@@ -1,0 +1,8 @@
+# Root eval entrypoint: Analyzer agent eval suite (placeholder).
+# Placeholder stub for Story 0.1 spine layout; eval contents delivered by later story
+# (see _bmad-output/planning-artifacts epics.md / architecture spine).
+# Shape: promptfooconfig.yaml (provider, prompts, tests).
+provider: anthropic:claude-haiku-4-5-20251001
+prompts:
+  - prompts/analyzer.md
+tests: []

@@ -1,0 +1,9 @@
+# Root eval entrypoint: Jev agent eval suite (placeholder).
+# Placeholder stub for Story 0.1 spine layout; eval contents delivered by later story
+# (see _bmad-output/planning-artifacts epics.md / architecture spine).
+# Shape: promptfooconfig.yaml (provider, prompts, tests).
+provider: anthropic:claude-haiku-4-5-20251001
+prompts:
+  - prompts/jev.md
+tests: []
+# Placeholder: eval requires ANTHROPIC_API_KEY in .env to run; content delivered by later story.

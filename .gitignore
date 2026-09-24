@@ -1,0 +1,27 @@
+# Secrets & environments — never commit real values
+.env
+.env.*
+!.env.example
+.venv/
+venv/
+
+# Toolchain / build byproducts
+node_modules/
+__pycache__/
+*.pyc
+triage.egg-info/
+dist/
+exports/
+
+# Generated run artifacts (keep READMEs)
+runs/*
+!runs/README.md
+results/*
+!results/README.md
+
+# Tool junk
+.DS_Store
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.log

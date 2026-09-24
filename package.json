@@ -1,0 +1,10 @@
+{
+  "name": "stage4-triage",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Blameless CI Triage certification slice — npm toolchain pins (Story 0.1)",
+  "devDependencies": {
+    "promptfoo": "0.123.1",
+    "smee-client": "5.0.0"
+  }
+}
