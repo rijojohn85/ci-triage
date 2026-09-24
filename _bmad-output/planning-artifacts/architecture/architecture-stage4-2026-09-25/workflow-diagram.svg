@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 775" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Blameless CI Triage workflow</title>
+  <desc id="d">GitHub webhook to gateway, Postgres queue, orchestrator state machine calling A2A agents (Jev, Analyzer, Proposer, Reviewer) with a revision loop, deterministic risk gate, and three outcomes: draft PR, infra report, or INPUT_REQUIRED human punch-out approved by a CODEOWNER.</desc>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#475569"/></marker>
+    <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b91c1c"/></marker>
+    <marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#15803d"/></marker>
+    <style>
+      .bg{fill:#ffffff}
+      .box{fill:#f8fafc;stroke:#94a3b8;stroke-width:1.5}
+      .det{fill:#eef2ff;stroke:#6366f1;stroke-width:1.5}
+      .ai{fill:#fff7ed;stroke:#ea580c;stroke-width:1.5}
+      .hub{fill:#ecfeff;stroke:#0891b2;stroke-width:2}
+      .ok{fill:#f0fdf4;stroke:#16a34a;stroke-width:1.5}
+      .stop{fill:#fef2f2;stroke:#dc2626;stroke-width:1.5}
+      .zone{fill:none;stroke:#cbd5e1;stroke-dasharray:6 5;stroke-width:1.2}
+      .h{font-size:15px;font-weight:700;fill:#0f172a}
+      .s{font-size:12px;fill:#334155}
+      .xs{font-size:11px;fill:#64748b}
+      .title{font-size:22px;font-weight:800;fill:#0f172a}
+      .l{stroke:#475569;stroke-width:1.6;fill:none}
+      .lr{stroke:#b91c1c;stroke-width:1.6;fill:none;stroke-dasharray:5 4}
+      .lg{stroke:#15803d;stroke-width:1.6;fill:none}
+      .tag{font-size:11px;font-weight:700;fill:#0e7490}
+    </style>
+  </defs>
+  <rect class="bg" width="1200" height="775"/>
+  <text class="title" x="30" y="40">Blameless CI Triage — who, why, how sure, and a fix, with receipts</text>
+  <text class="xs" x="30" y="60">Hub-and-spoke A2A workflow · every state persisted in Postgres · deterministic steps in blue, AI steps in orange</text>
+
+  <!-- ingress row -->
+  <rect class="box" x="30" y="90" width="170" height="70" rx="10"/>
+  <text class="h" x="45" y="118">GitHub</text><text class="s" x="45" y="138">workflow_run failure</text><text class="xs" x="45" y="152">synthetic demo repo</text>
+  <rect class="det" x="250" y="90" width="170" height="70" rx="10"/>
+  <text class="h" x="265" y="118">Gateway</text><text class="s" x="265" y="138">HMAC · replay dedupe</text><text class="xs" x="265" y="152">202 fast, no AI</text>
+  <rect class="det" x="470" y="90" width="180" height="70" rx="10"/>
+  <text class="h" x="485" y="118">Postgres queue</text><text class="s" x="485" y="138">triage_run · lease claim</text><text class="xs" x="485" y="152">run_step = audit trail</text>
+  <path class="l" d="M200 125 H246" marker-end="url(#a)"/>
+  <path class="l" d="M420 125 H466" marker-end="url(#a)"/>
+
+  <!-- orchestrator zone -->
+  <rect class="zone" x="20" y="190" width="1160" height="400" rx="14"/>
+  <text class="tag" x="36" y="212">ORCHESTRATOR (A2A server + explicit state machine) — calls every agent over A2A</text>
+  <path class="l" d="M560 160 V186" marker-end="url(#a)"/>
+
+  <!-- pipeline -->
+  <rect class="det" x="40" y="230" width="190" height="90" rx="10"/>
+  <text class="h" x="55" y="256">1 · Evidence pack</text><text class="s" x="55" y="276">Log Distiller (no raw logs)</text><text class="s" x="55" y="292">last green · suspects ranked</text><text class="xs" x="55" y="308">history · runner metrics</text>
+
+  <rect class="ai" x="270" y="230" width="190" height="90" rx="10"/>
+  <text class="h" x="285" y="256">2 · Jev classify</text><text class="s" x="285" y="276">5 classes + confidence</text><text class="s" x="285" y="292">injection pre-screen</text><text class="xs" x="285" y="308">A2A skill classify-failure</text>
+
+  <rect class="ai" x="500" y="230" width="190" height="90" rx="10"/>
+  <text class="h" x="515" y="256">3 · Analyzer</text><text class="s" x="515" y="276">Claude Haiku</text><text class="s" x="515" y="292">cited suspects, why</text><text class="xs" x="515" y="308">may only LOWER confidence</text>
+
+  <rect class="ai" x="730" y="230" width="190" height="90" rx="10"/>
+  <text class="h" x="745" y="256">4 · Proposer</text><text class="s" x="745" y="276">Claude Sonnet</text><text class="s" x="745" y="292">fix · deflake · mock</text><text class="xs" x="745" y="308">sole author of the diff</text>
+
+  <rect class="ai" x="960" y="230" width="200" height="90" rx="10"/>
+  <text class="h" x="975" y="256">5 · Adversarial Reviewer</text><text class="s" x="975" y="276">Claude Sonnet</text><text class="s" x="975" y="292">objections only</text><text class="xs" x="975" y="308">wrong? assumed? dangerous?</text>
+
+  <path class="l" d="M230 275 H266" marker-end="url(#a)"/>
+  <path class="l" d="M460 275 H496" marker-end="url(#a)"/>
+  <path class="l" d="M690 275 H726" marker-end="url(#a)"/>
+  <path class="l" d="M920 275 H956" marker-end="url(#a)"/>
+  <!-- revision loop -->
+  <path class="lr" d="M1060 230 C1060 200 825 200 825 226" marker-end="url(#ar)"/>
+  <text class="xs" x="880" y="200" fill="#b91c1c">revise · max 2 rounds</text>
+
+  <!-- guardrail band -->
+  <rect class="det" x="40" y="350" width="1120" height="44" rx="8"/>
+  <text class="s" x="56" y="377"><tspan font-weight="700">Guardrails on every AI step:</tspan> Pydantic schema · strict citation check (log line / commit SHA / metric / history row must exist in this run's evidence) · 1 retry then escalate · untrusted-data delimiting</text>
+
+  <!-- risk gate -->
+  <polygon class="det" points="1060,420 1140,470 1060,520 980,470"/>
+  <text class="h" x="1024" y="466">Risk</text><text class="h" x="1024" y="484">Gate</text>
+  <path class="l" d="M1060 320 V346" marker-end="url(#a)"/>
+  <path class="l" d="M1060 394 V416" marker-end="url(#a)"/>
+  <text class="xs" x="780" y="428">blocks: skip/retry/timeout/loosened assert,</text>
+  <text class="xs" x="780" y="442">CI config, secrets, infra · no LLM override</text>
+
+  <!-- early exits -->
+  <text class="xs" x="40" y="425" fill="#b91c1c">escalate: low confidence · no-route · invalid twice</text>
+
+  <!-- outcomes -->
+  <rect class="ok" x="40" y="620" width="300" height="110" rx="12"/>
+  <text class="h" x="58" y="648">Draft PR  (S1 · S2 · S4)</text><text class="s" x="58" y="670">branch triage/&lt;run_id&gt; · never merged</text><text class="s" x="58" y="688">rank-1 suspect requested as reviewer</text><text class="xs" x="58" y="706">flaky: quarantine = label, not a skip</text>
+
+  <rect class="ok" x="380" y="620" width="300" height="110" rx="12"/>
+  <text class="h" x="398" y="648">Infra report  (S3)</text><text class="s" x="398" y="670">GitHub issue ci-triage/infra</text><text class="s" x="398" y="688">runner metrics for on-call</text><text class="xs" x="398" y="706">no PR, no blame</text>
+
+  <rect class="stop" x="720" y="620" width="440" height="110" rx="12"/>
+  <text class="h" x="738" y="648">INPUT_REQUIRED punch-out  (S5)</text><text class="s" x="738" y="670">blame-free evidence pack, sent to team lead</text><text class="s" x="738" y="688">triage approve | reject &lt;task_id&gt; (A2A, GitHub token)</text><text class="xs" x="738" y="706">only CODEOWNERS · approval bound to diff hash · bypass attempts logged</text>
+
+  <path class="lg" d="M1000 482 C700 560 300 560 190 616" marker-end="url(#ag)"/>
+  <text class="xs" x="920" y="486" fill="#15803d">normal</text>
+  <path class="lr" d="M1060 520 V616" marker-end="url(#ar)"/>
+  <text class="xs" x="1068" y="580" fill="#b91c1c">blocked</text>
+  <path class="l" d="M595 320 C595 500 530 560 530 616" marker-end="url(#a)"/>
+  <text class="xs" x="548" y="604">class = infra</text>
+  <path class="lr" d="M365 320 C365 520 820 520 860 616" marker-end="url(#ar)"/>
+  <!-- approve resume -->
+  <path class="lg" d="M720 720 C560 750 300 750 250 732" marker-end="url(#ag)"/>
+  <text class="xs" x="440" y="752" fill="#15803d">approve: draft PR (or re-run from Analyzer with --class)</text>
+</svg>

@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CI Triage Brainstorm</title>
+<meta name="description" content="Keepsake of the 2026-09-25 brainstorming session on a CI-triage multi-agent workflow (A2A, Jev, promptfoo, human punch-out).">
+<style>
+:root{
+  --bg:#f4f6f8; --bg2:#ffffff; --panel:#ffffff; --line:#d5dbe1; --fg:#1b2129; --dim:#5b6673; --faint:#8a94a0;
+  --red:#cf222e; --red-bg:#ffebe9; --green:#1a7f37; --green-bg:#dafbe1; --amber:#9a6700; --amber-bg:#fff8c5;
+  --blue:#0969da; --blue-bg:#ddf4ff; --violet:#8250df; --violet-bg:#fbefff;
+  --user:#bf3989; --user-bg:#ffeff7; --coach:#0969da; --coach-bg:#ddf4ff;
+  --term:#0d1117; --term-fg:#c9d1d9;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0b0f14; --bg2:#10161d; --panel:#131a22; --line:#27313c; --fg:#dde3ea; --dim:#9aa6b2; --faint:#6b7682;
+    --red:#ff6b6b; --red-bg:#3a1418; --green:#3fb950; --green-bg:#11291a; --amber:#e3b341; --amber-bg:#2e2410;
+    --blue:#58a6ff; --blue-bg:#0f2438; --violet:#bc8cff; --violet-bg:#261a3a;
+    --user:#ff7bc0; --user-bg:#3a1530; --coach:#58a6ff; --coach-bg:#0f2438;
+    --term:#05080b; --term-fg:#c9d1d9; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0b0f14; --bg2:#10161d; --panel:#131a22; --line:#27313c; --fg:#dde3ea; --dim:#9aa6b2; --faint:#6b7682;
+  --red:#ff6b6b; --red-bg:#3a1418; --green:#3fb950; --green-bg:#11291a; --amber:#e3b341; --amber-bg:#2e2410;
+  --blue:#58a6ff; --blue-bg:#0f2438; --violet:#bc8cff; --violet-bg:#261a3a;
+  --user:#ff7bc0; --user-bg:#3a1530; --coach:#58a6ff; --coach-bg:#0f2438;
+  --term:#05080b; --term-fg:#c9d1d9; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.55 var(--sans);-webkit-text-size-adjust:100%}
+.wrap{max-width:1120px;margin:0 auto;padding:0 16px}
+code,.mono{font-family:var(--mono)}
+a{color:var(--blue)}
+h1,h2,h3{font-family:var(--mono);letter-spacing:-.01em;line-height:1.2}
+h2{font-size:1.35rem;margin:0 0 .25rem}
+h3{font-size:1rem;margin:0 0 .5rem}
+.sub{color:var(--dim);margin:0 0 1.25rem;max-width:70ch}
+
+/* ---------- top status bar ---------- */
+.bar{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.bar .wrap{display:flex;gap:10px;align-items:center;padding-top:8px;padding-bottom:8px;overflow-x:auto;scrollbar-width:none}
+.bar .wrap::-webkit-scrollbar{display:none}
+.stage{display:flex;align-items:center;gap:6px;font:12px var(--mono);color:var(--dim);text-decoration:none;white-space:nowrap;padding:4px 8px;border-radius:999px;border:1px solid var(--line);background:var(--bg2)}
+.stage:hover{color:var(--fg);border-color:var(--green)}
+.stage i{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block}
+.stage.active{color:var(--fg);border-color:var(--green);background:var(--green-bg)}
+.conn{flex:0 0 14px;height:2px;background:var(--line)}
+.theme{margin-left:auto;font:12px var(--mono);background:none;border:1px solid var(--line);color:var(--dim);border-radius:6px;padding:4px 8px;cursor:pointer}
+
+/* ---------- hero terminal ---------- */
+header.hero{padding:36px 0 24px}
+.term{background:var(--term);color:var(--term-fg);border-radius:10px;border:1px solid #30363d;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,.18)}
+.term .tb{display:flex;gap:6px;align-items:center;padding:9px 12px;background:#161b22;border-bottom:1px solid #30363d;font:12px var(--mono);color:#8b949e}
+.term .tb b{width:11px;height:11px;border-radius:50%;display:inline-block}
+.term pre{margin:0;padding:16px;font:13px/1.6 var(--mono);white-space:pre-wrap;word-break:break-word}
+.t-red{color:#ff7b72}.t-grn{color:#56d364}.t-yel{color:#e3b341}.t-blu{color:#79c0ff}.t-dim{color:#6e7681}.t-pnk{color:#ff7bc0}
+.cursor{display:inline-block;width:8px;height:1em;background:#56d364;vertical-align:-2px;animation:blink 1.1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.title{font-size:clamp(1.7rem,5vw,2.9rem);margin:26px 0 8px}
+.title .x{color:var(--red)} .title .ok{color:var(--green)}
+.tagline{font:italic 1.1rem/1.4 var(--sans);color:var(--dim);margin:0 0 18px;max-width:60ch}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:12px var(--mono);border:1px solid var(--line);background:var(--bg2);padding:3px 8px;border-radius:999px;color:var(--dim)}
+
+/* ---------- authorship ---------- */
+.legend{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:18px 0 0;font:12px var(--mono);color:var(--dim)}
+.legend button{font:12px var(--mono);border:1px solid var(--line);background:var(--bg2);color:var(--fg);padding:4px 10px;border-radius:6px;cursor:pointer}
+.legend button[aria-pressed="true"]{border-color:var(--fg);background:var(--fg);color:var(--bg)}
+.tally{display:flex;height:8px;border-radius:4px;overflow:hidden;min-width:160px;flex:1;max-width:320px;background:var(--line)}
+.tally span{display:block;height:100%}
+.who{font:11px/1 var(--mono);padding:3px 6px;border-radius:4px;white-space:nowrap;display:inline-block;vertical-align:1px}
+.who.u{color:var(--user);background:var(--user-bg);border:1px solid color-mix(in srgb,var(--user) 40%,transparent)}
+.who.c{color:var(--coach);background:var(--coach-bg);border:1px solid color-mix(in srgb,var(--coach) 40%,transparent)}
+.who.n{color:var(--dim);background:transparent;border:1px dashed var(--line)}
+body[data-filter="user"] .ln:not(.u),body[data-filter="coach"] .ln:not(.c){opacity:.22}
+.ln{transition:opacity .2s}
+
+/* log lines */
+ul.log{list-style:none;margin:0;padding:0}
+.log li{display:grid;grid-template-columns:auto 1fr;gap:4px 8px;padding:6px 0;border-top:1px dashed var(--line);font-size:14px}
+.log li:first-child{border-top:0}
+.log .tag{display:flex;gap:4px;align-items:flex-start;flex-wrap:wrap}
+.k{font:10px/1 var(--mono);text-transform:uppercase;letter-spacing:.06em;padding:4px 5px;border-radius:3px;color:var(--dim);border:1px solid var(--line)}
+.k.decision{color:var(--green);border-color:var(--green)}
+.k.question{color:var(--amber);border-color:var(--amber)}
+.k.insight{color:var(--violet);border-color:var(--violet)}
+.k.direction{color:var(--red);border-color:var(--red)}
+.v2{font:10px var(--mono);color:var(--amber);border:1px solid var(--amber);border-radius:3px;padding:1px 4px;margin-left:4px}
+
+section{padding:56px 0 8px;scroll-margin-top:48px}
+.step-no{font:12px var(--mono);color:var(--green);letter-spacing:.1em;text-transform:uppercase}
+.step-no::before{content:"✓ ";}
+
+/* ---------- five whys ---------- */
+.whys{position:relative;counter-reset:why}
+.why{position:relative;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:16px;margin-left:calc(var(--d) * 28px);padding-bottom:26px}
+.why::before{content:"";position:absolute;left:18px;top:44px;bottom:0;width:2px;background:repeating-linear-gradient(var(--red) 0 6px,transparent 6px 11px)}
+.why:last-child::before{display:none}
+.why .q{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--red);border-radius:8px;padding:12px 14px}
+.why .q .lbl{font:12px var(--mono);color:var(--red);display:block;margin-bottom:4px}
+.why .q .lbl b{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--red);color:#fff;margin-right:6px;font-size:11px}
+.why .side{border:1px dashed var(--line);border-radius:8px;padding:10px 12px;background:color-mix(in srgb,var(--panel) 60%,transparent)}
+.side h4{margin:0 0 4px;font:11px var(--mono);color:var(--faint);text-transform:uppercase;letter-spacing:.08em}
+.root{margin-left:calc(5 * 28px);border-radius:10px;padding:18px 20px;background:var(--term);color:var(--term-fg);border:2px solid var(--red);position:relative;box-shadow:0 0 0 6px var(--red-bg)}
+.root .lbl{font:12px var(--mono);color:#ff7b72;letter-spacing:.1em}
+.root p{font:600 1.15rem/1.45 var(--sans);margin:.4rem 0 0}
+.root .fix{margin-top:12px;font:13px var(--mono);color:#56d364}
+.root ul.log li{border-top-color:#30363d}
+.root .who.n{border-color:#30363d;color:#8b949e}
+.root .k{border-color:#30363d;color:#8b949e}
+
+/* ---------- hats ---------- */
+.hats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.hat{border-radius:10px;border:1px solid var(--line);background:var(--panel);overflow:hidden;display:flex;flex-direction:column}
+.hat header{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line)}
+.hat header svg{width:40px;height:24px;flex:0 0 auto}
+.hat header h3{margin:0}
+.hat header small{display:block;font:12px var(--mono);color:var(--dim)}
+.hat .body{padding:6px 14px 12px}
+.hat.white header{background:linear-gradient(90deg,#fff,#f0f2f4);color:#1b2129}
+.hat.white header small{color:#5b6673}
+.hat.white svg{fill:#fff;stroke:#1b2129;stroke-width:1.2}
+.hat.red{--h:#e5484d}.hat.yellow{--h:#f5c518}.hat.green{--h:#2da44e}.hat.blue{--h:#1f6feb}
+.hat.red header,.hat.yellow header,.hat.green header,.hat.blue header{background:var(--h);color:#fff;border-bottom:0}
+.hat.yellow header{color:#221b00}.hat.yellow header small{color:#4a3c00}
+.hat.red header small,.hat.green header small,.hat.blue header small{color:rgba(255,255,255,.85)}
+.hat.red svg,.hat.green svg,.hat.blue svg{fill:#fff}
+.hat.yellow svg{fill:#221b00}
+.hat.black{background:#0e1115;color:#e6e9ec;border-color:#2b3138;grid-column:span 2}
+.hat.black header{background:#000;color:#fff;border-bottom-color:#2b3138}
+.hat.black header small{color:#9aa4ae}
+.hat.black svg{fill:#1f242a;stroke:#fff;stroke-width:1.2}
+.hat.black .log li{border-top-color:#2b3138}
+.hat.black .k{border-color:#3a424b;color:#9aa4ae}
+.hat.black .k.decision{color:#3fb950;border-color:#3fb950}
+.hat.black .k.insight{color:#bc8cff;border-color:#bc8cff}
+.hat.black .k.direction{color:#ff6b6b;border-color:#ff6b6b}
+.hat.black .who.n{border-color:#3a424b;color:#9aa4ae}
+.hat.black .who.u{background:#3a1530;color:#ff7bc0}
+.hat.black .who.c{background:#0f2438;color:#58a6ff}
+.hat.blue{grid-column:span 2}
+.hat .note{font:12px var(--mono);color:var(--dim);margin:6px 0 0}
+.matrix{width:100%;border-collapse:collapse;font:12.5px var(--mono);margin:8px 0 4px}
+.matrix th,.matrix td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+.matrix th{color:var(--dim);font-weight:500}
+.st{padding:1px 6px;border-radius:3px;font-size:11px;white-space:nowrap}
+.st.pr{background:var(--green-bg);color:var(--green)}
+.st.no{background:var(--amber-bg);color:var(--amber)}
+.st.ir{background:var(--violet-bg);color:var(--violet)}
+
+/* ---------- JTBD ---------- */
+.jtbd{display:grid;gap:10px}
+.jrow{display:grid;grid-template-columns:minmax(0,.8fr) 28px minmax(0,1.2fr) 28px minmax(0,1fr);align-items:stretch}
+.jrow>div{border:1px solid var(--line);border-radius:8px;padding:10px 12px;background:var(--panel)}
+.jrow .arrow{display:grid;place-items:center;color:var(--faint);font:16px var(--mono);border:0;background:none;padding:0}
+.jrow .h{font:600 14px var(--mono)}
+.jrow .h small{display:block;font:400 11px var(--mono);color:var(--dim)}
+.jrow .job{font-style:italic}
+.jrow.v2row>div:not(.arrow){border-style:dashed;opacity:.8}
+.jrow .out b{font-family:var(--mono)}
+.jhead{display:grid;grid-template-columns:minmax(0,.8fr) 28px minmax(0,1.2fr) 28px minmax(0,1fr);font:11px var(--mono);color:var(--faint);text-transform:uppercase;letter-spacing:.1em;padding:0 2px}
+.jhead span:nth-child(2),.jhead span:nth-child(4){visibility:hidden}
+.card-mock{margin-top:18px;border:1px solid var(--line);border-radius:10px;background:var(--panel);overflow:hidden;max-width:640px}
+.card-mock .ch{display:flex;gap:8px;align-items:center;padding:8px 12px;background:var(--bg2);border-bottom:1px solid var(--line);font:12px var(--mono);color:var(--dim)}
+.card-mock dl{margin:0;padding:10px 14px;display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:14px}
+.card-mock dt{font:600 12px var(--mono);color:var(--dim);text-transform:uppercase}
+.card-mock dd{margin:0}
+.card-mock .clear{padding:8px 14px 12px;font-size:13px;color:var(--green)}
+
+/* ---------- convergence ---------- */
+.verified{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:26px}
+.vbox{border:1px solid var(--line);border-radius:8px;padding:10px 12px;background:var(--panel);font-size:13.5px}
+.vbox .badge{font:11px var(--mono);color:var(--green)}
+.vbox .badge.q{color:var(--amber)}
+.archs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.arch{position:relative;border:1px solid var(--line);border-radius:10px;padding:14px;background:var(--panel)}
+.arch .lt{font:700 34px/1 var(--mono);color:var(--faint)}
+.arch h3{margin:6px 0}
+.arch p{margin:.3rem 0;font-size:14px}
+.arch .mr{font:12.5px var(--mono);color:var(--dim);border-top:1px dashed var(--line);padding-top:8px;margin-top:8px}
+.arch.chosen{border:2px solid var(--green);box-shadow:0 0 0 5px var(--green-bg)}
+.arch.chosen .lt{color:var(--green)}
+.stamp{position:absolute;top:12px;right:12px;font:700 11px var(--mono);letter-spacing:.12em;color:var(--green);border:2px solid var(--green);padding:3px 7px;border-radius:4px;transform:rotate(6deg)}
+.arch:not(.chosen){opacity:.82}
+.arch:not(.chosen) .lt{text-decoration:line-through}
+
+.diagram{margin:26px 0;border:1px solid var(--line);border-radius:12px;background:var(--panel);padding:12px;overflow-x:auto}
+.diagram svg{display:block;width:100%;min-width:460px;max-width:720px;margin:0 auto;height:auto}
+.diagram figcaption{font:12px var(--mono);color:var(--dim);text-align:center;margin-top:6px}
+svg .bx{fill:var(--bg2);stroke:var(--line);stroke-width:1.5}
+svg .bx.hub{fill:var(--green-bg);stroke:var(--green);stroke-width:2}
+svg .bx.jev{fill:var(--violet-bg);stroke:var(--violet)}
+svg .bx.tool{stroke-dasharray:5 4}
+svg .bx.gate{fill:var(--amber-bg);stroke:var(--amber);stroke-width:2}
+svg .bx.pr{fill:var(--green-bg);stroke:var(--green)}
+svg .bx.ir{fill:var(--violet-bg);stroke:var(--violet)}
+svg .bx.src{fill:var(--red-bg);stroke:var(--red)}
+svg .t1{font:600 14px var(--mono);fill:var(--fg)}
+svg .t2{font:11px var(--mono);fill:var(--dim)}
+svg .tl{font:11px var(--mono);fill:var(--faint)}
+svg .flow{stroke:var(--fg);stroke-width:1.8;fill:none;stroke-dasharray:6 5;animation:dash 1.2s linear infinite}
+svg .spoke{stroke:var(--green);stroke-width:1.5;fill:none;opacity:.8}
+svg .spoke.jev{stroke:var(--violet)}
+svg .ah{fill:var(--fg)}
+@keyframes dash{to{stroke-dashoffset:-22}}
+
+.moscow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.col{border-radius:8px;border:1px solid var(--line);background:var(--panel);display:flex;flex-direction:column}
+.col h3{margin:0;padding:8px 10px;border-bottom:1px solid var(--line);font-size:13px;display:flex;justify-content:space-between}
+.col.must h3{color:var(--red)}.col.should h3{color:var(--amber)}.col.could h3{color:var(--blue)}.col.wont h3{color:var(--faint)}
+.col ul{list-style:none;margin:0;padding:8px;display:grid;gap:6px}
+.col li{font-size:13px;background:var(--bg2);border:1px solid var(--line);border-radius:6px;padding:6px 8px;border-left:3px solid var(--c)}
+.col.must{--c:var(--red)}.col.should{--c:var(--amber)}.col.could{--c:var(--blue)}.col.wont{--c:var(--faint)}
+.col.wont li{text-decoration:line-through;text-decoration-color:var(--faint);color:var(--dim)}
+.promo{font:10px var(--mono);color:var(--green);display:block}
+
+.qa{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:26px}
+.qa .panel{border:1px solid var(--line);border-radius:10px;background:var(--panel);padding:14px}
+.prompt{font:13px var(--mono);background:var(--term);color:var(--term-fg);padding:8px 10px;border-radius:6px;margin-bottom:8px}
+.prompt .t-pnk::before{content:"user$ ";color:#6e7681}
+
+/* ---------- synthesis ---------- */
+#synthesis{padding-bottom:40px}
+.climax{position:relative;border-radius:16px;padding:34px 20px 26px;background:
+ radial-gradient(1200px 400px at 50% -10%,color-mix(in srgb,var(--green) 22%,transparent),transparent 60%),var(--term);color:var(--term-fg);border:1px solid #30363d;overflow:hidden}
+.climax h2{color:#fff;text-align:center;font-size:clamp(1.3rem,4.4vw,2.2rem);margin:0}
+.climax .kicker{text-align:center;font:12px var(--mono);color:#56d364;letter-spacing:.2em;text-transform:uppercase;margin-bottom:8px}
+.coin{width:120px;height:120px;margin:22px auto 10px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,#ffe58a,#e3b341 55%,#9a6700);color:#3b2a00;font:700 13px/1.1 var(--mono);text-align:center;box-shadow:0 0 0 6px rgba(227,179,65,.2),0 0 50px rgba(227,179,65,.35);animation:spin 9s ease-in-out infinite}
+.coin span{font-size:30px;display:block}
+@keyframes spin{0%,100%{transform:rotateY(0)}50%{transform:rotateY(180deg)}}
+.pillars{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:24px;position:relative}
+.pillar{border:1px solid #30363d;border-top:4px solid var(--pc);border-radius:10px;padding:14px;background:rgba(255,255,255,.03)}
+.pillar .n{font:12px var(--mono);color:var(--pc)}
+.pillar h3{color:#fff;font-size:1.05rem;margin:4px 0 8px}
+.pillar p{margin:0 0 .5rem;font-size:14px;color:#c9d1d9}
+.pillar .use{font:12.5px var(--mono);color:#e3b341;border-top:1px dashed #30363d;padding-top:8px;margin-top:8px}
+.p1{--pc:#56d364}.p2{--pc:#bc8cff}.p3{--pc:#79c0ff}
+.proof{margin-top:16px;text-align:center;font:13px var(--mono);color:#8b949e}
+.sim{margin-top:22px;border:1px solid #30363d;border-radius:10px;padding:14px;background:rgba(0,0,0,.25)}
+.sim h3{color:#fff;font-size:13px;margin:0 0 8px}
+.sim label{display:grid;grid-template-columns:130px 1fr 44px;gap:10px;align-items:center;font:12px var(--mono);color:#8b949e;margin:6px 0}
+.sim input[type=range]{width:100%;accent-color:#e3b341}
+.sim output{color:#fff;text-align:right}
+.route{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;font:12.5px var(--mono)}
+.route span{padding:4px 8px;border-radius:5px;border:1px solid #30363d;color:#6e7681;transition:all .2s}
+.route span.on{color:#0d1117;background:#56d364;border-color:#56d364}
+.route span.on.alt{background:#bc8cff;border-color:#bc8cff}
+.sim .note{font:11.5px var(--mono);color:#6e7681;margin-top:8px}
+.also{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:18px}
+.also > div{border:1px solid #30363d;border-radius:10px;padding:12px 14px;font-size:14px}
+.also h4{margin:0 0 6px;font:12px var(--mono);color:#e3b341;text-transform:uppercase;letter-spacing:.08em}
+.also .who.c{background:#0f2438;color:#58a6ff}
+
+footer{padding:30px 0 50px;color:var(--dim);font-size:13px}
+footer .open{border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:var(--panel);margin-bottom:18px}
+footer .exit{font:13px var(--mono);color:var(--green)}
+
+.reveal{opacity:1;transform:none;transition:opacity .6s,transform .6s}
+.js .reveal.pre{opacity:0;transform:translateY(14px)}
+
+/* ---------- responsive ---------- */
+@media (max-width:900px){
+  .hats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .hat.black,.hat.blue{grid-column:span 2}
+  .moscow{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:720px){
+  body{font-size:14.5px}
+  .why{grid-template-columns:1fr;margin-left:calc(var(--d) * 10px)}
+  .root{margin-left:50px}
+  .hats,.archs,.verified,.qa,.pillars,.also{grid-template-columns:1fr}
+  .hat.black,.hat.blue{grid-column:auto}
+  .jhead{display:none}
+  .jrow{grid-template-columns:1fr;gap:4px}
+  .jrow .arrow{transform:rotate(90deg);height:18px}
+  .moscow{grid-template-columns:1fr}
+  .sim label{grid-template-columns:1fr 44px}
+  .sim label span{grid-column:1/-1}
+  .matrix{font-size:11.5px}
+}
+</style>
+</head>
+<body>
+
+<nav class="bar" aria-label="Session pipeline">
+  <div class="wrap">
+    <a class="stage" href="#trigger"><i></i>trigger</a><span class="conn"></span>
+    <a class="stage" href="#whys"><i></i>five-whys</a><span class="conn"></span>
+    <a class="stage" href="#hats"><i></i>six-hats</a><span class="conn"></span>
+    <a class="stage" href="#jtbd"><i></i>jtbd</a><span class="conn"></span>
+    <a class="stage" href="#converge"><i></i>converge</a><span class="conn"></span>
+    <a class="stage" href="#synthesis"><i></i>synthesis</a>
+    <button class="theme" id="theme" type="button" aria-label="Toggle colour theme">◐ theme</button>
+  </div>
+</nav>
+
+<header class="hero wrap" id="trigger">
+  <div class="term" role="img" aria-label="Terminal showing a failed CI run triggering the brainstorm">
+    <div class="tb"><b style="background:#ff5f57"></b><b style="background:#febc2e"></b><b style="background:#28c840"></b>&nbsp; brainstorm — workflow_run</div>
+<pre><span class="t-dim">2026-09-25 · mode=partner · status=complete · updated 01:39</span>
+<span class="t-blu">event</span>  workflow_run  <span class="t-red">conclusion=failure</span>
+<span class="t-blu">topic</span>  CI triage multi-agent workflow (A2A, promptfoo, red team, RAG?)
+<span class="t-blu">goal </span>  Stage 4 certification: workflow, guardrails, punch-out, E2E success, audit trail
+<span class="t-pnk">[direction · user]</span> A2A for discovery/routing/comms; promptfoo evals for every agent;
+                   red-team vs prompt injection; mirror Stage 4 folder rubric; open Q: RAG?
+<span class="t-yel">→ dispatching techniques:</span> five-whys · six-thinking-hats · job-to-be-done · converge
+<span class="t-grn">✓ all stages passed</span> <span class="cursor"></span></pre>
+  </div>
+
+  <h1 class="title"><span class="x">✗ red build</span> → <span class="ok">✓ receipts</span></h1>
+  <p class="tagline">“Blameless CI triage — who, why, how sure, and a fix, with receipts.” <span class="who c">coach</span></p>
+  <div class="chips">
+    <span class="chip">A2A</span><span class="chip">TypeSafe Jev</span><span class="chip">Claude API</span><span class="chip">promptfoo</span><span class="chip">GitHub Actions</span><span class="chip">Python</span><span class="chip">Postgres queue</span><span class="chip">INPUT_REQUIRED</span>
+  </div>
+
+  <div class="legend" role="group" aria-label="Filter by idea author">
+    <span>authorship:</span>
+    <button type="button" data-f="all" aria-pressed="true">all</button>
+    <button type="button" data-f="user" aria-pressed="false"><span class="who u">user</span></button>
+    <button type="button" data-f="coach" aria-pressed="false"><span class="who c">coach</span></button>
+    <div class="tally" aria-hidden="true"><span id="tu" style="background:var(--user)"></span><span id="tc" style="background:var(--coach)"></span><span id="tn" style="background:var(--faint)"></span></div>
+    <span id="tallytxt"></span>
+  </div>
+</header>
+
+<main>
+<!-- ================= FIVE WHYS ================= -->
+<section id="whys" class="wrap">
+  <div class="step-no">stage 1 · five whys</div>
+  <h2>Digging down the stack trace</h2>
+  <p class="sub">Each frame goes one level deeper, from the user’s pains down to the root cause. Coach ideas attach to the side like breakpoints.</p>
+
+  <div class="whys">
+    <div class="why reveal" style="--d:0">
+      <div class="q"><span class="lbl"><b>1</b>why does a red build hurt?</span>
+        <ul class="log">
+          <li class="ln u"><span class="tag"><span class="k insight">insight</span><span class="who u">user</span></span><span>Pain 1: classifying failure — flaky vs infra vs code</span></li>
+          <li class="ln u"><span class="tag"><span class="k insight">insight</span><span class="who u">user</span></span><span>Pain 2: devs not notified / wrong owner</span></li>
+          <li class="ln u"><span class="tag"><span class="k insight">insight</span><span class="who u">user</span></span><span>Pain 3: triage slow</span></li>
+          <li class="ln u"><span class="tag"><span class="k insight">insight</span><span class="who u">user</span></span><span>Pain 4: quick fix causes regressions elsewhere</span></li>
+        </ul>
+      </div>
+      <div class="side"><h4>attached</h4>
+        <ul class="log">
+          <li class="ln c"><span class="tag"><span class="k">idea</span><span class="who c">coach</span></span><span>One agent per pain: Classifier (flaky/infra/code), Router/Notifier (owner via CODEOWNERS + blame), Fix Proposer, Adversarial Reviewer (blast radius of a quick fix)</span></li>
+          <li class="ln u"><span class="tag"><span class="k decision">decision</span><span class="who u">user</span></span><span>Agent ALWAYS produces a draft PR; a human approves every PR (never auto-merge)</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="why reveal" style="--d:1">
+      <div class="q"><span class="lbl"><b>2</b>why is classification so hard?</span>
+        <ul class="log">
+          <li class="ln u"><span class="tag"><span class="k insight">insight</span><span class="who u">user</span></span><span>Log volume, concurrent pushes from many devs, heavy tests, infra overload under load</span></li>
+          <li class="ln u"><span class="tag"><span class="k">idea</span><span class="who u">user</span></span><span>Flaky tests: agent suggests a root-cause fix to stop flakiness recurring, not just retry</span></li>
+        </ul>
+      </div>
+      <div class="side"><h4>attached</h4>
+        <ul class="log">
+          <li class="ln c"><span class="tag"><span class="k">idea</span><span class="who c">coach</span></span><span>Branch by class: code → fix PR to author; flaky → deflake PR + quarantine; infra → no code PR, notify infra / capacity report</span></li>
+          <li class="ln c"><span class="tag"><span class="k">idea</span><span class="who c">coach</span></span><span>Risk-gate tiers: normal draft PR vs BLOCKED + escalate when a PR disables/skips a test, edits CI config, secrets or infra manifests</span></li>
+          <li class="ln n"><span class="tag"><span class="k question">question</span><span class="who n">log</span></span><span>Rubric needs branching — if a human always approves, the tiered risk gate supplies the branch</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="why reveal" style="--d:2">
+      <div class="q"><span class="lbl"><b>3</b>why is manual triage slow?</span>
+        <ul class="log">
+          <li class="ln u"><span class="tag"><span class="k">idea</span><span class="who u">user</span></span><span>Manual algorithm: commits since last green → read failing logs in detail → map failure back to culprit code</span></li>
+          <li class="ln n"><span class="tag"><span class="k insight">insight</span><span class="who n">log</span></span><span>Triage is deterministic-heavy: git range + log parsing are tools, not LLM work; the LLM reasons over distilled evidence</span></li>
+        </ul>
+      </div>
+      <div class="side"><h4>attached</h4>
+        <ul class="log">
+          <li class="ln c"><span class="tag"><span class="k">idea</span><span class="who c">coach</span></span><span>Suspect-commit narrowing: intersect files touched in last-green..HEAD with stack-trace files / test imports; rank suspects</span></li>
+          <li class="ln c"><span class="tag"><span class="k">idea</span><span class="who c">coach</span></span><span>Log Distiller: deterministic (non-LLM) extraction of error blocks / stack traces before the LLM sees them — cuts tokens and shrinks the injection surface</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="why reveal" style="--d:3">
+      <div class="q"><span class="lbl"><b>4</b>why can’t a verdict be trusted?</span>
+        <ul class="log">
+          <li class="ln u"><span class="tag"><span class="k insight">insight</span><span class="who u">user</span></span><span>Confidence signals: failed-test history, other PRs failing the same test, runner resource usage, interdependent code</span></li>
+          <li class="ln n"><span class="tag"><span class="k insight">insight</span><span class="who n">log</span></span><span>RAG answer emerging: 3 of 4 signals are STRUCTURED lookups (history DB, cross-PR query, runner metrics), not vector RAG</span></li>
+        </ul>
+      </div>
+      <div class="side"><h4>attached</h4>
+        <ul class="log">
+          <li class="ln c"><span class="tag"><span class="k">idea</span><span class="who c">coach</span></span><span>Failure fingerprint store: normalise error + stack → hash; exact match first, embedding similarity fallback for near-dupes</span></li>
+          <li class="ln c"><span class="tag"><span class="k">idea</span><span class="who c">coach</span></span><span>Semantic RAG where it earns it: past fix PRs / postmortems → Deflake Advisor + Fix Proposer</span></li>
+          <li class="ln c"><span class="tag"><span class="k">idea</span><span class="who c">coach</span></span><span>Code dependency (import) graph tool → blast radius for the adversarial reviewer</span></li>
+          <li class="ln c"><span class="tag"><span class="k">idea</span><span class="who c">coach</span></span><span>RAG poisoning as a red-team target: stored past logs may carry injected text; retrieved content is untrusted data</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="why reveal" style="--d:4">
+      <div class="q"><span class="lbl"><b>5</b>why does a wrong call matter?</span>
+        <ul class="log">
+          <li class="ln u"><span class="tag"><span class="k insight">insight</span><span class="who u">user</span></span><span>Cost of wrong triage: wrong dev blamed, real bug hidden by deflake, broken main, dev back-and-forth, external API calls in E2E fail</span></li>
+          <li class="ln u"><span class="tag"><span class="k">idea</span><span class="who u">user</span></span><span>5th failure class: external dependency (3rd-party API in E2E tests)</span></li>
+        </ul>
+      </div>
+      <div class="side"><h4>attached</h4>
+        <ul class="log">
+          <li class="ln c"><span class="tag"><span class="k">idea</span><span class="who c">coach</span></span><span>External-dep class: check status pages / recorded HTTP errors; propose a mock / contract-test PR rather than a code fix</span></li>
+          <li class="ln c"><span class="tag"><span class="k">idea</span><span class="who c">coach</span></span><span>Deflake guard: flag deflake PRs that loosen assertions, add retries, bump timeouts or skip → escalate (may hide a real bug)</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="root reveal">
+      <div class="lbl">■ ROOT CAUSE · exit 1</div>
+      <p>Triage lacks <span style="color:#e3b341">evidence-backed confidence</span>, so every wrong call costs trust and human coordination. The system must SHOW evidence and confidence, not only a verdict.</p>
+      <ul class="log" style="margin-top:10px">
+        <li class="ln c"><span class="tag"><span class="k">patch</span><span class="who c">coach</span></span><span>Evidence-cited output schema: every claim must reference a log line / commit SHA / metric; a schema validator rejects uncited claims</span></li>
+        <li class="ln c"><span class="tag"><span class="k">patch</span><span class="who c">coach</span></span><span>Low-confidence branch: confidence &lt; threshold or conflicting signals → “needs human triage” punch-out with an evidence pack, no blame</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SIX HATS ================= -->
+<section id="hats" class="wrap">
+  <div class="step-no">stage 2 · six thinking hats</div>
+  <h2>Six hats, six runners</h2>
+  <p class="sub">The same system seen through six lenses. The log names Red, Yellow, Black, Green and Blue; the opening stretch of facts and stack choices is shown here under White.</p>
+
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><symbol id="hat" viewBox="0 0 40 24"><path d="M10 18 C10 6 13 2.5 20 2.5 C27 2.5 30 6 30 18Z"/><ellipse cx="20" cy="19" rx="18.5" ry="4"/></symbol></defs></svg>
+
+  <div class="hats">
+    <article class="hat white reveal">
+      <header><svg aria-hidden="true"><use href="#hat"/></svg><div><h3>White</h3><small>facts, stack &amp; Jev</small></div></header>
+      <div class="body"><ul class="log">
+        <li class="ln u"><span class="tag"><span class="k decision">decision</span><span class="who u">user</span></span><span>Stack: GitHub Actions CI, Python, Claude API</span></li>
+        <li class="ln u"><span class="tag"><span class="k decision">decision</span><span class="who u">user</span></span><span>Test data: synthetic demo repo with seeded failures (bug commit, flaky test, OOM/infra, external API, concurrent pushes)</span></li>
+        <li class="ln c"><span class="tag"><span class="k">idea</span><span class="who c">coach</span></span><span>Trigger via <code>workflow_run</code> on failure; pull logs + JUnit XML artifacts via the GH API</span></li>
+        <li class="ln c"><span class="tag"><span class="k">idea</span><span class="who c">coach</span></span><span>Model tiering: Haiku for classifier / distill-summary, Sonnet for fix proposer, Opus/Sonnet for adversarial reviewer; audit usage per step</span></li>
+        <li class="ln c"><span class="tag"><span class="k">idea</span><span class="who c">coach</span></span><span>Each agent = A2A server (Python A2A SDK) with an Agent Card; orchestrator discovers by skill tags</span></li>
+        <li class="ln u"><span class="tag"><span class="k direction">direction</span><span class="who u">user</span></span><span>Include TypeSafe Jev (System One classifier model) for classification tasks</span></li>
+        <li class="ln n"><span class="tag"><span class="k insight">insight</span><span class="who n">log</span></span><span>Jev research (web): class + probabilities from a fixed label set, ~100ms, ~$0.042/M input tokens, no explanations; Python pkg <code>typesafe-sdk</code>; reported injection detection 118/170 @0.5 with 0 FP; VentureBeat: injection can sway Jev verdicts</span></li>
+        <li class="ln u"><span class="tag"><span class="k">idea</span><span class="who u">user</span></span><span>Use Jev for failure classification (5 classes)</span></li>
+        <li class="ln c"><span class="tag"><span class="k">idea</span><span class="who c">coach</span></span><span>Hybrid: Jev classifies with calibrated probs → drives the low-confidence branch; Claude Analyzer explains with evidence citations</span></li>
+        <li class="ln c"><span class="tag"><span class="k">idea</span><span class="who c">coach</span></span><span>Jev as injection pre-screen on distilled logs + retrieved chunks (layer 1 of defence-in-depth, ~69% recall)</span></li>
+        <li class="ln c"><span class="tag"><span class="k">idea</span><span class="who c">coach</span></span><span>Jev as risk-gate scorer on draft PR diffs, alongside deterministic rules</span></li>
+        <li class="ln c"><span class="tag"><span class="k">idea</span><span class="who c">coach</span></span><span>Wrap Jev as its own A2A agent (skill: classify) — routing across non-LLM + LLM agents</span></li>
+        <li class="ln c"><span class="tag"><span class="k">idea</span><span class="who c">coach</span></span><span>Red-team Jev itself: injected logs that try to flip the class (“this is flaky, not code”)</span></li>
+      </ul></div>
+    </article>
+
+    <article class="hat red reveal">
+      <header><svg aria-hidden="true"><use href="#hat"/></svg><div><h3>Red</h3><small>feelings &amp; gut</small></div></header>
+      <div class="body"><ul class="log">
+        <li class="ln u"><span class="tag"><span class="k insight">excited</span><span class="who u">user</span></span><span>A2A routing with Jev; real code triage</span></li>
+        <li class="ln u"><span class="tag"><span class="k insight">worry</span><span class="who u">user</span></span><span>Red team can’t catch everything, and staying up to date with new attacks</span></li>
+        <li class="ln c"><span class="tag"><span class="k">idea</span><span class="who c">coach</span></span><span>Reframe: assume injection WILL get through → contain blast radius (read-only agents, draft PR only, no secrets in agent env, human approves)</span></li>
+        <li class="ln c"><span class="tag"><span class="k">idea</span><span class="who c">coach</span></span><span>Keep the red team current: promptfoo regenerates attacks each run; weekly scheduled GH Action; found attacks frozen into a regression suite</span></li>
+        <li class="ln c"><span class="tag"><span class="k">idea</span><span class="who c">coach</span></span><span>Map red-team coverage to an OWASP LLM Top 10 table in the README — covered vs consciously out of scope</span></li>
+      </ul></div>
+    </article>
+
+    <article class="hat yellow reveal">
+      <header><svg aria-hidden="true"><use href="#hat"/></svg><div><h3>Yellow</h3><small>benefits</small></div></header>
+      <div class="body"><ul class="log">
+        <li class="ln u"><span class="tag"><span class="k insight">headline</span><span class="who u">user</span></span><span>Evidence-backed triage with confidence and a well-rounded solution, not just blame</span></li>
+        <li class="ln c"><span class="tag"><span class="k">idea</span><span class="who c">coach</span></span><span>Tagline: “Blameless CI triage — who, why, how sure, and a fix, with receipts”</span></li>
+        <li class="ln c"><span class="tag"><span class="k">idea</span><span class="who c">coach</span></span><span>Calibration proof: compare Jev / pipeline confidence vs actual correctness across test data → reliability table in <code>results/</code></span></li>
+        <li class="ln c"><span class="tag"><span class="k">idea</span><span class="who c">coach</span></span><span>Every verdict ships an action: fix PR / deflake PR / mock PR / infra report + prevention suggestion</span></li>
+      </ul></div>
+    </article>
+
+    <article class="hat black reveal">
+      <header><svg aria-hidden="true"><use href="#hat"/></svg><div><h3>Black</h3><small>risks, and what got cut</small></div></header>
+      <div class="body"><ul class="log">
+        <li class="ln u"><span class="tag"><span class="k decision">decision</span><span class="who u">user</span></span><span><b>DROP vector RAG</b> — overkill, feels forced</span></li>
+        <li class="ln c"><span class="tag"><span class="k">idea</span><span class="who c">coach</span></span><span>Keep a lightweight structured history tool instead (SQLite of past runs: test_id, fingerprint hash, class, SHA, runner metrics) — exact-match lookups, no embeddings</span></li>
+        <li class="ln n"><span class="tag"><span class="k insight">insight</span><span class="who n">log</span></span><span>Indirect injection is still testable without RAG: stored history, commit messages and PR titles fed back into prompts are attacker-influenced</span></li>
+        <li class="ln n"><span class="tag"><span class="k insight">insight</span><span class="who n">log</span></span><span>RAG answer for the README: considered, rejected — grounding needs are structured lookups; a small synthetic corpus gives vector search nothing to win</span></li>
+        <li class="ln u"><span class="tag"><span class="k decision">decision</span><span class="who u">user</span></span><span>Agents NOT in GH Actions; a GitHub webhook on failure triggers a long-running agent system on a cluster</span></li>
+        <li class="ln c"><span class="tag"><span class="k">idea</span><span class="who c">coach</span></span><span>GitHub App webhook (<code>workflow_run</code> completed, conclusion=failure) → Gateway verifies <code>X-Hub-Signature-256</code> HMAC → 202 fast → queue → orchestrator</span></li>
+        <li class="ln c"><span class="tag"><span class="k">idea</span><span class="who c">coach</span></span><span>Least-privilege App token: actions:read, contents:read, checks:read, pull_requests:write (draft only)</span></li>
+        <li class="ln c"><span class="tag"><span class="k">idea</span><span class="who c">coach</span></span><span>Map human punch-out to A2A task state input-required; approval resumes the task</span></li>
+        <li class="ln c"><span class="tag"><span class="k">idea</span><span class="who c">coach</span></span><span>Local dev: kind/k3d + smee.io/cloudflared tunnel for webhooks; docker-compose fallback for demo</span></li>
+        <li class="ln c"><span class="tag"><span class="k">idea</span><span class="who c">coach</span></span><span>Webhook guardrail: forged webhook rejected (HMAC), replay protection via delivery-ID dedupe</span></li>
+        <li class="ln u"><span class="tag"><span class="k direction">direction</span><span class="who u">user</span></span><span>No deadline; goal = a good general agent working across multiple repos + languages (beyond certification)</span></li>
+        <li class="ln c"><span class="tag"><span class="k">idea</span><span class="who c">coach</span></span><span>JUnit XML as lingua franca (pytest / jest / gotestsum / maven / gradle) → language-agnostic distiller core + per-language stack-trace parser plugins</span></li>
+        <li class="ln c"><span class="tag"><span class="k">idea</span><span class="who c">coach</span></span><span>Language-specialist fix agents discovered via Agent Card skill tags (propose-fix + lang:python/go/ts)</span></li>
+        <li class="ln c"><span class="tag"><span class="k">idea</span><span class="who c">coach</span></span><span>Per-repo <code>.ci-triage.yml</code>: owners, risky paths, test cmd, quarantine policy, languages</span></li>
+        <li class="ln c"><span class="tag"><span class="k">idea</span><span class="who c">coach</span></span><span>Multi-repo via a single GitHub App installed on many repos; history DB keyed by repo</span></li>
+        <li class="ln c"><span class="tag"><span class="k">idea</span><span class="who c">coach</span></span><span>Phasing: v1 certification slice (1–2 languages, full rubric), then extend; multi-language test data = demo repos in Python + TS/Go</span></li>
+        <li class="ln n"><span class="tag"><span class="k insight">risk</span><span class="who n">log</span></span><span>Scope creep vs the cert rubric — mitigated by phasing + plugin architecture</span></li>
+      </ul></div>
+    </article>
+
+    <article class="hat green reveal">
+      <header><svg aria-hidden="true"><use href="#hat"/></svg><div><h3>Green</h3><small>new ideas</small></div></header>
+      <div class="body"><ul class="log">
+        <li class="ln u"><span class="tag"><span class="k decision">decision</span><span class="who u">user</span></span><span>Phasing agreed: v1 = certification slice, v2 = multi-repo / multi-language</span></li>
+        <li class="ln c"><span class="tag"><span class="k">idea</span><span class="who c">coach</span></span><span>Self-verifying fix: re-run the failing test N times against its own draft PR in a sandbox; attach the pass rate as a receipt<span class="v2">v2</span></span></li>
+        <li class="ln c"><span class="tag"><span class="k">idea</span><span class="who c">coach</span></span><span>Bisect agent: automated git bisect when concurrent pushes leave &gt;1 suspect<span class="v2">v2</span></span></li>
+        <li class="ln c"><span class="tag"><span class="k">idea</span><span class="who c">coach</span></span><span>Cross-repo contagion: same fingerprint across repos → one root issue instead of N PRs<span class="v2">v2</span></span></li>
+        <li class="ln c"><span class="tag"><span class="k">idea</span><span class="who c">coach</span></span><span>Human verdicts as training signal: every approve/reject/edit becomes a promptfoo test case</span></li>
+        <li class="ln c"><span class="tag"><span class="k">idea</span><span class="who c">coach</span></span><span>Pre-merge flake forecast: warn on PR open which touched tests historically flake<span class="v2">v2</span></span></li>
+        <li class="ln u"><span class="tag"><span class="k decision">decision</span><span class="who u">user</span></span><span>v1 adds #4: human approve/reject/edit auto-appended as promptfoo test cases; keep simple</span></li>
+        <li class="ln u"><span class="tag"><span class="k decision">decision</span><span class="who u">user</span></span><span>Parked for v2: self-verify, bisect, contagion, flake forecast</span></li>
+      </ul></div>
+    </article>
+
+    <article class="hat blue reveal">
+      <header><svg aria-hidden="true"><use href="#hat"/></svg><div><h3>Blue</h3><small>process &amp; definition of done</small></div></header>
+      <div class="body">
+        <ul class="log">
+          <li class="ln u"><span class="tag"><span class="k decision">decision</span><span class="who u">user</span></span><span>v1 done = 5 scenarios, 5/5 E2E success, red-team findings documented (not required to be zero)</span></li>
+          <li class="ln c"><span class="tag"><span class="k">idea</span><span class="who c">coach</span></span><span>E2E success per scenario = “correct terminal state” — escalation counts as success when escalation is expected</span></li>
+        </ul>
+        <table class="matrix ln c" aria-label="Five v1 scenarios (coach idea)">
+          <thead><tr><th>#</th><th>scenario</th><th>expected terminal state</th></tr></thead>
+          <tbody>
+            <tr><td>S1</td><td>code bug (concurrent pushes, 2 suspects)</td><td><span class="st pr">fix PR</span></td></tr>
+            <tr><td>S2</td><td>flaky test</td><td><span class="st pr">deflake PR</span></td></tr>
+            <tr><td>S3</td><td>infra OOM</td><td><span class="st no">no PR · infra report</span></td></tr>
+            <tr><td>S4</td><td>external API</td><td><span class="st pr">mock PR</span></td></tr>
+            <tr><td>S5</td><td>high-risk / low-confidence</td><td><span class="st ir">punch-out · input-required</span></td></tr>
+          </tbody>
+        </table>
+        <p class="note"><span class="who c">coach</span> scenario matrix · <span class="k question">question</span> per-agent promptfoo pass bar: use the Stage 3 quality bar — exact threshold to confirm</p>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ================= JTBD ================= -->
+<section id="jtbd" class="wrap">
+  <div class="step-no">stage 3 · job to be done</div>
+  <h2>Who hires the triage system?</h2>
+  <p class="sub">Hirers were named by the user; each job maps to an output. Dashed rows were deferred to v2.</p>
+
+  <div class="jhead"><span>hirer</span><span></span><span>job</span><span></span><span>output</span></div>
+  <div class="jtbd">
+    <div class="jrow reveal">
+      <div class="h ln u">broken-build dev <small><span class="who u">user</span> core JTBD</small></div><div class="arrow">→</div>
+      <div class="job">“Know where the problem is and how to fix it.” <br><small style="font-style:normal;color:var(--dim)">emotional job: “not my fault” reassurance <span class="who c">coach</span></small></div><div class="arrow">→</div>
+      <div class="out ln c"><b>Triage Card</b> on the failing PR; clears non-suspect devs <span class="who c">coach</span></div>
+    </div>
+    <div class="jrow reveal">
+      <div class="h ln u">infra on-call <small><span class="who u">user</span> named</small></div><div class="arrow">→</div>
+      <div class="job">“Is it mine?”</div><div class="arrow">→</div>
+      <div class="out ln c"><b>Infra report</b> with runner metrics + retry window, routed to on-call (S3) <span class="who c">coach</span></div>
+    </div>
+    <div class="jrow reveal">
+      <div class="h ln u">team lead <small><span class="who u">user</span> named</small></div><div class="arrow">→</div>
+      <div class="job">“Approve risk, keep the team unblocked.”</div><div class="arrow">→</div>
+      <div class="out ln c"><b>Punch-out approver</b> for high-risk escalation (S5) <span class="who c">coach</span></div>
+    </div>
+    <div class="jrow v2row reveal">
+      <div class="h ln u">pipeline watchers <small><span class="who u">user</span> named · v2</small></div><div class="arrow">→</div>
+      <div class="job">“Can I merge?”</div><div class="arrow">→</div>
+      <div class="out ln c"><b>Main-status line</b>: red because X, fix PR #, ETA <span class="who c">coach</span></div>
+    </div>
+    <div class="jrow v2row reveal">
+      <div class="h ln u">system architect <small><span class="who u">user</span> named · v2</small></div><div class="arrow">→</div>
+      <div class="job">“Where is the system fragile?”</div><div class="arrow">→</div>
+      <div class="out ln c"><b>Weekly hotspot report</b> from the history DB (flaky modules, coupling) <span class="who c">coach</span></div>
+    </div>
+  </div>
+
+  <div class="card-mock reveal" aria-label="Shape of a Triage Card">
+    <div class="ch">● triage-card · the job in one glance <span class="who c">coach</span></div>
+    <dl>
+      <dt>where</dt><dd><code>file:line</code>, SHA</dd>
+      <dt>why</dt><dd>evidence</dd>
+      <dt>how sure</dt><dd>confidence</dd>
+      <dt>fix</dt><dd>draft PR link</dd>
+    </dl>
+    <div class="clear">✓ explicitly clears non-suspect devs</div>
+  </div>
+  <p class="sub" style="margin-top:12px"><span class="k decision">decision</span> v1 serves the broken-build dev, infra on-call and team lead; watchers + architect → v2.</p>
+</section>
+
+<!-- ================= CONVERGE ================= -->
+<section id="converge" class="wrap">
+  <div class="step-no">stage 4 · convergence</div>
+  <h2>Merge to main</h2>
+  <p class="sub">The user called the move to converge. Claims were checked against docs, three architectures were compared, and scope was cut with MoSCoW.</p>
+
+  <div class="verified">
+    <div class="vbox reveal ln n"><div class="badge">✓ VERIFIED · context7 a2a-python</div>TaskState: SUBMITTED, WORKING, <b>INPUT_REQUIRED</b>, AUTH_REQUIRED, COMPLETED, FAILED, CANCELED, REJECTED. <code>TaskUpdater.update_status</code> in the executor; INPUT_REQUIRED is non-terminal → fits human punch-out.</div>
+    <div class="vbox reveal ln n"><div class="badge">✓ VERIFIED · context7 promptfoo</div>Red-team plugin <code>indirect-prompt-injection</code> with <code>config.indirectInjectionVar</code>; strategies <code>jailbreak</code>, <code>jailbreak-templates</code>; https target with named inputs for agent endpoints.</div>
+    <div class="vbox reveal ln n"><div class="badge q">? PENDING</div>Claude model pricing: verify via the claude-api skill at build time, not from memory.</div>
+  </div>
+
+  <h3>Architecture candidates <span class="who c">coach</span></h3>
+  <div class="archs">
+    <div class="arch chosen reveal">
+      <span class="stamp">SELECTED</span>
+      <div class="lt">A</div>
+      <h3>Hub-and-spoke</h3>
+      <p>Orchestrator state machine calling A2A agents.</p>
+      <div class="mr">multi-repo: cleanest — only the orchestrator / tool layer holds the per-repo token</div>
+    </div>
+    <div class="arch reveal">
+      <div class="lt">B</div>
+      <h3>Choreographed chain</h3>
+      <p>Each A2A agent discovers and hands off to the next.</p>
+      <div class="mr">multi-repo: token + repo context must travel through every hop</div>
+    </div>
+    <div class="arch reveal">
+      <div class="lt">C</div>
+      <h3>Event-driven</h3>
+      <p>Agents subscribe to queue topics; A2A only for card discovery.</p>
+      <div class="mr">multi-repo: partition topics by repo, context in events</div>
+    </div>
+  </div>
+  <p class="sub" style="margin-top:12px"><span class="k decision">decision</span> <span class="who u">user</span> <b>A</b> — hub-and-spoke orchestrator (A2A server, explicit state machine) calling A2A agents; Postgres queue / history / audit; one cluster, multi-repo.</p>
+
+  <figure class="diagram reveal">
+    <svg viewBox="0 0 560 860" role="img" aria-labelledby="dgt dgd">
+      <title id="dgt">Chosen architecture A: hub and spoke</title>
+      <desc id="dgd">A GitHub App webhook for a failed workflow_run hits a gateway that verifies HMAC and returns 202, enqueues into a Postgres queue, from which an orchestrator pulls work and calls A2A agents: Log Distiller, Jev classifier, Claude Analyzer, Router/Notifier, Fix Proposer and Adversarial Reviewer. Output passes a risk gate: normal results become a draft PR with Triage Card; risky or low-confidence results go to INPUT_REQUIRED for team lead punch-out.</desc>
+      <defs>
+        <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah" d="M0 0 L10 5 L0 10z"/></marker>
+      </defs>
+
+      <!-- pipeline in -->
+      <rect class="bx src" x="130" y="16" width="300" height="56" rx="8"/>
+      <text class="t1" x="280" y="40" text-anchor="middle">GitHub App webhook</text>
+      <text class="t2" x="280" y="58" text-anchor="middle">workflow_run · conclusion=failure</text>
+      <path class="flow" d="M280 72 V104" marker-end="url(#arr)"/>
+
+      <rect class="bx" x="130" y="106" width="300" height="56" rx="8"/>
+      <text class="t1" x="280" y="130" text-anchor="middle">Gateway</text>
+      <text class="t2" x="280" y="148" text-anchor="middle">HMAC verify · 202 fast · delivery-ID dedupe</text>
+      <path class="flow" d="M280 162 V194" marker-end="url(#arr)"/>
+
+      <rect class="bx" x="130" y="196" width="300" height="56" rx="8"/>
+      <text class="t1" x="280" y="220" text-anchor="middle">Postgres queue</text>
+      <text class="t2" x="280" y="238" text-anchor="middle">SKIP LOCKED · history · audit</text>
+      <path class="flow" d="M280 252 V356" marker-end="url(#arr)"/>
+      <text class="tl" x="290" y="310">N workers</text>
+
+      <!-- spokes -->
+      <g>
+        <path class="spoke" d="M280 430 L135 340"/>
+        <path class="spoke jev" d="M280 430 L135 430"/>
+        <path class="spoke" d="M280 430 L135 520"/>
+        <path class="spoke" d="M280 430 L425 340"/>
+        <path class="spoke" d="M280 430 L425 430"/>
+        <path class="spoke" d="M280 430 L425 520"/>
+      </g>
+      <text class="tl" x="160" y="378" transform="rotate(32 160 378)">A2A</text>
+      <text class="tl" x="376" y="372" transform="rotate(-32 376 372)">A2A</text>
+
+      <rect class="bx tool" x="8" y="315" width="128" height="50" rx="8"/>
+      <text class="t1" x="72" y="336" text-anchor="middle">Log Distiller</text>
+      <text class="t2" x="72" y="353" text-anchor="middle">deterministic</text>
+
+      <rect class="bx jev" x="8" y="405" width="128" height="50" rx="8"/>
+      <text class="t1" x="72" y="426" text-anchor="middle">Jev</text>
+      <text class="t2" x="72" y="443" text-anchor="middle">classify · probs</text>
+
+      <rect class="bx" x="8" y="495" width="128" height="50" rx="8"/>
+      <text class="t1" x="72" y="516" text-anchor="middle">Analyzer</text>
+      <text class="t2" x="72" y="533" text-anchor="middle">Claude · citations</text>
+
+      <rect class="bx" x="424" y="315" width="128" height="50" rx="8"/>
+      <text class="t1" x="488" y="336" text-anchor="middle">Router</text>
+      <text class="t2" x="488" y="353" text-anchor="middle">CODEOWNERS+blame</text>
+
+      <rect class="bx" x="424" y="405" width="128" height="50" rx="8"/>
+      <text class="t1" x="488" y="426" text-anchor="middle">Fix Proposer</text>
+      <text class="t2" x="488" y="443" text-anchor="middle">draft fix</text>
+
+      <rect class="bx" x="424" y="495" width="128" height="50" rx="8"/>
+      <text class="t1" x="488" y="516" text-anchor="middle">Adversarial</text>
+      <text class="t2" x="488" y="533" text-anchor="middle">blast radius</text>
+
+      <!-- hub -->
+      <circle class="bx hub" cx="280" cy="430" r="72"/>
+      <text class="t1" x="280" y="424" text-anchor="middle">Orchestrator</text>
+      <text class="t2" x="280" y="442" text-anchor="middle">A2A server</text>
+      <text class="t2" x="280" y="457" text-anchor="middle">state machine</text>
+
+      <path class="flow" d="M280 502 V596" marker-end="url(#arr)"/>
+
+      <!-- risk gate -->
+      <polygon class="bx gate" points="280,600 380,650 280,700 180,650"/>
+      <text class="t1" x="280" y="648" text-anchor="middle">Risk gate</text>
+      <text class="t2" x="280" y="665" text-anchor="middle">rules + confidence</text>
+
+      <path class="flow" d="M200 660 Q140 690 140 752" marker-end="url(#arr)"/>
+      <path class="flow" d="M360 660 Q420 690 420 752" marker-end="url(#arr)"/>
+      <text class="tl" x="44" y="712">normal · confident</text>
+      <text class="tl" x="396" y="712">risky · low conf.</text>
+
+      <rect class="bx pr" x="20" y="756" width="240" height="72" rx="8"/>
+      <text class="t1" x="140" y="782" text-anchor="middle">Draft PR + Triage Card</text>
+      <text class="t2" x="140" y="800" text-anchor="middle">dev approves every PR</text>
+      <text class="t2" x="140" y="816" text-anchor="middle">never auto-merge</text>
+
+      <rect class="bx ir" x="300" y="756" width="240" height="72" rx="8"/>
+      <text class="t1" x="420" y="782" text-anchor="middle">INPUT_REQUIRED</text>
+      <text class="t2" x="420" y="800" text-anchor="middle">team lead punch-out</text>
+      <text class="t2" x="420" y="816" text-anchor="middle">task parked in DB</text>
+    </svg>
+    <figcaption>architecture A · agents hold no tokens · draft-only · Jev spoke in violet</figcaption>
+  </figure>
+
+  <h3>MoSCoW · v1 scope</h3>
+  <div class="moscow">
+    <div class="col must reveal"><h3>MUST <span>■</span></h3><ul>
+      <li class="ln u">A2A discovery by skill AND description (not just tags) <span class="who u">user</span></li>
+      <li class="ln u"><span class="promo">↑ promoted from SHOULD</span>History table <span class="who u">user</span></li>
+      <li class="ln u"><span class="promo">↑ promoted from SHOULD</span>Calibration table in <code>results/</code> <span class="who u">user</span></li>
+      <li class="ln c">Two-stage discovery: exact skill-id/tag first; fallback Jev routes need vs skill descriptions; below threshold → no-route error <span class="who c">coach</span></li>
+      <li class="ln c">Agent Card poisoning guard: allowlisted card URLs; descriptions untrusted; red-team a rogue card claiming all skills <span class="who c">coach</span></li>
+    </ul></div>
+    <div class="col should reveal"><h3>SHOULD <span>▲</span></h3><ul>
+      <li>Triage Card</li><li>Feedback → promptfoo</li><li>Jev injection pre-screen</li><li>Cross-repo leakage red team</li>
+    </ul></div>
+    <div class="col could reveal"><h3>COULD <span>●</span></h3><ul>
+      <li>Weekly red team + OWASP table</li><li>Coalescing / priority lanes</li><li>2nd language</li><li>Jev risk scorer</li>
+    </ul></div>
+    <div class="col wont reveal"><h3>WON’T v1 <span>○</span></h3><ul>
+      <li>Vector RAG</li><li>Self-verify</li><li>Bisect</li><li>Contagion</li><li>Flake forecast</li><li>Watcher / architect reports</li><li>Language specialists</li>
+    </ul></div>
+  </div>
+
+  <div class="qa">
+    <div class="panel reveal">
+      <div class="prompt ln u"><span class="t-pnk">can one cluster serve multiple repos?</span></div>
+      <ul class="log">
+        <li class="ln n"><span class="tag"><span class="k insight">answer</span><span class="who n">log</span></span><span>Yes, for all 3: one GitHub App on many repos; the payload carries <code>repository</code> + <code>installation.id</code>; mint a per-repo installation token per task; agents stateless, repo context in the task</span></li>
+        <li class="ln c"><span class="tag"><span class="k">idea</span><span class="who c">coach</span></span><span>Tenant isolation: history queries scoped by repo_id; LLM context never mixes repos; separate namespace only for different orgs / security boundaries</span></li>
+        <li class="ln c"><span class="tag"><span class="k">idea</span><span class="who c">coach</span></span><span>Red-team cross-repo leakage with promptfoo bola/rbac plugins: an injected log tries to pull another repo’s history</span></li>
+      </ul>
+    </div>
+    <div class="panel reveal">
+      <div class="prompt ln u"><span class="t-pnk">many concurrent failures, or a queue?</span></div>
+      <ul class="log">
+        <li class="ln n"><span class="tag"><span class="k insight">answer</span><span class="who n">log</span></span><span>Need a queue: ack fast, bursts (broken main fails many PRs), Claude/GitHub rate limits, durability across restarts, retries, INPUT_REQUIRED tasks wait hours</span></li>
+        <li class="ln c"><span class="tag"><span class="k">idea</span><span class="who c">coach</span></span><span>v1: Postgres jobs table with <code>SELECT … FOR UPDATE SKIP LOCKED</code> (also holds history + audit) or Redis Streams; N workers = concurrency cap</span></li>
+        <li class="ln c"><span class="tag"><span class="k">idea</span><span class="who c">coach</span></span><span>Dedupe/coalesce: same repo + fingerprint within a window → one triage, Triage Cards fanned out to all affected PRs</span></li>
+        <li class="ln c"><span class="tag"><span class="k">idea</span><span class="who c">coach</span></span><span>Priority lanes: main/release failures ahead of feature-branch PRs</span></li>
+        <li class="ln c"><span class="tag"><span class="k">idea</span><span class="who c">coach</span></span><span>Paused INPUT_REQUIRED tasks persisted in the DB, not held by a worker</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SYNTHESIS ================= -->
+<section id="synthesis" class="wrap">
+  <div class="step-no">stage 5 · synthesis</div>
+  <div class="climax reveal">
+    <div class="kicker">release artifact</div>
+    <h2>Confidence is the currency</h2>
+    <div class="coin" aria-hidden="true"><div><span>p</span>confidence</div></div>
+    <p style="text-align:center;max-width:62ch;margin:0 auto;color:#c9d1d9"><span class="who u">user</span> named the heart of the project. <span class="who c">coach</span> saw one mechanism under three pillars: a single probability is spent in three places, and the calibration table shows the number is honest.</p>
+
+    <div class="pillars">
+      <div class="pillar p1"><div class="n">pillar 01</div><h3>Evidence-backed confidence</h3>
+        <p>Every claim cites a log line, SHA or metric. The verdict comes with its receipts.</p>
+        <div class="use">spent on → the classification branch</div></div>
+      <div class="pillar p2"><div class="n">pillar 02</div><h3>A2A routing with Jev</h3>
+        <p>Agents found by skill and description; Jev routes the need against registered skill descriptions.</p>
+        <div class="use">spent on → description-routing fallback</div></div>
+      <div class="pillar p3"><div class="n">pillar 03</div><h3>Human punch-out</h3>
+        <p>Low confidence or high risk parks the task in INPUT_REQUIRED for someone with authority to decide.</p>
+        <div class="use">spent on → INPUT_REQUIRED punch-out</div></div>
+    </div>
+    <div class="proof">— calibration table in results/ proves the number honest —</div>
+
+    <div class="sim" aria-label="Interactive: spend the confidence">
+      <h3>▶ spend the coin</h3>
+      <label><span>Jev probability p</span><input type="range" id="p" min="0" max="100" value="82"><output id="po">0.82</output></label>
+      <label><span>threshold τ</span><input type="range" id="t" min="0" max="100" value="60"><output id="to">0.60</output></label>
+      <div class="route" id="route">
+        <span data-r="hi">class branch proceeds</span>
+        <span data-r="hi">route by description</span>
+        <span data-r="hi">draft PR → dev approves</span>
+        <span data-r="lo" class="alt">no-route / needs human triage</span>
+        <span data-r="lo" class="alt">INPUT_REQUIRED → team lead</span>
+      </div>
+      <div class="note">The session left τ open; both sliders are illustrative. Risk-gate rules can also force a punch-out regardless of p.</div>
+    </div>
+
+    <div class="also">
+      <div><h4>two tiers of human <span class="who c">coach</span></h4>Routine draft-PR approval (dev) vs authority escalation (team lead via INPUT_REQUIRED). Resolves “always human” against “rubric needs real branching.”</div>
+      <div><h4>why imperfection is acceptable <span class="who c">coach</span></h4>Least privilege (agents hold no tokens, draft-only) is what makes red-team imperfection acceptable. The history table does grounding without RAG.</div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="wrap">
+  <div class="open">
+    <h3 style="margin-top:0">⚠ open questions carried forward</h3>
+    <ul class="log">
+      <li class="ln n"><span class="tag"><span class="k question">question</span></span><span>Per-agent promptfoo pass bar: confirm the exact Stage 3 threshold</span></li>
+      <li class="ln n"><span class="tag"><span class="k question">question</span></span><span>Claude model pricing: verify via the claude-api skill at build time</span></li>
+    </ul>
+  </div>
+  <div class="exit">$ brainstorm --session 2026-09-25 &nbsp;→&nbsp; exit 0 · status: complete</div>
+  <p>Keepsake generated from the session memlog. Nothing here goes beyond what the session recorded.</p>
+</footer>
+
+<script>
+(function(){
+  var d=document, b=d.body;
+  d.documentElement.classList.add('js');
+  // theme toggle
+  var root=d.documentElement, btn=d.getElementById('theme');
+  try{var s=localStorage.getItem('bs-theme'); if(s) root.setAttribute('data-theme',s);}catch(e){}
+  btn.addEventListener('click',function(){
+    var cur=root.getAttribute('data-theme') || (matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+    var nx=cur==='dark'?'light':'dark'; root.setAttribute('data-theme',nx);
+    try{localStorage.setItem('bs-theme',nx);}catch(e){}
+  });
+  // authorship tally + filter
+  var u=d.querySelectorAll('.ln.u').length, c=d.querySelectorAll('.ln.c').length, n=d.querySelectorAll('.ln.n').length, t=u+c+n||1;
+  d.getElementById('tu').style.width=(u/t*100)+'%';
+  d.getElementById('tc').style.width=(c/t*100)+'%';
+  d.getElementById('tn').style.width=(n/t*100)+'%';
+  d.getElementById('tallytxt').textContent=u+' user · '+c+' coach · '+n+' log';
+  d.querySelectorAll('.legend button').forEach(function(x){
+    x.addEventListener('click',function(){
+      d.querySelectorAll('.legend button').forEach(function(y){y.setAttribute('aria-pressed','false');});
+      x.setAttribute('aria-pressed','true');
+      var f=x.getAttribute('data-f'); if(f==='all') b.removeAttribute('data-filter'); else b.setAttribute('data-filter',f);
+    });
+  });
+  // reveal on scroll
+  var els=d.querySelectorAll('.reveal');
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.remove('pre');io.unobserve(e.target);}});},{rootMargin:'0px 0px -8% 0px'});
+    els.forEach(function(el){ var r=el.getBoundingClientRect(); if(r.top>innerHeight){el.classList.add('pre');io.observe(el);} });
+  }
+  // active stage in bar
+  var stages=d.querySelectorAll('.stage');
+  if('IntersectionObserver' in window){
+    var so=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){stages.forEach(function(s){s.classList.toggle('active',s.getAttribute('href')==='#'+e.target.id);});}});},{rootMargin:'-45% 0px -50% 0px'});
+    d.querySelectorAll('#trigger,section[id]').forEach(function(s){so.observe(s);});
+  }
+  // confidence sim
+  var p=d.getElementById('p'), th=d.getElementById('t'), po=d.getElementById('po'), to=d.getElementById('to'), rs=d.querySelectorAll('#route span');
+  function upd(){
+    var pv=p.value/100, tv=th.value/100; po.textContent=pv.toFixed(2); to.textContent=tv.toFixed(2);
+    var hi=pv>=tv; rs.forEach(function(s){s.classList.toggle('on',(s.dataset.r==='hi')===hi);});
+  }
+  p.addEventListener('input',upd); th.addEventListener('input',upd); upd();
+})();
+</script>
+</body>
+</html>
