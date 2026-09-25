@@ -2,7 +2,7 @@
 title: 'Story 0.1 — Reproduce the rubric layout and pinned toolchain'
 type: 'feature'
 created: '2026-09-25'
-status: 'in-review' # implemented + review patches applied; ACs verified locally
+status: 'done' # PR #1 merged to main
 route: 'dispatch'
 review_loop_iteration: 0
 baseline_commit: '297788786093eece7a94100426d0bc7e53bb24bc'
