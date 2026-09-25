@@ -14,13 +14,14 @@ On any conflict: spine AD > this file > everything else.
 
 ## How work is done
 
-1. **Brief before code.** Before changing anything, state what will be built: story + ACs, binding ADs, files to create/change and what is deliberately not touched, approach (naming the SOLID/DRY decisions), tests per AC, risks/open questions, doc impact (step 7). Wait for the human's go.
+1. **Brief before code.** Before changing anything, state what will be built: story + ACs, binding ADs, files to create/change and what is deliberately not touched, approach (naming the SOLID/DRY decisions), tests per AC, risks/open questions, doc impact (step 8). Wait for the human's go.
 2. **TDD** (below) for every behaviour change.
 3. **Quality gates** (below) green before a story is called done. Report AC by AC with the command that proved it.
 4. One branch per story (`story/<sprint-status key>`), off an up-to-date `main`; merged only after human review.
-5. Library/API usage: check current docs (context7 first, web second) and say which source answered.
-6. Models: Claude Sonnet / Haiku and TypeSafe Jev only. No secrets in the repo; `.env.example` holds names only.
-7. **Docs move with code.** Every story updates, in the same PR:
+5. **Explain for the human, not for the compiler.** Whenever you explain work to the human (briefs, review trails, summaries) — in chat and in developer-facing docs — do it in very simple plain terms with no jargon: say what a thing does and why it exists, not what type it is. Technical artifacts (code, PRs, specs, commits) keep the exact domain words; only the explanations stay plain.
+6. Library/API usage: check current docs (context7 first, web second) and say which source answered.
+7. Models: Claude Sonnet / Haiku and TypeSafe Jev only. No secrets in the repo; `.env.example` holds names only.
+8. **Docs move with code.** Every story updates, in the same PR:
    - `docs/DEVELOPER.md` — architecture, where things live, how to run, test and extend them;
    - `docs/USER-GUIDE.md` — how to install and use the tool, when user-visible behaviour changes.
 

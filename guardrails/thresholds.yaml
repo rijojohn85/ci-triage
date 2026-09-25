@@ -1,0 +1,9 @@
+# guardrails/thresholds.yaml — the one thresholds file (AD-19).
+# Values live here, never in code; consumed via workflow.thresholds loads
+# and later the risk gate / reviewer stories. Calibration may change the
+# numbers; the keys and their meaning are fixed.
+
+review:
+  max_rounds: 2
+
+workflow_path_glob: ".github/workflows/**"

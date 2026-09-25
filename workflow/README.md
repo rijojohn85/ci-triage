@@ -1,1 +1,1 @@
-workflow/ — orchestration state machine, registry, A2A client/server, TaskStore adapter, evidence pack, step runners. Filled by: Epic 2 stories (see epics.md).
+workflow/ — orchestration state machine, registry, A2A client/server, TaskStore adapter, evidence pack, step runners. Filled by: Epic 2 stories (see epics.md). Filled (2.1): the AD-1 state machine — `run_states`, `transitions`, `projection`, `diagram`, `thresholds`; see docs/DEVELOPER.md "The state machine (story 2.1)".
