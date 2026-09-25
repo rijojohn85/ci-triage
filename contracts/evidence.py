@@ -7,6 +7,7 @@ from pydantic import BaseModel, ConfigDict, Field, PositiveInt
 from contracts.citations import Sha40
 
 __all__ = [
+    "AUTHOR_ATTRIBUTION_FIELD",
     "CandidateSuspect",
     "CommitRecord",
     "DistilledLogLine",
@@ -16,6 +17,9 @@ __all__ = [
 
 MetricValue = Annotated[float, Field(allow_inf_nan=False)]
 """Runner metric value; NaN/Inf would break JSON dumping downstream."""
+
+AUTHOR_ATTRIBUTION_FIELD = "author_login"
+"""The one field naming a commit's author; AD-27 blame-free output drops it."""
 
 
 class DistilledLogLine(BaseModel):

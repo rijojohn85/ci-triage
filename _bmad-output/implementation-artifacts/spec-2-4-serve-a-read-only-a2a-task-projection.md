@@ -2,13 +2,28 @@
 title: 'Story 2.4 — Serve a read-only A2A task projection'
 type: 'feature'
 created: '2026-09-26'
-status: 'ready-for-dev'
+status: 'done'
 route: 'dispatch'
+baseline_revision: 'f206729ae4cff07b3b9cb9d7f9a3116961e3937d'
 review_loop_iteration: 0
 followup_review_recommended: false
 context: ['{project-root}/AGENTS.md']
 warnings: ['oversized']
-deferred: []
+deferred:
+  - summary: >-
+      The A2A server has no concrete Postgres TaskReader, so the served endpoint is proven only with fixture readers.
+    evidence: |-
+      The AC is fixture-driven ("stored run and step fixtures"), so 2.4 ships the TaskReader protocol plus a fake; the orchestrator entrypoint (a later story) must supply a real reader bound to triage_run/run_step before the endpoint serves real runs.
+    location: >-
+      workflow/a2a_server.py
+    severity: medium (unverified)
+  - summary: >-
+      Every completed step output is published as an artifact without a payload allowlist, so interim data (suspects, proposed diff, objections) is served.
+    evidence: |-
+      build_task maps every completed run_step output to an artifact and strips only author attribution. Contract-shape validation and an exposure allowlist belong to the later coverage/security stories (4.1/4.3).
+    location: >-
+      workflow/task_store.py
+    severity: low
 ---
 
 ## Build Brief
@@ -107,8 +122,66 @@ deferred: []
 - Confirm no `DatabaseTaskStore` reference in `workflow/` or `deploy/` (AD-4).
 - Confirm `get_task` performs no INSERT/UPDATE (grep `workflow/task_store.py` for write verbs).
 
+## Review Triage Log
+
+### 2026-09-26 — Review pass
+
+- verdicts: 25 findings — high 0, medium 1, low 24, false 0, maybe-false 0
+- findings:
+  - `[low]` `[reject]` the agent card is built but no `/.well-known/agent-card.json` route is mounted — agent discovery/registry is story 3.9's; 2.4 serves `get_task`/`list_tasks`.
+  - `[low]` `[patch]` the served path injects a fixed serving confidence, so the below-cutoff blame arm cannot trigger and the docs overclaimed it — docs reworded; the run's confidence is not persisted yet and 4.1 adds it to the reader.
+  - `[low]` `[reject]` `list` ignores request filters/pagination — pagination is not in the ACs and the demo is single-tenant with a small run set; a later refinement.
+  - `[low]` `[reject]` `list` does one `list_steps` per run and builds artifacts before the handler trims them — a performance refinement, no correctness harm at this scale.
+  - `[low]` `[reject]` the sync `TaskReader` called from async store methods could block the loop — there is no concrete reader yet; the reader story owns the I/O strategy (async adapter or thread offload).
+  - `[low]` `[reject]` AD-4's `outcome=rejected_by_human` is not written as metadata — `terminal_state` already carries the outcome; the parenthetical is descriptive.
+  - `[low]` `[defer]` every completed step output is published without a payload allowlist, so interim data is served — a security/validation concern for the later coverage stories (4.1/4.3).
+  - `[low]` `[patch]` `GET_TERMINAL`/`FAILED` and failed-step artifact exclusion were untested — added a failed-step artifact test.
+  - `[low]` `[patch]` the compose no-`DatabaseTaskStore` check was duplicated into the task-store test — removed; the security suite owns it.
+  - `[low]` `[patch]` the new test files carried ruff findings the gate never sees (`tests/` is not linted) — made both files ruff-clean.
+  - `[low]` `[patch]` the unknown-task wire test only asserted `"error" in body` — now asserts the JSON-RPC code and HTTP status.
+  - `[low]` `[patch]` write refusal was never exercised over the served app — added a wire test posting `CancelTask` and asserting refusal.
+  - `[low]` `[reject]` `_as_run_id` accepts any UUID version, not just v7 — the client may send any id; a non-run id simply finds nothing.
+  - `[low]` `[reject]` `TaskStatus(timestamp=...)` assumes a timezone-aware value — `triage_run.updated_at` is `timestamptz`, so it is always aware.
+  - `[low]` `[reject]` duplicate of the `list` request-filter finding.
+  - `[low]` `[reject]` duplicate of the `list` pagination finding.
+  - `[low]` `[patch]` a JSON list/tuple step output was rendered as text `repr` — now treated as data artifacts.
+  - `[low]` `[patch]` failed-step exclusion in the artifact filter was unverified (verification-gap) — added the test.
+  - `[low]` `[patch]` duplicate of the confidence-arm and test-ruff findings (verification-gap).
+  - `[low]` `[reject]` intent-alignment: the guarantees are proven mostly at the `build_task` surface over a fake reader, not the wire — the AC is explicitly fixture-driven; the concrete Postgres reader is a later integration.
+  - `[low]` `[patch]` `"author_login"` was a local literal duplicating a contract field name, so a rename would silently stop the blame strip — the key now lives once in `contracts.evidence`.
+  - `[low]` `[reject]` `task_store.py` builds protobuf `Task`/`Artifact` while calling itself pure — a protobuf read-model build is a pure transformation; the SDK `TaskStore` ABC is necessarily SDK-aware.
+  - `[low]` `[patch]` duplicate of the confidence-arm docs finding.
+  - `[low]` `[patch]` `create_app`'s `confidence`/`cutoffs` keyword parameters had no caller — removed.
+  - `[medium]` `[defer]` the A2A server has no concrete Postgres `TaskReader`, so the served endpoint is proven only with fixture readers — the AC is fixture-driven, but the orchestrator entrypoint (a later story) must supply one before the endpoint serves real runs.
+
 ## Auto Run Result
 
-Status: ready-for-dev
-Blocking condition: none
-Planned: 2026-09-26. Halted after planning. Reused cached `epic-2-context.md` (valid); continuity context from done specs 2.1 and 2.2. No production code written. Assumes 2.1 (`project`), 2.2 (`attribution_allowed`) and 2.3 (`run_step` reader) have landed. Evidence pack is a fixture here; 2.7 produces it.
+Status: done
+Baseline: `f206729ae4cff07b3b9cb9d7f9a3116961e3937d`.
+
+**Summary.** Built the read-only A2A task view (AD-4): `workflow/task_store.py` projects a stored run and its steps onto a protobuf A2A `Task` (`task_id`/`context_id` = `run_id`, status/terminal-state via 2.1's `project()`, artifacts from completed `run_step` outputs, author stripped when 2.2's `attribution_allowed` is false), with `save`/`delete` refused so no second task-state owner exists. `workflow/a2a_server.py` wires the read-only store plus a `RefusingExecutor` into the SDK's `DefaultRequestHandler` and serves `get_task`/`list_tasks` over the JSON-RPC binding. No `DatabaseTaskStore`/a2a-db is used.
+
+**Files changed (one line each):**
+- `workflow/task_store.py` — the read-only projection: `RunRecord`, `TaskReader`, `build_task`, `ReadOnlyTaskStore`.
+- `workflow/a2a_server.py` — transport wiring: `RefusingExecutor`, `create_app`, JSON-RPC routes.
+- `contracts/evidence.py` — the one `AUTHOR_ATTRIBUTION_FIELD` constant.
+- `tests/workflow/{test_task_store,test_task_server}.py` — AC and ASGI tests.
+- `workflow/README.md`, `docs/DEVELOPER.md` — docs.
+
+**Review findings.** 25 reported: 0 high, 1 medium, 24 low. Patched 12 entries (failed-step artifact coverage, wire write-refusal, list-output data artifacts, the contract-sourced author key, unused `create_app` params, the duplicated compose check, a sharper not-found assertion, test lint, and the confidence-arm docs); deferred 2 (payload allowlist for 4.1/4.3; the concrete Postgres reader); rejected 11 with reasons above.
+
+**Patched root causes:** failed-step artifact exclusion, the served write-refusal path, JSON list outputs rendered as text, the author-key literal, dead `create_app` parameters, a duplicated schema assertion, a weak not-found test, and new-test lint — none changed the projection's behaviour for the frozen ACs.
+
+**Follow-up review recommendation: false.** All patches were low severity and no high or two-or-more-medium entries were patched, so the work has converged.
+
+**Verification performed:**
+- `git diff` reviewed since baseline, then re-generated after patches.
+- `make check` → PASS (256 tests, coverage 94.83%).
+- `.venv/bin/pytest -m integration -q` → 31 passed.
+- Manual: no `INSERT`/`UPDATE`/`DELETE` or run/step writes in the new modules; no `DatabaseTaskStore` in `workflow/`.
+
+**Residual risks:** the endpoint is proven with fixture readers (a concrete Postgres `TaskReader` is owed by the orchestrator entrypoint); the run's confidence is not persisted, so only the state arm of the blame rule is live (4.1); interim step payloads are served without an allowlist (4.1/4.3).
+
+## Spec Change Log
+
+<!-- none: no bad_spec loopback on this story -->

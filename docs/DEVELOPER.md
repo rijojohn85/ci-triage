@@ -30,6 +30,7 @@ Every message between orchestrator and agent is an A2A message whose data part i
 | 1.1 | Gateway intake: the webhook signature is checked over the raw bytes before parsing, unknown installations are refused, replayed deliveries and duplicate run identities collapse to one `triage_run(RECEIVED)`, bursts are shed, and run ids are time-ordered UUIDv7 | `gateway/`, `workflow/ids.py`, `config/gateway.yaml`, `deploy/migrations/0002_webhook_delivery.sql`, `deploy/gateway.Dockerfile`, `tests/security/` |
 | 1.2 | Worker leases and fencing: a claim takes the next unleased/expired non-terminal run in a short `FOR UPDATE SKIP LOCKED` transaction, renew extends only the owner's live lease, and a stale owner's lease-guarded commit is discarded (`LeaseLost`); lease timings come from config | `workflow/leases.py`, `workflow/lease_store.py`, `workflow/orchestrator_config.py`, `config/orchestrator.yaml`, `deploy/migrations/0003_triage_run_lease.sql`, `tests/workflow/`, `tests/security/test_compose_secret_placement.py` |
 | 2.3 | Steps and resume: a finished step's row and the run's state move commit in one lease-guarded transaction, validated by the 2.1 transition table; a reclaimed run reads its current state and completed step names so it skips finished work, and a stale owner's step-commit writes nothing | `workflow/steps.py`, `workflow/step_store.py`, `deploy/migrations/0004_run_step.sql`, `tests/workflow/test_steps.py`, `tests/workflow/test_step_integration.py`, `tests/security/test_compose_secret_placement.py` |
+| 2.4 | Read-only A2A task view: `get_task`/`list_tasks` project a stored run and its steps onto an A2A `Task` (task id = run id), a paused run is `INPUT_REQUIRED` with a blame-free evidence pack and no worker is started, and every write to the view is refused — so no second task-state writer exists | `workflow/task_store.py`, `workflow/a2a_server.py`, `tests/workflow/test_task_store.py`, `tests/workflow/test_task_server.py` |
 
 ## Where things live
 
@@ -45,7 +46,7 @@ Every message between orchestrator and agent is an A2A message whose data part i
 | `tests/scripts/` | built (0.4) | unit tests of the demo-repo read-back comparison logic against recorded API fixtures; live `gh` path is `@pytest.mark.integration` |
 | `test-data/` | built (0.4) | demo-repo evidence: `demo-repo-expected.json` (AD-16 set, one source for script + docs), `demo-repo.md` (live facts + scenario slots), `demo-repo-seed/` (pushed verbatim to the demo repo) |
 | `tests/contracts/` | built (0.2) | contract tests, named after the ACs they prove |
-| `tests/workflow/`, `tests/security/` | built (0.3, 2.1, 1.1, 1.2, 2.2, 2.3) | migration-runner and compose secret-placement tests; state-machine, projection and diagram tests; gateway signature/intake/limits tests; lease unit + fencing tests; step unit + atomic-commit/resume/fencing tests (`@pytest.mark.integration` ones need Docker, `pytest -m integration`) |
+| `tests/workflow/`, `tests/security/` | built (0.3, 2.1, 1.1, 1.2, 2.2, 2.3, 2.4) | migration-runner and compose secret-placement tests; state-machine, projection and diagram tests; gateway signature/intake/limits tests; lease unit + fencing tests; step unit + atomic-commit/resume/fencing tests; A2A task-view unit + JSON-RPC ASGI tests (`@pytest.mark.integration` ones need Docker, `pytest -m integration`) |
 | `gateway/` | built (1.1) | webhook intake only — signature, accepted events, load limits, one enqueue; see [gateway/README.md](../gateway/README.md) |
 | `workflow/ids.py` | built (1.1) | pure `new_run_id()`: the one UUIDv7 run identity (AD-4) |
 | `workflow/leases.py` | built (1.2) | the pure AD-23 policy (claimable states, expiry predicates, owner token) and the small `RunLeaseStore` / connection protocol (SOLID-I) |
@@ -53,6 +54,8 @@ Every message between orchestrator and agent is an A2A message whose data part i
 | `workflow/orchestrator_config.py` | built (1.2) | loader plus sanity checks for the one orchestrator settings file (AD-19); the worker loop that will read it arrives with stories 2.3/2.8 |
 | `workflow/steps.py` | built (2.3) | the pure step domain (AD-2, no SQL): `StepStatus`, `StepRecord`, `StepCommit`, `ResumeView` and the small `StepRecorder` protocol |
 | `workflow/step_store.py` | built (2.3) | the one Postgres adapter for steps: `PostgresStepRecorder` composes 1.2's lease guard, inserts the step and moves the state in that one transaction (SOLID-S) |
+| `workflow/task_store.py` | built (2.4) | the read-only A2A task view: `RunRecord`, the small `TaskReader` protocol, `build_task` (2.1's `project` + 2.2's `attribution_allowed`) and `ReadOnlyTaskStore`, whose `save`/`delete` refuse (AD-4, SOLID-S/I) |
+| `workflow/a2a_server.py` | built (2.4) | the A2A transport wiring: `RefusingExecutor` plus `create_app`, which serves `get_task`/`list_tasks` through a2a-sdk 1.1.5's JSON-RPC routes (AD-4, AD-5) |
 | `config/gateway.yaml` | built (1.1) | per-installation rate limit and per-repo queue-depth cap (AD-19); consumed via `gateway.settings.load_gateway_limits` |
 | `config/orchestrator.yaml` | built (1.2) | `lease_seconds` / `renew_after_seconds` (AD-19); `workflow.orchestrator_config.load_orchestrator_config` reads it for the worker loop that will consume it |
 | `config/runtime.yaml` | placeholder | model IDs and per-skill `step_timeout` (AD-19) |
@@ -261,6 +264,63 @@ fake lease store; the real database path is the marked integration tests.
 (AD-25) plus the matching field on `StepRecord`/`StepCommit`. Resume works from
 the rows that exist, never from a stored list of steps, so adding one does not
 change how a run is resumed.
+
+## The A2A task view (story 2.4)
+
+A client (a person's tool, or another service) asks "what is happening with
+this run?" through A2A. The answer must be the same before and after a pause,
+and it must never become a second place where run state is kept. That second
+copy is the thing [AD-4](../_bmad-output/planning-artifacts/architecture/architecture-stage4-2026-09-25/ARCHITECTURE-SPINE.md)
+forbids, so this story is a **read-only mirror** of the run.
+
+- **The task is the run, mirrored.** The task's id is the run's id (`run_id`,
+  the UUIDv7 from story 1.1). Its status and its `terminal_state` come from
+  story 2.1's one mapping (`workflow/projection.py::project`) — the same table
+  the rest of the system trusts — and its artifacts are read straight from the
+  stored `run_step` outputs (story 2.3). Nothing is computed twice and nothing
+  new is stored.
+- **The SDK's own database store is not deployed.** a2a-sdk ships a task store
+  that keeps tasks in its own database tables. Wiring it in would create a
+  second owner of run state that could drift from `triage_run`. Instead,
+  `ReadOnlyTaskStore` puts a thin read-only layer over `triage_run`/`run_step`:
+  `get` and `list` project through the small `TaskReader`; `save` and `delete`
+  raise `ReadOnlyTaskStoreError` (not retryable, AD-22). A read can therefore
+  never write anything.
+- **A paused run shows the evidence, blame-free.** When a run waits for a
+  human (`AWAITING_APPROVAL`), fetching it answers `INPUT_REQUIRED` and carries
+  the stored evidence pack as an artifact, so the person can decide without the
+  run doing any work. Because the run is paused (and again while it is
+  `REPORTING`), the AD-27 rule says output must not name anyone: the author
+  field is dropped from every artifact. This story serves only that state half
+  of the blame rule. The other half — a run whose confidence is under the
+  cut-off — needs the run's confidence, which is not stored yet, so story 4.1
+  will add it to the reader. Both halves go through story 2.2's one
+  `attribution_allowed`, so the rule still has a single home. A read never asks
+  a worker to start.
+- **Unknown and other-repo ids show nothing.** Every read is bound to the
+  adapter's configured `repo_id` (AD-15); a run under another repo looks exactly
+  like a run that does not exist — `None`, which the A2A layer turns into a
+  not-found error. Today that repo scope is the single demo deployment; proper
+  per-user identity arrives with story 5.1.
+
+**Where the code lives.** `workflow/task_store.py` holds the read shapes and
+the projection (`RunRecord`, `TaskReader`, `build_task`, `ReadOnlyTaskStore`) —
+it builds no SQL, so the future Postgres reader can live in its own adapter
+module. `workflow/a2a_server.py` is only transport: it wires the read-only
+store and a `RefusingExecutor` (which refuses to run any agent work) into
+a2a-sdk's `DefaultRequestHandler`, then exposes the JSON-RPC binding with
+`create_jsonrpc_routes`. The unit tests fake the reader and drive the real
+store; the server test drives the real app in-process over an ASGI transport.
+`create_app` reads the confidence cut-offs from the one thresholds file
+(AD-19).
+
+**To extend it:** a new artifact is a new kind of step output — a new
+`run_step` row — never a new writer or a new task-state table. A new state
+flows in automatically because the status mapping is story 2.1's table, not a
+list kept here. The confidence-below-cut-off half of the blame rule is not
+served yet because the run's confidence is not stored; story 4.1 will add it to
+the reader, and the shared `attribution_allowed` predicate is already in place
+here, so the strip follows with no second copy of the rule.
 
 ## Contracts (story 0.2)
 
