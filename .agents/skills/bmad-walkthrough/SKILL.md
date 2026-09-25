@@ -61,6 +61,7 @@ Activation is complete. If `activation_steps_prepend` or `activation_steps_appen
 
 - **Path:line format** — Every code reference must use CWD-relative `path:line` format (no leading `/`) so it is clickable in IDE-embedded terminals (e.g., `src/auth/middleware.ts:42`).
 - **Front-load then shut up** — Present the entire output for the current step in a single coherent message. Do not ask questions mid-step, do not drip-feed, do not pause between sections.
+- **Plain language for the human** — Whenever you explain a change or any part of a walkthrough to the user (intent, trail, detail pass, testing), do it in very simple plain terms with no jargon: say what a thing does and why it exists, not what type it is. File paths and command lines stay exactly as they are (the human needs them to navigate); only the explanations around them stay plain.
 - **Language** — Speak in `{communication_language}`. Write any file output in `{document_output_language}`.
 
 ## FIRST STEP
