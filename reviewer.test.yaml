@@ -1,0 +1,8 @@
+# Root eval entrypoint: Reviewer agent eval suite (placeholder).
+# Placeholder stub for Story 0.1 spine layout; eval contents delivered by later story
+# (see _bmad-output/planning-artifacts epics.md / architecture spine).
+# Shape: promptfooconfig.yaml (provider, prompts, tests).
+provider: anthropic:claude-sonnet-5
+prompts:
+  - prompts/reviewer.md
+tests: []

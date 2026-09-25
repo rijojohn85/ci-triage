@@ -1,0 +1,9 @@
+# Root eval entrypoint: redteam safety suite (placeholder).
+# Placeholder stub for Story 0.1 spine layout; redteam contents delivered by later story
+# (see _bmad-output/planning-artifacts epics.md / architecture spine).
+# Shape: promptfooconfig.yaml (provider, prompts, tests).
+targets:
+  - id: anthropic:claude-haiku-4-5-20251001
+prompts:
+  - prompts/analyzer.md
+tests: []
