@@ -2,13 +2,21 @@
 title: 'Story 1.2 — Claim, renew and fence worker leases'
 type: 'feature'
 created: '2026-09-26'
-status: 'ready-for-dev'
+status: 'done'
 route: 'dispatch'
+baseline_revision: '59291c7a6c7e5d348243d7122b5423fc886e84da'
 review_loop_iteration: 0
-followup_review_recommended: false
+followup_review_recommended: true
 context: ['{project-root}/AGENTS.md']
 warnings: ['oversized']
-deferred: []
+deferred:
+  - summary: >-
+      A discarded stale-owner commit raises LeaseLost with no log line, so a lost lease leaves no audit trace.
+    evidence: |-
+      AGENTS.md asks errors to be logged with run_id before re-raising; lease_store.guarded_commit raises without logging. A logging story should own it; no 1.2 consumer reads it yet.
+    location: >-
+      workflow/lease_store.py
+    severity: low
 ---
 
 ## Build Brief
@@ -113,8 +121,83 @@ deferred: []
 **Manual checks:**
 - Confirm no `sleep(` appears in the lease tests (time is injected or DB-seeded).
 
+## Review Triage Log
+
+### 2026-09-26 — Review pass
+
+- verdicts: 41 findings — high 0, medium 8, low 32, false 1, maybe-false 0
+- findings:
+  - `[low]` `[reject]` the fence re-checks `lease_owner` but not lease expiry — AD-23 requires only the owner re-check; a concurrent reclaim overwrites the owner and `FOR UPDATE` fences the later commit; an expired-but-unclaimed commit duplicates nothing.
+  - `[low]` `[reject]` `guarded_commit` has no `now` argument — same reason; expiry is not a commit condition per AD-23.
+  - `[medium]` `[patch]` `renew` never runs against real Postgres; its only test asserts SQL substrings — added a real-DB renew test (owner extends, non-owner `False` and unchanged, expired refused).
+  - `[low]` `[patch]` `load_orchestrator_config` is unconsumed while docs say it is — reworded the docs to say the loader is for the worker loop (2.3/2.8); the config-to-claim join arrives with that loop.
+  - `[low]` `[patch]` `renew_after_seconds < lease_seconds` is documented but unenforced — added a model validator plus a temp-file test.
+  - `[low]` `[patch]` lease timings accept zero/negative — same validator also requires positive values.
+  - `[low]` `[patch]` `new_lease_owner` reads an undocumented `WORKER_ID` — added it to `.env.example` and one plain sentence in DEVELOPER.
+  - `[low]` `[reject]` the per-claim random token defeats owner grouping — deliberate uniqueness so a restarted worker is never mistaken for its predecessor; the prefix still names the worker.
+  - `[medium]` `[patch]` the integration tests mix a fixed `NOW` with the DB/wall clock and fail after a fixed moment — `expire_lease` now seeds from the injected `NOW` and asserts against it.
+  - `[low]` `[reject]` mixed DB/application clocks in one statement — lease decisions consistently use the injected `now`; `updated_at = now()` is cosmetic.
+  - `[low]` `[reject]` no CHECK ties `lease_owner` to `lease_until` — the claim writes both together and renew writes only the expiry; no inconsistent state is produced.
+  - `[low]` `[reject]` the claim index does not cover the `state` filter — a composite/partial index is a future performance refinement, not a correctness need.
+  - `[low]` `[reject]` the `ORDER BY run_id` FIFO tie-break is undocumented — `run_id` is UUIDv7 time-ordered (AD-4), which is what makes the order FIFO.
+  - `[low]` `[reject]` unit tests pin SQL substrings — the real claim/renew/fencing behaviour is proven against Postgres in the integration tests.
+  - `[low]` `[reject]` `FakeConnection` returns one scripted row for every execute — the integration tests exercise the real statement order; the fake is a boundary double.
+  - `[low]` `[reject]` the `row is None` branch of `guarded_commit` is untested — it models a deleted run, which nothing in 1.2 can produce.
+  - `[medium]` `[patch]` duplicate of the renew real-DB coverage finding — same fix.
+  - `[low]` `[reject]` two migration-index tests assert the same index — harmless redundancy, neither is wrong.
+  - `[low]` `[reject]` the config loader raises raw `KeyError`/`TypeError` — the file is committed and static; the failure is loud, not silent.
+  - `[low]` `[reject]` the loader re-reads YAML on every call — the worker loop will load it once; not a 1.2 hot path.
+  - `[low]` `[reject]` `LeaseLost` sits outside the A2A error taxonomy — same shape as 2.1's `IllegalTransition`, which the project already accepted.
+  - `[low]` `[defer]` no log line when a lease is lost — logging arrives with a later logging story.
+  - `[low]` `[reject]` `guarded_commit` could hold the row lock across slow work — the step loop (2.3/2.8) passes DB-only writes; the model call happens before the guard.
+  - `[false]` `[reject]` the `RunLeaseStore` Protocol "leaks an unbound TypeVar" — a type variable in a Protocol method makes it generic; `mypy --strict` accepts it.
+  - `[low]` `[reject]` `_as_uuid` raises a bare `ValueError` on a schema mismatch — defensive coercion for an impossible row shape; no consumer.
+  - `[low]` `[patch]` the 1.2 story row omits the schema-guard test file — added.
+  - `[low]` `[reject]` duplicate of the time-bomb finding (expiry seeded from the DB clock).
+  - `[low]` `[reject]` duplicate of the `datetime.now()` assertion (same fix).
+  - `[low]` `[reject]` duplicate of the empty-config `TypeError` finding (static committed file).
+  - `[low]` `[reject]` duplicate of the unvalidated-invariant finding.
+  - `[low]` `[reject]` duplicate of the non-positive-timing finding.
+  - `[medium]` `[patch]` duplicate of the wall-clock-coupled fence-proof finding — same fix.
+  - `[medium]` `[patch]` duplicate of the renew real-DB finding (verification-gap).
+  - `[medium]` `[patch]` duplicate of the wall-clock/gate-exclusion finding (verification-gap) — fixed the clock; exclusion from `make check` is the project's own integration convention.
+  - `[low]` `[reject]` intent-alignment: SQL-text assertions, Protocol seam without a store-level fake, config join — descriptive; the behavioural matrix is proven against real Postgres and the store-level fake arrives with the worker loop.
+  - `[medium]` `[patch]` `workflow/leases.py` mixes pure policy with the Postgres adapter and imports `psycopg` (AGENTS SOLID-S) — split the adapter/SQL into `workflow/lease_store.py`; `leases.py` now builds no SQL and imports no driver.
+  - `[low]` `[reject]` `lease_expired`/`renew_due` have no production caller — spec-directed helpers for the 2.3/2.8 worker loop; deleting them would contradict the planned interface.
+  - `[low]` `[reject]` the claimability predicate appears in both the pure helper and the SQL — one is domain policy, the other the query; the split keeps them readable.
+  - `[low]` `[reject]` `claim_next` reads `WORKER_ID` inside the adapter — the spec's one `new_lease_owner` factory; documented now.
+  - `[low]` `[patch]` a unit test restates the claimable-set definition verbatim — replaced with an explicit ten-state expected set.
+  - `[medium]` `[patch]` DEVELOPER described config wiring that does not exist — reworded to describe the loader as it exists now (worker loop consumes it later).
+
 ## Auto Run Result
 
-Status: ready-for-dev
-Blocking condition: none
-Planned: 2026-09-26. Halted after planning. Reused cached `epic-1-context.md` (valid). No production code written. Assumes story 1.1 lands `0002_webhook_delivery.sql` before this story's `0003`.
+Status: done
+Baseline: `59291c7a6c7e5d348243d7122b5423fc886e84da`.
+
+**Summary.** Built the AD-23 worker-lease and fencing primitives: `workflow/leases.py` holds the pure policy (claimable states derived from the terminal set, `Claim`, `LeaseLost`, `new_lease_owner`, `lease_expired`, `renew_due`, the `RunLeaseStore` protocol), and `workflow/lease_store.py` holds the one Postgres adapter (short-transaction `FOR UPDATE SKIP LOCKED` claim, owner-only renew, `FOR UPDATE` owner re-check whose mismatch rolls the work back with `LeaseLost`). Migration `0003` adds `lease_owner`/`lease_until` and a claim index; `config/orchestrator.yaml` + `workflow/orchestrator_config.py` own the timings.
+
+**Files changed (one line each):**
+- `workflow/leases.py` — pure AD-23 policy, `Claim`, `LeaseLost`, owner factory, expiry predicates, `RunLeaseStore` protocol.
+- `workflow/lease_store.py` — the Postgres adapter and its SQL (one short connection per call).
+- `workflow/orchestrator_config.py`, `config/orchestrator.yaml` — lease timings from one config file (AD-19), with the invariant enforced.
+- `deploy/migrations/0003_triage_run_lease.sql`, `deploy/migrations/README.md` — lease columns + claim index.
+- `tests/workflow/{test_leases,test_orchestrator_config,test_lease_integration}.py`, `tests/security/test_compose_secret_placement.py` — AC tests and the schema-guard allowlist.
+- `workflow/README.md`, `docs/DEVELOPER.md`, `.env.example` — docs.
+
+**Review findings.** 41 reported: 0 high, 8 medium, 32 low, 1 false. Patched 6 root-cause entries (renew real-DB coverage, wall-clock determinism, config invariant, SOLID-S split, docs honesty, claimable-set test); deferred 1 (lease-loss logging); rejected 34 with reasons above (1 verified false: the TypeVar claim).
+
+**Patched medium root causes:** (1) the Postgres adapter/SQL moved out of `leases.py` into `workflow/lease_store.py` so domain code builds no SQL (AGENTS SOLID-S); (2) the integration tests now seed and assert on the injected clock, removing the wall-clock time bomb; (3) a real-Postgres renew test now proves owner-only, non-owner `False`, and expired refusal; (4) DEVELOPER now describes the config loader as it exists rather than claiming a consumer that has not landed.
+
+**Follow-up review recommendation: true.** Named unverified risk: the new `workflow/lease_store.py` split and the real-DB renew test are fresh code added during patching and have not themselves been re-reviewed.
+
+**Verification performed:**
+- `git diff` reviewed since baseline, then re-generated after patches.
+- `make check` → PASS (216 tests, coverage 93.72%).
+- `.venv/bin/pytest -m integration -q` → 20 passed (postgres:18; claim, reclaim, fencing, renew, `0003`).
+- `rg "psycopg|SELECT|UPDATE" workflow/leases.py` → none (pure module).
+
+**Residual risks:** `renew_due`/`lease_expired` and the config loader have no production caller until the worker loop (2.3/2.8); the claim's FIFO order relies on `run_id` being UUIDv7; no dump/log on lease loss yet.
+
+## Spec Change Log
+
+<!-- none: no bad_spec loopback on this story -->

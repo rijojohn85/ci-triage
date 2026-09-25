@@ -28,6 +28,7 @@ Every message between orchestrator and agent is an A2A message whose data part i
 | 2.1 | The AD-1 run-state machine: `RunState` enum, one declarative transition table, pure guards, non-retryable `IllegalTransition`, pure AD-4 projection, generated state diagram + drift gate, `0001_triage_run` migration, thresholds loader | `workflow/run_states.py`, `workflow/transitions.py`, `workflow/projection.py`, `workflow/thresholds.py`, `workflow/diagram.py`, `scripts/generate_state_diagram.py`, `workflow/STATE_DIAGRAM.md`, `guardrails/thresholds.yaml`, `deploy/migrations/0001_triage_run.sql`, `tests/workflow/` |
 | 2.2 | The one confidence number (AD-9): Jev's `Choice`/`Noul` contracts, the frozen `ClassConfidence` min rule, the injection pre-screen cap, classification-branch cut-off predicates, the AD-27 blame-free attribution predicate, new cut-offs in `guardrails/thresholds.yaml` | `contracts/jev.py`, `contracts/verdict.py` (`effective_confidence`), `guardrails/confidence.py`, `workflow/attribution.py`, `workflow/thresholds.py`, `guardrails/thresholds.yaml`, `guardrails/schemas/JevClassification.json`, `tests/contracts/test_jev.py`, `tests/guardrails/`, `tests/workflow/test_attribution.py`, `tests/workflow/test_thresholds.py` |
 | 1.1 | Gateway intake: the webhook signature is checked over the raw bytes before parsing, unknown installations are refused, replayed deliveries and duplicate run identities collapse to one `triage_run(RECEIVED)`, bursts are shed, and run ids are time-ordered UUIDv7 | `gateway/`, `workflow/ids.py`, `config/gateway.yaml`, `deploy/migrations/0002_webhook_delivery.sql`, `deploy/gateway.Dockerfile`, `tests/security/` |
+| 1.2 | Worker leases and fencing: a claim takes the next unleased/expired non-terminal run in a short `FOR UPDATE SKIP LOCKED` transaction, renew extends only the owner's live lease, and a stale owner's lease-guarded commit is discarded (`LeaseLost`); lease timings come from config | `workflow/leases.py`, `workflow/lease_store.py`, `workflow/orchestrator_config.py`, `config/orchestrator.yaml`, `deploy/migrations/0003_triage_run_lease.sql`, `tests/workflow/`, `tests/security/test_compose_secret_placement.py` |
 
 ## Where things live
 
@@ -38,15 +39,19 @@ Every message between orchestrator and agent is an A2A message whose data part i
 | `guardrails/thresholds.yaml` | built (2.1, 2.2) | the one thresholds file (AD-19): `review.max_rounds`, `workflow_path_glob`, and the `confidence` cut-offs (`class_cutoff`, `no_route_cutoff`, `injection_screen_cutoff`, `injection_screen_cap`); consumed via `workflow.thresholds.load_thresholds` |
 | `guardrails/confidence.py` | built (2.2) | the AD-9 min rule as code: `ClassConfidence`, `RouteConfidence`, `apply_injection_screen`, `below_class_cutoff`, `class_escalation` |
 | `deploy/compose.yaml` | built (0.3, 1.1) | postgres:18 + one-shot `migrate` job + the real gateway (story 1.1) + orchestrator/agent placeholders, with AD-16 secret placement; see [deploy/README.md](../deploy/README.md) and [Compose and migrations](#compose-and-migrations-story-03) |
-| `deploy/migrations/` | built (0.3, 2.1, 1.1) | forward-only `.sql` files + naming rules; runner is `workflow/migrate.py`; `0001_triage_run.sql` owns run state, `0002_webhook_delivery.sql` records seen delivery ids for replay dedupe |
+| `deploy/migrations/` | built (0.3, 2.1, 1.1, 1.2) | forward-only `.sql` files + naming rules; runner is `workflow/migrate.py`; `0001_triage_run.sql` owns run state, `0002_webhook_delivery.sql` records seen delivery ids for replay dedupe, `0003_triage_run_lease.sql` adds the AD-23 lease columns + claim index |
 | `scripts/` | built (0.1, 0.2, 0.4, 1.1, 2.1) | `bootstrap.sh`, `check_layer_contract.py`, `generate_schemas.py`, `verify_demo_repo.py`, `generate_state_diagram.py`; `ruleset-seed.json` payload for the demo-repo ruleset |
 | `tests/scripts/` | built (0.4) | unit tests of the demo-repo read-back comparison logic against recorded API fixtures; live `gh` path is `@pytest.mark.integration` |
 | `test-data/` | built (0.4) | demo-repo evidence: `demo-repo-expected.json` (AD-16 set, one source for script + docs), `demo-repo.md` (live facts + scenario slots), `demo-repo-seed/` (pushed verbatim to the demo repo) |
 | `tests/contracts/` | built (0.2) | contract tests, named after the ACs they prove |
-| `tests/workflow/`, `tests/security/` | built (0.3, 2.1, 1.1) | migration-runner and compose secret-placement tests; state-machine, projection and diagram tests; gateway signature/intake/limits tests; `@pytest.mark.integration` ones need Docker (`pytest -m integration`) |
+| `tests/workflow/`, `tests/security/` | built (0.3, 2.1, 1.1, 1.2) | migration-runner and compose secret-placement tests; state-machine, projection and diagram tests; gateway signature/intake/limits tests; lease unit + fencing tests (`@pytest.mark.integration` ones need Docker, `pytest -m integration`) |
 | `gateway/` | built (1.1) | webhook intake only — signature, accepted events, load limits, one enqueue; see [gateway/README.md](../gateway/README.md) |
 | `workflow/ids.py` | built (1.1) | pure `new_run_id()`: the one UUIDv7 run identity (AD-4) |
+| `workflow/leases.py` | built (1.2) | the pure AD-23 policy (claimable states, expiry predicates, owner token) and the small `RunLeaseStore` / connection protocol (SOLID-I) |
+| `workflow/lease_store.py` | built (1.2) | the one Postgres adapter for leases: the claim / renew / lease-guarded commit SQL lives here (SOLID-S) |
+| `workflow/orchestrator_config.py` | built (1.2) | loader plus sanity checks for the one orchestrator settings file (AD-19); the worker loop that will read it arrives with stories 2.3/2.8 |
 | `config/gateway.yaml` | built (1.1) | per-installation rate limit and per-repo queue-depth cap (AD-19); consumed via `gateway.settings.load_gateway_limits` |
+| `config/orchestrator.yaml` | built (1.2) | `lease_seconds` / `renew_after_seconds` (AD-19); `workflow.orchestrator_config.load_orchestrator_config` reads it for the worker loop that will consume it |
 | `config/runtime.yaml` | placeholder | model IDs and per-skill `step_timeout` (AD-19) |
 | `deploy/` | partially built (0.3, 1.1) | Compose, gateway image, k8s manifests, migrations (0.3+); k8s manifests + `registry.<env>.yaml` still placeholders |
 | `workflow/` (rest), `agents/`, `guardrails/` (validator, citation_check, risk_gate), `punch-out/`, `monitoring/` | placeholder | filled by Epics 2–6; each folder's README says what belongs there |
@@ -150,6 +155,60 @@ a future multi-replica gateway would move them to a shared store.
 `gateway/events.py`, not a new branch; a new limit is a new field in
 `config/gateway.yaml` plus `GatewayLimits`. The run identity is generated by
 one factory (`workflow/ids.py::new_run_id`) that later stories reuse.
+
+## Worker leases and fencing (story 1.2)
+
+After the gateway queues a failed run, a pool of workers picks runs up. Two
+workers must never run the same long model call, and a worker that has been
+replaced must not write down a result it is no longer entitled to give. A
+**lease** is how the database records which worker currently owns a run. The
+rules are [AD-23](../_bmad-output/planning-artifacts/architecture/architecture-stage4-2026-09-25/ARCHITECTURE-SPINE.md)
+and [AD-2](../_bmad-output/planning-artifacts/architecture/architecture-stage4-2026-09-25/ARCHITECTURE-SPINE.md).
+
+- **Taking a run is one quick, all-or-nothing step.** A worker asks for the
+  next run that is not finished and is either unclaimed or whose lease has run
+  out. In one small database transaction it takes exactly one such row
+  (`SELECT … FOR UPDATE SKIP LOCKED`) and stamps its own owner name and an
+  expiry time, then that transaction finishes *before* any slow work starts.
+  Other workers skip a row that is already taken; "SKIP LOCKED" means they do
+  not wait in line for it, they just move on to the next run. Because each
+  worker takes one row at a time, the number of workers is the concurrency cap.
+- **The expiry makes a crashed worker harmless.** A worker that dies mid-run
+  cannot hand its lease back, so the lease simply runs out. After that the run
+  is claimable again by any worker — nobody has to unlock anything by hand. A
+  step that runs long can ask to **renew** first (push its own expiry further
+  out), but only while it still owns the lease and the lease has not already
+  expired.
+- **A replaced worker's result is thrown away.** Before a worker writes a
+  step's output and moves the run on, it checks again, inside that same
+  transaction, that it still owns the lease (`FOR UPDATE`). If another worker
+  has taken the run in the meantime, the whole write is rolled back and the
+  worker gets a `LeaseLost` error. That error is final — not something to retry
+  — because the run belongs to someone else now. This is the "fence": the old
+  worker cannot overwrite the new owner's progress. The door for step output
+  arrives with the step story (2.3); this story supplies the guard it composes.
+
+**Where the numbers live.** How long a lease lasts and when to renew come only
+from `config/orchestrator.yaml` (AD-19). The loader
+`workflow/orchestrator_config.py` checks the two values make sense (a positive
+lease, and a renew point before the lease ends); the worker loop that will
+read them arrives with stories 2.3/2.8. The Postgres SQL lives on its own in
+`workflow/lease_store.py`, so the policy in `workflow/leases.py` stays free of
+database code.
+
+The owner name is made by one factory, `workflow/leases.py::new_lease_owner`.
+It takes the worker's name from the `WORKER_ID` environment variable (name
+only in `.env.example`) and adds a random suffix, so each claim is unique and
+a restarted worker can never be mistaken for the one before it. `RunLeaseStore`
+is the small interface the worker loop will use; the one real implementation
+talks to Postgres, and the tests drive it through a fake. Time is always
+passed in, so no test waits.
+
+**To extend it:** a new claimable-state rule is a change in the state machine —
+the claimable set is worked out as *all states minus the terminal ones*, never
+a hand-written list — so it flows through here with no edit. `workflow/leases.py`
+and its adapter `workflow/lease_store.py` stand alone; the worker loop itself
+arrives with stories 2.3/2.8.
 
 ## Contracts (story 0.2)
 

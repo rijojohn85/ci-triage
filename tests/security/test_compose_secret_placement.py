@@ -144,12 +144,15 @@ class TestNoSpeculativeSchema:
             if forbidden.search(f.read_text(encoding="utf-8"))
         ]
         assert offending == []
-        allowed_triage_run = ["0001_triage_run.sql"]  # story 2.1 (AD-1, AD-17)
-        declared = [
+        allowed_triage_run = [
+            "0001_triage_run.sql",  # story 2.1 (AD-1, AD-17)
+            "0003_triage_run_lease.sql",  # story 1.2: ALTER ... lease columns (AD-23)
+        ]
+        declared = sorted(
             f.name
             for f in sql_files
             if re.search(r"\btriage_run\b", f.read_text(encoding="utf-8"), re.IGNORECASE)
-        ]
+        )
         assert declared == allowed_triage_run
         # no a2a-db/taskstore service either
         compose = yaml.safe_load(COMPOSE.read_text(encoding="utf-8"))
