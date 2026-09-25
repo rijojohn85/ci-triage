@@ -1,7 +1,7 @@
 # Quality gates — single entry: `make check` (AGENTS.md § Quality gates).
 # Tool targets are thin wrappers over .venv tools; pins live in pyproject.toml
 # + requirements/dev-constraints.txt (installed by bootstrap).
-.PHONY: check bootstrap print-versions schema-drift ruff mypy pylint-dup pytest-cov pre-commit
+.PHONY: check bootstrap print-versions schema-drift ruff mypy pylint-dup pytest-cov test-integration pre-commit
 
 VENV := .venv
 PY := $(VENV)/bin/python
@@ -62,3 +62,8 @@ pytest-cov:
 
 pre-commit: bootstrap-check
 	@$(VENV)/bin/pre-commit run --all-files
+
+# Integration tests need Docker (compose/postgres:18) — story 0.3+; excluded
+# from `check` by the pytest addopts marker default.
+test-integration:
+	@$(PYTEST) -m integration -q
