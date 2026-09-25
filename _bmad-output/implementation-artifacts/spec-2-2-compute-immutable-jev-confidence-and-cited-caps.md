@@ -24,6 +24,7 @@ context: ['{project-root}/AGENTS.md']
 - **C:** `ReviewThresholds` → `Thresholds`; keeps flat `review_max_rounds` and `workflow_path_glob` (2.1 tests untouched) and gains `confidence: ConfidenceCutoffs`. One file, one loader.
 - **D:** Noul is a probability (SDK 0.7.1 `NoulAnswer.noul: float`), so the injection screen has two settings: `cutoff` (positive when `noul >= cutoff`) and `cap` value. Placeholders: class 0.75, no-route 0.6, screen cutoff 0.5, screen cap 0.5; each commented `ASSUMPTION — OQ-2, not calibrated`.
 - Developer docs are written in very simple words, no jargon.
+- **Review #5 (human, 2026-09-25):** keep `injection_screen_cap: 0.5` below `class_cutoff`, so a positive injection screen always sends the run to a human via the ordinary `low_confidence` check (the screen still has no escalation reason of its own). Placeholder until OQ-2 calibration.
 
 ## Boundaries & Constraints
 
@@ -87,7 +88,7 @@ context: ['{project-root}/AGENTS.md']
 | 2 | `TriageVerdict` mutable → validator bypass (edge) | medium | no `frozen`/`validate_assignment`; `caps.clear()` after validation passes | patch |
 | 3 | `probabilities` unbounded (blind, edge) | low | `dict[FailureClass, float]`, no bounds; 5.0 accepted | patch |
 | 4 | `probabilities` dict mutable in place (blind, edge) | low | true, but audit-only, no decision reads it (AD-9); immutable-mapping fix adds complexity | rejected (low) |
-| 5 | Positive screen always escalates with shipped 0.5 cap < 0.75 cutoff (blind) | maybe-false | AD-11 "never blocks on its own" read as: no screen-specific reason; lowered number then hits the ordinary cut-off. Placeholder values (OQ-2) decide the effect | human question |
+| 5 | Positive screen always escalates with shipped 0.5 cap < 0.75 cutoff (blind) | resolved | Human chose option 1 (keep 0.5). AD-11 "never blocks on its own" read as: no screen-specific reason; lowered number then hits the ordinary cut-off. Placeholder values (OQ-2) decide the effect | human question |
 | 6 | `attribution_allowed` deny-list fails open for other states (blind, edge) | false | AD-27 names exactly AWAITING_APPROVAL, REPORTING, below-cutoff; pre-classification states have no `ClassConfidence` to pass; spec matrix matches | rejected |
 | 7 | UNKNOWN class above cutoff allows attribution (edge) | false | unknown class escalates to AWAITING_APPROVAL(unknown_class) → blame-free by state | rejected |
 | 8 | Override to UNKNOWN skips unknown-class check (edge) | low | AD-14 `--class` is a human choice; guarding adds a branch; unlikely | rejected (low) |
