@@ -3,17 +3,26 @@
 import pytest
 from pydantic import ValidationError
 
+from contracts.citations import CommitCitation
 from contracts.enums import FailureClass, RiskTier, TerminalState
 from contracts.objections import Objection
-from contracts.verdict import Quarantine, Suspect, TriageVerdict
+from contracts.verdict import (
+    Cap,
+    Quarantine,
+    Suspect,
+    TriageVerdict,
+    effective_confidence,
+)
 from tests.contracts.samples import FULL_SHA
 
-REPRESENTATIVE_CONFIDENCE = 0.8
+REPRESENTATIVE_CONFIDENCE = 0.85
 REPRESENTATIVE_CONFIDENCE_JEV = 0.9
 
 
 def representative_verdict_payload() -> dict[str, object]:
-    """AC1 happy path: terminal_state null while running; diff and quarantine null."""
+    """AC1 happy path: terminal_state null while running; diff and quarantine
+    null. `confidence` = `min(confidence_jev, caps…)` = min(0.9, 0.85) = 0.85
+    (AD-9)."""
     return {
         "class": "flaky",
         "confidence": REPRESENTATIVE_CONFIDENCE,
@@ -76,16 +85,55 @@ def test_ac1_terminal_state_nullability_follows_ad4() -> None:
 
 
 def test_ac2_confidence_bounds_are_one_min() -> None:
+    # No caps here, so effective_confidence == confidence_jev (AD-9): the
+    # boundary values below stay consistent with the new min-rule validator
+    # instead of colliding with it.
     payload = representative_verdict_payload()
+    payload["caps"] = []
     for bad in (-0.1, 1.1):
         payload["confidence"] = bad
         with pytest.raises(ValidationError) as exc:
             TriageVerdict.model_validate(payload)
         assert "confidence" in str(exc.value)
-    payload["confidence"] = 0.0
-    TriageVerdict.model_validate(payload)
-    payload["confidence"] = 1.0
-    TriageVerdict.model_validate(payload)
+    for boundary in (0.0, 1.0):
+        payload["confidence"] = boundary
+        payload["confidence_jev"] = boundary
+        TriageVerdict.model_validate(payload)
+
+
+def test_ac1_verdict_confidence_must_equal_min_of_jev_and_caps() -> None:
+    payload = representative_verdict_payload()
+    payload["confidence"] = 0.9  # min(0.9, 0.85) is 0.85, not 0.9
+    with pytest.raises(ValidationError) as exc:
+        TriageVerdict.model_validate(payload)
+    assert "confidence" in str(exc.value)
+
+
+def test_ac1_cap_cannot_be_changed_after_creation() -> None:
+    cap = Cap(
+        value=0.5,
+        reason="x",
+        citations=[{"kind": "jev_signal", "answer": "noul"}],
+    )
+    with pytest.raises(ValidationError):
+        cap.value = 1.0  # type: ignore[misc]
+
+
+def test_ac1_verdict_cannot_be_changed_after_validation() -> None:
+    verdict = TriageVerdict.model_validate(representative_verdict_payload())
+    with pytest.raises(ValidationError):
+        verdict.confidence = 0.99  # type: ignore[misc]
+    with pytest.raises(ValidationError):
+        verdict.caps = ()  # type: ignore[misc]
+
+
+def test_ac1_effective_confidence_is_the_one_min_rule() -> None:
+    caps = [
+        Cap(value=0.7, reason="x", citations=[CommitCitation(sha=FULL_SHA)]),
+        Cap(value=0.5, reason="y", citations=[CommitCitation(sha=FULL_SHA)]),
+    ]
+    assert effective_confidence(0.9, []) == 0.9
+    assert effective_confidence(0.9, caps) == 0.5
 
 
 def test_ac2_class_rejects_non_spine_value() -> None:

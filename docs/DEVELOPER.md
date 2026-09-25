@@ -26,6 +26,7 @@ Every message between orchestrator and agent is an A2A message whose data part i
 | 0.3 | Compose foundation: postgres:18 + healthcheck, one-shot forward-only migration job (`service_completed_successfully` gating), secret placement | `deploy/`, `workflow/migrate.py`, `tests/workflow/`, `tests/security/` |
 | 0.4 | Protected external demo repo: seeded Python package with green CI, AD-16 GitHub App + installation, default-branch ruleset (App not a bypass actor), read-back gate | `test-data/demo-repo-seed/`, `test-data/demo-repo.md`, `scripts/verify_demo_repo.py`, `scripts/ruleset-seed.json` |
 | 2.1 | The AD-1 run-state machine: `RunState` enum, one declarative transition table, pure guards, non-retryable `IllegalTransition`, pure AD-4 projection, generated state diagram + drift gate, `0001_triage_run` migration, thresholds loader | `workflow/run_states.py`, `workflow/transitions.py`, `workflow/projection.py`, `workflow/thresholds.py`, `workflow/diagram.py`, `scripts/generate_state_diagram.py`, `workflow/STATE_DIAGRAM.md`, `guardrails/thresholds.yaml`, `deploy/migrations/0001_triage_run.sql`, `tests/workflow/` |
+| 2.2 | The one confidence number (AD-9): Jev's `Choice`/`Noul` contracts, the frozen `ClassConfidence` min rule, the injection pre-screen cap, classification-branch cut-off predicates, the AD-27 blame-free attribution predicate, new cut-offs in `guardrails/thresholds.yaml` | `contracts/jev.py`, `contracts/verdict.py` (`effective_confidence`), `guardrails/confidence.py`, `workflow/attribution.py`, `workflow/thresholds.py`, `guardrails/thresholds.yaml`, `guardrails/schemas/JevClassification.json`, `tests/contracts/test_jev.py`, `tests/guardrails/`, `tests/workflow/test_attribution.py`, `tests/workflow/test_thresholds.py` |
 
 ## Where things live
 
@@ -33,7 +34,8 @@ Every message between orchestrator and agent is an A2A message whose data part i
 | --- | --- | --- |
 | `contracts/` | built (0.2) | Pydantic v2 models for every inter-agent payload; see [contracts/README.md](../contracts/README.md) |
 | `guardrails/schemas/` | built (0.2) | JSON Schemas generated from `contracts/`; never edit by hand |
-| `guardrails/thresholds.yaml` | built (2.1) | the one thresholds file (AD-19): e.g. `review.max_rounds`, `workflow_path_glob`; consumed via `workflow.thresholds.load_thresholds` |
+| `guardrails/thresholds.yaml` | built (2.1, 2.2) | the one thresholds file (AD-19): `review.max_rounds`, `workflow_path_glob`, and the `confidence` cut-offs (`class_cutoff`, `no_route_cutoff`, `injection_screen_cutoff`, `injection_screen_cap`); consumed via `workflow.thresholds.load_thresholds` |
+| `guardrails/confidence.py` | built (2.2) | the AD-9 min rule as code: `ClassConfidence`, `RouteConfidence`, `apply_injection_screen`, `below_class_cutoff`, `class_escalation` |
 | `deploy/compose.yaml` | built (0.3) | postgres:18 + one-shot `migrate` job + placeholders for gateway/orchestrator/agents with AD-16 secret placement; see [deploy/README.md](../deploy/README.md) and [Compose and migrations](#compose-and-migrations-story-03) |
 | `deploy/migrations/` | built (0.3, 2.1) | forward-only `.sql` files + naming rules; runner is `workflow/migrate.py`; `0001_triage_run.sql` owns run state |
 | `scripts/` | built (0.1, 0.2, 0.4, 2.1) | `bootstrap.sh`, `check_layer_contract.py`, `generate_schemas.py`, `verify_demo_repo.py`, `generate_state_diagram.py`; `ruleset-seed.json` payload for the demo-repo ruleset |
@@ -43,7 +45,7 @@ Every message between orchestrator and agent is an A2A message whose data part i
 | `tests/workflow/`, `tests/security/` | built (0.3, 2.1) | migration-runner and compose secret-placement tests; state-machine, projection and diagram tests; `@pytest.mark.integration` ones need Docker (`pytest -m integration`) |
 | `config/runtime.yaml` | placeholder | model IDs and per-skill `step_timeout` (AD-19) |
 | `deploy/` | partially built (0.3) | Compose, k8s manifests, migrations (0.3+); k8s manifests + `registry.<env>.yaml` still placeholders |
-| `gateway/`, `workflow/` (rest), `agents/`, `guardrails/` (validator/code), `punch-out/`, `monitoring/` | placeholder | filled by Epics 1–6; each folder's README says what belongs there |
+| `gateway/`, `workflow/` (rest), `agents/`, `guardrails/` (validator, citation_check, risk_gate), `punch-out/`, `monitoring/` | placeholder | filled by Epics 1–6; each folder's README says what belongs there |
 | `prompts/`, `*.test.yaml` | placeholder | agent prompts and their promptfoo evals (Epic 3) |
 
 Layer rules (enforced by `scripts/check_layer_contract.py`): `contracts/` imports only stdlib and pydantic; `guardrails/` imports only `contracts/`; agents hold no GitHub or Postgres clients; model IDs and timeouts live in YAML; secrets come from environment variables.
@@ -129,3 +131,27 @@ The orchestrator runs every triage as a life of exactly one record, `triage_run`
 **Extending the state machine:** add a state (a new `RunState` member) or an edge = add a row in `workflow/transitions.py` (plus a guard predicate when the edge is conditional), name the guard's sample fields in `GUARD_FIELDS`, write the failing tests first (`tests/workflow/test_transitions.py`, names cite the AC), re-run `python scripts/generate_state_diagram.py`, and commit the regenerated `STATE_DIAGRAM.md` in the same PR ([AD-1](../_bmad-output/planning-artifacts/architecture/architecture-stage4-2026-09-25/ARCHITECTURE-SPINE.md), [AD-4](../_bmad-output/planning-artifacts/architecture/architecture-stage4-2026-09-25/ARCHITECTURE-SPINE.md)). If the spine's AD-1 diagram disagrees with your row, stop — the spine wins ([AGENTS.md "Sources of truth"](../AGENTS.md)).
 
 **Projection (AD-4):** `workflow/projection.py::project()` is a pure mapping-table from `RunState` to the pair (A2A `TaskState` member name, contract `TerminalState | None`) — `RECEIVED → SUBMITTED`, active states → `WORKING`, `AWAITING_APPROVAL → INPUT_REQUIRED`/`input_required`, the terminal states → `COMPLETED`/`FAILED` with their contract terminal state. a2a-sdk 1.1.5's `TaskState` is a protobuf wrapper, so the projection returns the member *name*; the A2A server story (2.4) converts to the integer at the transport edge.
+
+## Confidence: one trusted number (story 2.2)
+
+**What it is for.** When a CI run fails, a fast checker called Jev guesses what kind of failure it is (code, flaky, infra, external or unknown) and says how sure it is, from 0 to 1. Many parts of the system later ask "how sure are we?". They must all get the same answer, so there is exactly one trusted number. Rules: [AD-9](../_bmad-output/planning-artifacts/architecture/architecture-stage4-2026-09-25/ARCHITECTURE-SPINE.md), [AD-11](../_bmad-output/planning-artifacts/architecture/architecture-stage4-2026-09-25/ARCHITECTURE-SPINE.md).
+
+**How the number is made.**
+
+- Jev's own score is kept exactly as it arrived and can never be changed (`contracts/jev.py`, `JevChoice`). Jev also sends how likely each other failure type was. We keep that for the record only; nothing ever makes a decision with it.
+- Anything that has a reason to trust Jev less can add a **cap**: a lower limit, plus a pointer to the evidence behind it. A cap with no evidence is refused.
+- The trusted number is simply **the smallest** of Jev's score and all the caps. It is worked out every time you read it, so nobody can type it in, and adding a cap can only pull it down, never up. This rule is written once, in `contracts/verdict.py` (`effective_confidence`). The final verdict checks itself against the same rule and is refused if its number doesn't match.
+- The code for all of this is in `guardrails/confidence.py` (`ClassConfidence`).
+
+**Where caps come from today.** Jev also checks whether the log looks like someone is trying to trick the AI. It answers with a number from 0 to 1. At or above the "trick check" line, we add one cap that points back to that check (`apply_injection_screen`). That is all it does: it never stops a run by itself. If the lower number then falls under the line, the normal "too unsure" check pauses the run, the same as for any other low score.
+
+**The yes/no questions.**
+
+- *Too unsure?* The trusted number is under the failure-type line. Exactly on the line counts as sure enough (`below_class_cutoff`).
+- *Pause the run?* Yes if the type is `unknown` or the number is too low (`class_escalation`). If a person has already picked the failure type by hand (a "class override"), these two checks are skipped for the rest of the run. Both numbers stay the same.
+- *May we name a person as the likely cause?* No while the run waits for a human, no while it is writing its report, and no while the number is too low. That includes after a hand-picked type, because the number is still low (`workflow/attribution.py`).
+- The score used later for picking which helper agent to call is a **different kind of number** (`RouteConfidence`). The checks above refuse it, so the two can't be mixed up.
+
+**Where the lines live.** All lines are in `guardrails/thresholds.yaml` under `confidence:`. Today they are guesses, each marked `ASSUMPTION — OQ-2, not calibrated`. `workflow/thresholds.py` reads that file once. The confidence tests read their own copy, `tests/fixtures/thresholds.test.yaml`, so changing the real numbers never breaks them; one test checks the two files still list the same keys, so the copy can't quietly drift out of shape.
+
+**To add a new reason to trust Jev less:** build a `Cap` with its evidence and add it with `ClassConfidence.with_cap(...)`. Never add a new score field, and never write your own "smallest of" code. **To add a new line:** add it to `guardrails/thresholds.yaml` and to `ConfidenceCutoffs`, never as a number in code.

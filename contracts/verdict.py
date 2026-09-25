@@ -4,6 +4,7 @@
 dry-run boundary relaxes it, never these production models.
 """
 
+from collections.abc import Sequence
 from typing import Annotated
 
 from pydantic import BaseModel, ConfigDict, Field, PositiveInt, model_validator
@@ -25,17 +26,30 @@ __all__ = [
     "ShaPrefix",
     "Suspect",
     "TriageVerdict",
+    "effective_confidence",
 ]
 
 
-class Cap(BaseModel):
-    """One confidence cap: a reason plus its citations; nothing may raise it (AD-9)."""
+def effective_confidence(confidence_jev: float, caps: Sequence["Cap"]) -> float:
+    """The one min rule (AD-9): `confidence` = min(`confidence_jev`, caps…).
 
-    model_config = ConfigDict(extra="forbid")
+    Caps only lower or keep confidence; nothing may raise it. The single
+    home for this rule — `TriageVerdict`'s validator and
+    `guardrails.confidence.ClassConfidence` both call it.
+    """
+    return min(confidence_jev, *(cap.value for cap in caps)) if caps else confidence_jev
+
+
+class Cap(BaseModel):
+    """One confidence cap: a reason plus its citations; nothing may raise it
+    (AD-9). Frozen with a tuple of citations so a built `Cap` can never be
+    mutated to raise `ClassConfidence.confidence` back up."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
 
     value: float = Field(ge=0.0, le=1.0)
     reason: str = Field(min_length=1)
-    citations: list[Citation] = Field(min_length=1)
+    citations: tuple[Citation, ...] = Field(min_length=1)
 
 
 class Suspect(BaseModel):
@@ -95,19 +109,32 @@ class TriageVerdict(BaseModel):
     """
 
     model_config = ConfigDict(
-        extra="forbid", populate_by_name=True, serialize_by_alias=True
+        frozen=True,
+        extra="forbid",
+        populate_by_name=True,
+        serialize_by_alias=True,
     )
 
     class_: FailureClass = Field(alias="class")
     confidence: float = Field(ge=0.0, le=1.0)
     confidence_jev: float = Field(ge=0.0, le=1.0)
-    caps: list[Cap]
+    caps: tuple[Cap, ...]
     suspects: list[Suspect]
     citations: list[Citation]
     risk_tier: RiskTier
     terminal_state: TerminalState | None = None
     proposed_diff: ProposedDiff | None = None
     quarantine: Quarantine | None = None
+
+    @model_validator(mode="after")
+    def confidence_is_the_one_min_rule(self) -> "TriageVerdict":
+        expected = effective_confidence(self.confidence_jev, self.caps)
+        if self.confidence != expected:
+            raise ValueError(
+                "confidence must equal min(confidence_jev, caps…) "
+                f"= {expected}, got {self.confidence} (AD-9)"
+            )
+        return self
 
 
 ShaPrefix = Annotated[str, Field(pattern=r"^[0-9a-f]{7,40}$")]

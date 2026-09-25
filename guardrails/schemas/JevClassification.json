@@ -1,0 +1,83 @@
+{
+  "$defs": {
+    "FailureClass": {
+      "description": "Failure class enum `code | flaky | infra | external | unknown` (AD-11).",
+      "enum": [
+        "code",
+        "flaky",
+        "infra",
+        "external",
+        "unknown"
+      ],
+      "title": "FailureClass",
+      "type": "string"
+    },
+    "JevChoice": {
+      "additionalProperties": false,
+      "description": "The 5-class `Choice` answer: `confidence_jev`'s source (AD-9, AD-11).\n\nFrozen once built (AD-9): nothing downstream may mutate the Jev number.",
+      "properties": {
+        "answer": {
+          "$ref": "#/$defs/FailureClass"
+        },
+        "confidence": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "probabilities": {
+          "additionalProperties": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "type": "number"
+          },
+          "propertyNames": {
+            "$ref": "#/$defs/FailureClass"
+          },
+          "title": "Probabilities",
+          "type": "object"
+        }
+      },
+      "required": [
+        "answer",
+        "confidence",
+        "probabilities"
+      ],
+      "title": "JevChoice",
+      "type": "object"
+    },
+    "JevInjectionScreen": {
+      "additionalProperties": false,
+      "description": "The injection pre-screen `Noul` answer (spine \"One Jev call\" rule):\na probability, not a boolean \u2014 `guardrails.confidence` turns it into a\ncited cap above its cutoff.",
+      "properties": {
+        "noul": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Noul",
+          "type": "number"
+        }
+      },
+      "required": [
+        "noul"
+      ],
+      "title": "JevInjectionScreen",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "One Jev `system_one` call: the class choice plus the injection screen\n(spine: one call carries both the 5-class `Choice` and the `Noul`\npre-screen).",
+  "properties": {
+    "choice": {
+      "$ref": "#/$defs/JevChoice"
+    },
+    "injection_screen": {
+      "$ref": "#/$defs/JevInjectionScreen"
+    }
+  },
+  "required": [
+    "choice",
+    "injection_screen"
+  ],
+  "title": "JevClassification",
+  "type": "object"
+}

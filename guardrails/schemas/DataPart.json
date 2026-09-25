@@ -95,7 +95,7 @@
     },
     "Cap": {
       "additionalProperties": false,
-      "description": "One confidence cap: a reason plus its citations; nothing may raise it (AD-9).",
+      "description": "One confidence cap: a reason plus its citations; nothing may raise it\n(AD-9). Frozen with a tuple of citations so a built `Cap` can never be\nmutated to raise `ClassConfidence.confidence` back up.",
       "properties": {
         "citations": {
           "items": {

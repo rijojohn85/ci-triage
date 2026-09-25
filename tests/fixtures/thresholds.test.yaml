@@ -1,0 +1,14 @@
+# tests/fixtures/thresholds.test.yaml — fixture thresholds for tests, never
+# the real `guardrails/thresholds.yaml` (spec-2.2 Boundaries & Constraints).
+# Same shape as the real file; kept in sync deliberately, not generated.
+
+review:
+  max_rounds: 2
+
+workflow_path_glob: ".github/workflows/**"
+
+confidence:
+  class_cutoff: 0.75
+  no_route_cutoff: 0.6
+  injection_screen_cutoff: 0.5
+  injection_screen_cap: 0.5
