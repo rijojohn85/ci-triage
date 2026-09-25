@@ -1,0 +1,15 @@
+# Dev toolchain pins (AGENTS.md § Quality gates) — installed into .venv by scripts/bootstrap.sh next to runtime deps.
+# Version sources (pinned 2026-09-25, latest stable from PyPI simple index / PyPI JSON API,
+# context7-compatible upstream source):
+#   https://pypi.org/pypi/ruff/0.16.9/json        (ruff 0.16.9)
+#   https://pypi.org/pypi/mypy/2.3.1/json        (mypy 2.3.1)
+#   https://pypi.org/pypi/pylint/4.0.9/json      (pylint 4.0.9)
+#   https://pypi.org/pypi/pytest/9.1.1/json      (pytest 9.1.1)
+#   https://pypi.org/pypi/pytest-cov/7.1.0/json  (pytest-cov 7.1.0)
+#   https://pypi.org/pypi/pre-commit/4.6.2/json  (pre-commit 4.6.2)
+ruff==0.16.9
+mypy==2.3.1
+pylint==4.0.9
+pytest==9.1.1
+pytest-cov==7.1.0
+pre-commit==4.6.2

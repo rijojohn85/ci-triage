@@ -72,10 +72,17 @@ else
   source .venv/bin/activate
 
   echo "== installing pinned Python deps =="
-  if [ -f requirements/constraints.txt ]; then
-    if ! pip_err="$(pip install -e . -c requirements/constraints.txt 2>&1)"; then
-      report_mismatch "python install of project pins" "all pins installable under constraints" "pip install 'triage' failed: $(echo "$pip_err" | tail -n 3 | tr '\n' ' ')"
+  pip_install() { # constrained install of "$@" into .venv; report on failure
+    if ! pip_err="$(.venv/bin/pip install "$@" -c requirements/constraints.txt 2>&1)"; then
+      report_mismatch "python install of project pins" "all pins installable under constraints" "pip install '$*' failed: $(echo "$pip_err" | tail -n 3 | tr '\n' ' ')"
       fail_and_exit_2
+    fi
+  }
+  if [ -f requirements/constraints.txt ]; then
+    pip_install -e .
+    if [ -f requirements/dev-constraints.txt ]; then
+      echo "== installing pinned dev toolchain =="
+      pip_install -r requirements/dev-constraints.txt
     fi
   else
     if ! pip_err="$(pip install -e . 2>&1)"; then
@@ -85,6 +92,7 @@ else
     mkdir -p requirements
     pip freeze | grep -v -e '^-e ' -e '^## !!' > requirements/constraints.txt
     echo "NOTE: constraints file was absent; installed directly and generated requirements/constraints.txt from the installed .venv."
+    pip_install "-r requirements/dev-constraints.txt"
   fi
 
   echo "== npm install =="
@@ -146,7 +154,7 @@ print_versions() {
 
 # ---- Verify pins (data-driven) ----
 echo "== verifying pins =="
-export PYTHON=".venv/bin/python"
+PYTHON=".venv/bin/python"
 for entry in "${PY_PINS[@]}"; do
   verify_py "${entry%% *}" "${entry##* }"
 done

@@ -57,7 +57,7 @@ On any conflict: spine AD > this file > everything else.
 
 ## Quality gates
 
-Mechanical checks that enforce the rules above. Status: the layer-contract check and bootstrap exist (story 0.1); the rest are being added in the 0.1 follow-up — until `make check` exists, run what is present and say what is missing.
+Mechanical checks that enforce the rules above. Status: the layer-contract check and bootstrap exist (story 0.1); **all gates now exist and run via `make check` (0.1 follow-up)** — bootstrap check, layer contract, ruff check+format, mypy --strict, pylint duplicate-code, pytest --cov (≥85% on contracts/guardrails/workflow). `make check` must be green before any story is called done.
 
 | Check | Tool | Gate |
 | --- | --- | --- |
