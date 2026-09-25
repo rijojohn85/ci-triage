@@ -18,6 +18,8 @@ runs/*
 !runs/README.md
 results/*
 !results/README.md
+deploy/smoke/*
+!deploy/smoke/README.md
 
 # Tool junk
 .DS_Store

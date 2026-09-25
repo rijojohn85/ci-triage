@@ -100,12 +100,40 @@ below are recorded in [test-data/demo-repo.md](../test-data/demo-repo.md).
 The locally running intake behind the tunnel is story 1.1; until then
 webhook deliveries pile up in the smee channel only.
 
+## Rotating the webhook secret (story 1.3)
+
+The gateway accepts a comma-separated list of secrets in
+`GITHUB_WEBHOOK_SECRET` (see `.env.example`), so a rotation never needs a
+code change or downtime — only a config edit and a restart, in three steps:
+
+1. **Add the new secret alongside the old one.** Generate a new random
+   secret value, then set `GITHUB_WEBHOOK_SECRET=<old-value>,<new-value>` in
+   `.env` (old first, new second — order does not matter to the gateway, but
+   keeping it consistent avoids confusion later). Restart the gateway:
+   `docker compose -f deploy/compose.yaml up -d --wait gateway`. Both
+   secrets are now accepted — this is the *overlap* phase.
+2. **Point GitHub at the new secret and verify overlap.** In the App's
+   settings (https://github.com/settings/apps), update the webhook secret
+   to the new value and save. Trigger a test delivery (GitHub's *Redeliver*
+   button on a recent delivery, or a fresh CI failure) and confirm the
+   gateway answers `202`/`200`, not `401`. Deliveries signed with either the
+   old or the new secret succeed during this window.
+3. **Retire the old secret.** Once you have confirmed new deliveries are
+   arriving signed with the new secret, remove the old value from `.env` so
+   it holds only `GITHUB_WEBHOOK_SECRET=<new-value>`, then restart the
+   gateway again. From this point a delivery signed with the old secret is
+   rejected with `401`.
+
+No admin endpoint exists for this and none is planned — rotation is always
+a `.env` edit plus a restart (AD-25).
+
 ## Sections
 
 | Section | Available after |
 | --- | --- |
 | Run it locally (Compose) | done (story 0.3) |
 | Install the GitHub App on a repository | done (story 0.4); intake around it lands with story 1.1 |
+| Rotating the webhook secret | done (story 1.3) |
 | Reading a draft PR or infra report | story 2.11 |
 | Approving or rejecting a paused triage | Epic 5 |
 | Configuration | to be decided by the stories that add settings |
