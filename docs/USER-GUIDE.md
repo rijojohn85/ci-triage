@@ -56,14 +56,51 @@ Requirements: Docker with the Compose plugin (`docker compose version` prints �
 
 Webhook intake, agents, and triage runs are not started yet (stories 0.4+).
 
+## Install the GitHub App on a repository (story 0.4)
+
+Works today for the demo repository
+[`rijojohn85-dev/triage-demo-py`](https://github.com/rijojohn85-dev/triage-demo-py);
+edge cases beyond it land with story 1.1. Setup lives on GitHub; identifiers
+below are recorded in [test-data/demo-repo.md](../test-data/demo-repo.md).
+
+1. **Create/proxy the webhook channel**: open https://smee.io/new and copy
+   the channel URL — that URL *is* the webhook URL; it is not a secret.
+2. **Register the App** at https://github.com/settings/apps/new:
+   - name, homepage URL of the repository, "Any account" install scope;
+   - **Webhook**: Active, URL = the smee channel formed above, with a
+     locally generated secret — the secret goes into `.env`
+     (`GITHUB_WEBHOOK_SECRET`), never into chat or the repo;
+   - **Repository permissions** exactly: Actions read-only, Checks
+     read-only, Contents read *and* write, Pull requests read and write,
+     Issues read and write, **Workflows: No access** (never grant it —
+     AD-16). GitHub auto-adds `metadata` (and `statuses`), which are
+     platform-implied, not requested;
+   - **Organization permissions**: Members read-only (this is the
+     permission story 1.1 uses to authorise CODEOWNER decisions);
+   - **Subscribe to events**: Workflow run + Issue comment;
+   - after creation, *Private keys → Generate a private key* and put the
+     PEM into `.env` (`GITHUB_APP_PRIVATE_KEY`) — keep the file outside
+     any repo tree.
+3. **Install**: from the App's page choose *Install GitHub App* → your
+   organization → **Only select repositories** → the demo repo. Record the
+   installation ID shown at `https://github.com/settings/installations`.
+4. Creating a repository ruleset (1 approval + code-owner review, no
+   force-push/deletion, App not a bypass actor) is an admin step, currently
+   done from `scripts/ruleset-seed.json`; UI-driven setup follows later.
+5. The private key, webhook secret and IDs (`GITHUB_APP_ID`,
+   `GITHUB_APP_INSTALLATION_ID`) live only in `.env` (names listed in
+   `.env.example`); verify your install with
+   `python scripts/verify_demo_repo.py`.
+
+The locally running intake behind the tunnel is story 1.1; until then
+webhook deliveries pile up in the smee channel only.
+
 ## Sections
 
 | Section | Available after |
 | --- | --- |
-| Section | Status |
-| --- | --- |
 | Run it locally (Compose) | done (story 0.3) |
-| Install the GitHub App on a repository | stories 0.4, 1.1 |
+| Install the GitHub App on a repository | done (story 0.4); intake around it lands with story 1.1 |
 | Reading a draft PR or infra report | story 2.11 |
 | Approving or rejecting a paused triage | Epic 5 |
 | Configuration | to be decided by the stories that add settings |

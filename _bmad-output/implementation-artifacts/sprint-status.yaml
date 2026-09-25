@@ -46,7 +46,7 @@ development_status:
   0-1-reproduce-the-rubric-layout-and-pinned-toolchain: done
   0-2-publish-shared-payload-contracts-and-generated-schemas: done
   0-3-start-compose-and-forward-only-migrations: in-progress
-  0-4-prepare-the-protected-external-github-demo-repository: backlog
+  0-4-prepare-the-protected-external-github-demo-repository: in-progress
   epic-0-retrospective: optional
 
   epic-1: backlog

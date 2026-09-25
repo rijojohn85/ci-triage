@@ -1,0 +1,25 @@
+# ci.yml — the green baseline for stories 0.4 and 6.x: pushes and pull
+# requests run the demo package's tests. Scenario drivers (stories 6.6-6.8)
+# add jobs that fail on purpose; this workflow is never extended by them
+# (workflows changes are the AD-13/AD-16 blocked path).
+
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  unit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install pytest
+        run: pip install pytest
+      - name: Run tests
+        run: pytest -q
