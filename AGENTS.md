@@ -14,12 +14,17 @@ On any conflict: spine AD > this file > everything else.
 
 ## How work is done
 
-1. **Brief before code.** Before changing anything, state what will be built: story + ACs, binding ADs, files to create/change and what is deliberately not touched, approach (naming the SOLID/DRY decisions), tests per AC, risks/open questions. Wait for the human's go.
+1. **Brief before code.** Before changing anything, state what will be built: story + ACs, binding ADs, files to create/change and what is deliberately not touched, approach (naming the SOLID/DRY decisions), tests per AC, risks/open questions, doc impact (step 7). Wait for the human's go.
 2. **TDD** (below) for every behaviour change.
 3. **Quality gates** (below) green before a story is called done. Report AC by AC with the command that proved it.
 4. One branch per story (`story/<sprint-status key>`), off an up-to-date `main`; merged only after human review.
 5. Library/API usage: check current docs (context7 first, web second) and say which source answered.
 6. Models: Claude Sonnet / Haiku and TypeSafe Jev only. No secrets in the repo; `.env.example` holds names only.
+7. **Docs move with code.** Every story updates, in the same PR:
+   - `docs/DEVELOPER.md` — architecture, where things live, how to run, test and extend them;
+   - `docs/USER-GUIDE.md` — how to install and use the tool, when user-visible behaviour changes.
+
+   If neither needs a change, the story report says "no doc change" and why. Docs describe what exists on `main` now, not plans. They link spine ADs and folder READMEs instead of restating them (DRY). `README.md` stays the short rubric entry point and links both.
 
 ## TDD
 
@@ -71,3 +76,49 @@ Mechanical checks that enforce the rules above. Status: the layer-contract check
 | All of the above | `make check` | green before done |
 
 Exceptions need an inline `# noqa: <code> — <reason / AD-n>` and are listed in the story report.
+
+<!-- code-review-graph MCP tools -->
+## MCP Tools: code-review-graph
+
+**This project has a knowledge graph. Start with the code-review-graph
+MCP tools to narrow scope, then read the source.** The graph is cheaper than scanning files and
+gives you structural context (callers, dependents, test coverage) that file search cannot.
+
+### When to use graph tools FIRST
+
+- **Exploring code**: `semantic_search_nodes_tool` or `query_graph_tool` instead of Grep
+- **Understanding impact**: `get_impact_radius_tool` instead of manually tracing imports
+- **Code review**: `detect_changes_tool` + `get_review_context_tool` instead of reading entire files
+- **Finding relationships**: `query_graph_tool` with callers_of/callees_of/imports_of/tests_for
+- **Architecture questions**: `get_architecture_overview_tool` + `list_communities_tool`
+
+### Verify in the source
+
+- Narrow scope with the graph, then read the source. Do not change code from graph output alone.
+- For any non-trivial change, read the implementation and the relevant tests before concluding.
+- Verify the exact source when touching behavior, database logic, migrations, retries, fallbacks,
+  recovery, or compatibility code.
+- When the graph and the source disagree, the source wins. The graph may be stale or may not
+  model that relationship.
+- An empty graph result can mean "not indexed" or "not statically visible", not "does not exist".
+
+### Key Tools
+
+| Tool | Use when |
+| ------ | ---------- |
+| `detect_changes_tool` | Reviewing code changes — gives risk-scored analysis |
+| `get_review_context_tool` | Need source snippets for review — token-efficient |
+| `get_impact_radius_tool` | Understanding blast radius of a change |
+| `get_affected_flows_tool` | Finding which execution paths are impacted |
+| `query_graph_tool` | Tracing callers, callees, imports, tests, dependencies |
+| `semantic_search_nodes_tool` | Finding functions/classes by name or keyword |
+| `get_architecture_overview_tool` | Understanding high-level codebase structure |
+| `refactor_tool` | Planning renames, finding dead code |
+
+### Workflow
+
+1. The graph auto-updates on file changes (via hooks).
+2. Use `detect_changes_tool` for code review.
+3. Use `get_affected_flows_tool` to understand impact.
+4. Use `query_graph_tool` pattern="tests_for" to check coverage.
+<!-- /code-review-graph MCP tools -->

@@ -2,6 +2,11 @@
 
 Spoke-based multi-agent system that triages CI failures and produces blameless, human-gated fixes. This repo is Story 0.1 of Epic 0: the reproducible rubric layout and pinned toolchain foundation. Full planning docs: `_bmad-output/planning-artifacts/` (architecture spine, epics.md).
 
+## Docs
+
+- [docs/DEVELOPER.md](docs/DEVELOPER.md) — architecture, where things live, how to run, test and extend.
+- [docs/USER-GUIDE.md](docs/USER-GUIDE.md) — how to install and use the tool.
+
 ## Quickstart (bootstrap)
 
 ```bash

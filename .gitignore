@@ -29,3 +29,5 @@ results/*
 # coverage artifacts
 .coverage
 htmlcov/
+# Added by code-review-graph
+.code-review-graph/
