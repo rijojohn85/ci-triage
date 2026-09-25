@@ -9,7 +9,7 @@ in the marked integration tests).
 
 import uuid
 from collections.abc import Callable
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import TypeVar
 
 import psycopg
@@ -24,25 +24,30 @@ from workflow.leases import (
 
 __all__ = ["PostgresRunLeaseStore"]
 
+# The database's own `now()` is the single clock for lease validity: anchoring
+# the expiry and comparing it in SQL means two hosts with disagreeing clocks
+# can never reclaim a live lease early (AD-23).
 _CLAIM_SQL = """
 UPDATE triage_run
-SET lease_owner = %s, lease_until = %s, updated_at = now()
+SET lease_owner = %s,
+    lease_until = now() + make_interval(secs => %s),
+    updated_at = now()
 WHERE run_id = (
     SELECT run_id
     FROM triage_run
     WHERE state = ANY(%s)
-      AND (lease_until IS NULL OR lease_until <= %s)
+      AND (lease_until IS NULL OR lease_until <= now())
     ORDER BY run_id
     FOR UPDATE SKIP LOCKED
     LIMIT 1
 )
-RETURNING run_id
+RETURNING run_id, lease_until
 """
 
 _RENEW_SQL = """
 UPDATE triage_run
-SET lease_until = %s, updated_at = now()
-WHERE run_id = %s AND lease_owner = %s AND lease_until > %s
+SET lease_until = now() + make_interval(secs => %s), updated_at = now()
+WHERE run_id = %s AND lease_owner = %s AND lease_until > now()
 RETURNING run_id
 """
 
@@ -55,12 +60,21 @@ def _as_uuid(value: object) -> uuid.UUID:
     return value if isinstance(value, uuid.UUID) else uuid.UUID(str(value))
 
 
+def _as_datetime(value: object) -> datetime:
+    return value if isinstance(value, datetime) else datetime.fromisoformat(str(value))
+
+
 def _open_connection(dsn: str) -> LeaseConnection:
     return psycopg.connect(dsn)
 
 
 class PostgresRunLeaseStore:
-    """I/O adapter; one short connection per call keeps it thread-safe."""
+    """I/O adapter; one short connection per call keeps it thread-safe.
+
+    Lease validity is decided by the database clock (`now()`), never the
+    caller's, so clock skew between workers cannot reclaim a live lease early
+    (AD-23).
+    """
 
     def __init__(
         self, dsn: str, connect: Callable[[str], LeaseConnection] | None = None
@@ -68,28 +82,25 @@ class PostgresRunLeaseStore:
         self._dsn = dsn
         self._connect: Callable[[str], LeaseConnection] = connect or _open_connection
 
-    def claim_next(self, *, now: datetime, lease_seconds: int) -> Claim | None:
+    def claim_next(self, *, lease_seconds: int) -> Claim | None:
         owner = new_lease_owner()
-        lease_until = now + timedelta(seconds=lease_seconds)
         with self._connect(self._dsn) as conn, conn.transaction():
             row = conn.execute(
                 _CLAIM_SQL,
                 (
                     owner,
-                    lease_until,
+                    lease_seconds,
                     [state.value for state in CLAIMABLE_RUN_STATES],
-                    now,
                 ),
             ).fetchone()
         if row is None:
             return None
-        return Claim(_as_uuid(row[0]), owner, lease_until)
+        return Claim(_as_uuid(row[0]), owner, _as_datetime(row[1]))
 
-    def renew(self, claim: Claim, *, now: datetime, lease_seconds: int) -> bool:
-        lease_until = now + timedelta(seconds=lease_seconds)
+    def renew(self, claim: Claim, *, lease_seconds: int) -> bool:
         with self._connect(self._dsn) as conn, conn.transaction():
             row = conn.execute(
-                _RENEW_SQL, (lease_until, claim.run_id, claim.owner, now)
+                _RENEW_SQL, (lease_seconds, claim.run_id, claim.owner)
             ).fetchone()
         return row is not None
 

@@ -18,3 +18,20 @@ Run locally: `python -m gateway` (needs `DATABASE_URL`,
 `tests/security/test_gateway_signature.py`, `test_gateway_intake.py`,
 `test_gateway_limits.py`; the Postgres path is `test_gateway_store_integration.py`
 (marked integration, needs Docker).
+
+Known limits (v1):
+
+- **The store calls run in a worker thread.** `handle` runs the blocking
+  Postgres reads/writes through `run_in_threadpool`, so one slow query does not
+  block the event loop and a burst still gets its `429` on time. Each call
+  opens its own connection ("one connection per call"); a pooled connection is
+  a later optimisation.
+- **The rate limiter is in-process.** `InstallationRateLimiter` counts in this
+  process's memory, so with several uvicorn workers or replicas the effective
+  limit is the configured limit times the number of processes. Move it to a
+  shared store before running more than one gateway.
+- **The queue-depth cap is soft.** The depth is read and the run is inserted in
+  two statements, so two concurrent requests can each pass the check just under
+  the cap and push it over by one. That is acceptable for a shed-load guard;
+  enforce it in the insert transaction if it ever needs to be exact.
+

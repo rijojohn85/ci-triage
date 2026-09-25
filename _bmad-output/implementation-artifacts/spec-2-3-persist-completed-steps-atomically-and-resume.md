@@ -150,6 +150,12 @@ deferred:
   - `[low]` `[patch]` `test_status_values_match_the_migration_check_constraint` compared a hardcoded set instead of reading `0004` — now parses the migration's CHECK.
   - `[medium]` `[patch]` orchestrator-flagged: `workflow/steps.py` mixed pure types with the `psycopg` adapter (AGENTS SOLID-S, matching the 1.2 review) — the Postgres side moved to `workflow/step_store.py`; `steps.py` is pure and imports no driver.
 
+### 2026-09-26 — Second review pass (post-finalization fixes)
+
+- `[high]` `[patch]` a duplicate `(run_id, step, attempt)` surfaced as a raw `psycopg.errors.UniqueViolation`; it is now mapped to a typed, non-retryable `DuplicateStepError` (AD-22).
+- `[medium]` `[patch]` a missing insert/update result was raised as `LeaseLost`, which it is not (the lease was already re-checked and the row was read in the same transaction); it is now a typed, non-retryable `StepWriteError`.
+- `[low]` no change: `StepConnection`/`StepCursor` duplicate `LeaseConnection`/`LeaseCursor`, which the rule of three allows until a third copy appears.
+
 ## Auto Run Result
 
 Status: done

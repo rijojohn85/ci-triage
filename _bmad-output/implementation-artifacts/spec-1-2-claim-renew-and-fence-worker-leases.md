@@ -17,6 +17,13 @@ deferred:
     location: >-
       workflow/lease_store.py
     severity: low
+  - summary: >-
+      `claim_next` deliberately excludes AWAITING_APPROVAL, so the approval handler needs a targeted way to lease one paused run before committing the out-of-pause transition.
+    evidence: |-
+      AD-1 (spine line 438) makes a paused run wait indefinitely, so paused runs are not worker-claimable. Committing an approval transition still needs an owner (guarded_commit re-checks lease_owner), so the punch-out/approval story (AD-14) must acquire the paused run by run id rather than through claim_next. tests/workflow/test_step_integration.py::test_ac1_commit_out_of_pause_clears_the_escalation_reason stands in for that path with a direct lease.
+    location: >-
+      workflow/leases.py
+    severity: medium (unverified)
 ---
 
 ## Build Brief
@@ -168,6 +175,11 @@ deferred:
   - `[low]` `[reject]` `claim_next` reads `WORKER_ID` inside the adapter — the spec's one `new_lease_owner` factory; documented now.
   - `[low]` `[patch]` a unit test restates the claimable-set definition verbatim — replaced with an explicit ten-state expected set.
   - `[medium]` `[patch]` DEVELOPER described config wiring that does not exist — reworded to describe the loader as it exists now (worker loop consumes it later).
+
+### 2026-09-26 — Second review pass (post-finalization fixes)
+
+- `[high]` `[patch]` `AWAITING_APPROVAL` was claimable, so N paused runs would occupy all N workers and starve new `RECEIVED` work. The claimable set is now `non-terminal − HUMAN_WAIT_STATES` (AD-1 line 438: a paused run waits indefinitely and has no worker work). New tests pin both the set and a paused-run claim.
+- `[medium]` `[patch]` lease expiry was anchored to each worker's own clock, so a host whose clock lagged could see a live lease as expired and reclaim it early. The claim and renew SQL now anchor to and compare against the database's `now()`; `now` was dropped from `RunLeaseStore.claim_next`/`renew`. The pure `lease_expired`/`renew_due` helpers still take an injected `now` for a worker's local renew scheduling.
 
 ## Auto Run Result
 

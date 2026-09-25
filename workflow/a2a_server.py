@@ -30,6 +30,10 @@ _REFUSAL = "this endpoint serves task reads only (AD-4)"
 # The confidence-below-cutoff arm of the shared predicate is owned by 4.1 AC3,
 # so the server supplies a confidence that is never below the cutoff; the
 # predicate itself is reused, not re-implemented.
+#
+# TODO(story 4.1): supply the run's stored confidence instead of this
+# placeholder, so a finished low-confidence run is blame-free. Until then the
+# below-cutoff arm is NOT enforced here (tracked as a deferral in the 2.4 spec).
 _SERVING_CONFIDENCE = ClassConfidence(
     failure_class=FailureClass.UNKNOWN,
     confidence_jev=1.0,

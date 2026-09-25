@@ -198,6 +198,12 @@ deferred:
   - `[low]` `[patch]` DEVELOPER still called the gateway a placeholder — corrected.
   - `[low]` `[patch]` DEVELOPER `scripts/` status omitted 1.1 — added.
 
+### 2026-09-26 — Second review pass (post-finalization fixes)
+
+- `[high]` `[patch]` the blocking Postgres calls ran on the event loop, so a slow store call stalled every request and delayed a burst's `429`; the store reads/writes now run through `run_in_threadpool`, keeping the pure rate-limiter on the loop.
+- `[medium]` `[patch]` the run identity was parsed twice per request (once in `screen`, once in `enqueue`); `screen` now returns the parsed `RunIdentity`.
+- `[low]` `[patch]` the queue-depth cap is soft (read then insert, two statements) and the rate limiter is per process; both are now documented in `gateway/README.md` rather than left implicit.
+
 ## Auto Run Result
 
 Status: done

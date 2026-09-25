@@ -11,9 +11,9 @@ context: ['{project-root}/AGENTS.md']
 warnings: ['oversized']
 deferred:
   - summary: >-
-      The A2A server has no concrete Postgres TaskReader, so the served endpoint is proven only with fixture readers.
+      The A2A server has no concrete Postgres TaskReader, so the served endpoint is proven only with fixture readers; its list path must be batch-shaped to avoid a query per run.
     evidence: |-
-      The AC is fixture-driven ("stored run and step fixtures"), so 2.4 ships the TaskReader protocol plus a fake; the orchestrator entrypoint (a later story) must supply a real reader bound to triage_run/run_step before the endpoint serves real runs.
+      The AC is fixture-driven ("stored run and step fixtures"), so 2.4 ships the TaskReader protocol plus a fake; the orchestrator entrypoint (a later story) must supply a real reader bound to triage_run/run_step before the endpoint serves real runs. `ReadOnlyTaskStore.list` reads every run for the repo and then calls `list_steps` once per run, so the concrete reader must add a batch `list_steps_for_runs(repo_id, run_ids)` method (or equivalent) rather than reusing the per-run call.
     location: >-
       workflow/a2a_server.py
     severity: medium (unverified)
@@ -24,6 +24,20 @@ deferred:
     location: >-
       workflow/task_store.py
     severity: low
+  - summary: >-
+      The read-only A2A endpoint has no authentication; its only scoping is the single repo_id bound at build time.
+    evidence: |-
+      AD-14 requires the orchestrator's own auth middleware to validate the caller's GitHub user token and reject unauthenticated calls before any check. 2.4 serves `get_task`/`list_tasks` with no auth and a build-time repo scope, so it must not be exposed beyond the single demo deployment until the AD-14 auth middleware lands (punch-out story).
+    location: >-
+      workflow/a2a_server.py
+    severity: medium (unverified)
+  - summary: >-
+      The below-cutoff arm of AD-27 blame-free output is not enforced on the A2A endpoint until story 4.1.
+    evidence: |-
+      2.4 cannot read a run's stored confidence, so `_SERVING_CONFIDENCE` forces a confidence that is never below the cutoff; a finished low-confidence run would still show author attribution. Story 4.1 AC3 owns the confidence-below-cutoff arm and must supply the run's real confidence to `build_task`. Pinned by tests/workflow/test_task_server.py::test_ac3_below_cutoff_blame_free_arm_is_a_tracked_placeholder_until_4_1.
+    location: >-
+      workflow/a2a_server.py
+    severity: medium (unverified)
 ---
 
 ## Build Brief
@@ -153,6 +167,11 @@ deferred:
   - `[low]` `[patch]` duplicate of the confidence-arm docs finding.
   - `[low]` `[patch]` `create_app`'s `confidence`/`cutoffs` keyword parameters had no caller — removed.
   - `[medium]` `[defer]` the A2A server has no concrete Postgres `TaskReader`, so the served endpoint is proven only with fixture readers — the AC is fixture-driven, but the orchestrator entrypoint (a later story) must supply one before the endpoint serves real runs.
+
+### 2026-09-26 — Second review pass (post-finalization fixes)
+
+- `[medium]` `[defer]` the A2A endpoint has no authentication (AD-14); recorded with its AD-14 owner in the deferral list, and the reader deferral now names the batch shape `list_steps_for_runs` the concrete Postgres reader must use to avoid a query per run.
+- `[medium]` `[defer]` the below-cutoff AD-27 blame-free arm is not enforced until story 4.1 (the serving confidence cannot be read yet); recorded as a deferral, marked with a `TODO(story 4.1)` in `workflow/a2a_server.py`, and pinned by `test_ac3_below_cutoff_blame_free_arm_is_a_tracked_placeholder_until_4_1` so the gap is loud and any wiring change is deliberate.
 
 ## Auto Run Result
 

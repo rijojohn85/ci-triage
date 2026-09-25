@@ -17,9 +17,9 @@ The three rules this encodes:
 
 `RunLeaseStore` is the small per-consumer Protocol (AGENTS.md; SOLID-I): unit
 tests fake it, the Postgres adapter is the only implementation. Claimable
-states derive from `TERMINAL_RUN_STATES`, never a hand-listed set (SOLID-O).
-Timings come from `config/orchestrator.yaml` (AD-19); `now` is injected so no
-test sleeps.
+states derive from `TERMINAL_RUN_STATES` minus the human-wait states, never a
+hand-listed set (SOLID-O). Timings come from `config/orchestrator.yaml`
+(AD-19); `now` is injected so no test sleeps.
 """
 
 import os
@@ -34,6 +34,7 @@ from workflow.run_states import RUN_STATES, TERMINAL_RUN_STATES, RunState
 
 __all__ = [
     "CLAIMABLE_RUN_STATES",
+    "HUMAN_WAIT_STATES",
     "Claim",
     "LeaseConnection",
     "LeaseLost",
@@ -45,9 +46,19 @@ __all__ = [
 
 _WORKER_ID_ENV = "WORKER_ID"
 
+# AD-1 (spine line 438): a run waits in AWAITING_APPROVAL indefinitely for a
+# human; there is no worker work to do while it is paused, so a worker must not
+# claim it. The approval handler moves it out through a guarded transition
+# (AD-4/AD-14); once it leaves this state it becomes claimable again.
+HUMAN_WAIT_STATES: frozenset[RunState] = frozenset({RunState.AWAITING_APPROVAL})
+
 # SOLID-O: the claimable set is *derived* from the state machine. A future
-# state change (or terminal addition) flows through with no edit here.
-CLAIMABLE_RUN_STATES: frozenset[RunState] = frozenset(RUN_STATES) - TERMINAL_RUN_STATES
+# state change (or terminal addition) flows through with no edit here; a paused
+# run is not claimable (see `HUMAN_WAIT_STATES`), so N workers never spin on
+# runs that are waiting on a person.
+CLAIMABLE_RUN_STATES: frozenset[RunState] = (
+    frozenset(RUN_STATES) - TERMINAL_RUN_STATES - HUMAN_WAIT_STATES
+)
 
 T = TypeVar("T")
 
@@ -109,11 +120,16 @@ class LeaseConnection(Protocol):
 
 
 class RunLeaseStore(Protocol):
-    """The whole persistence surface a worker loop needs (AD-23)."""
+    """The whole persistence surface a worker loop needs (AD-23).
 
-    def claim_next(self, *, now: datetime, lease_seconds: int) -> Claim | None: ...
+    Lease validity is the database's decision, so no clock is passed in: the
+    adapter anchors and compares `lease_until` with the database's `now()`, and
+    `lease_seconds` is the only timing input (from config).
+    """
 
-    def renew(self, claim: Claim, *, now: datetime, lease_seconds: int) -> bool: ...
+    def claim_next(self, *, lease_seconds: int) -> Claim | None: ...
+
+    def renew(self, claim: Claim, *, lease_seconds: int) -> bool: ...
 
     def guarded_commit(
         self, claim: Claim, work: Callable[[LeaseConnection], T]

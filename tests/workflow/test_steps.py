@@ -17,13 +17,21 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Final
 
+import psycopg
 import pytest
 
 from contracts.enums import EscalationReason, FailureClass
 from workflow.leases import Claim, LeaseLost
 from workflow.run_states import RunState
 from workflow.step_store import PostgresStepRecorder
-from workflow.steps import ResumeView, StepCommit, StepRecord, StepStatus
+from workflow.steps import (
+    DuplicateStepError,
+    ResumeView,
+    StepCommit,
+    StepRecord,
+    StepStatus,
+    StepWriteError,
+)
 from workflow.transitions import GuardInput, IllegalTransition
 
 NOW = datetime(2026, 9, 26, 12, 0, tzinfo=timezone.utc)
@@ -66,6 +74,20 @@ class FakeConnection:
         return FakeCursor(rows)
 
 
+class InsertRaisesConnection(FakeConnection):
+    """Raises on the `run_step` insert, as the unique index would (AD-2)."""
+
+    def __init__(self, error: BaseException) -> None:
+        super().__init__([(RunState.RECEIVED.value,)])
+        self._error = error
+
+    def execute(self, sql: str, params: tuple[object, ...] = ()) -> FakeCursor:
+        if sql.lstrip().startswith("INSERT"):
+            self.calls.append((sql, params))
+            raise self._error
+        return super().execute(sql, params)
+
+
 class FakeLeaseStore:
     """The one `guarded_commit` call the recorder composes (AD-23).
 
@@ -78,10 +100,10 @@ class FakeLeaseStore:
         self.owner_ok = owner_ok
         self.commits: list[Claim] = []
 
-    def claim_next(self, *, now: object, lease_seconds: int) -> Claim | None:
+    def claim_next(self, *, lease_seconds: int) -> Claim | None:
         raise NotImplementedError
 
-    def renew(self, claim: Claim, *, now: object, lease_seconds: int) -> bool:
+    def renew(self, claim: Claim, *, lease_seconds: int) -> bool:
         raise NotImplementedError
 
     def guarded_commit(self, claim: Claim, work: object) -> object:
@@ -300,6 +322,61 @@ class TestRecord:
 
         assert len(connection.calls) == 1
         assert connection.calls[0][1] == (run_id, REPO_ID)
+
+    def test_duplicate_step_attempt_is_definitive_not_retryable(self) -> None:
+        # The unique (run_id, step, attempt) index is the double-completion
+        # backstop (AD-2): a duplicate is typed and never retryable (AD-22).
+        run_id = uuid.uuid4()
+        connection = InsertRaisesConnection(
+            psycopg.errors.UniqueViolation("duplicate key")
+        )
+        store, _ = recorder_against(connection)
+
+        with pytest.raises(DuplicateStepError) as excinfo:
+            store.record(
+                claim_for(run_id),
+                REPO_ID,
+                StepCommit(step="distill", to_state=RunState.DISTILLING),
+            )
+
+        assert excinfo.value.retryable is False
+        assert excinfo.value.run_id == run_id
+        assert "distill" in str(excinfo.value)
+
+    def test_missing_insert_result_is_a_write_error_not_a_lost_lease(self) -> None:
+        run_id = uuid.uuid4()
+        connection = FakeConnection(
+            [(RunState.RECEIVED.value,)],  # current state read
+            [],  # INSERT returned no row
+            [(run_id,)],
+        )
+        store, _ = recorder_against(connection)
+
+        with pytest.raises(StepWriteError):
+            store.record(
+                claim_for(run_id),
+                REPO_ID,
+                StepCommit(step="distill", to_state=RunState.DISTILLING),
+            )
+
+    def test_missing_state_move_result_is_a_write_error(self) -> None:
+        run_id = uuid.uuid4()
+        connection = FakeConnection(
+            [(RunState.RECEIVED.value,)],
+            [(CREATED_AT,)],
+            [],  # UPDATE ... RETURNING run_id returned no row
+        )
+        store, _ = recorder_against(connection)
+
+        with pytest.raises(StepWriteError):
+            store.record(
+                claim_for(run_id),
+                REPO_ID,
+                StepCommit(step="distill", to_state=RunState.DISTILLING),
+            )
+
+    def test_step_write_error_is_definitive_not_retryable(self) -> None:
+        assert StepWriteError(uuid.uuid4(), "distill").retryable is False  # AD-22
 
 
 class TestResume:

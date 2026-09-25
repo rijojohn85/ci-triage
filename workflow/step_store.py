@@ -24,7 +24,14 @@ import psycopg
 from workflow.lease_store import PostgresRunLeaseStore
 from workflow.leases import Claim, LeaseConnection, LeaseLost, RunLeaseStore
 from workflow.run_states import RunState
-from workflow.steps import ResumeView, StepCommit, StepRecord, StepStatus
+from workflow.steps import (
+    DuplicateStepError,
+    ResumeView,
+    StepCommit,
+    StepRecord,
+    StepStatus,
+    StepWriteError,
+)
 from workflow.transitions import transition
 
 __all__ = ["PostgresStepRecorder"]
@@ -117,18 +124,25 @@ class PostgresStepRecorder:
             # assignment. An illegal move raises before any write.
             transition(current, commit.to_state, commit.guards)
             step_id = uuid.uuid4()
-            created = conn.execute(
-                _INSERT_STEP_SQL,
-                (
-                    step_id,
-                    claim.run_id,
-                    repo_id,
-                    commit.step,
-                    commit.attempt,
-                    commit.status.value,
-                    _as_json(commit.output),
-                ),
-            ).fetchone()
+            try:
+                created = conn.execute(
+                    _INSERT_STEP_SQL,
+                    (
+                        step_id,
+                        claim.run_id,
+                        repo_id,
+                        commit.step,
+                        commit.attempt,
+                        commit.status.value,
+                        _as_json(commit.output),
+                    ),
+                ).fetchone()
+            except psycopg.errors.UniqueViolation as exc:
+                # `(run_id, step, attempt)` is unique (AD-2): a second
+                # completion of the same attempt is definitive, not transient.
+                raise DuplicateStepError(
+                    claim.run_id, commit.step, commit.attempt
+                ) from exc
             advanced = conn.execute(
                 _ADVANCE_STATE_SQL,
                 (
@@ -139,7 +153,10 @@ class PostgresStepRecorder:
                 ),
             ).fetchone()
             if created is None or advanced is None:
-                raise LeaseLost(claim.run_id, claim.owner)
+                # guarded_commit already re-checked the lease, and the run row
+                # was read in this transaction, so a missing insert/update
+                # result is a data-integrity fault, never a lost lease.
+                raise StepWriteError(claim.run_id, commit.step)
             return StepRecord(
                 step_id=step_id,
                 run_id=claim.run_id,

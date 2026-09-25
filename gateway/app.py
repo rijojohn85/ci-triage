@@ -10,6 +10,7 @@ import time
 from collections.abc import Callable, Mapping
 
 from starlette.applications import Starlette
+from starlette.concurrency import run_in_threadpool
 from starlette.requests import Request
 from starlette.responses import JSONResponse, Response
 from starlette.routing import Route
@@ -17,6 +18,7 @@ from starlette.routing import Route
 from gateway.events import (
     DELIVERY_HEADER,
     EVENT_HEADER,
+    RunIdentity,
     installation_id,
     is_accepted_event,
     parse_run_identity,
@@ -61,30 +63,37 @@ class GatewayIntake:
 
     def screen(
         self, request: Request, payload: Mapping[str, object]
-    ) -> Response | None:
-        """Installation, event and load checks; None means "enqueue it"."""
+    ) -> tuple[RunIdentity | None, Response | None]:
+        """Installation, event and rate checks; `(identity, None)` means enqueue.
+
+        Pure and synchronous: it touches no store, so the shared rate limiter
+        stays on the event loop and is never raced by worker threads. The
+        parsed `RunIdentity` is handed back so `enqueue` does not parse again.
+        """
         installation = installation_id(payload)
         if (
             installation is None
             or installation not in self._settings.allowed_installation_ids
         ):
-            return _status("unknown_installation", _STATUS_UNKNOWN_INSTALLATION)
+            return None, _status("unknown_installation", _STATUS_UNKNOWN_INSTALLATION)
         if not is_accepted_event(request.headers.get(EVENT_HEADER, ""), payload):
-            return _status("ignored", _STATUS_NOOP)
+            return None, _status("ignored", _STATUS_NOOP)
         identity = parse_run_identity(payload)
         if identity is None:
-            return _status("invalid_payload", _STATUS_BAD_REQUEST)
+            return None, _status("invalid_payload", _STATUS_BAD_REQUEST)
         if not self._rate_limiter.allow(installation):
-            return _status("rate_limited", _STATUS_RATE_LIMITED)
-        depth = self._store.queue_depth(identity.repo_id)
-        if queue_depth_exceeds(depth, self._limits.max_queue_depth_per_repo):
-            return _status("queue_full", _STATUS_RATE_LIMITED)
-        return None
+            return None, _status("rate_limited", _STATUS_RATE_LIMITED)
+        return identity, None
 
-    def enqueue(self, request: Request, payload: Mapping[str, object]) -> Response:
-        identity = parse_run_identity(payload)
+    def queue_is_full(self, identity: RunIdentity) -> bool:
+        """Blocking store read; call through `run_in_threadpool` (AD-17)."""
+        depth = self._store.queue_depth(identity.repo_id)
+        return queue_depth_exceeds(depth, self._limits.max_queue_depth_per_repo)
+
+    def enqueue(self, request: Request, identity: RunIdentity) -> Response:
+        """Blocking store write; call through `run_in_threadpool` (AD-17)."""
         delivery_id = request.headers.get(DELIVERY_HEADER, "")
-        if identity is None or not delivery_id:
+        if not delivery_id:
             return _status("invalid_payload", _STATUS_BAD_REQUEST)
         run_id = new_run_id()
         result = self._store.record_and_enqueue(delivery_id, identity, run_id)
@@ -114,10 +123,15 @@ class GatewayIntake:
         payload = _parse_body(raw_body)
         if payload is None:
             return _status("invalid_payload", _STATUS_BAD_REQUEST)
-        rejection = self.screen(request, payload)
+        identity, rejection = self.screen(request, payload)
         if rejection is not None:
             return rejection
-        return self.enqueue(request, payload)
+        assert identity is not None  # screen returns an identity or a rejection
+        # The store calls block on Postgres; run them in a worker thread so the
+        # event loop keeps serving (e.g. a burst gets its 429 on time).
+        if await run_in_threadpool(self.queue_is_full, identity):
+            return _status("queue_full", _STATUS_RATE_LIMITED)
+        return await run_in_threadpool(self.enqueue, request, identity)
 
 
 def create_app(

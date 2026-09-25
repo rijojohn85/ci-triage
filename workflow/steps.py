@@ -25,12 +25,49 @@ from workflow.run_states import RunState
 from workflow.transitions import GuardInput
 
 __all__ = [
+    "DuplicateStepError",
     "ResumeView",
     "StepCommit",
     "StepRecord",
     "StepRecorder",
     "StepStatus",
+    "StepWriteError",
 ]
+
+
+class DuplicateStepError(Exception):
+    """A `(run_id, step, attempt)` row already exists (AD-2).
+
+    Definitive, never retryable (AD-22): the step has already been recorded, so
+    running it again would duplicate work. Raised from the unique index that is
+    the database-level backstop against a double completion.
+    """
+
+    retryable: bool = False
+
+    def __init__(self, run_id: uuid.UUID, step: str, attempt: int) -> None:
+        super().__init__(
+            f"step {step!r} attempt {attempt} already recorded for run {run_id}"
+        )
+        self.run_id = run_id
+        self.step = step
+        self.attempt = attempt
+
+
+class StepWriteError(Exception):
+    """A step write returned no row though the run row was present (AD-2).
+
+    Definitive, never retryable (AD-22): the insert and the state move commit
+    or roll back together, so a missing row is a data-integrity fault, not a
+    lost lease (the owner was already re-checked by the guarded commit).
+    """
+
+    retryable: bool = False
+
+    def __init__(self, run_id: uuid.UUID, step: str) -> None:
+        super().__init__(f"step {step!r} write for run {run_id} returned no row")
+        self.run_id = run_id
+        self.step = step
 
 
 class StepStatus(str, Enum):

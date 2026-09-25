@@ -28,7 +28,7 @@ Every message between orchestrator and agent is an A2A message whose data part i
 | 2.1 | The AD-1 run-state machine: `RunState` enum, one declarative transition table, pure guards, non-retryable `IllegalTransition`, pure AD-4 projection, generated state diagram + drift gate, `0001_triage_run` migration, thresholds loader | `workflow/run_states.py`, `workflow/transitions.py`, `workflow/projection.py`, `workflow/thresholds.py`, `workflow/diagram.py`, `scripts/generate_state_diagram.py`, `workflow/STATE_DIAGRAM.md`, `guardrails/thresholds.yaml`, `deploy/migrations/0001_triage_run.sql`, `tests/workflow/` |
 | 2.2 | The one confidence number (AD-9): Jev's `Choice`/`Noul` contracts, the frozen `ClassConfidence` min rule, the injection pre-screen cap, classification-branch cut-off predicates, the AD-27 blame-free attribution predicate, new cut-offs in `guardrails/thresholds.yaml` | `contracts/jev.py`, `contracts/verdict.py` (`effective_confidence`), `guardrails/confidence.py`, `workflow/attribution.py`, `workflow/thresholds.py`, `guardrails/thresholds.yaml`, `guardrails/schemas/JevClassification.json`, `tests/contracts/test_jev.py`, `tests/guardrails/`, `tests/workflow/test_attribution.py`, `tests/workflow/test_thresholds.py` |
 | 1.1 | Gateway intake: the webhook signature is checked over the raw bytes before parsing, unknown installations are refused, replayed deliveries and duplicate run identities collapse to one `triage_run(RECEIVED)`, bursts are shed, and run ids are time-ordered UUIDv7 | `gateway/`, `workflow/ids.py`, `config/gateway.yaml`, `deploy/migrations/0002_webhook_delivery.sql`, `deploy/gateway.Dockerfile`, `tests/security/` |
-| 1.2 | Worker leases and fencing: a claim takes the next unleased/expired non-terminal run in a short `FOR UPDATE SKIP LOCKED` transaction, renew extends only the owner's live lease, and a stale owner's lease-guarded commit is discarded (`LeaseLost`); lease timings come from config | `workflow/leases.py`, `workflow/lease_store.py`, `workflow/orchestrator_config.py`, `config/orchestrator.yaml`, `deploy/migrations/0003_triage_run_lease.sql`, `tests/workflow/`, `tests/security/test_compose_secret_placement.py` |
+| 1.2 | Worker leases and fencing: a claim takes the next unleased/expired non-terminal, non-paused run in a short `FOR UPDATE SKIP LOCKED` transaction, renew extends only the owner's live lease, and a stale owner's lease-guarded commit is discarded (`LeaseLost`); lease validity uses the database clock and lease timings come from config | `workflow/leases.py`, `workflow/lease_store.py`, `workflow/orchestrator_config.py`, `config/orchestrator.yaml`, `deploy/migrations/0003_triage_run_lease.sql`, `tests/workflow/`, `tests/security/test_compose_secret_placement.py` |
 | 2.3 | Steps and resume: a finished step's row and the run's state move commit in one lease-guarded transaction, validated by the 2.1 transition table; a reclaimed run reads its current state and completed step names so it skips finished work, and a stale owner's step-commit writes nothing | `workflow/steps.py`, `workflow/step_store.py`, `deploy/migrations/0004_run_step.sql`, `tests/workflow/test_steps.py`, `tests/workflow/test_step_integration.py`, `tests/security/test_compose_secret_placement.py` |
 | 2.4 | Read-only A2A task view: `get_task`/`list_tasks` project a stored run and its steps onto an A2A `Task` (task id = run id), a paused run is `INPUT_REQUIRED` with a blame-free evidence pack and no worker is started, and every write to the view is refused — so no second task-state writer exists | `workflow/task_store.py`, `workflow/a2a_server.py`, `tests/workflow/test_task_store.py`, `tests/workflow/test_task_server.py` |
 | 2.5 | Deterministic CI-log distiller (AD-20): strips ANSI/control characters, keeps only error blocks, stack traces and JUnit failures, numbers the survivors, and clips them to the `distiller.max_bytes` bound — with no model, network or clock, so the same input always gives the same output | `workflow/distiller.py`, `workflow/thresholds.py`, `guardrails/thresholds.yaml`, `tests/security/test_distiller.py`, `tests/workflow/test_thresholds.py`, `tests/fixtures/thresholds.py` |
@@ -141,7 +141,17 @@ installation id we do not know is refused with no downstream call.
 **Then the limits.** A per-installation rate limit (messages per time window)
 and a per-repo cap on how many runs may already be waiting stop a burst from
 becoming work. Both numbers live only in `config/gateway.yaml` (AD-19), never
-in code.
+in code. The queue-depth cap is a *soft* cap: the depth is read, then the run
+is inserted, in two statements, so two requests racing the same last slot can
+push the depth over by one. That is fine for shed-load; make it exact inside
+the insert transaction if it ever must be.
+
+**The store calls run off the event loop.** Reading the queue depth and
+writing the run are blocking Postgres calls, so `handle` runs them through
+`run_in_threadpool`. The event loop stays free to serve other requests (and to
+return a pending `429`) instead of stalling behind one query. The pure checks —
+signature, installation, event, rate limit — stay on the loop, so the
+in-memory rate limiter is never touched by two threads at once.
 
 **Then one insert.** A message that passes everything is written as a single
 `triage_run` in `RECEIVED` and answered `202`. Repetition collapses two ways:
@@ -156,8 +166,10 @@ keep the database index tidy.
 **What it deliberately is not:** no state-machine logic, and no LLM or GitHub
 call — enqueueing `RECEIVED` is the only write (AD-1, AD-17). The layer check
 fails the build if `gateway/` ever imports an LLM or GitHub client. The limits
-are in-process, which is correct for the one gateway under Compose v1 (AD-25);
-a future multi-replica gateway would move them to a shared store.
+are in-process, which is correct for the one gateway under Compose v1
+(AD-25): the rate limiter's counter is per process, so running N uvicorn
+workers multiplies the effective limit by N. A future multi-replica gateway
+must move the counters to a shared store.
 
 **To extend it:** a new accepted event is one new entry in the registry in
 `gateway/events.py`, not a new branch; a new limit is a new field in
@@ -175,7 +187,10 @@ and [AD-2](../_bmad-output/planning-artifacts/architecture/architecture-stage4-2
 
 - **Taking a run is one quick, all-or-nothing step.** A worker asks for the
   next run that is not finished and is either unclaimed or whose lease has run
-  out. In one small database transaction it takes exactly one such row
+  out. A run that is waiting for a person (`AWAITING_APPROVAL`) is never
+  offered: it has no worker work until a human decides (AD-1), so a pile of
+  paused runs cannot starve new work by occupying every worker. In one small
+  database transaction a worker takes exactly one eligible row
   (`SELECT … FOR UPDATE SKIP LOCKED`) and stamps its own owner name and an
   expiry time, then that transaction finishes *before* any slow work starts.
   Other workers skip a row that is already taken; "SKIP LOCKED" means they do
@@ -202,18 +217,24 @@ from `config/orchestrator.yaml` (AD-19). The loader
 lease, and a renew point before the lease ends); the worker loop that will
 read them arrives with stories 2.3/2.8. The Postgres SQL lives on its own in
 `workflow/lease_store.py`, so the policy in `workflow/leases.py` stays free of
-database code.
+database code. Lease validity uses the *database's* clock: the claim and the
+renew anchor the new expiry to `now()` and compare against `now()`, so two
+workers whose local clocks disagree can never treat a live lease as expired.
+The small pure helpers (`lease_expired`, `renew_due`) still take a `now` so a
+worker can decide *when* to renew from its own clock; the database always has
+the final say on whether a lease is valid.
 
 The owner name is made by one factory, `workflow/leases.py::new_lease_owner`.
 It takes the worker's name from the `WORKER_ID` environment variable (name
 only in `.env.example`) and adds a random suffix, so each claim is unique and
 a restarted worker can never be mistaken for the one before it. `RunLeaseStore`
 is the small interface the worker loop will use; the one real implementation
-talks to Postgres, and the tests drive it through a fake. Time is always
-passed in, so no test waits.
+talks to Postgres, and the tests drive it through a fake. Because the database
+owns lease validity, no test has to sleep.
 
 **To extend it:** a new claimable-state rule is a change in the state machine —
-the claimable set is worked out as *all states minus the terminal ones*, never
+the claimable set is worked out as *all states minus the terminal ones and the
+human-wait states*, never
 a hand-written list — so it flows through here with no edit. `workflow/leases.py`
 and its adapter `workflow/lease_store.py` stand alone; the worker loop itself
 arrives with stories 2.3/2.8.
@@ -345,7 +366,10 @@ at (AD-7).
   the failing test, then its stack text.
 
 Everything else — progress chatter, timings, the story before the error — is
-thrown away. But the lines that are kept are still untrusted. An error marker
+thrown away. The JUnit lines come first in the numbered list: they are the
+parsed, structured signal, so when the byte bound is reached it is the raw CI
+text that is trimmed first, never the JUnit evidence. But the lines that are
+kept are still untrusted. An error marker
 line, a line indented under one, and the fallback line can all hold text an
 attacker wrote. The request builder must pass the kept lines to a model only
 as clearly separated untrusted data, never as instructions (AD-20).

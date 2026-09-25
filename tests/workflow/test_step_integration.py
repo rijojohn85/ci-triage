@@ -36,7 +36,6 @@ pytestmark = pytest.mark.integration
 
 REPO_ROOT: Final[Path] = Path(__file__).resolve().parents[2]
 MIGRATIONS_DIR: Final[Path] = REPO_ROOT / "deploy" / "migrations"
-NOW = datetime(2026, 9, 26, 12, 0, tzinfo=timezone.utc)
 LEASE_SECONDS = 300
 REPO_ID = 42
 OTHER_REPO_ID = 99
@@ -106,16 +105,33 @@ def step_rows(dsn: str, run_id: uuid.UUID) -> list[tuple]:
 
 
 def claim_run(dsn: str, run_id: uuid.UUID) -> Claim:
-    claim = PostgresRunLeaseStore(dsn).claim_next(now=NOW, lease_seconds=LEASE_SECONDS)
+    claim = PostgresRunLeaseStore(dsn).claim_next(lease_seconds=LEASE_SECONDS)
     assert claim is not None and claim.run_id == run_id
     return claim
+
+
+def lease_run(dsn: str, run_id: uuid.UUID, owner: str = "approval-handler") -> Claim:
+    """Lease a specific run directly.
+
+    `claim_next` deliberately excludes a paused run (AD-1), so the approval
+    path — which acts on one known run — leases it by id. This helper stands in
+    for that path until the punch-out story supplies it.
+    """
+    with psycopg.connect(dsn) as conn, conn.cursor() as cur:
+        cur.execute(
+            "UPDATE triage_run SET lease_owner = %s, "
+            "lease_until = now() + interval '5 minutes' WHERE run_id = %s",
+            (owner, run_id),
+        )
+    return Claim(run_id, owner, datetime.now(timezone.utc) + timedelta(minutes=5))
 
 
 def expire_lease(dsn: str, run_id: uuid.UUID) -> None:
     with psycopg.connect(dsn) as conn, conn.cursor() as cur:
         cur.execute(
-            "UPDATE triage_run SET lease_until = %s WHERE run_id = %s",
-            (NOW - timedelta(seconds=1), run_id),
+            "UPDATE triage_run SET lease_until = now() - interval '1 second' "
+            "WHERE run_id = %s",
+            (run_id,),
         )
 
 
@@ -216,7 +232,9 @@ def test_ac1_commit_out_of_pause_clears_the_escalation_reason(pg_dsn: str) -> No
                 EscalationReason.UNKNOWN_CLASS.value,
             ),
         )
-    claim = claim_run(pg_dsn, run_id)
+    # The approval path leases the specific paused run by id (claim_next
+    # excludes paused runs, AD-1); this proves the recorder clears the reason.
+    claim = lease_run(pg_dsn, run_id)
 
     PostgresStepRecorder(pg_dsn).record(
         claim,

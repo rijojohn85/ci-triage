@@ -149,6 +149,11 @@ deferred:
   - `[low]` `[reject]` duplicate of the fallback injection finding; the doc was softened to say retained lines are untrusted data.
   - `[low]` `[patch]` duplicate of the JUnit `<error>` untested finding (clean-code).
 
+### 2026-09-26 — Second review pass (post-finalization fixes)
+
+- `[high]` `[patch]` the pytest banner pattern `^_{5,}.*_{5,}$` backtracked cubically on a long run of underscores ending in another character (an 8,000-char line froze the worker), reachable by any PR author through a CI log. The pattern is now `^_{5,} .* _{5,}$` (the real banner has spaces around the title) and every line's marker scan is capped to `max_bytes`; a regression test distils a 50,000-char pathological line under a time bound.
+- `[medium]` `[patch]` JUnit evidence was appended after the CI text, so a large raw log could push the structured evidence out at the byte bound; JUnit evidence is now emitted first, with a test that it survives a tight bound.
+
 ## Auto Run Result
 
 Status: done

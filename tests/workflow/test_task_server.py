@@ -29,6 +29,7 @@ from contracts.jev import JevChoice
 from guardrails.confidence import ClassConfidence
 from tests.contracts.samples import FULL_SHA, RUN_ID
 from tests.fixtures.thresholds import FIXTURE_CUTOFFS
+from workflow import a2a_server
 from workflow.a2a_server import RefusingExecutor, create_app
 from workflow.run_states import RunState
 from workflow.steps import StepRecord, StepStatus
@@ -291,3 +292,16 @@ def test_refusing_executor_refuses_work() -> None:
         asyncio.run(executor.execute(None, None))  # type: ignore[arg-type]
     with pytest.raises(UnsupportedOperationError):
         asyncio.run(executor.cancel(None, None))  # type: ignore[arg-type]
+
+
+def test_ac3_below_cutoff_blame_free_arm_is_a_tracked_placeholder_until_4_1() -> None:
+    # 2.4 cannot read a run's stored confidence yet, so `create_app` serves a
+    # confidence that is never below the cutoff and the below-cutoff arm of the
+    # AD-27 rule is NOT enforced on this endpoint. Story 4.1 must replace
+    # `_SERVING_CONFIDENCE` with the run's real confidence and delete this
+    # guard. If this test fails, the serving confidence changed: close the 2.4
+    # deferral and update story 4.1 with it.
+    assert a2a_server._SERVING_CONFIDENCE.confidence_jev == 1.0
+    assert not a2a_server._SERVING_CONFIDENCE.confidence_jev < min(
+        FIXTURE_CUTOFFS.no_route_cutoff, FIXTURE_CUTOFFS.class_cutoff
+    ), "the placeholder is deliberately above every cutoff"

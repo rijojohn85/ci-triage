@@ -2,8 +2,9 @@
 
 Proves the lease rules against the real database: N workers claim distinct
 rows at most once, an expired lease is reclaimable, and a stale owner's
-guarded commit is discarded while the new owner can progress. Time is
-DB-seeded, never a real sleep.
+guarded commit is discarded while the new owner can progress. Lease validity
+uses the database's `now()`, so "expired" is seeded with SQL `now()`, never a
+real sleep.
 
 Needs Docker on the host; marked `integration` and excluded from `make
 check` (pyproject addopts). Run explicitly:
@@ -13,7 +14,7 @@ check` (pyproject addopts). Run explicitly:
 
 import threading
 import uuid
-from datetime import datetime, timedelta, timezone
+from datetime import datetime
 from itertools import count
 from pathlib import Path
 from typing import Final, cast
@@ -32,7 +33,6 @@ pytestmark = pytest.mark.integration
 
 REPO_ROOT: Final[Path] = Path(__file__).resolve().parents[2]
 MIGRATIONS_DIR: Final[Path] = REPO_ROOT / "deploy" / "migrations"
-NOW = datetime(2026, 9, 26, 12, 0, tzinfo=timezone.utc)
 LEASE_SECONDS = 300
 WORKERS = 5
 ROWS = 12
@@ -53,11 +53,16 @@ def insert_run(
     repo_id: int = 1,
 ) -> None:
     workflow_run_id = next(_WORKFLOW_RUN_IDS)
+    # AD-1: escalation_reason is non-null exactly when the state is
+    # AWAITING_APPROVAL, so a paused row must carry one.
+    escalation_reason = (
+        "low_confidence" if state is RunState.AWAITING_APPROVAL else None
+    )
     with psycopg.connect(dsn) as conn, conn.cursor() as cur:
         cur.execute(
             "INSERT INTO triage_run (run_id, repo_id, workflow_run_id, "
-            "run_attempt, state) VALUES (%s, %s, %s, %s, %s)",
-            (run_id, repo_id, workflow_run_id, 1, state.value),
+            "run_attempt, state, escalation_reason) VALUES (%s, %s, %s, %s, %s, %s)",
+            (run_id, repo_id, workflow_run_id, 1, state.value, escalation_reason),
         )
 
 
@@ -72,12 +77,12 @@ def current_state(dsn: str, run_id: uuid.UUID) -> str:
 
 
 def expire_lease(dsn: str, run_id: uuid.UUID) -> None:
-    """Seed the clock: move `lease_until` just behind the injected `NOW`, so
-    claims compare against the same clock the tests pass in (no real sleep)."""
+    """Seed an expired lease using the database clock (no real sleep)."""
     with psycopg.connect(dsn) as conn, conn.cursor() as cur:
         cur.execute(
-            "UPDATE triage_run SET lease_until = %s WHERE run_id = %s",
-            (NOW - timedelta(seconds=1), run_id),
+            "UPDATE triage_run SET lease_until = now() - interval '1 second' "
+            "WHERE run_id = %s",
+            (run_id,),
         )
 
 
@@ -103,7 +108,7 @@ def test_ac1_n_workers_claim_distinct_rows_at_most_once(pg_dsn: str) -> None:
     def worker() -> None:
         barrier.wait()
         while True:
-            claim = store.claim_next(now=NOW, lease_seconds=LEASE_SECONDS)
+            claim = store.claim_next(lease_seconds=LEASE_SECONDS)
             if claim is None:
                 return
             with lock:
@@ -116,7 +121,7 @@ def test_ac1_n_workers_claim_distinct_rows_at_most_once(pg_dsn: str) -> None:
         thread.join()
 
     # Drain any row a worker happened to skip while it was locked (AC1 cap).
-    while (claim := store.claim_next(now=NOW, lease_seconds=LEASE_SECONDS)) is not None:
+    while (claim := store.claim_next(lease_seconds=LEASE_SECONDS)) is not None:
         claimed.append(claim.run_id)
 
     assert sorted(claimed) == sorted(run_ids), "every row claimed exactly once"
@@ -130,21 +135,17 @@ def test_ac2_expired_row_reclaimable_by_other_worker(pg_dsn: str) -> None:
     run_id = new_run_id()
     insert_run(pg_dsn, run_id)
 
-    first = PostgresRunLeaseStore(pg_dsn).claim_next(
-        now=NOW, lease_seconds=LEASE_SECONDS
-    )
+    first = PostgresRunLeaseStore(pg_dsn).claim_next(lease_seconds=LEASE_SECONDS)
     assert first is not None and first.run_id == run_id
 
     expire_lease(pg_dsn, run_id)
-    second = PostgresRunLeaseStore(pg_dsn).claim_next(
-        now=NOW, lease_seconds=LEASE_SECONDS
-    )
+    second = PostgresRunLeaseStore(pg_dsn).claim_next(lease_seconds=LEASE_SECONDS)
 
     assert second is not None and second.run_id == run_id
     assert second.owner != first.owner, "the new worker becomes the owner"
     owner, until = lease_row(pg_dsn, run_id)
     assert owner == second.owner
-    assert until > NOW, "reclaimed lease is live again"
+    assert until > first.lease_until, "reclaimed lease is live again"
 
 
 def test_ac2_renew_extends_only_the_owners_live_lease(pg_dsn: str) -> None:
@@ -152,23 +153,22 @@ def test_ac2_renew_extends_only_the_owners_live_lease(pg_dsn: str) -> None:
     run_id = new_run_id()
     insert_run(pg_dsn, run_id)
     store = PostgresRunLeaseStore(pg_dsn)
-    claim = store.claim_next(now=NOW, lease_seconds=LEASE_SECONDS)
+    claim = store.claim_next(lease_seconds=LEASE_SECONDS)
     assert claim is not None
     _, seeded = lease_row(pg_dsn, run_id)
 
-    later = NOW + timedelta(seconds=60)
-    assert store.renew(claim, now=later, lease_seconds=600) is True
+    assert store.renew(claim, lease_seconds=600) is True
     _, renewed = lease_row(pg_dsn, run_id)
-    assert renewed == later + timedelta(seconds=600)
-    assert renewed > seeded
+    assert renewed > seeded, "the owner's lease is extended"
+    assert renewed > claim.lease_until, "the extension uses the database clock"
 
     impostor = Claim(run_id, "not-the-owner", renewed)
-    assert store.renew(impostor, now=later, lease_seconds=900) is False
+    assert store.renew(impostor, lease_seconds=900) is False
     _, unchanged = lease_row(pg_dsn, run_id)
     assert unchanged == renewed, "a non-owner leaves the lease untouched"
 
     expire_lease(pg_dsn, run_id)
-    assert store.renew(claim, now=later, lease_seconds=600) is False, (
+    assert store.renew(claim, lease_seconds=600) is False, (
         "an already-expired lease is not renewable"
     )
 
@@ -182,10 +182,10 @@ def test_ac3_stale_owner_discarded_without_state_or_output(pg_dsn: str) -> None:
 
     a = PostgresRunLeaseStore(pg_dsn)
     b = PostgresRunLeaseStore(pg_dsn)
-    claim_a = a.claim_next(now=NOW, lease_seconds=LEASE_SECONDS)
+    claim_a = a.claim_next(lease_seconds=LEASE_SECONDS)
     assert claim_a is not None
     expire_lease(pg_dsn, run_id)
-    claim_b = b.claim_next(now=NOW, lease_seconds=LEASE_SECONDS)
+    claim_b = b.claim_next(lease_seconds=LEASE_SECONDS)
     assert claim_b is not None and claim_b.owner != claim_a.owner
 
     def a_stale_work(conn: object) -> None:
@@ -211,12 +211,12 @@ def test_ac3_two_worker_fencing_and_b_recovers(pg_dsn: str) -> None:
     a = PostgresRunLeaseStore(pg_dsn)
     b = PostgresRunLeaseStore(pg_dsn)
 
-    claim_a = a.claim_next(now=NOW, lease_seconds=LEASE_SECONDS)
+    claim_a = a.claim_next(lease_seconds=LEASE_SECONDS)
     assert claim_a is not None and claim_a.run_id == run_id
 
     # Worker A's lease expires (DB-seeded, deterministic, no sleep).
     expire_lease(pg_dsn, run_id)
-    claim_b = b.claim_next(now=NOW, lease_seconds=LEASE_SECONDS)
+    claim_b = b.claim_next(lease_seconds=LEASE_SECONDS)
     assert claim_b is not None and claim_b.run_id == run_id
     assert claim_b.owner != claim_a.owner
 
@@ -248,7 +248,7 @@ def test_ac3_guarded_commit_by_current_owner_persists_work(pg_dsn: str) -> None:
     run_id = new_run_id()
     insert_run(pg_dsn, run_id)
     store = PostgresRunLeaseStore(pg_dsn)
-    claim = store.claim_next(now=NOW, lease_seconds=LEASE_SECONDS)
+    claim = store.claim_next(lease_seconds=LEASE_SECONDS)
     assert claim is not None
 
     def work(conn: object) -> str:
@@ -260,6 +260,24 @@ def test_ac3_guarded_commit_by_current_owner_persists_work(pg_dsn: str) -> None:
 
     assert store.guarded_commit(claim, work) == "ok"
     assert current_state(pg_dsn, run_id) == RunState.DISTILLING.value
+
+
+def test_ac1_paused_run_is_never_claimed_by_workers(pg_dsn: str) -> None:
+    # AD-1: AWAITING_APPROVAL waits for a human indefinitely; a worker must not
+    # claim it (otherwise paused runs would starve new work).
+    assert migrated(pg_dsn) > 0
+    paused = new_run_id()
+    fresh = new_run_id()
+    insert_run(pg_dsn, paused, state=RunState.AWAITING_APPROVAL)
+    insert_run(pg_dsn, fresh, state=RunState.RECEIVED)
+    store = PostgresRunLeaseStore(pg_dsn)
+
+    claim = store.claim_next(lease_seconds=LEASE_SECONDS)
+
+    assert claim is not None and claim.run_id == fresh, "the paused run is skipped"
+    assert store.claim_next(lease_seconds=LEASE_SECONDS) is None, (
+        "the paused run stays unclaimed"
+    )
 
 
 def test_0003_migration_adds_lease_columns_and_claim_index(pg_dsn: str) -> None:

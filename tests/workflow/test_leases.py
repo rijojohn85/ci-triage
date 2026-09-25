@@ -14,6 +14,7 @@ import pytest
 from workflow.lease_store import PostgresRunLeaseStore
 from workflow.leases import (
     CLAIMABLE_RUN_STATES,
+    HUMAN_WAIT_STATES,
     Claim,
     LeaseLost,
     lease_expired,
@@ -94,25 +95,26 @@ def bound_list(params: tuple[object, ...]) -> list[object]:
 class TestClaim:
     def test_ac1_claim_sets_owner_and_expiry_and_returns_claim(self) -> None:
         run_id = uuid.uuid4()
-        connection = FakeConnection(row=(run_id,))
+        db_lease_until = NOW + timedelta(seconds=LEASE_SECONDS)
+        connection = FakeConnection(row=(run_id, db_lease_until))
 
-        claim = store_against(connection).claim_next(
-            now=NOW, lease_seconds=LEASE_SECONDS
-        )
+        claim = store_against(connection).claim_next(lease_seconds=LEASE_SECONDS)
 
         assert claim is not None
         assert claim.run_id == run_id
         assert claim.owner
-        assert claim.lease_until == NOW + timedelta(seconds=LEASE_SECONDS)
+        # The expiry is the database's, never the caller's clock (AD-23).
+        assert claim.lease_until == db_lease_until
         assert connection.events == ["begin", "commit"]
-        _, params = connection.calls[0]
+        sql, params = connection.calls[0]
         assert claim.owner in params
-        assert claim.lease_until in params
+        assert LEASE_SECONDS in params
+        assert "now()" in sql
 
     def test_ac1_claim_uses_skip_locked_and_short_transaction(self) -> None:
-        connection = FakeConnection(row=(uuid.uuid4(),))
+        connection = FakeConnection(row=(uuid.uuid4(), NOW))
 
-        store_against(connection).claim_next(now=NOW, lease_seconds=LEASE_SECONDS)
+        store_against(connection).claim_next(lease_seconds=LEASE_SECONDS)
 
         sql, _ = connection.calls[0]
         assert "FOR UPDATE SKIP LOCKED" in sql
@@ -123,17 +125,15 @@ class TestClaim:
         # No unleased/expired row: the claim finds nothing and writes nothing.
         connection = FakeConnection(row=None)
 
-        claim = store_against(connection).claim_next(
-            now=NOW, lease_seconds=LEASE_SECONDS
-        )
+        claim = store_against(connection).claim_next(lease_seconds=LEASE_SECONDS)
 
         assert claim is None
         sql, _ = connection.calls[0]
-        assert "lease_until IS NULL OR lease_until <=" in sql
+        assert "lease_until IS NULL OR lease_until <= now()" in sql
 
-    def test_ac1_terminal_run_not_claimable(self) -> None:
-        # The ten AD-1 non-terminal states, written out so a bad derivation
-        # fails here instead of restating the production expression.
+    def test_ac1_claimable_states_exclude_terminal_and_paused(self) -> None:
+        # The AD-1 non-terminal states that carry worker work: terminal states
+        # and the human-wait state (AWAITING_APPROVAL) are absent.
         assert CLAIMABLE_RUN_STATES == frozenset(
             {
                 RunState.RECEIVED,
@@ -143,7 +143,6 @@ class TestClaim:
                 RunState.PROPOSING,
                 RunState.REVIEWING,
                 RunState.GATING,
-                RunState.AWAITING_APPROVAL,
                 RunState.PR_OPENING,
                 RunState.REPORTING,
             }
@@ -152,9 +151,21 @@ class TestClaim:
             assert terminal not in CLAIMABLE_RUN_STATES
 
         connection = FakeConnection(row=None)
-        store_against(connection).claim_next(now=NOW, lease_seconds=LEASE_SECONDS)
+        store_against(connection).claim_next(lease_seconds=LEASE_SECONDS)
         bound = bound_list(connection.calls[0][1])
         assert set(bound) == {state.value for state in CLAIMABLE_RUN_STATES}
+
+    def test_ac1_paused_run_is_not_claimable(self) -> None:
+        # AD-1: a run waits in AWAITING_APPROVAL indefinitely for a human, so
+        # no worker may claim it — otherwise N paused runs starve new work.
+        assert HUMAN_WAIT_STATES == frozenset({RunState.AWAITING_APPROVAL})
+
+        connection = FakeConnection(row=None)
+        store_against(connection).claim_next(lease_seconds=LEASE_SECONDS)
+
+        bound = set(bound_list(connection.calls[0][1]))
+        assert RunState.AWAITING_APPROVAL.value not in bound
+        assert bound == {state.value for state in CLAIMABLE_RUN_STATES}
 
     def test_new_lease_owner_is_unique_per_claim(self) -> None:
         assert new_lease_owner() != new_lease_owner()
@@ -171,23 +182,20 @@ class TestRenew:
         connection = FakeConnection(row=(run_id,))
         claim = Claim(run_id, "owner-a", NOW + timedelta(seconds=LEASE_SECONDS))
 
-        extended = store_against(connection).renew(
-            claim, now=NOW, lease_seconds=600
-        )
+        extended = store_against(connection).renew(claim, lease_seconds=600)
 
         assert extended is True
         sql, params = connection.calls[0]
         assert "lease_owner = " in sql, "only the current owner may extend"
-        assert "lease_until > " in sql, "an expired lease is not renewable"
-        assert NOW + timedelta(seconds=600) in params
+        assert "lease_until > now()" in sql, "an expired lease is not renewable"
+        assert "now() + make_interval" in sql, "the DB clock anchors the extension"
+        assert 600 in params
 
     def test_ac2_renew_rejected_for_non_owner(self) -> None:
         connection = FakeConnection(row=None)  # UPDATE matched no row
         claim = Claim(uuid.uuid4(), "owner-a", NOW + timedelta(seconds=LEASE_SECONDS))
 
-        assert store_against(connection).renew(
-            claim, now=NOW, lease_seconds=600
-        ) is False
+        assert store_against(connection).renew(claim, lease_seconds=600) is False
 
     def test_ac2_lease_expired_and_renew_due_helpers(self) -> None:
         future = NOW + timedelta(seconds=60)

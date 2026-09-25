@@ -44,7 +44,11 @@ ERROR_MARKERS: tuple[re.Pattern[str], ...] = tuple(
         r"^\s*E\s+\S",
         r"^>\s",
         r"##\[error\]",
-        r"^_{5,}.*_{5,}$",
+        # pytest's underscore banner always has spaces around the title, so the
+        # two runs of underscores are separated by literals. Requiring the
+        # spaces keeps this pattern linear on a long run of underscores (a
+        # bare `.*` between two `_{5,}` is cubic on such input).
+        r"^_{5,} .* _{5,}$",
         r"=+ FAILURES =+",
         r"^goroutine \d+",
         r"^\s+at [\w.$]+\(",
@@ -58,6 +62,11 @@ _UNTRUSTED_XML_MARKERS = ("<!DOCTYPE", "<!ENTITY")
 
 _JUNIT_FAILURE_TAGS = {"failure": "FAIL", "error": "ERROR"}
 
+# A safety cap on how much of one line the marker patterns see. Markers sit at
+# the start of a line or in its opening text, so a bounded prefix catches every
+# real marker while keeping the scan linear on a hostile, very long line.
+_MAX_MARKER_SCAN_CHARS = 4096
+
 
 def _strip_controls(text: str) -> str:
     """Remove ANSI escapes and non-printing controls (ASCII and C1); keep tabs
@@ -67,7 +76,10 @@ def _strip_controls(text: str) -> str:
 
 
 def _matches_error_marker(line: str) -> bool:
-    return any(marker.search(line) is not None for marker in ERROR_MARKERS)
+    # A bounded prefix is all the markers need; this keeps matching linear on a
+    # hostile, very long line (AD-20).
+    candidate = line[:_MAX_MARKER_SCAN_CHARS]
+    return any(marker.search(candidate) is not None for marker in ERROR_MARKERS)
 
 
 def _evidence_text_lines(cleaned_log: str) -> list[str]:
@@ -180,9 +192,13 @@ def distill(
     junit_xml: str | None,
     limits: DistillerLimits,
 ) -> list[DistilledLogLine]:
-    """Distil raw CI text plus optional JUnit XML into numbered evidence lines."""
+    """Distil raw CI text plus optional JUnit XML into numbered evidence lines.
+
+    JUnit evidence is emitted first: it is the parsed, structured signal, so it
+    must survive the byte bound even when the raw CI text is huge (AD-20).
+    """
     cleaned = _strip_controls(ci_log)
-    evidence = _evidence_text_lines(cleaned) + _junit_evidence(junit_xml)
+    evidence = _junit_evidence(junit_xml) + _evidence_text_lines(cleaned)
     if not evidence:
         evidence = _fallback_lines(cleaned)
     return _clip_to_bytes(evidence, limits.max_bytes)
