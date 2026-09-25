@@ -2,7 +2,7 @@
 title: 'Start Compose and forward-only migrations (Story 0.3)'
 type: 'feature'
 created: '2026-09-25'
-status: 'draft'
+status: 'done'
 route: 'dispatch'
 review_loop_iteration: 0
 baseline_commit: 'fc702b6b4e543ba632b7d1ea63bc891a841ea2cb'
