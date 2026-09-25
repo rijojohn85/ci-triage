@@ -25,3 +25,7 @@ results/*
 .mypy_cache/
 .ruff_cache/
 *.log
+
+# coverage artifacts
+.coverage
+htmlcov/

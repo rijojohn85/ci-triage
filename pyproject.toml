@@ -17,3 +17,24 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
 packages = []
+
+[tool.ruff]
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM", "N", "C90", "PL", "ARG", "RUF", "ERA"]
+mccabe.max-complexity = 10
+pylint.max-args = 5
+
+[tool.mypy]
+strict = true
+python_version = "3.10"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+
+[tool.coverage.run]
+source = ["contracts", "guardrails", "workflow"]
+
+[tool.coverage.report]
+fail_under = 85

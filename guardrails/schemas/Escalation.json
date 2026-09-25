@@ -1,0 +1,41 @@
+{
+  "$defs": {
+    "EscalationReason": {
+      "description": "`AWAITING_APPROVAL` escalation reasons, the exact AD-1 set.",
+      "enum": [
+        "low_confidence",
+        "unknown_class",
+        "no_route",
+        "validation_failed",
+        "review_rejected",
+        "gate_blocked"
+      ],
+      "title": "EscalationReason",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "`AWAITING_APPROVAL` message to the human (AD-1, AD-14).",
+  "properties": {
+    "proposal_step_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Proposal Step Id"
+    },
+    "reason": {
+      "$ref": "#/$defs/EscalationReason"
+    }
+  },
+  "required": [
+    "reason"
+  ],
+  "title": "Escalation",
+  "type": "object"
+}

@@ -1,1 +1,1 @@
-contracts/ — Pydantic v2 payload models, single source; root story 0.2 ships models (see epics.md Story 0.2).
+contracts/ — Pydantic v2 payload models, single source for every inter-agent payload (AD-6). One model family per module: `enums.py`, `citations.py`, `verdict.py`, `evidence.py`, `objections.py`, `errors.py`, `approval.py`, `a2a.py`. JSON Schemas are generated into `guardrails/schemas/` by `scripts/generate_schemas.py` (`make schema-drift` is the byte-identical gate). Depends on stdlib + pydantic + itself only (layer-contract script).

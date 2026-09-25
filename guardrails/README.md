@@ -1,1 +1,1 @@
-guardrails/ — validator, citation_check, risk_gate, thresholds.yaml. Depends only on contracts/. Filled by: Epic 2/3 stories.
+guardrails/ — validator, citation_check, risk_gate, thresholds.yaml. Depends only on contracts/. Schema files live in `guardrails/schemas/` (generated, committed; drift gate = `make schema-drift`). Filled by: Epic 2/3 stories (schemas shipped by story 0.2).

@@ -1,0 +1,50 @@
+{
+  "$defs": {
+    "FailureClass": {
+      "description": "Failure class enum `code | flaky | infra | external | unknown` (AD-11).",
+      "enum": [
+        "code",
+        "flaky",
+        "infra",
+        "external",
+        "unknown"
+      ],
+      "title": "FailureClass",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "The human's `triage approve|reject` decision, one A2A message (AD-14).\n\nEffect contract of `class_override`: replaces only the low-confidence and\nunknown-class cutoff checks; `confidence` itself stays min(...) (AD-9).",
+  "properties": {
+    "class_override": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/FailureClass"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "decision": {
+      "enum": [
+        "approve",
+        "reject"
+      ],
+      "title": "Decision",
+      "type": "string"
+    },
+    "note": {
+      "minLength": 1,
+      "title": "Note",
+      "type": "string"
+    }
+  },
+  "required": [
+    "decision",
+    "note"
+  ],
+  "title": "ApprovalPayload",
+  "type": "object"
+}
