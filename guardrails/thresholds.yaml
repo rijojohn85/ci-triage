@@ -7,3 +7,13 @@ review:
   max_rounds: 2
 
 workflow_path_glob: ".github/workflows/**"
+
+# Classification-branch cut-offs (AD-9, AD-14) and the injection pre-screen
+# (spine "One Jev call carries both Choice and Noul"). Placeholders below are
+# not calibrated — OQ-2; each is deliberately marked so a real number
+# replaces it once calibration data exists.
+confidence:
+  class_cutoff: 0.75  # ASSUMPTION — OQ-2, not calibrated
+  no_route_cutoff: 0.6  # ASSUMPTION — OQ-2, not calibrated
+  injection_screen_cutoff: 0.5  # ASSUMPTION — OQ-2, not calibrated
+  injection_screen_cap: 0.5  # ASSUMPTION — OQ-2, not calibrated

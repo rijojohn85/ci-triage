@@ -23,6 +23,7 @@ from contracts.a2a import DataPart  # noqa: E402 — path set right above
 from contracts.approval import ApprovalPayload, Escalation  # noqa: E402
 from contracts.errors import AgentError  # noqa: E402
 from contracts.evidence import EvidencePack  # noqa: E402
+from contracts.jev import JevClassification  # noqa: E402
 from contracts.verdict import TriageVerdict  # noqa: E402
 
 EnvelopeModels = tuple[type[BaseModel], ...]
@@ -35,6 +36,7 @@ ENVELOPE_MODELS: Final[EnvelopeModels] = (
     Escalation,
     AgentError,
     DataPart,
+    JevClassification,
 )
 
 
