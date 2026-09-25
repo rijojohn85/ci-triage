@@ -31,6 +31,7 @@ Every message between orchestrator and agent is an A2A message whose data part i
 | 1.2 | Worker leases and fencing: a claim takes the next unleased/expired non-terminal run in a short `FOR UPDATE SKIP LOCKED` transaction, renew extends only the owner's live lease, and a stale owner's lease-guarded commit is discarded (`LeaseLost`); lease timings come from config | `workflow/leases.py`, `workflow/lease_store.py`, `workflow/orchestrator_config.py`, `config/orchestrator.yaml`, `deploy/migrations/0003_triage_run_lease.sql`, `tests/workflow/`, `tests/security/test_compose_secret_placement.py` |
 | 2.3 | Steps and resume: a finished step's row and the run's state move commit in one lease-guarded transaction, validated by the 2.1 transition table; a reclaimed run reads its current state and completed step names so it skips finished work, and a stale owner's step-commit writes nothing | `workflow/steps.py`, `workflow/step_store.py`, `deploy/migrations/0004_run_step.sql`, `tests/workflow/test_steps.py`, `tests/workflow/test_step_integration.py`, `tests/security/test_compose_secret_placement.py` |
 | 2.4 | Read-only A2A task view: `get_task`/`list_tasks` project a stored run and its steps onto an A2A `Task` (task id = run id), a paused run is `INPUT_REQUIRED` with a blame-free evidence pack and no worker is started, and every write to the view is refused — so no second task-state writer exists | `workflow/task_store.py`, `workflow/a2a_server.py`, `tests/workflow/test_task_store.py`, `tests/workflow/test_task_server.py` |
+| 2.5 | Deterministic CI-log distiller (AD-20): strips ANSI/control characters, keeps only error blocks, stack traces and JUnit failures, numbers the survivors, and clips them to the `distiller.max_bytes` bound — with no model, network or clock, so the same input always gives the same output | `workflow/distiller.py`, `workflow/thresholds.py`, `guardrails/thresholds.yaml`, `tests/security/test_distiller.py`, `tests/workflow/test_thresholds.py`, `tests/fixtures/thresholds.py` |
 
 ## Where things live
 
@@ -38,7 +39,7 @@ Every message between orchestrator and agent is an A2A message whose data part i
 | --- | --- | --- |
 | `contracts/` | built (0.2) | Pydantic v2 models for every inter-agent payload; see [contracts/README.md](../contracts/README.md) |
 | `guardrails/schemas/` | built (0.2) | JSON Schemas generated from `contracts/`; never edit by hand |
-| `guardrails/thresholds.yaml` | built (2.1, 2.2) | the one thresholds file (AD-19): `review.max_rounds`, `workflow_path_glob`, and the `confidence` cut-offs (`class_cutoff`, `no_route_cutoff`, `injection_screen_cutoff`, `injection_screen_cap`); consumed via `workflow.thresholds.load_thresholds` |
+| `guardrails/thresholds.yaml` | built (2.1, 2.2, 2.5) | the one thresholds file (AD-19): `review.max_rounds`, `workflow_path_glob`, the `confidence` cut-offs (`class_cutoff`, `no_route_cutoff`, `injection_screen_cutoff`, `injection_screen_cap`) and `distiller.max_bytes`; consumed via `workflow.thresholds.load_thresholds` |
 | `guardrails/confidence.py` | built (2.2) | the AD-9 min rule as code: `ClassConfidence`, `RouteConfidence`, `apply_injection_screen`, `below_class_cutoff`, `class_escalation` |
 | `deploy/compose.yaml` | built (0.3, 1.1) | postgres:18 + one-shot `migrate` job + the real gateway (story 1.1) + orchestrator/agent placeholders, with AD-16 secret placement; see [deploy/README.md](../deploy/README.md) and [Compose and migrations](#compose-and-migrations-story-03) |
 | `deploy/migrations/` | built (0.3, 2.1, 1.1, 1.2, 2.3) | forward-only `.sql` files + naming rules; runner is `workflow/migrate.py`; `0001_triage_run.sql` owns run state, `0002_webhook_delivery.sql` records seen delivery ids for replay dedupe, `0003_triage_run_lease.sql` adds the AD-23 lease columns + claim index, `0004_run_step.sql` adds the AD-2 step record |
@@ -46,7 +47,7 @@ Every message between orchestrator and agent is an A2A message whose data part i
 | `tests/scripts/` | built (0.4) | unit tests of the demo-repo read-back comparison logic against recorded API fixtures; live `gh` path is `@pytest.mark.integration` |
 | `test-data/` | built (0.4) | demo-repo evidence: `demo-repo-expected.json` (AD-16 set, one source for script + docs), `demo-repo.md` (live facts + scenario slots), `demo-repo-seed/` (pushed verbatim to the demo repo) |
 | `tests/contracts/` | built (0.2) | contract tests, named after the ACs they prove |
-| `tests/workflow/`, `tests/security/` | built (0.3, 2.1, 1.1, 1.2, 2.2, 2.3, 2.4) | migration-runner and compose secret-placement tests; state-machine, projection and diagram tests; gateway signature/intake/limits tests; lease unit + fencing tests; step unit + atomic-commit/resume/fencing tests; A2A task-view unit + JSON-RPC ASGI tests (`@pytest.mark.integration` ones need Docker, `pytest -m integration`) |
+| `tests/workflow/`, `tests/security/` | built (0.3, 2.1, 1.1, 1.2, 2.2, 2.3, 2.4, 2.5) | migration-runner and compose secret-placement tests; state-machine, projection and diagram tests; gateway signature/intake/limits tests; lease unit + fencing tests; step unit + atomic-commit/resume/fencing tests; A2A task-view unit + JSON-RPC ASGI tests; distiller AC tests (no I/O) (`@pytest.mark.integration` ones need Docker, `pytest -m integration`) |
 | `gateway/` | built (1.1) | webhook intake only — signature, accepted events, load limits, one enqueue; see [gateway/README.md](../gateway/README.md) |
 | `workflow/ids.py` | built (1.1) | pure `new_run_id()`: the one UUIDv7 run identity (AD-4) |
 | `workflow/leases.py` | built (1.2) | the pure AD-23 policy (claimable states, expiry predicates, owner token) and the small `RunLeaseStore` / connection protocol (SOLID-I) |
@@ -56,6 +57,7 @@ Every message between orchestrator and agent is an A2A message whose data part i
 | `workflow/step_store.py` | built (2.3) | the one Postgres adapter for steps: `PostgresStepRecorder` composes 1.2's lease guard, inserts the step and moves the state in that one transaction (SOLID-S) |
 | `workflow/task_store.py` | built (2.4) | the read-only A2A task view: `RunRecord`, the small `TaskReader` protocol, `build_task` (2.1's `project` + 2.2's `attribution_allowed`) and `ReadOnlyTaskStore`, whose `save`/`delete` refuse (AD-4, SOLID-S/I) |
 | `workflow/a2a_server.py` | built (2.4) | the A2A transport wiring: `RefusingExecutor` plus `create_app`, which serves `get_task`/`list_tasks` through a2a-sdk 1.1.5's JSON-RPC routes (AD-4, AD-5) |
+| `workflow/distiller.py` | built (2.5) | the pure AD-20 log distiller: `distill(ci_log, junit_xml, limits) -> list[DistilledLogLine]`, the ordered `ERROR_MARKERS` registry, ANSI/control stripping, JUnit evidence and the UTF-8-safe byte clip; no I/O, model, network or clock (SOLID-S) |
 | `config/gateway.yaml` | built (1.1) | per-installation rate limit and per-repo queue-depth cap (AD-19); consumed via `gateway.settings.load_gateway_limits` |
 | `config/orchestrator.yaml` | built (1.2) | `lease_seconds` / `renew_after_seconds` (AD-19); `workflow.orchestrator_config.load_orchestrator_config` reads it for the worker loop that will consume it |
 | `config/runtime.yaml` | placeholder | model IDs and per-skill `step_timeout` (AD-19) |
@@ -321,6 +323,70 @@ list kept here. The confidence-below-cut-off half of the blame rule is not
 served yet because the run's confidence is not stored; story 4.1 will add it to
 the reader, and the shared `attribution_allowed` predicate is already in place
 here, so the strip follows with no second copy of the rule.
+
+## Distilling CI logs (story 2.5)
+
+A failed CI run produces a huge wall of text that no one wrote for us. Two
+things are true about it, and both are
+[AD-20](../_bmad-output/planning-artifacts/architecture/architecture-stage4-2026-09-25/ARCHITECTURE-SPINE.md):
+a model must never be shown the raw text, and the only part worth keeping is
+the error evidence. `workflow/distiller.py` turns that wall into a short,
+numbered list of lines. The shape is `contracts.evidence.DistilledLogLine`
+(AD-24), and the numbers are the `log_line` anchors the citation rules point
+at (AD-7).
+
+**What counts as evidence.** The distiller keeps two kinds of line:
+
+- lines from the raw CI text that match an **error marker** — a Python
+  `Traceback (most recent call last):`, a `File "…", line N` frame, an
+  `ERROR:`/`FAILED`/`panic:` line, a pytest `E   …` assertion line, and so on
+  — plus the indented lines that continue such a block;
+- the `<failure>` and `<error>` parts of a JUnit XML report: one line naming
+  the failing test, then its stack text.
+
+Everything else — progress chatter, timings, the story before the error — is
+thrown away. But the lines that are kept are still untrusted. An error marker
+line, a line indented under one, and the fallback line can all hold text an
+attacker wrote. The request builder must pass the kept lines to a model only
+as clearly separated untrusted data, never as instructions (AD-20).
+
+**ANSI and control characters.** Terminals colour their output with escape
+codes. The distiller removes those codes, and removes non-printing control
+characters (`\r`, `\b`, NUL, and the rest) while leaving the text itself
+alone. Tabs and newlines stay.
+
+**Numbering and the byte bound.** Kept lines are numbered from 1 through
+`DistilledLogLine.line_number`; the numbers are their citation anchors, so
+once a line has a number it keeps it. The total kept text is clipped to
+`distiller.max_bytes`, which lives only in
+[`guardrails/thresholds.yaml`](../guardrails/thresholds.yaml) and is read
+through the one loader (`workflow/thresholds.py`, AD-19). An overlong line is
+cut at a full character — never in the middle of a multi-byte letter — and
+once the bound is reached the later lines are dropped, so nothing is
+renumbered. The byte bound counts the kept evidence text; the small number
+labels are not counted. Today the bound is a marked placeholder, like the
+confidence cut-offs (OQ-2).
+
+**Two deliberate edges.** JUnit XML is untrusted: a document that declares a
+DOCTYPE or an entity is skipped whole, so a "billion laughs" expansion can
+never run (AD-20). And when there is no error marker and no JUnit evidence at
+all, the distiller keeps the last non-empty line (or a single empty line for
+an empty log), so the evidence pack always has at least one line, as its
+contract requires.
+
+**Where the code lives.** `workflow/distiller.py` is a pure text transform
+(SOLID-S): it takes the text and the bound in, and returns contract types; it
+has no I/O, no model, no network and no clock, so the same input always gives
+the same output. The JUnit XML is read with the standard library
+(`xml.etree.ElementTree`), so no new dependency is needed.
+`workflow/thresholds.py` owns the bound's shape (`DistillerLimits`) and the
+one loader.
+
+**To extend it:** a new CI error style is one new entry in `ERROR_MARKERS`,
+never a new branch. To change the byte bound, change it only in
+`guardrails/thresholds.yaml`. The distiller builds no SQL and no HTTP, so
+another consumer (the evidence-pack builder, story 2.7) can reuse the same
+numbered lines without any change here.
 
 ## Contracts (story 0.2)
 

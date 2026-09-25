@@ -12,3 +12,6 @@ confidence:
   no_route_cutoff: 0.6
   injection_screen_cutoff: 0.5
   injection_screen_cap: 0.5
+
+distiller:
+  max_bytes: 4096

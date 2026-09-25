@@ -8,15 +8,29 @@ never carries a threshold literal.
 from pathlib import Path
 
 import yaml
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, PositiveInt
 
 from guardrails.confidence import ConfidenceCutoffs
 
-__all__ = ["THRESHOLDS_PATH", "Thresholds", "load_thresholds"]
+__all__ = [
+    "THRESHOLDS_PATH",
+    "DistillerLimits",
+    "Thresholds",
+    "load_thresholds",
+]
 
 THRESHOLDS_PATH = (
     Path(__file__).resolve().parent.parent / "guardrails" / "thresholds.yaml"
 )
+
+
+class DistillerLimits(BaseModel):
+    """The distilled-log byte bound (AD-19, AD-20): the most evidence text the
+    distiller may keep, so a huge raw log can never reach a model."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    max_bytes: PositiveInt
 
 
 class Thresholds(BaseModel):
@@ -27,6 +41,7 @@ class Thresholds(BaseModel):
     review_max_rounds: int
     workflow_path_glob: str
     confidence: ConfidenceCutoffs
+    distiller: DistillerLimits
 
 
 def load_thresholds(path: Path = THRESHOLDS_PATH) -> Thresholds:
@@ -37,4 +52,5 @@ def load_thresholds(path: Path = THRESHOLDS_PATH) -> Thresholds:
         review_max_rounds=int(review["max_rounds"]),
         workflow_path_glob=str(raw["workflow_path_glob"]),
         confidence=ConfidenceCutoffs.model_validate(raw["confidence"]),
+        distiller=DistillerLimits.model_validate(raw["distiller"]),
     )

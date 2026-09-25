@@ -11,7 +11,12 @@ from pydantic import ValidationError
 
 from guardrails.confidence import ConfidenceCutoffs
 from tests.fixtures.thresholds import FIXTURE_THRESHOLDS_PATH
-from workflow.thresholds import THRESHOLDS_PATH, Thresholds, load_thresholds
+from workflow.thresholds import (
+    THRESHOLDS_PATH,
+    DistillerLimits,
+    Thresholds,
+    load_thresholds,
+)
 
 FIXTURE = FIXTURE_THRESHOLDS_PATH
 
@@ -26,6 +31,12 @@ def test_ac3_thresholds_loads_confidence_cutoffs_from_the_fixture() -> None:
     assert thresholds.confidence.no_route_cutoff == 0.6
     assert thresholds.confidence.injection_screen_cutoff == 0.5
     assert thresholds.confidence.injection_screen_cap == 0.5
+
+
+def test_ac3_distiller_max_bytes_loads_from_fixture() -> None:
+    thresholds = load_thresholds(FIXTURE)
+    assert isinstance(thresholds.distiller, DistillerLimits)
+    assert thresholds.distiller.max_bytes == 4096
 
 
 def test_ac3_thresholds_is_frozen() -> None:

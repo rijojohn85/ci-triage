@@ -17,3 +17,10 @@ confidence:
   no_route_cutoff: 0.6  # ASSUMPTION — OQ-2, not calibrated
   injection_screen_cutoff: 0.5  # ASSUMPTION — OQ-2, not calibrated
   injection_screen_cap: 0.5  # ASSUMPTION — OQ-2, not calibrated
+
+# Distilled-log byte bound (AD-19, AD-20): the most evidence text (UTF-8 bytes)
+# the distiller may keep, so a huge raw log can never reach a model. The
+# placeholder below is not calibrated — deliberately marked so a real number
+# replaces it once calibration data exists (mirrors OQ-2).
+distiller:
+  max_bytes: 65536  # ASSUMPTION — placeholder, not calibrated
