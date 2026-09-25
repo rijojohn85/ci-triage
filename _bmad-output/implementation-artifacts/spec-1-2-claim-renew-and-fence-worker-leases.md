@@ -24,7 +24,7 @@ deferred: []
 
 **(4) Files:**
 - Create: `workflow/leases.py` (`Claim`, `RunLeaseStore` protocol, pure helpers, `PostgresRunLeaseStore`); `workflow/orchestrator_config.py` (loader); `config/orchestrator.yaml`; `deploy/migrations/0003_triage_run_lease.sql`; `tests/workflow/test_leases.py`; integration tests in `tests/workflow/test_lease_integration.py`.
-- Change: `workflow/README.md`, `deploy/migrations/README.md` (0003 note), `docs/DEVELOPER.md`; extend `tests/workflow/conftest.py` only if the disposable-postgres fixture needs a shared helper (do not duplicate it).
+- Change: `workflow/README.md`, `deploy/migrations/README.md` (0003 note), `docs/DEVELOPER.md`; extend `tests/workflow/conftest.py` only if the disposable-postgres fixture needs a shared helper (do not duplicate it). Also update `tests/security/test_compose_secret_placement.py`: the `test_ac3_no_speculative_domain_tables_triage_run_allowlisted` guard currently allows only `0001_triage_run.sql` to name `triage_run`, so `ALTER TABLE triage_run` in `0003` trips it — add `0003_triage_run_lease.sql` to that allowlist (still no `run_step`/`history`/`approval`).
 - **NOT touched:** the `run_step` table and step persistence (2.3 owns them; this story supplies the guard primitive 2.3 composes), gateway intake (1.1), A2A server/TaskStore (2.4), distiller (2.5), agents, prompts, `contracts/`, `workflow/transitions.py`.
 
 **(5) Approach (SOLID/DRY):**
@@ -77,6 +77,7 @@ deferred: []
 - `workflow/run_states.py` — reuse `TERMINAL_RUN_STATES` to define claimable states; never a literal list.
 - `workflow/transitions.py` + `workflow/thresholds.py` — the "pure domain + one config loader" pattern this story mirrors in `workflow/leases.py` + `workflow/orchestrator_config.py`.
 - `deploy/migrations/0002_webhook_delivery.sql` — planned by story 1.1; orders before `0003` (assumption, see Build Brief 7).
+- `tests/security/test_compose_secret_placement.py:131-153` — `test_ac3_no_speculative_domain_tables_triage_run_allowlisted`; `0003` names `triage_run` so it must join that allowlist (and must keep `run_step`/`history`/`approval` out).
 - `tests/workflow/conftest.py` — `pg_dsn` disposable `postgres:18` fixture; reuse for the two-worker integration tests.
 - `tests/workflow/test_triage_run_migration.py` — the `@pytest.mark.integration` + `PsycopgMigrationConnection` pattern for applying `0003` and asserting columns/index.
 - AGENTS.md names `RunLeaseStore` as the per-consumer protocol; keep the name and keep it small.
@@ -90,6 +91,7 @@ deferred: []
 - `workflow/orchestrator_config.py` -- frozen loader for `config/orchestrator.yaml` (mirrors `workflow/thresholds.py`) -- AC1/AC2
 - `workflow/leases.py` -- `Claim`, `new_lease_owner()`, pure `lease_expired`/`renew_due`, `RunLeaseStore` protocol (`claim_next`, `renew`, `guarded_commit`), `LeaseLost`, `PostgresRunLeaseStore` -- AC1/AC2/AC3
 - `deploy/migrations/0003_triage_run_lease.sql` -- `ALTER TABLE triage_run ADD lease_owner text NULL, lease_until timestamptz NULL` + a claim index on `lease_until` -- AC1/AD-23
+- `tests/security/test_compose_secret_placement.py` -- allowlist `0003_triage_run_lease.sql` in the `triage_run` table guard (consuming-story pattern set by 2.1) -- AC1
 - `tests/workflow/test_lease_integration.py` -- N-thread claim uniqueness, expired reclaim, two-worker fencing via real Postgres -- AC1/AC2/AC3
 - `workflow/README.md`, `deploy/migrations/README.md`, `docs/DEVELOPER.md` -- docs (brief part 8)
 
