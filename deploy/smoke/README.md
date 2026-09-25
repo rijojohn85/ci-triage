@@ -1,0 +1,1 @@
+deploy/smoke/ — receipts from `scripts/smoke_signed_tunnel.py` (story 1.3, AC1). Never contains secrets. Populated at runtime by the smoke script; gitignored (except this README) since it is a script artifact, not a DB-table export (`runs/`/`results/` stay reserved for those, AD-18).

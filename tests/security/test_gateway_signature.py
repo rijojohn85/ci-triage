@@ -1,15 +1,29 @@
-"""Story 1.1 AC1: verify the signature over raw bytes before parsing (AD-17).
+"""Story 1.1 AC1 / story 1.3 AC2: signature verification and secret rotation.
 
 The fakes and clock come from `tests/security/gateway_fakes.py`; no live GitHub.
 """
 
+import json
 from collections.abc import Callable
 
 import httpx
+from starlette.testclient import TestClient
 
-from gateway.signature import verify_signature
+from gateway.app import create_app
+from gateway.settings import GatewayLimits, GatewaySettings
+from gateway.signature import SIGNATURE_HEADER, verify_signature
 from gateway.store import IntakeOutcome
-from tests.security.gateway_fakes import FakeIntakeStore
+from tests.security.gateway_fakes import (
+    DELIVERY_HEADER,
+    EVENT_HEADER,
+    INSTALLATION_ID,
+    ROTATED_WEBHOOK_SECRET,
+    TEST_WEBHOOK_SECRET,
+    FakeIntakeStore,
+    FrozenClock,
+    sign,
+    workflow_run_payload,
+)
 
 
 class TestSignatureBeforeParse:
@@ -123,3 +137,93 @@ class TestSignatureBeforeParse:
         assert response.status_code == 200
         assert response.json()["status"] == "ignored"
         assert fake_store.enqueue_calls == []
+
+
+class TestRotationLifecycle:
+    """Story 1.3 AC2: old-only -> overlap -> retired, through the real app.
+
+    Each phase builds its own `create_app` with a distinct `GatewaySettings`
+    secret tuple (rotation is a config change, not a code path -- AD-25).
+    `signature.py` and `settings.py` are untouched; this proves the existing
+    `_split_secrets` + `verify_signature` contract already carries the whole
+    lifecycle.
+    """
+
+    def _app_client(
+        self,
+        secrets: tuple[str, ...],
+        fake_store: FakeIntakeStore,
+        limits: GatewayLimits,
+        clock: FrozenClock,
+    ) -> TestClient:
+        settings = GatewaySettings(
+            webhook_secrets=secrets,
+            allowed_installation_ids=frozenset({INSTALLATION_ID}),
+            database_url="postgresql://unused",
+        )
+        app = create_app(settings, fake_store, limits, clock=clock)
+        return TestClient(app)
+
+    def _post(
+        self,
+        client: TestClient,
+        *,
+        secret_used_to_sign: str | None,
+        delivery: str,
+        workflow_run_id: int,
+    ) -> httpx.Response:
+        body = json.dumps(
+            workflow_run_payload(workflow_run_id=workflow_run_id)
+        ).encode("utf-8")
+        headers = {EVENT_HEADER: "workflow_run", DELIVERY_HEADER: delivery}
+        if secret_used_to_sign is not None:
+            headers[SIGNATURE_HEADER] = sign(body, secret_used_to_sign)
+        return client.post("/webhook", content=body, headers=headers)
+
+    def test_ac2_rotation_lifecycle_old_overlap_retired(
+        self,
+        fake_store: FakeIntakeStore,
+        limits: GatewayLimits,
+        clock: FrozenClock,
+    ) -> None:
+        old, new = TEST_WEBHOOK_SECRET, ROTATED_WEBHOOK_SECRET
+
+        # Old-only phase: only the old secret is configured.
+        with self._app_client((old,), fake_store, limits, clock) as client:
+            old_ok = self._post(
+                client, secret_used_to_sign=old, delivery="d-old-1", workflow_run_id=101
+            )
+            new_rejected = self._post(
+                client, secret_used_to_sign=new, delivery="d-old-2", workflow_run_id=102
+            )
+        assert old_ok.status_code == 202
+        assert new_rejected.status_code == 401
+
+        # Overlap phase: both secrets are configured during rotation.
+        with self._app_client((old, new), fake_store, limits, clock) as client:
+            old_still_ok = self._post(
+                client, secret_used_to_sign=old, delivery="d-overlap-1", workflow_run_id=103
+            )
+            new_also_ok = self._post(
+                client, secret_used_to_sign=new, delivery="d-overlap-2", workflow_run_id=104
+            )
+            wrong_secret_rejected = self._post(
+                client,
+                secret_used_to_sign="not-a-configured-secret",
+                delivery="d-overlap-3",
+                workflow_run_id=105,
+            )
+        assert old_still_ok.status_code == 202
+        assert new_also_ok.status_code == 202
+        assert wrong_secret_rejected.status_code == 401
+
+        # Retired phase: the old secret has been dropped from config.
+        with self._app_client((new,), fake_store, limits, clock) as client:
+            old_now_rejected = self._post(
+                client, secret_used_to_sign=old, delivery="d-retired-1", workflow_run_id=106
+            )
+            new_still_ok = self._post(
+                client, secret_used_to_sign=new, delivery="d-retired-2", workflow_run_id=107
+            )
+        assert old_now_rejected.status_code == 401
+        assert new_still_ok.status_code == 202

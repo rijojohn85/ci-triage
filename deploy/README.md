@@ -7,6 +7,7 @@ deploy/ — local runtime foundation (story 0.3+; epics 0.3).
 | `gateway.Dockerfile` | gateway intake image (story 1.1, AD-17): pinned starlette/uvicorn/psycopg + `gateway` app |
 | `migrations/` | forward-only `.sql` files, applied in filename order (see `migrations/README.md`) |
 | `k8s/` | cluster manifests — later story, same images (AD-25) |
+| `smoke/` | gitignored receipts from `scripts/smoke_signed_tunnel.py` (story 1.3) — never contains secrets |
 
 Run from the repo root:
 

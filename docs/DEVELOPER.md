@@ -240,6 +240,52 @@ a hand-written list — so it flows through here with no edit. `workflow/leases.
 and its adapter `workflow/lease_store.py` stand alone; the worker loop itself
 arrives with stories 2.3/2.8.
 
+## Signed tunnel smoke test (story 1.3)
+
+Story 1.1 proved rotation and signature checks as pure/unit behaviour.
+`tests/security/test_gateway_signature.py::TestRotationLifecycle` now also
+drives the full old-only → overlap → retired lifecycle through the real app
+with fakes (AC2), with no change to `signature.py` or `settings.py` — the
+existing secret-tuple contract already carries the whole lifecycle. Story
+1.3 adds the other half: proof that a *real* signed delivery, through the
+actual smee tunnel and Compose stack, reaches the gateway and enqueues
+exactly once (AC1).
+
+`scripts/smoke_signed_tunnel.py` is the repeatable script for that. It is
+split the same way every I/O script in this repo is: a pure `build_receipt()`
+(unit-tested; it takes only status/run_id/delivery_id, so it structurally
+cannot leak a secret) and an I/O `main()` that triggers a failing run in the
+demo repo via `gh workflow run`, polls Postgres for exactly one matching
+`webhook_delivery` + `triage_run` row, and writes the receipt. `main()`
+reads `DATABASE_URL` from `.env` itself — never a CLI argument, never
+printed (AD-16).
+
+Run it (Compose + smee tunnel already up, `.env` populated, per the
+USER-GUIDE rotation section above):
+
+```bash
+.venv/bin/python scripts/smoke_signed_tunnel.py \
+  --org rijojohn85-dev --repo triage-demo-py --repo-id 1387450356
+```
+
+The default `--ref main` dispatches against today's green baseline (see
+`test-data/demo-repo.md`: `last_green` with scenario branches S1–S5 still
+`PENDING`). The gateway only enqueues a `triage_run` for a `workflow_run`
+whose `conclusion` is `failure` (`gateway/events.py`), so a run against the
+current `main` completes successfully, nothing gets enqueued, and
+`poll_for_single_delivery` always times out with `SMOKE FAIL: timed out
+waiting...` — that failure means the target ref is green, not that the
+tunnel/gateway path is broken. Point `--ref` at a branch arranged to end in
+failure (a scratch branch with a broken commit, or a populated S1–S5
+scenario branch once available) to exercise the real AC1 path end to end.
+
+Receipts land under `deploy/smoke/` (gitignored except its README — a
+script artifact, not a DB-table export, so it gets its own dir rather than
+reusing `runs/`/`results/`). The live path is
+`tests/scripts/test_smoke_signed_tunnel.py::test_ac1_live_smoke_run_enqueues_exactly_one_triage_run`,
+marked `@pytest.mark.integration` so `make check` stays offline; run it with
+`.venv/bin/pytest tests/scripts/test_smoke_signed_tunnel.py -m integration`.
+
 ## Steps and resume (story 2.3)
 
 A triage run is a series of steps: distil the log, classify the failure, analyze
