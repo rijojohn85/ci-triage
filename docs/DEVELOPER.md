@@ -23,6 +23,7 @@ Every message between orchestrator and agent is an A2A message whose data part i
 | --- | --- | --- |
 | 0.1 | Rubric folder layout, pinned toolchain bootstrap, layer-contract check, quality gates (`make check`) | `scripts/`, `Makefile`, `pyproject.toml` |
 | 0.2 | Shared Pydantic payload contracts, generated JSON Schemas, schema drift gate | `contracts/`, `guardrails/schemas/`, `scripts/generate_schemas.py` |
+| 0.3 | Compose foundation: postgres:18 + healthcheck, one-shot forward-only migration job (`service_completed_successfully` gating), secret placement | `deploy/`, `workflow/migrate.py`, `tests/workflow/`, `tests/security/` |
 
 ## Where things live
 
@@ -30,8 +31,11 @@ Every message between orchestrator and agent is an A2A message whose data part i
 | --- | --- | --- |
 | `contracts/` | built (0.2) | Pydantic v2 models for every inter-agent payload; see [contracts/README.md](../contracts/README.md) |
 | `guardrails/schemas/` | built (0.2) | JSON Schemas generated from `contracts/`; never edit by hand |
+| `deploy/compose.yaml` | built (0.3) | postgres:18 + one-shot `migrate` job + placeholders for gateway/orchestrator/agents with AD-16 secret placement; see [deploy/README.md](../deploy/README.md) and [Compose and migrations](#compose-and-migrations-story-03) |
+| `deploy/migrations/` | built (0.3) | forward-only `.sql` files + naming rules; runner is `workflow/migrate.py` |
 | `scripts/` | built (0.1, 0.2) | `bootstrap.sh`, `check_layer_contract.py`, `generate_schemas.py` |
 | `tests/contracts/` | built (0.2) | contract tests, named after the ACs they prove |
+| `tests/workflow/`, `tests/security/` | built (0.3) | migration-runner and compose secret-placement tests; `@pytest.mark.integration` ones need Docker (`pytest -m integration`) |
 | `config/runtime.yaml` | placeholder | model IDs and per-skill `step_timeout` (AD-19) |
 | `deploy/` | placeholder | Compose, k8s manifests, migrations (0.3+) |
 | `gateway/`, `workflow/`, `agents/`, `guardrails/` (code), `punch-out/`, `monitoring/` | placeholder | filled by Epics 1–6; each folder's README says what belongs there |
@@ -47,7 +51,23 @@ make check                         # every quality gate; must be green before a 
 python scripts/generate_schemas.py # regenerate guardrails/schemas/ after changing a contract
 ```
 
-`make check` runs: bootstrap check, layer contract, schema drift, ruff (check + format), `mypy --strict`, pylint duplicate-code, `pytest --cov` (≥ 85% on `contracts`, `guardrails`, `workflow`). Individual targets are listed in the [Makefile](../Makefile).
+`make check` runs: bootstrap check, layer contract, schema drift, ruff (check + format), `mypy --strict`, pylint duplicate-code, `pytest --cov` (≥ 85% on `contracts`, `guardrails`, `workflow`). Integration tests that need Docker are marked `@pytest.mark.integration` and excluded from `make check` by default — run them with `make test-integration` (or `.venv/bin/pytest -m integration`). Individual targets are listed in the [Makefile](../Makefile).
+
+## Compose and migrations (story 0.3)
+
+The local runtime is `deploy/compose.yaml` (run from the repo root):
+
+```bash
+docker compose --project-directory . -f deploy/compose.yaml up -d --wait     # postgres + migration job (+ placeholders)
+docker compose --project-directory . -f deploy/compose.yaml run --rm migrate # re-apply pending migrations
+docker compose --project-directory . -f deploy/compose.yaml down -v          # stop and drop data
+```
+
+- **Postgres 18** with a `pg_isready` healthcheck; data in the named `pgdata` volume (postgres:18 keeps its data at `/var/lib/postgresql`; see the image notes).
+- **Migrations** are forward-only `.sql` files in `deploy/migrations/`, applied in filename order by `workflow/migrate.py` ([AD-25](../_bmad-output/planning-artifacts/architecture/architecture-stage4-2026-09-25/ARCHITECTURE-SPINE.md)). No Alembic/SQLAlchemy, no advisory lock, no new dependencies. Each file commits atomically together with its `schema_migrations` row; a failing file rolls back completely, exits non-zero, and the `service_completed_successfully` dependency keeps all workers from starting on a broken schema. Re-running applies nothing new (idempotent).
+- **Secrets** come from `.env` (names in `.env.example`); [deploy/README.md](../deploy/README.md) links the scope rules. The placement contract is tested (AD-16): key scoping gateway/orchestrator, Claude agents-, Jev/orchestrator-only.
+- **Worker services** (gateway, orchestrator, agents) are busybox placeholders until their stories — the AD-16 env names are already in place and the migration gating is live.
+- **Connection strings:** the migrate job builds its DSN from `POSTGRES_*` names inside the compose network; host-side tools use `DATABASE_URL` from `.env`.
 
 ## Contracts (story 0.2)
 
