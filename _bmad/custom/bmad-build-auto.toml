@@ -1,0 +1,46 @@
+# Team overrides for bmad-build-auto (merged over .claude/skills/bmad-build-auto/customize.toml).
+# Lists append; arrays of tables merge by `id`.
+
+[workflow]
+
+persistent_facts = [
+  "file:{project-root}/AGENTS.md",
+]
+
+activation_steps_append = [
+  """BUILD BRIEF IN THE SPEC (AGENTS.md "How work is done" step 1). This workflow runs unattended: there is no interactive brief checkpoint, so the spec itself must carry the brief. Every spec this run produces must contain a `## Build Brief` section in the spec body (right after the frontmatter, before the intent-contract) with the 8 parts: (1) story id + title and the sprint-status key; (2) each AC in one line; (3) binding ADs and how each constrains this story; (4) files/modules to create or change, and what is deliberately NOT touched; (5) approach in 3-6 bullets, naming the SOLID/DRY decisions (new Protocols, registries, what is reused vs extracted); (6) the TDD plan: the failing tests (or promptfoo cases, for prompt changes) written first for each AC; (7) risks, open questions (OQ-n), prerequisites; (8) doc impact (AGENTS.md step 7): the sections of docs/DEVELOPER.md and docs/USER-GUIDE.md to add or change, or "no doc change" with the reason. The implementation subagent treats this section as the brief; a spec missing it does not meet the ready-for-development standard.""",
+  """Every spec's frontmatter `context:` must include `{project-root}/AGENTS.md`, so the implementation subagent loads the standards. Keep the rest of `context:` short — only what is not already distilled into the spec body.""",
+  """Before this run may end with status `done`, the AGENTS.md Quality gates must be green: run `make check` and record the result in the spec's `## Auto Run Result`; a red gate blocks `done` (HALT `blocked` with the failing gate named). Also confirm the doc updates named in the spec's `## Build Brief` (part 8) are present in the diff; missing docs block `done` the same way.""",
+]
+
+implementation_handoff = """
+Launch a subagent with no prior conversation context, with this prompt:
+
+> Read {spec_file} fully and implement it — the spec is the sole source of truth. Load every file listed in its frontmatter `context:` before you start, and follow `AGENTS.md` (TDD, SOLID, DRY, clean code).
+>
+> Work test-first: for each AC, write the failing test (or promptfoo case for a prompt change), run it and confirm it fails for the right reason, then write the minimum code to pass, then refactor with tests green. Update docs/DEVELOPER.md and docs/USER-GUIDE.md as the spec's `## Build Brief` doc impact says (AGENTS.md step 7). Finish by running the AGENTS.md Quality gates (`make check`).
+>
+> When done, report what you changed, the red→green evidence per AC, gate results, and anything left incomplete or risky.
+"""
+
+on_complete = """
+Sprint-status sync: after the HALT write-back, sync `{project-root}/_bmad-output/implementation-artifacts/sprint-status.yaml` with this run's outcome. Under `development_status:`, find the key for the story this run's spec implements (the sprint-status key, e.g. `2-3-persist-completed-steps-atomically-and-resume`):
+- Final status `done` → set that key to `review` and set `last_updated` to today's date in the file's `MM-DD-YYYY` format.
+- Final status `blocked` or any other status → change nothing in the file.
+Never edit any other key, the header comments, or the execution-order block. If the story's key cannot be identified unambiguously from the spec, leave the file unchanged and note the miss in the terminal output.
+On `done` only: step-04 finalization committed and verified a clean tree BEFORE the HALT write-back and this sync, so both leave the tree dirty and the next unattended run's step-01 clean-tree check would HALT. Commit `{spec_file}` and sprint-status.yaml on the current story branch as `chore: mark story <N.M> review`, then verify `git status --porcelain` is empty; if not, report the dirty paths in the terminal output. Never push.
+"""
+
+[[workflow.review_layers]]
+id = "clean-code"
+name = "TDD / SOLID / DRY / Clean Code Reviewer"
+instruction = """
+Launch a context-free subagent with this prompt:
+
+Read `{project-root}/AGENTS.md` completely; it is your rubric.
+Review the unified diff at `{diff_file}` against its TDD, SOLID, DRY and Clean code sections. Report only concrete violations in the changed code: TDD breaches (behaviour or prompt changes with no test or promptfoo case, ACs without a named test, tests weakened or skipped), SOLID breaches (mixed responsibilities, if/elif chains that should be table/registry entries, concrete clients imported into domain code, fat interfaces), DRY breaches (logic, prompts, schemas, model IDs or thresholds duplicated instead of loaded from their single source), and clean-code breaches (unclear names, functions doing several things, magic values, swallowed errors, comments that restate code), and doc breaches (AGENTS.md step 7: changed behaviour, commands, layout or user-visible flows with no matching update to docs/DEVELOPER.md or docs/USER-GUIDE.md, or docs describing things that do not exist in the code). Also flag over-engineering: abstractions with one implementation and no test fake need.
+For each finding give file:line, the rule broken, and the smallest fix. Output a Markdown list of findings only, with no severity or ranking. If there are none, say "no violations" and list what you checked.
+
+Do not invoke any skill, and do not spawn subagents of your own. Return findings as text in your final message; do not route them through any findings-reporting tool.
+"""
+
