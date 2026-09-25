@@ -24,6 +24,7 @@ Every message between orchestrator and agent is an A2A message whose data part i
 | 0.1 | Rubric folder layout, pinned toolchain bootstrap, layer-contract check, quality gates (`make check`) | `scripts/`, `Makefile`, `pyproject.toml` |
 | 0.2 | Shared Pydantic payload contracts, generated JSON Schemas, schema drift gate | `contracts/`, `guardrails/schemas/`, `scripts/generate_schemas.py` |
 | 0.3 | Compose foundation: postgres:18 + healthcheck, one-shot forward-only migration job (`service_completed_successfully` gating), secret placement | `deploy/`, `workflow/migrate.py`, `tests/workflow/`, `tests/security/` |
+| 0.4 | Protected external demo repo: seeded Python package with green CI, AD-16 GitHub App + installation, default-branch ruleset (App not a bypass actor), read-back gate | `test-data/demo-repo-seed/`, `test-data/demo-repo.md`, `scripts/verify_demo_repo.py`, `scripts/ruleset-seed.json` |
 
 ## Where things live
 
@@ -33,11 +34,13 @@ Every message between orchestrator and agent is an A2A message whose data part i
 | `guardrails/schemas/` | built (0.2) | JSON Schemas generated from `contracts/`; never edit by hand |
 | `deploy/compose.yaml` | built (0.3) | postgres:18 + one-shot `migrate` job + placeholders for gateway/orchestrator/agents with AD-16 secret placement; see [deploy/README.md](../deploy/README.md) and [Compose and migrations](#compose-and-migrations-story-03) |
 | `deploy/migrations/` | built (0.3) | forward-only `.sql` files + naming rules; runner is `workflow/migrate.py` |
-| `scripts/` | built (0.1, 0.2) | `bootstrap.sh`, `check_layer_contract.py`, `generate_schemas.py` |
+| `scripts/` | built (0.1, 0.2, 0.4) | `bootstrap.sh`, `check_layer_contract.py`, `generate_schemas.py`, `verify_demo_repo.py`; `ruleset-seed.json` payload for the demo-repo ruleset |
+| `tests/scripts/` | built (0.4) | unit tests of the demo-repo read-back comparison logic against recorded API fixtures; live `gh` path is `@pytest.mark.integration` |
+| `test-data/` | built (0.4) | demo-repo evidence: `demo-repo-expected.json` (AD-16 set, one source for script + docs), `demo-repo.md` (live facts + scenario slots), `demo-repo-seed/` (pushed verbatim to the demo repo) |
 | `tests/contracts/` | built (0.2) | contract tests, named after the ACs they prove |
 | `tests/workflow/`, `tests/security/` | built (0.3) | migration-runner and compose secret-placement tests; `@pytest.mark.integration` ones need Docker (`pytest -m integration`) |
 | `config/runtime.yaml` | placeholder | model IDs and per-skill `step_timeout` (AD-19) |
-| `deploy/` | placeholder | Compose, k8s manifests, migrations (0.3+) |
+| `deploy/` | partially built (0.3) | Compose, k8s manifests, migrations (0.3+); k8s manifests + `registry.<env>.yaml` still placeholders |
 | `gateway/`, `workflow/`, `agents/`, `guardrails/` (code), `punch-out/`, `monitoring/` | placeholder | filled by Epics 1–6; each folder's README says what belongs there |
 | `prompts/`, `*.test.yaml` | placeholder | agent prompts and their promptfoo evals (Epic 3) |
 
@@ -52,6 +55,29 @@ python scripts/generate_schemas.py # regenerate guardrails/schemas/ after changi
 ```
 
 `make check` runs: bootstrap check, layer contract, schema drift, ruff (check + format), `mypy --strict`, pylint duplicate-code, `pytest --cov` (≥ 85% on `contracts`, `guardrails`, `workflow`). Integration tests that need Docker are marked `@pytest.mark.integration` and excluded from `make check` by default — run them with `make test-integration` (or `.venv/bin/pytest -m integration`). Individual targets are listed in the [Makefile](../Makefile).
+
+## Demo repository (story 0.4)
+
+The real synthetic demo repo is
+[`rijojohn85-dev/triage-demo-py`](https://github.com/rijojohn85-dev/triage-demo-py)
+(org-owned so AD-16's org `members:read` permission is meaningful). Its
+facts — repository/App/installation IDs, ruleset, CODEOWNERS, baseline
+tag, S1–S5 scenario slots — are recorded in
+[test-data/demo-repo.md](../test-data/demo-repo.md); the seed material that
+recreates it lives in [test-data/demo-repo-seed/](../test-data/demo-repo-seed/).
+
+- **Expected permissions** have one source: [test-data/demo-repo-expected.json](../test-data/demo-repo-expected.json). `scripts/verify_demo_repo.py` (AC4) reads it and diffs the live `gh api` responses; [AD-16](../_bmad-output/planning-artifacts/architecture/architecture-stage4-2026-09-25/ARCHITECTURE-SPINE.md) is cited, not restated.
+- **Ruleset** is a repository ruleset (not legacy branch protection) built from `scripts/ruleset-seed.json`: 1 approval + code-owner review, force-push/deletion blocked, `bypass_actors: []` so the App can never bypass.
+- **Not GitHub-enforced:** writes being restricted to `refs/heads/triage/*` + draft PRs is enforced in code by the E4 GitHub adapter (AD-3, AD-16); the ruleset covers the default branch only.
+- **Tests**: `tests/scripts/test_verify_demo_repo.py` unit-tests the comparison logic against recorded fixtures; the live `gh` path is `@pytest.mark.integration` (`python scripts/verify_demo_repo.py --org … --repo …` runs it ad hoc).
+
+Run the read-back:
+
+```bash
+.venv/bin/python scripts/verify_demo_repo.py \
+  --org rijojohn85-dev --repo triage-demo-py \
+  --app-id 5073639 --installation-id 164804973 --ruleset-id 23997553
+```
 
 ## Compose and migrations (story 0.3)
 

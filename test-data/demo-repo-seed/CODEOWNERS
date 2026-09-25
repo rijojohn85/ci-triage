@@ -1,0 +1,5 @@
+# Fixture CODEOWNERS for the demo repository (story 0.4, AC2).
+# Identities only, never tokens. The fallback `*` rule is the authority the
+# punch-out CLI resolves CODEOWNERS from (spine AD-14: read from the
+# protected default-branch tip, fallback `*`), so it must stay applicable.
+* @rijojohn85

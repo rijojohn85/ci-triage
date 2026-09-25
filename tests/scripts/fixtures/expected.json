@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "actions": "read",
+    "checks": "read",
+    "contents": "write",
+    "pull_requests": "write",
+    "issues": "write"
+  },
+  "organization_permissions": {
+    "members": "read"
+  },
+  "forbidden_permissions": ["workflows"],
+  "platform_implied_permissions": {
+    "metadata": "read",
+    "statuses": "write"
+  },
+  "events": ["issue_comment", "workflow_run"]
+}

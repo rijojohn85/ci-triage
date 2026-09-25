@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "actions": "read",
+    "checks": "read",
+    "contents": "write",
+    "pull_requests": "write",
+    "issues": "write",
+    "metadata": "read",
+    "statuses": "write",
+    "members": "read"
+  },
+  "events": ["issue_comment", "workflow_run"]
+}

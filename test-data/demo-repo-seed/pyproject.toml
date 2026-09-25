@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+# Not installed here or in the CI run; tests import the package via the
+# PYTHONPATH exported in the workflow, keeping the seed dependency-free.
+[project]
+name = "demo-app"
+version = "0.1.0"
+description = "Synthetic demo package for the CI triage demo repository"
+requires-python = ">=3.10"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
