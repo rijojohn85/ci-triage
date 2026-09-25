@@ -1,0 +1,498 @@
+{
+  "$defs": {
+    "Cap": {
+      "additionalProperties": false,
+      "description": "One confidence cap: a reason plus its citations; nothing may raise it (AD-9).",
+      "properties": {
+        "citations": {
+          "items": {
+            "discriminator": {
+              "mapping": {
+                "commit": "#/$defs/CommitCitation",
+                "history_row": "#/$defs/HistoryRowCitation",
+                "jev_signal": "#/$defs/JevSignalCitation",
+                "log_line": "#/$defs/LogLineCitation",
+                "metric": "#/$defs/MetricCitation"
+              },
+              "propertyName": "kind"
+            },
+            "oneOf": [
+              {
+                "$ref": "#/$defs/LogLineCitation"
+              },
+              {
+                "$ref": "#/$defs/CommitCitation"
+              },
+              {
+                "$ref": "#/$defs/MetricCitation"
+              },
+              {
+                "$ref": "#/$defs/HistoryRowCitation"
+              },
+              {
+                "$ref": "#/$defs/JevSignalCitation"
+              }
+            ]
+          },
+          "minItems": 1,
+          "title": "Citations",
+          "type": "array"
+        },
+        "reason": {
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        },
+        "value": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Value",
+          "type": "number"
+        }
+      },
+      "required": [
+        "value",
+        "reason",
+        "citations"
+      ],
+      "title": "Cap",
+      "type": "object"
+    },
+    "CommitCitation": {
+      "additionalProperties": false,
+      "description": "`commit` locator: a full `Sha40` SHA within `last_green..HEAD` (AD-7).",
+      "properties": {
+        "kind": {
+          "const": "commit",
+          "default": "commit",
+          "title": "Kind",
+          "type": "string"
+        },
+        "sha": {
+          "pattern": "^[0-9a-f]{40}$",
+          "title": "Sha",
+          "type": "string"
+        }
+      },
+      "required": [
+        "sha"
+      ],
+      "title": "CommitCitation",
+      "type": "object"
+    },
+    "DiffFile": {
+      "additionalProperties": false,
+      "description": "One file of the proposed diff (AD-6).",
+      "properties": {
+        "new_content": {
+          "title": "New Content",
+          "type": "string"
+        },
+        "op": {
+          "$ref": "#/$defs/DiffOperation"
+        },
+        "path": {
+          "minLength": 1,
+          "title": "Path",
+          "type": "string"
+        }
+      },
+      "required": [
+        "path",
+        "op",
+        "new_content"
+      ],
+      "title": "DiffFile",
+      "type": "object"
+    },
+    "DiffOperation": {
+      "description": "Proposed-diff file operation `add | modify | delete` (AD-6).",
+      "enum": [
+        "add",
+        "modify",
+        "delete"
+      ],
+      "title": "DiffOperation",
+      "type": "string"
+    },
+    "FailureClass": {
+      "description": "Failure class enum `code | flaky | infra | external | unknown` (AD-11).",
+      "enum": [
+        "code",
+        "flaky",
+        "infra",
+        "external",
+        "unknown"
+      ],
+      "title": "FailureClass",
+      "type": "string"
+    },
+    "HistoryRowCitation": {
+      "additionalProperties": false,
+      "description": "`history_row` locator: a `row_id` served in the evidence pack (AD-7, AD-15).",
+      "properties": {
+        "kind": {
+          "const": "history_row",
+          "default": "history_row",
+          "title": "Kind",
+          "type": "string"
+        },
+        "row_id": {
+          "minLength": 1,
+          "title": "Row Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "row_id"
+      ],
+      "title": "HistoryRowCitation",
+      "type": "object"
+    },
+    "JevSignalCitation": {
+      "additionalProperties": false,
+      "description": "`jev_signal` locator: the answer key of this run's Jev call (AD-7, AD-11).",
+      "properties": {
+        "answer": {
+          "minLength": 1,
+          "title": "Answer",
+          "type": "string"
+        },
+        "kind": {
+          "const": "jev_signal",
+          "default": "jev_signal",
+          "title": "Kind",
+          "type": "string"
+        }
+      },
+      "required": [
+        "answer"
+      ],
+      "title": "JevSignalCitation",
+      "type": "object"
+    },
+    "LogLineCitation": {
+      "additionalProperties": false,
+      "description": "`log_line` locator: a line number in the numbered distilled log (AD-7).",
+      "properties": {
+        "kind": {
+          "const": "log_line",
+          "default": "log_line",
+          "title": "Kind",
+          "type": "string"
+        },
+        "log_line": {
+          "minimum": 1,
+          "title": "Log Line",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "log_line"
+      ],
+      "title": "LogLineCitation",
+      "type": "object"
+    },
+    "MetricCitation": {
+      "additionalProperties": false,
+      "description": "`metric` locator: a key of the collected runner metrics (AD-7).",
+      "properties": {
+        "kind": {
+          "const": "metric",
+          "default": "metric",
+          "title": "Kind",
+          "type": "string"
+        },
+        "metric_key": {
+          "minLength": 1,
+          "title": "Metric Key",
+          "type": "string"
+        }
+      },
+      "required": [
+        "metric_key"
+      ],
+      "title": "MetricCitation",
+      "type": "object"
+    },
+    "ProposedDiff": {
+      "additionalProperties": false,
+      "description": "The Proposer's diff: `base_sha` and its files (AD-6).",
+      "properties": {
+        "base_sha": {
+          "pattern": "^[0-9a-f]{40}$",
+          "title": "Base Sha",
+          "type": "string"
+        },
+        "files": {
+          "items": {
+            "$ref": "#/$defs/DiffFile"
+          },
+          "minItems": 1,
+          "title": "Files",
+          "type": "array"
+        }
+      },
+      "required": [
+        "base_sha",
+        "files"
+      ],
+      "title": "ProposedDiff",
+      "type": "object"
+    },
+    "Quarantine": {
+      "additionalProperties": false,
+      "description": "Quarantine recommendation stays out of `proposed_diff` (AD-21).",
+      "properties": {
+        "citations": {
+          "items": {
+            "discriminator": {
+              "mapping": {
+                "commit": "#/$defs/CommitCitation",
+                "history_row": "#/$defs/HistoryRowCitation",
+                "jev_signal": "#/$defs/JevSignalCitation",
+                "log_line": "#/$defs/LogLineCitation",
+                "metric": "#/$defs/MetricCitation"
+              },
+              "propertyName": "kind"
+            },
+            "oneOf": [
+              {
+                "$ref": "#/$defs/LogLineCitation"
+              },
+              {
+                "$ref": "#/$defs/CommitCitation"
+              },
+              {
+                "$ref": "#/$defs/MetricCitation"
+              },
+              {
+                "$ref": "#/$defs/HistoryRowCitation"
+              },
+              {
+                "$ref": "#/$defs/JevSignalCitation"
+              }
+            ]
+          },
+          "title": "Citations",
+          "type": "array"
+        },
+        "reason": {
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        },
+        "test_id": {
+          "minLength": 1,
+          "title": "Test Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "test_id",
+        "reason",
+        "citations"
+      ],
+      "title": "Quarantine",
+      "type": "object"
+    },
+    "RiskTier": {
+      "description": "Risk gate outcome `normal | blocked | not_gated` (AD-6, AD-13).",
+      "enum": [
+        "normal",
+        "blocked",
+        "not_gated"
+      ],
+      "title": "RiskTier",
+      "type": "string"
+    },
+    "Suspect": {
+      "additionalProperties": false,
+      "description": "Blame needs a commit citation plus a log line (AD-27) and a rank (AD-24).",
+      "properties": {
+        "author_login": {
+          "minLength": 1,
+          "title": "Author Login",
+          "type": "string"
+        },
+        "citations": {
+          "items": {
+            "discriminator": {
+              "mapping": {
+                "commit": "#/$defs/CommitCitation",
+                "history_row": "#/$defs/HistoryRowCitation",
+                "jev_signal": "#/$defs/JevSignalCitation",
+                "log_line": "#/$defs/LogLineCitation",
+                "metric": "#/$defs/MetricCitation"
+              },
+              "propertyName": "kind"
+            },
+            "oneOf": [
+              {
+                "$ref": "#/$defs/LogLineCitation"
+              },
+              {
+                "$ref": "#/$defs/CommitCitation"
+              },
+              {
+                "$ref": "#/$defs/MetricCitation"
+              },
+              {
+                "$ref": "#/$defs/HistoryRowCitation"
+              },
+              {
+                "$ref": "#/$defs/JevSignalCitation"
+              }
+            ]
+          },
+          "minItems": 1,
+          "title": "Citations",
+          "type": "array"
+        },
+        "rank": {
+          "exclusiveMinimum": 0,
+          "title": "Rank",
+          "type": "integer"
+        },
+        "sha": {
+          "pattern": "^[0-9a-f]{40}$",
+          "title": "Sha",
+          "type": "string"
+        }
+      },
+      "required": [
+        "sha",
+        "author_login",
+        "rank",
+        "citations"
+      ],
+      "title": "Suspect",
+      "type": "object"
+    },
+    "TerminalState": {
+      "description": "Terminal `triage_run` outcome, per the AD-4 projection table.",
+      "enum": [
+        "pr_opened",
+        "report_sent",
+        "input_required",
+        "rejected_by_human",
+        "failed"
+      ],
+      "title": "TerminalState",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "The one verdict every consumer reads (AD-6, AD-9).\n\nThe payload spelling is `class`; `populate_by_name` + `serialize_by_alias`\nkeep the dump \u2192 revalidate round trip byte-faithful.",
+  "properties": {
+    "caps": {
+      "items": {
+        "$ref": "#/$defs/Cap"
+      },
+      "title": "Caps",
+      "type": "array"
+    },
+    "citations": {
+      "items": {
+        "discriminator": {
+          "mapping": {
+            "commit": "#/$defs/CommitCitation",
+            "history_row": "#/$defs/HistoryRowCitation",
+            "jev_signal": "#/$defs/JevSignalCitation",
+            "log_line": "#/$defs/LogLineCitation",
+            "metric": "#/$defs/MetricCitation"
+          },
+          "propertyName": "kind"
+        },
+        "oneOf": [
+          {
+            "$ref": "#/$defs/LogLineCitation"
+          },
+          {
+            "$ref": "#/$defs/CommitCitation"
+          },
+          {
+            "$ref": "#/$defs/MetricCitation"
+          },
+          {
+            "$ref": "#/$defs/HistoryRowCitation"
+          },
+          {
+            "$ref": "#/$defs/JevSignalCitation"
+          }
+        ]
+      },
+      "title": "Citations",
+      "type": "array"
+    },
+    "class": {
+      "$ref": "#/$defs/FailureClass"
+    },
+    "confidence": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Confidence",
+      "type": "number"
+    },
+    "confidence_jev": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Confidence Jev",
+      "type": "number"
+    },
+    "proposed_diff": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ProposedDiff"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "quarantine": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Quarantine"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "risk_tier": {
+      "$ref": "#/$defs/RiskTier"
+    },
+    "suspects": {
+      "items": {
+        "$ref": "#/$defs/Suspect"
+      },
+      "title": "Suspects",
+      "type": "array"
+    },
+    "terminal_state": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/TerminalState"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    }
+  },
+  "required": [
+    "class",
+    "confidence",
+    "confidence_jev",
+    "caps",
+    "suspects",
+    "citations",
+    "risk_tier"
+  ],
+  "title": "TriageVerdict",
+  "type": "object"
+}

@@ -2,8 +2,9 @@
 """Layer-contract checker (stdlib only: ast + pathlib), enforced from Story 0.1 (AC2).
 
 Checks:
-1. contracts/ imports nothing from the app layers (stdlib-only dependencies).
-2. guardrails/ imports only contracts/ (+stdlib).
+1. contracts/ imports stdlib + pydantic + intra-package modules only (amended
+   in Story 0.2: AD-6 mandates Pydantic; the 0.1 stdlib-only wording loses).
+2. guardrails/ imports only contracts/ (+ pydantic + intra-package + stdlib).
 3. agents/* import no GitHub API clients or Postgres clients.
 4. No secrets hardcoded (basic scan for key assigns) in Python files.
 5. Runtime YAML: only allowed model IDs (claude-haiku-4-5-20251001,
@@ -12,6 +13,7 @@ Checks:
 Exit non-zero on any violation; prints PASS lines per check on success.
 """
 
+import argparse
 import ast
 import re
 import sys
@@ -29,7 +31,7 @@ APP_LAYERS = {
     "runs",
     "test_data",
 }
-GUARDRAILS_ALLOWED = {"contracts"}  # plus stdlib
+PYDANTIC = "pydantic"
 FORBIDDEN_AGENT_MODULES = (
     "github",
     "pygithub",
@@ -55,6 +57,7 @@ def fail(msg: str) -> None:
 
 
 def imports_of(path: Path) -> set[str]:
+    """Record imports; relative imports surface as one "." per level (see checks)."""
     try:
         tree = ast.parse(path.read_text(encoding="utf-8"))
     except SyntaxError as e:
@@ -64,8 +67,12 @@ def imports_of(path: Path) -> set[str]:
     for node in ast.walk(tree):
         if isinstance(node, ast.Import):
             mods.update(a.name for a in node.names)
-        elif isinstance(node, ast.ImportFrom) and node.module:
-            mods.add(node.module)
+        elif isinstance(node, ast.ImportFrom):
+            marker = "." * node.level
+            if node.module:
+                mods.add(f"{marker}{node.module}")
+            elif node.level:  # pure `from .. import x` style
+                mods.add(marker)
     return mods
 
 
@@ -73,50 +80,67 @@ def project_top_of(mod: str) -> str:
     return mod.split(".", maxsplit=1)[0] if mod else ""
 
 
+def is_self_import(imp: str, owner_dir: str) -> bool:
+    """Level-1 relative import or absolute `owner_dir.*`; level-2 imports escape."""
+    if imp.startswith(".."):
+        return False
+    return imp.startswith(".") or imp == owner_dir or imp.startswith(f"{owner_dir}.")
+
+
 def is_stdlib(top: str) -> bool:
     return top in sys.stdlib_module_names or top in {"__future__"}
 
 
-def check_contracts(files: list[Path]) -> None:
-    # contracts/ may import stdlib only — anything else fails.
+def admitted(imp: str, owner_dir: str, extras: tuple[str, ...]) -> bool:
+    if imp.startswith(".."):
+        return False  # even an inter-package relative import leaves the package
+    top = project_top_of(imp) or imp
+    return (
+        is_stdlib(top)
+        or top in extras
+        or is_self_import(imp, owner_dir)
+        or any(top.startswith(f"{extra}.") for extra in extras)
+    )
+
+
+def check_layer(
+    owner_dir: str,
+    group_files: list[Path],
+    allowed_extras: tuple[str, ...],
+    message: str,
+    root: Path,
+) -> None:
+    """One layer rule: stdlib + intra-package + admitted extras (SOLID-D)."""
     bad = []
-    for f in files:
+    for f in group_files:
         for imp in imports_of(f):
-            top = project_top_of(imp)
-            if not is_stdlib(top):
-                bad.append(f"{f.relative_to(ROOT)} imports {imp}")
+            if not admitted(imp, owner_dir, allowed_extras):
+                bad.append(f"{f.relative_to(root)} imports {imp}")
     if bad:
         for b in bad:
-            fail(f"LAYER CONTRACT (contracts) imports stdlib only: {b}")
+            fail(f"LAYER CONTRACT ({owner_dir}) {message}: {b}")
     else:
-        print("PASS: contracts/ imports nothing but stdlib (no app-layer deps)")
+        print(f"PASS: {owner_dir}/ {message}")
 
 
-def check_guardrails(files: list[Path]) -> None:
-    # guardrails/ may import only contracts (+stdlib) — positive allowlist.
-    bad = []
-    for f in files:
-        for imp in imports_of(f):
-            top = project_top_of(imp)
-            if is_stdlib(top):
-                continue
-            if top not in GUARDRAILS_ALLOWED:
-                bad.append(f"{f.relative_to(ROOT)} imports {imp}")
-    if bad:
-        for b in bad:
-            fail(f"LAYER CONTRACT (guardrails) imports only contracts(+stdlib): {b}")
-    else:
-        print("PASS: guardrails/ depends only on contracts (+stdlib)")
+LAYERS: tuple[tuple[str, tuple[str, ...], str], ...] = (
+    ("contracts", (PYDANTIC,), "imports stdlib + pydantic + intra-package only"),
+    (
+        "guardrails",
+        (PYDANTIC, "contracts"),
+        "depends only on contracts (+ pydantic, self, stdlib)",
+    ),
+)
 
 
-def check_agents(files: list[Path]) -> None:
+def check_agents(files: list[Path], root: Path) -> None:
     # AST import scanning only: fail on actual imports matching forbidden package names.
     bad = []
     for f in files:
         for imp in imports_of(f):
             top = project_top_of(imp).lower()
             if top in FORBIDDEN_AGENT_MODULES:
-                bad.append(f"{f.relative_to(ROOT)} imports {imp}")
+                bad.append(f"{f.relative_to(root)} imports {imp}")
     if bad:
         for b in bad:
             fail(f"LAYER CONTRACT (agents) no GitHub/Postgres clients: {b}")
@@ -124,7 +148,7 @@ def check_agents(files: list[Path]) -> None:
         print("PASS: agents/ has no GitHub/Postgres client imports")
 
 
-def check_secrets_in_python(files: list[Path]) -> None:
+def check_secrets_in_python(files: list[Path], root: Path) -> None:
     bad = []
     for f in files:
         src = f.read_text(encoding="utf-8")
@@ -134,7 +158,7 @@ def check_secrets_in_python(files: list[Path]) -> None:
             src,
         ):
             bad.append(
-                f"{f.relative_to(ROOT)} possible hardcoded secret "
+                f"{f.relative_to(root)} possible hardcoded secret "
                 f"at line start '{m.group(0)[:20]}...'"
             )
     if bad:
@@ -144,8 +168,8 @@ def check_secrets_in_python(files: list[Path]) -> None:
         print("PASS: no hardcoded secrets in Python files")
 
 
-def check_runtime_yaml() -> None:
-    yaml_path = ROOT / "config" / "runtime.yaml"
+def check_runtime_yaml(root: Path) -> None:
+    yaml_path = root / "config" / "runtime.yaml"
     if not yaml_path.exists():
         fail("config/runtime.yaml missing")
         return
@@ -212,15 +236,15 @@ def _check_agent_key(line: str) -> set[str]:
     return set()
 
 
-def collect() -> dict[str, list[Path]]:
+def collect(root: Path) -> dict[str, list[Path]]:
     groups: dict[str, list[Path]] = {
         "contracts": [],
         "guardrails": [],
         "agents": [],
         "python": [],
     }
-    for py in ROOT.rglob("*.py"):
-        rel = str(py.relative_to(ROOT))
+    for py in root.rglob("*.py"):
+        rel = str(py.relative_to(root))
         if rel.startswith(
             (
                 ".venv",
@@ -245,22 +269,34 @@ def collect() -> dict[str, list[Path]]:
     return groups
 
 
-def check_dirs() -> None:
+def check_dirs(root: Path) -> None:
     for d in ("contracts", "guardrails", "agents"):
-        if not (ROOT / d).is_dir():
+        if not (root / d).is_dir():
             fail(f"LAYOUT: required directory '{d}/' missing")
     if not errors or not any(e.startswith("LAYOUT") for e in errors):
         print("PASS: contracts/, guardrails/, agents/ directories exist")
 
 
-def main() -> int:
-    check_dirs()
-    groups = collect()
-    check_contracts(groups["contracts"])
-    check_guardrails(groups["guardrails"])
-    check_agents(groups["agents"])
-    check_secrets_in_python(groups["python"])
-    check_runtime_yaml()
+def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--root",
+        type=Path,
+        default=ROOT,
+        help="repository root to check (tests plant fixture trees elsewhere)",
+    )
+    return parser.parse_args(argv)
+
+
+def main(argv: list[str] | None = None) -> int:
+    root = parse_args(argv).root.resolve()
+    check_dirs(root)
+    groups = collect(root)
+    for owner_dir, extras, message in LAYERS:
+        check_layer(owner_dir, groups[owner_dir], extras, message, root)
+    check_agents(groups["agents"], root)
+    check_secrets_in_python(groups["python"], root)
+    check_runtime_yaml(root)
     if errors:
         print("\nFAILURES:")
         for e in errors:

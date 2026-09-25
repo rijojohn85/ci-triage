@@ -1,0 +1,179 @@
+{
+  "$defs": {
+    "CandidateSuspect": {
+      "additionalProperties": false,
+      "description": "A deterministically ranked candidate; the Analyzer picks from these (AD-24).",
+      "properties": {
+        "changed_files": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Changed Files",
+          "type": "array"
+        },
+        "rank": {
+          "exclusiveMinimum": 0,
+          "title": "Rank",
+          "type": "integer"
+        },
+        "sha": {
+          "pattern": "^[0-9a-f]{40}$",
+          "title": "Sha",
+          "type": "string"
+        }
+      },
+      "required": [
+        "sha",
+        "rank",
+        "changed_files"
+      ],
+      "title": "CandidateSuspect",
+      "type": "object"
+    },
+    "CommitRecord": {
+      "additionalProperties": false,
+      "description": "A full-SHA commit of the `last_green..HEAD` range (AD-24).",
+      "properties": {
+        "author_login": {
+          "minLength": 1,
+          "title": "Author Login",
+          "type": "string"
+        },
+        "message": {
+          "minLength": 1,
+          "title": "Message",
+          "type": "string"
+        },
+        "sha": {
+          "pattern": "^[0-9a-f]{40}$",
+          "title": "Sha",
+          "type": "string"
+        }
+      },
+      "required": [
+        "sha",
+        "message",
+        "author_login"
+      ],
+      "title": "CommitRecord",
+      "type": "object"
+    },
+    "DistilledLogLine": {
+      "additionalProperties": false,
+      "description": "One numbered line of the distilled log (AD-20, AD-24).",
+      "properties": {
+        "line_number": {
+          "exclusiveMinimum": 0,
+          "title": "Line Number",
+          "type": "integer"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "line_number",
+        "text"
+      ],
+      "title": "DistilledLogLine",
+      "type": "object"
+    },
+    "HistoryRow": {
+      "additionalProperties": false,
+      "description": "Structured-only history row, cited by `row_id` (AD-15).",
+      "properties": {
+        "error_type": {
+          "minLength": 1,
+          "title": "Error Type",
+          "type": "string"
+        },
+        "fingerprint": {
+          "minLength": 1,
+          "title": "Fingerprint",
+          "type": "string"
+        },
+        "row_id": {
+          "minLength": 1,
+          "title": "Row Id",
+          "type": "string"
+        },
+        "test_id": {
+          "minLength": 1,
+          "title": "Test Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "row_id",
+        "fingerprint",
+        "test_id",
+        "error_type"
+      ],
+      "title": "HistoryRow",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "The deterministic single evidence source for every agent of the run (AD-24).",
+  "properties": {
+    "candidate_suspects": {
+      "items": {
+        "$ref": "#/$defs/CandidateSuspect"
+      },
+      "title": "Candidate Suspects",
+      "type": "array"
+    },
+    "commits": {
+      "items": {
+        "$ref": "#/$defs/CommitRecord"
+      },
+      "minItems": 1,
+      "title": "Commits",
+      "type": "array"
+    },
+    "distilled_log": {
+      "items": {
+        "$ref": "#/$defs/DistilledLogLine"
+      },
+      "minItems": 1,
+      "title": "Distilled Log",
+      "type": "array"
+    },
+    "history_rows": {
+      "items": {
+        "$ref": "#/$defs/HistoryRow"
+      },
+      "title": "History Rows",
+      "type": "array"
+    },
+    "last_green": {
+      "pattern": "^[0-9a-f]{40}$",
+      "title": "Last Green",
+      "type": "string"
+    },
+    "metrics": {
+      "additionalProperties": {
+        "type": "number"
+      },
+      "title": "Metrics",
+      "type": "object"
+    },
+    "repo_id": {
+      "minLength": 1,
+      "title": "Repo Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "repo_id",
+    "last_green",
+    "distilled_log",
+    "commits",
+    "candidate_suspects",
+    "history_rows",
+    "metrics"
+  ],
+  "title": "EvidencePack",
+  "type": "object"
+}

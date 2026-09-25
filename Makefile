@@ -1,7 +1,7 @@
 # Quality gates — single entry: `make check` (AGENTS.md § Quality gates).
 # Tool targets are thin wrappers over .venv tools; pins live in pyproject.toml
 # + requirements/dev-constraints.txt (installed by bootstrap).
-.PHONY: check bootstrap print-versions ruff mypy pylint-dup pytest-cov pre-commit
+.PHONY: check bootstrap print-versions schema-drift ruff mypy pylint-dup pytest-cov pre-commit
 
 VENV := .venv
 PY := $(VENV)/bin/python
@@ -10,7 +10,7 @@ MYPY := $(VENV)/bin/mypy
 PYLINT := $(VENV)/bin/pylint
 PYTEST := $(VENV)/bin/pytest
 
-check: bootstrap-check layer-contract ruff-check ruff-format mypy-check pylint-dup pytest-cov
+check: bootstrap-check layer-contract schema-drift ruff-check ruff-format mypy-check pylint-dup pytest-cov
 	@echo "MAKE CHECK: PASS"
 
 bootstrap-check:
@@ -20,6 +20,9 @@ bootstrap-check:
 
 layer-contract:
 	@$(PY) scripts/check_layer_contract.py
+
+schema-drift:
+	@$(PY) scripts/generate_schemas.py --check
 
 ruff-check:
 	@if find contracts guardrails workflow -name "*.py" 2>/dev/null | grep -q .; then \
@@ -33,8 +36,12 @@ ruff-format:
 
 mypy-check:
 	@$(MYPY) --strict scripts/
-	@if find contracts guardrails workflow -name "*.py" 2>/dev/null | grep -q .; then \
-		$(MYPY) --strict contracts/ guardrails/ workflow/; \
+	@src_dirs=""; \
+	for d in contracts guardrails workflow; do \
+		if find $$d -name "*.py" 2>/dev/null | grep -q .; then src_dirs="$$src_dirs $$d/"; fi; \
+	done; \
+	if [ -n "$$src_dirs" ]; then \
+		$(MYPY) --strict $$src_dirs; \
 	else \
 		echo "PASS: mypy src deferred (no Python source yet in contracts/guardrails/workflow)"; \
 	fi
