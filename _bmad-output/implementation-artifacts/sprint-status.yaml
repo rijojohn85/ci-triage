@@ -44,7 +44,7 @@ story_location: _bmad-output/implementation-artifacts
 development_status:
   epic-0: in-progress
   0-1-reproduce-the-rubric-layout-and-pinned-toolchain: done
-  0-2-publish-shared-payload-contracts-and-generated-schemas: review
+  0-2-publish-shared-payload-contracts-and-generated-schemas: done
   0-3-start-compose-and-forward-only-migrations: backlog
   0-4-prepare-the-protected-external-github-demo-repository: backlog
   epic-0-retrospective: optional
