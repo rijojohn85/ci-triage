@@ -89,6 +89,7 @@ services:
       GITHUB_APP_ID: ${GITHUB_APP_ID:-}
       GITHUB_APP_INSTALLATION_ID: ${GITHUB_APP_INSTALLATION_ID:-}
       TYPESAFE_API_KEY: ${TYPESAFE_API_KEY:-}
+      TYPESAFE_BASE_URL: ${TYPESAFE_BASE_URL:-https://openrouter.ai/api}
       DATABASE_URL: postgresql://${POSTGRES_USER:-triage}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-triage}
 
   # Spoke agents (A2A servers): model-API key only, no Postgres (AD-5/AD-16).
@@ -98,6 +99,7 @@ services:
     command: ["sleep", "infinity"]
     environment:
       TYPESAFE_API_KEY: ${TYPESAFE_API_KEY:-}
+      TYPESAFE_BASE_URL: ${TYPESAFE_BASE_URL:-https://openrouter.ai/api}
 
   analyzer:
     image: busybox:1.37.0

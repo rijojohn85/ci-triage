@@ -1,10 +1,11 @@
 # Runtime configuration — owns model IDs and per-skill step_timeout (layer contract: values live in YAML, never code).
 # NOTE: `temperature` is removed in anthropic SDK 1.x — never configure it here.
-# Key scopes per AD-16: jev -> TYPESAFE_API_KEY; analyzer/proposer/reviewer -> ANTHROPIC_API_KEY.
+# Key scopes per AD-16: jev -> TYPESAFE_API_KEY (an OpenRouter key; Jev is served via OpenRouter,
+# base URL from TYPESAFE_BASE_URL); analyzer/proposer/reviewer -> ANTHROPIC_API_KEY.
 # Pinned here per architecture spine; loaded by later stories.
 
 jev:
-  model: claude-haiku-4-5-20251001
+  model: typesafe/jev-1.13
   step_timeout: 60
 
 analyzer:

@@ -18,6 +18,7 @@ import yaml
 REPO = Path(__file__).resolve().parents[2]
 COMPOSE = REPO / "deploy" / "compose.yaml"
 MIGRATIONS_DIR = REPO / "deploy" / "migrations"
+RUNTIME = REPO / "config" / "runtime.yaml"
 
 SECRET_SCOPES: dict[str, set[str]] = {
     "GITHUB_APP_PRIVATE_KEY": {"gateway", "orchestrator"},
@@ -101,6 +102,31 @@ class TestSecretPlacement:
                     assert "${" in str(value), (
                         f"{name}/{key} must interpolate from env, not set a literal"
                     )
+
+
+class TestJevViaOpenRouter:
+    """Jev is reached through OpenRouter with the pinned typesafe-sdk.
+
+    The SDK reads TYPESAFE_BASE_URL; without it every Jev caller silently falls
+    back to api.typesafe.ai, where the OpenRouter key in TYPESAFE_API_KEY fails.
+    """
+
+    def test_jev_callers_default_base_url_to_openrouter(
+        self, services: dict[str, Any]
+    ) -> None:
+        for name in SECRET_SCOPES["TYPESAFE_API_KEY"]:
+            value = str(env_of(services[name]).get("TYPESAFE_BASE_URL", ""))
+            assert value == "${TYPESAFE_BASE_URL:-https://openrouter.ai/api}", name
+
+    def test_base_url_only_where_the_jev_key_lives(
+        self, services: dict[str, Any]
+    ) -> None:
+        holders = {n for n, s in services.items() if "TYPESAFE_BASE_URL" in env_of(s)}
+        assert holders == SECRET_SCOPES["TYPESAFE_API_KEY"]
+
+    def test_runtime_jev_model_is_the_openrouter_jev_id(self) -> None:
+        runtime = yaml.safe_load(RUNTIME.read_text(encoding="utf-8"))
+        assert runtime["jev"]["model"] == "typesafe/jev-1.13"
 
 
 class TestPostgresAndMigrationGating:
