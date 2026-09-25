@@ -1,7 +1,7 @@
 # Quality gates — single entry: `make check` (AGENTS.md § Quality gates).
 # Tool targets are thin wrappers over .venv tools; pins live in pyproject.toml
 # + requirements/dev-constraints.txt (installed by bootstrap).
-.PHONY: check bootstrap print-versions schema-drift ruff mypy pylint-dup pytest-cov test-integration pre-commit
+.PHONY: check bootstrap print-versions schema-drift state-diagram-drift ruff mypy pylint-dup pytest-cov test-integration pre-commit
 
 VENV := .venv
 PY := $(VENV)/bin/python
@@ -10,7 +10,7 @@ MYPY := $(VENV)/bin/mypy
 PYLINT := $(VENV)/bin/pylint
 PYTEST := $(VENV)/bin/pytest
 
-check: bootstrap-check layer-contract schema-drift ruff-check ruff-format mypy-check pylint-dup pytest-cov
+check: bootstrap-check layer-contract schema-drift state-diagram-drift ruff-check ruff-format mypy-check pylint-dup pytest-cov
 	@echo "MAKE CHECK: PASS"
 
 bootstrap-check:
@@ -23,6 +23,9 @@ layer-contract:
 
 schema-drift:
 	@$(PY) scripts/generate_schemas.py --check
+
+state-diagram-drift:
+	@$(PY) scripts/generate_state_diagram.py --check
 
 ruff-check:
 	@if find contracts guardrails workflow -name "*.py" 2>/dev/null | grep -q .; then \

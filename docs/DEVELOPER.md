@@ -25,6 +25,7 @@ Every message between orchestrator and agent is an A2A message whose data part i
 | 0.2 | Shared Pydantic payload contracts, generated JSON Schemas, schema drift gate | `contracts/`, `guardrails/schemas/`, `scripts/generate_schemas.py` |
 | 0.3 | Compose foundation: postgres:18 + healthcheck, one-shot forward-only migration job (`service_completed_successfully` gating), secret placement | `deploy/`, `workflow/migrate.py`, `tests/workflow/`, `tests/security/` |
 | 0.4 | Protected external demo repo: seeded Python package with green CI, AD-16 GitHub App + installation, default-branch ruleset (App not a bypass actor), read-back gate | `test-data/demo-repo-seed/`, `test-data/demo-repo.md`, `scripts/verify_demo_repo.py`, `scripts/ruleset-seed.json` |
+| 2.1 | The AD-1 run-state machine: `RunState` enum, one declarative transition table, pure guards, non-retryable `IllegalTransition`, pure AD-4 projection, generated state diagram + drift gate, `0001_triage_run` migration, thresholds loader | `workflow/run_states.py`, `workflow/transitions.py`, `workflow/projection.py`, `workflow/thresholds.py`, `workflow/diagram.py`, `scripts/generate_state_diagram.py`, `workflow/STATE_DIAGRAM.md`, `guardrails/thresholds.yaml`, `deploy/migrations/0001_triage_run.sql`, `tests/workflow/` |
 
 ## Where things live
 
@@ -32,16 +33,17 @@ Every message between orchestrator and agent is an A2A message whose data part i
 | --- | --- | --- |
 | `contracts/` | built (0.2) | Pydantic v2 models for every inter-agent payload; see [contracts/README.md](../contracts/README.md) |
 | `guardrails/schemas/` | built (0.2) | JSON Schemas generated from `contracts/`; never edit by hand |
+| `guardrails/thresholds.yaml` | built (2.1) | the one thresholds file (AD-19): e.g. `review.max_rounds`, `workflow_path_glob`; consumed via `workflow.thresholds.load_thresholds` |
 | `deploy/compose.yaml` | built (0.3) | postgres:18 + one-shot `migrate` job + placeholders for gateway/orchestrator/agents with AD-16 secret placement; see [deploy/README.md](../deploy/README.md) and [Compose and migrations](#compose-and-migrations-story-03) |
-| `deploy/migrations/` | built (0.3) | forward-only `.sql` files + naming rules; runner is `workflow/migrate.py` |
-| `scripts/` | built (0.1, 0.2, 0.4) | `bootstrap.sh`, `check_layer_contract.py`, `generate_schemas.py`, `verify_demo_repo.py`; `ruleset-seed.json` payload for the demo-repo ruleset |
+| `deploy/migrations/` | built (0.3, 2.1) | forward-only `.sql` files + naming rules; runner is `workflow/migrate.py`; `0001_triage_run.sql` owns run state |
+| `scripts/` | built (0.1, 0.2, 0.4, 2.1) | `bootstrap.sh`, `check_layer_contract.py`, `generate_schemas.py`, `verify_demo_repo.py`, `generate_state_diagram.py`; `ruleset-seed.json` payload for the demo-repo ruleset |
 | `tests/scripts/` | built (0.4) | unit tests of the demo-repo read-back comparison logic against recorded API fixtures; live `gh` path is `@pytest.mark.integration` |
 | `test-data/` | built (0.4) | demo-repo evidence: `demo-repo-expected.json` (AD-16 set, one source for script + docs), `demo-repo.md` (live facts + scenario slots), `demo-repo-seed/` (pushed verbatim to the demo repo) |
 | `tests/contracts/` | built (0.2) | contract tests, named after the ACs they prove |
-| `tests/workflow/`, `tests/security/` | built (0.3) | migration-runner and compose secret-placement tests; `@pytest.mark.integration` ones need Docker (`pytest -m integration`) |
+| `tests/workflow/`, `tests/security/` | built (0.3, 2.1) | migration-runner and compose secret-placement tests; state-machine, projection and diagram tests; `@pytest.mark.integration` ones need Docker (`pytest -m integration`) |
 | `config/runtime.yaml` | placeholder | model IDs and per-skill `step_timeout` (AD-19) |
 | `deploy/` | partially built (0.3) | Compose, k8s manifests, migrations (0.3+); k8s manifests + `registry.<env>.yaml` still placeholders |
-| `gateway/`, `workflow/`, `agents/`, `guardrails/` (code), `punch-out/`, `monitoring/` | placeholder | filled by Epics 1–6; each folder's README says what belongs there |
+| `gateway/`, `workflow/` (rest), `agents/`, `guardrails/` (validator/code), `punch-out/`, `monitoring/` | placeholder | filled by Epics 1–6; each folder's README says what belongs there |
 | `prompts/`, `*.test.yaml` | placeholder | agent prompts and their promptfoo evals (Epic 3) |
 
 Layer rules (enforced by `scripts/check_layer_contract.py`): `contracts/` imports only stdlib and pydantic; `guardrails/` imports only `contracts/`; agents hold no GitHub or Postgres clients; model IDs and timeouts live in YAML; secrets come from environment variables.
@@ -52,9 +54,10 @@ Layer rules (enforced by `scripts/check_layer_contract.py`): `contracts/` import
 bash scripts/bootstrap.sh          # create .venv, install pinned Python and npm tools, verify pins
 make check                         # every quality gate; must be green before a story is done
 python scripts/generate_schemas.py # regenerate guardrails/schemas/ after changing a contract
+python scripts/generate_state_diagram.py # regenerate workflow/STATE_DIAGRAM.md after a table change
 ```
 
-`make check` runs: bootstrap check, layer contract, schema drift, ruff (check + format), `mypy --strict`, pylint duplicate-code, `pytest --cov` (≥ 85% on `contracts`, `guardrails`, `workflow`). Integration tests that need Docker are marked `@pytest.mark.integration` and excluded from `make check` by default — run them with `make test-integration` (or `.venv/bin/pytest -m integration`). Individual targets are listed in the [Makefile](../Makefile).
+`make check` runs: bootstrap check, layer contract, schema drift, **state-diagram drift**, ruff (check + format), `mypy --strict`, pylint duplicate-code, `pytest --cov` (≥ 85% on `contracts`, `guardrails`, `workflow`). Integration tests that need Docker are marked `@pytest.mark.integration` and excluded from `make check` by default — run them with `make test-integration` (or `.venv/bin/pytest -m integration`). Individual targets are listed in the [Makefile](../Makefile).
 
 ## Demo repository (story 0.4)
 
@@ -111,3 +114,18 @@ One model family per module in `contracts/`: `enums`, `citations`, `verdict`, `e
 | `DataPart` | both sides | envelope in every A2A data part: `task_id` = `context_id` = `run_id` (AD-4) |
 
 **Adding or changing a contract:** write the failing test in `tests/contracts/` first, change the model, run `python scripts/generate_schemas.py`, commit the regenerated schema with the model. `make check` fails if the two drift apart.
+
+## The state machine (story 2.1)
+
+The orchestrator runs every triage as a life of exactly one record, `triage_run`, whose `state` column says where the run is. The whole story in plain words:
+
+- **There are 14 states** and they are written down once, in `workflow/run_states.py` (`RunState`, [AD-1](../_bmad-output/planning-artifacts/architecture/architecture-stage4-2026-09-25/ARCHITECTURE-SPINE.md)). A run is received from the webhook, distills the log, classifies the failure, analyzes it, then either **opens a draft PR** (code fix accepted), **reports** it (infra problem, or a human should apply the change), **pauses for a person** (`AWAITING_APPROVAL`), or **fails**.
+- **Every move must be in one table.** `workflow/transitions.py` holds a single list of rows — one row per legal move, saying *from which state, to which state, and under what condition*. If code asks for a move that has no row, or the row's condition is not met, `transition()` raises `IllegalTransition`, which is deliberately non-retryable (an invented move is a bug, not a hiccup, AD-22). Nothing else in the codebase is allowed to decide these moves.
+- **Conditions are pure guards** over one frozen `GuardInput` (SOLID-I: one small data bag, no god parameters): the failure class, the risk tier, the review round, the human's approve/reject decision, and a booleans-only `confidence_below_cutoff` (AD-9: the state machine never *computes* confidence — story 2.2 does). Guard thresholds come from `guardrails/thresholds.yaml` (AD-19), never from literals in code.
+- **Pauses carry a reason.** `AWAITING_APPROVAL` always has an `escalation_reason` from `contracts.enums.EscalationReason` — and the database enforces it: a run in `AWAITING_APPROVAL` without a reason is rejected by `deploy/migrations/0001_triage_run.sql` CHECK constraints, and vice versa.
+- **Failure is always an exit.** Any non-terminal state can go to `FAILED`; those edges are derived from the terminal set in code, not listed by hand (AD-22). Terminal states (`DONE_PR`, `DONE_REPORT`, `REJECTED_BY_HUMAN`, `FAILED`) have no moves out.
+- **The diagram is the table's shadow.** `workflow/STATE_DIAGRAM.md` is generated from the table by `scripts/generate_state_diagram.py`, and `make state-diagram-drift` fails if anyone edits either out of sync. A test also parses the spine's AD-1 mermaid block and proves the table's edge set equals it.
+
+**Extending the state machine:** add a state (a new `RunState` member) or an edge = add a row in `workflow/transitions.py` (plus a guard predicate when the edge is conditional), name the guard's sample fields in `GUARD_FIELDS`, write the failing tests first (`tests/workflow/test_transitions.py`, names cite the AC), re-run `python scripts/generate_state_diagram.py`, and commit the regenerated `STATE_DIAGRAM.md` in the same PR ([AD-1](../_bmad-output/planning-artifacts/architecture/architecture-stage4-2026-09-25/ARCHITECTURE-SPINE.md), [AD-4](../_bmad-output/planning-artifacts/architecture/architecture-stage4-2026-09-25/ARCHITECTURE-SPINE.md)). If the spine's AD-1 diagram disagrees with your row, stop — the spine wins ([AGENTS.md "Sources of truth"](../AGENTS.md)).
+
+**Projection (AD-4):** `workflow/projection.py::project()` is a pure mapping-table from `RunState` to the pair (A2A `TaskState` member name, contract `TerminalState | None`) — `RECEIVED → SUBMITTED`, active states → `WORKING`, `AWAITING_APPROVAL → INPUT_REQUIRED`/`input_required`, the terminal states → `COMPLETED`/`FAILED` with their contract terminal state. a2a-sdk 1.1.5's `TaskState` is a protobuf wrapper, so the projection returns the member *name*; the A2A server story (2.4) converts to the integer at the transport edge.
