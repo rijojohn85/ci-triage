@@ -1,0 +1,11 @@
+# config/gateway.yaml — the one gateway limits file (AD-19).
+# Values live here, never in code; loaded via gateway.settings.load_gateway_limits.
+# A burst past the per-installation rate limit is rejected with 429; a repo
+# already holding the queue-depth cap of RECEIVED runs is rejected with 429.
+# A request body larger than max_body_bytes is rejected with 413 (flooding).
+
+limits:
+  rate_limit_per_installation: 60
+  rate_limit_window_seconds: 60
+  max_queue_depth_per_repo: 100
+  max_body_bytes: 1048576

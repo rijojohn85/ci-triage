@@ -6,8 +6,9 @@ Checks:
    in Story 0.2: AD-6 mandates Pydantic; the 0.1 stdlib-only wording loses).
 2. guardrails/ imports only contracts/ (+ pydantic + intra-package + stdlib).
 3. agents/* import no GitHub API clients or Postgres clients.
-4. No secrets hardcoded (basic scan for key assigns) in Python files.
-5. Runtime YAML: only allowed model IDs (claude-haiku-4-5-20251001,
+4. gateway/* imports no LLM (anthropic/a2a) or GitHub API clients (AD-17).
+5. No secrets hardcoded (basic scan for key assigns) in Python files.
+6. Runtime YAML: only allowed model IDs (claude-haiku-4-5-20251001,
    claude-sonnet-5); one step_timeout per agent key.
 
 Exit non-zero on any violation; prints PASS lines per check on success.
@@ -43,6 +44,18 @@ FORBIDDEN_AGENT_MODULES = (
     "sqlalchemy",
     "asyncpg",
     "pg8000",
+    "githubkit",
+)
+# AD-17: the gateway is transport only — no LLM client and no GitHub client
+# (psycopg for enqueue is allowed, unlike for the spokes).
+FORBIDDEN_GATEWAY_MODULES = (
+    "anthropic",
+    "a2a",
+    "github",
+    "pygithub",
+    "gidgethub",
+    "ghapi",
+    "gitpython",
     "githubkit",
 )
 ALLOWED_MODELS = {"claude-haiku-4-5-20251001", "claude-sonnet-5"}
@@ -148,6 +161,21 @@ def check_agents(files: list[Path], root: Path) -> None:
         print("PASS: agents/ has no GitHub/Postgres client imports")
 
 
+def check_gateway(files: list[Path], root: Path) -> None:
+    # AD-17: no LLM or GitHub client in the gateway (psycopg enqueue is fine).
+    bad = []
+    for f in files:
+        for imp in imports_of(f):
+            top = project_top_of(imp).lower()
+            if top in FORBIDDEN_GATEWAY_MODULES:
+                bad.append(f"{f.relative_to(root)} imports {imp}")
+    if bad:
+        for b in bad:
+            fail(f"LAYER CONTRACT (gateway) no LLM/GitHub clients: {b}")
+    else:
+        print("PASS: gateway/ has no LLM/GitHub client imports")
+
+
 def check_secrets_in_python(files: list[Path], root: Path) -> None:
     bad = []
     for f in files:
@@ -241,6 +269,7 @@ def collect(root: Path) -> dict[str, list[Path]]:
         "contracts": [],
         "guardrails": [],
         "agents": [],
+        "gateway": [],
         "python": [],
     }
     for py in root.rglob("*.py"):
@@ -266,6 +295,8 @@ def collect(root: Path) -> dict[str, list[Path]]:
             groups["guardrails"].append(py)
         elif rel.startswith("agents/"):
             groups["agents"].append(py)
+        elif rel.startswith("gateway/"):
+            groups["gateway"].append(py)
     return groups
 
 
@@ -295,6 +326,7 @@ def main(argv: list[str] | None = None) -> int:
     for owner_dir, extras, message in LAYERS:
         check_layer(owner_dir, groups[owner_dir], extras, message, root)
     check_agents(groups["agents"], root)
+    check_gateway(groups["gateway"], root)
     check_secrets_in_python(groups["python"], root)
     check_runtime_yaml(root)
     if errors:

@@ -2,13 +2,42 @@
 title: 'Story 1.1 — Authenticate and deduplicate failed-run intake'
 type: 'feature'
 created: '2026-09-26'
-status: 'ready-for-dev'
+status: 'done'
 route: 'dispatch'
+baseline_revision: 'e1c074839a145e336d0956c9d4b9fef53592d13e'
 review_loop_iteration: 0
-followup_review_recommended: false
+followup_review_recommended: true
 context: ['{project-root}/AGENTS.md']
 warnings: ['oversized']
-deferred: []
+deferred:
+  - summary: >-
+      The gateway compose service is granted GITHUB_APP_PRIVATE_KEY and GITHUB_APP_ID it never reads.
+    evidence: |-
+      Pre-existing AD-16 placement from story 0.3; story 1.1's intent says keep the AD-16 secret names unchanged, so 1.1 deliberately did not alter it. A later least-privilege pass should trim the gateway environment.
+    location: >-
+      deploy/compose.yaml
+    severity: low
+  - summary: >-
+      A store outage yields an unlogged 500 from the gateway, with no operator-visible audit of rejections.
+    evidence: |-
+      gateway/app.py does not wrap store calls or log a reason; AGENTS.md asks errors to be typed and logged. Not required by any 1.1 AC; a logging story should own it.
+    location: >-
+      gateway/app.py
+    severity: low
+  - summary: >-
+      The gateway image copies an explicit workflow/ file whitelist that can break on a new import.
+    evidence: |-
+      deploy/gateway.Dockerfile copies only workflow/__init__.py, run_states.py and ids.py; a new import from gateway/ would fail in the image with no test catching it. Deferred until the image is built in CI.
+    location: >-
+      deploy/gateway.Dockerfile
+    severity: low
+  - summary: >-
+      The gateway integration test reuses tests/workflow/conftest.py's pg_dsn fixture and duplicates two small helpers.
+    evidence: |-
+      tests/security/test_gateway_store_integration.py imports another package's fixture and re-implements apply_migrations/query; a shared conftest plugin would remove the duplication.
+    location: >-
+      tests/security/test_gateway_store_integration.py
+    severity: low
 ---
 
 ## Build Brief
@@ -123,8 +152,81 @@ deferred: []
 **Manual checks:**
 - `grep -R "anthropic\|import a2a\|from a2a" gateway/*.py` returns nothing (AD-17 boundary).
 
+## Review Triage Log
+
+### 2026-09-26 — Review pass
+
+- verdicts: 39 findings — high 0, medium 8, low 29, false 2, maybe-false 0
+- findings:
+  - `[low]` `[patch]` `workflow/ids.py` constant `_MILLISECONDS_PER_SECOND` misnames ns-per-ms — renamed `_NANOSECONDS_PER_MILLISECOND`.
+  - `[medium]` `[patch]` `_parse_body` lets `UnicodeDecodeError` escape → 500 — now catches `ValueError` → 400.
+  - `[low]` `[reject]` a replay also tripping the rate/queue gates returns 429, not 2xx — no duplicate work results and GitHub retries; the fix needs a pre-limit delivery lookup (new store surface); not worth the complexity.
+  - `[medium]` `[patch]` Postgres adapter returned `run_id=None` on replay/duplicate while the fake returned the existing id — adapter now selects the existing run id by identity and the integration test asserts it.
+  - `[medium]` `[patch]` `webhook_delivery` lacks `run_id` so a replay could not recover it — resolved by selecting from `triage_run` by `(repo_id, workflow_run_id, run_attempt)`; no column added.
+  - `[low]` `[reject]` queue-depth read and insert are not atomic → concurrent overshoot — the cap is a shedding heuristic with no everyday harm, and an atomic guarded insert adds complexity.
+  - `[low]` `[reject]` `from_env` accepts empty secrets/installations/DSN — config is deployed deliberately and a misconfiguration fails loudly on first request; validation was not an AC.
+  - `[low]` `[defer]` gateway is granted `GITHUB_APP_PRIVATE_KEY`/`GITHUB_APP_ID` it never reads — pre-existing 0.3 placement; 1.1's intent says keep AD-16 names unchanged; deferred to a least-privilege pass.
+  - `[low]` `[reject]` Dockerfile repeats pins and pins `click` — matches the established `migrate.Dockerfile` pattern; `click` ships with uvicorn; explicit image pins are intentional.
+  - `[low]` `[patch]` no `.dockerignore` for `context: .` — added a repo-root `.dockerignore`.
+  - `[low]` `[patch]` `.env.example` missing the new gateway knobs — added names-only `GATEWAY_HOST_PORT=`, `GATEWAY_HOST=`, `GATEWAY_PORT=`.
+  - `[low]` `[reject]` no healthcheck/health route — outside the ACs; Compose gating already depends on postgres+migrate and no consumer needs it yet.
+  - `[low]` `[defer]` no logging/error wrapping around store calls — hardening for a later logging story, not a 1.1 AC.
+  - `[false]` `[reject]` rate-limiter memory grows unbounded — `screen()` rejects installations not in `allowed_installation_ids` before the limiter, so the key set is bounded by configuration.
+  - `[low]` `[patch]` test re-declared the forbidden-module set and used a non-recursive glob — now imports the set from `scripts.check_layer_contract` and uses `rglob`.
+  - `[low]` `[defer]` Dockerfile's explicit `workflow/` whitelist is fragile — real but unexercised until the image is built in CI.
+  - `[low]` `[patch]` `starlette`/`PyYAML` imported directly but only transitive — added as direct pinned dependencies.
+  - `[low]` `[reject]` `tests/security/test_run_ids.py` misplaced — the spec places the story's tests under `tests/security/`, and `workflow/ids.py` is the intake run identity; moving buys nothing.
+  - `[low]` `[patch]` signed non-dict body and blank `X-GitHub-Event` untested — added both cases.
+  - `[medium]` `[patch]` body read fully before the signature with no cap → memory exhaustion (AD-17 flooding) — added a bounded body read (`max_body_bytes`) returning 413.
+  - `[medium]` `[patch]` duplicate of the `UnicodeDecodeError` finding — same fix.
+  - `[medium]` `[patch]` duplicate of the lost `run_id` finding — same fix.
+  - `[low]` `[reject]` duplicate of the non-atomic queue-cap finding.
+  - `[low]` `[reject]` duplicate of the no-fail-fast settings finding.
+  - `[low]` `[reject]` `load_gateway_limits` unguarded on a missing/empty file — the file is committed and static; the failure is loud, not silent.
+  - `[low]` `[reject]` `new_run_id(now_ms=...)` can overflow the 48-bit range — reachable only through the test injection; the real clock cannot.
+  - `[false]` `[reject]` duplicate of the rate-limiter memory finding.
+  - `[medium]` `[patch]` duplicate of the fake/real `run_id` divergence (verification-gap).
+  - `[low]` `[patch]` per-installation rate-limit isolation untested — added a two-id unit test.
+  - `[low]` `[patch]` queue-depth `state = RECEIVED` filter unobservable — added a terminal-state integration case.
+  - `[low]` `[reject]` intent-alignment: invented response codes/body vocabulary and the fake-vs-Postgres evidence split — descriptive only; the codes are a designer choice the spec left open, and integration tests are excluded from `make check` by the project's own configuration.
+  - `[medium]` `[patch]` duplicate of the fake-vs-adapter contract break (clean-code).
+  - `[low]` `[patch]` test duplicated the header constants — now imported from `gateway.signature`/`gateway.events`.
+  - `[low]` `[patch]` the forbidden-module fact lived twice — single-sourced from `scripts.check_layer_contract`.
+  - `[low]` `[patch]` duplicated AST import scan in tests — the scan now reuses the script's helpers.
+  - `[low]` `[patch]` unit test asserted the fake's locking — renamed to state it verifies the fake contract; integration owns the real concurrency proof.
+  - `[low]` `[patch]` duplicate of the `ids.py` constant-name finding.
+  - `[low]` `[patch]` DEVELOPER still called the gateway a placeholder — corrected.
+  - `[low]` `[patch]` DEVELOPER `scripts/` status omitted 1.1 — added.
+
 ## Auto Run Result
 
-Status: ready-for-dev
-Blocking condition: none
-Planned: 2026-09-26. Halted after planning (invocation directed `Halt after planning.`). Epic 1 context compiled to `_bmad-output/implementation-artifacts/epic-1-context.md`. No production code written.
+Status: done
+Baseline: `e1c074839a145e336d0956c9d4b9fef53592d13e`.
+
+**Summary.** Built the webhook intake gateway (AD-17): constant-time HMAC over the raw body before parsing, an accepted-event registry (`workflow_run` completed/failure only), unknown-installation rejection, an in-memory per-installation rate limiter and a Postgres-backed per-repo queue-depth cap, and idempotent enqueue of one `triage_run(RECEIVED)` via delivery dedupe plus the unique run identity, all in one transaction. `run_id` is a new pure UUIDv7 factory (`workflow/ids.py`). Starlette + uvicorn pinned and the gateway compose service is now real.
+
+**Files changed (one line each):**
+- `gateway/{__init__,app,events,limits,settings,signature,store,__main__}.py` — the intake app, pure decisions, Protocol + Postgres adapter, uvicorn entrypoint.
+- `workflow/ids.py` — pure UUIDv7 `new_run_id`.
+- `config/gateway.yaml` — rate limit, window, queue-depth cap, max body bytes (AD-19).
+- `deploy/migrations/0002_webhook_delivery.sql` — the delivery-replay record.
+- `deploy/gateway.Dockerfile`, `deploy/compose.yaml`, `deploy/README.md`, `deploy/migrations/README.md` — real gateway image/service, docs.
+- `Makefile`, `scripts/check_layer_contract.py` — gateway lint/type gates and the no-LLM/GitHub layer rule.
+- `pyproject.toml`, `requirements/constraints.txt`, `scripts/bootstrap.sh` — uvicorn + direct `starlette`/`PyYAML` pins.
+- `tests/security/{conftest,gateway_fakes,test_gateway_signature,test_gateway_intake,test_gateway_limits,test_gateway_store_integration,test_run_ids}.py`, `tests/workflow/test_triage_run_migration.py` — AC tests and the migration-count derivation.
+- `docs/DEVELOPER.md`, `gateway/README.md`, `.env.example`, `.dockerignore` — docs and build hygiene.
+
+**Review findings.** 39 reported: 0 high, 8 medium, 29 low, 2 false. Patched 12 entries (the 3 medium root causes below plus the low corrections); deferred 4 (compose least-privilege, store logging, image workflow-file whitelist, integration-test fixture reuse); rejected 23 with reasons in the log above (2 verified false: the rate-limiter memory claim and one duplicate).
+
+**Patched medium root causes:** (1) `_parse_body` now catches `ValueError` so a signed non-UTF-8 body is a 400, never a 500; (2) the Postgres adapter now returns the existing `run_id` on replay/duplicate, matching the fake and asserting it in integration; (3) the request body is read bounded by `max_body_bytes` (413 over the cap) so an unauthenticated caller cannot exhaust memory.
+
+**Follow-up review recommendation: true.** Named unverified risk: the new bounded-body 413 path and the adapter's second `SELECT` on conflict are fresh behaviour added during patching and have not themselves been re-reviewed.
+
+**Verification performed:**
+- `git diff` reviewed since baseline (1814-line patch, then re-generated after patches).
+- `.venv/bin/pytest tests/security -q` → 35 passed, 3 deselected.
+- `make check` → PASS (bootstrap, layer contract, schema/state-diagram drift, ruff check+format, mypy --strict, pylint dup, 196 tests, coverage 92.87%).
+- `.venv/bin/pytest -m integration -q` → 12 passed (postgres:18: `0002` apply, replay/duplicate run-id, queue count, concurrency).
+- `python -c "from gateway.app import create_app"` → clean; gateway has no `anthropic`/`a2a`/GitHub imports (layer gate).
+
+**Residual risks:** limits and the rate limiter are in-process (correct for the single Compose gateway; a multi-replica gateway needs a shared store); the gateway image is defined but not built in CI yet; cost/token auditing and the worker loop arrive in later stories.

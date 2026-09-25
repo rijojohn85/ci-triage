@@ -26,6 +26,9 @@ pytestmark = pytest.mark.integration
 
 REPO_ROOT: Final[Path] = Path(__file__).resolve().parents[2]
 MIGRATIONS_DIR: Final[Path] = REPO_ROOT / "deploy" / "migrations"
+# Derived, not hardcoded: later stories add migrations (0002, 0003, …) and the
+# point of this test is that *every* file applies once and only once.
+EXPECTED_MIGRATIONS: Final[int] = len(migrate.read_migrations(MIGRATIONS_DIR))
 
 
 def applied_once(dsn: str) -> int:
@@ -53,7 +56,7 @@ def check_defs(dsn: str) -> dict[str, str]:
 def test_0001_migration_applies_and_check_constraints_reject_bad_state_and_missing_reason(
     pg_dsn: str,
 ) -> None:
-    assert applied_once(pg_dsn) == 1
+    assert applied_once(pg_dsn) == EXPECTED_MIGRATIONS
     assert applied_once(pg_dsn) == 0  # forward-only: never rerun
 
     good = (
@@ -94,7 +97,7 @@ def test_0001_migration_applies_and_check_constraints_reject_bad_state_and_missi
 
 def test_proposal_step_id_is_optional_awaiting_approval_roundtrip(pg_dsn: str) -> None:
     # AC2: proposal_step_id optional — with a value and without, read back.
-    assert applied_once(pg_dsn) == 1
+    assert applied_once(pg_dsn) == EXPECTED_MIGRATIONS
     with_proposal = (
         "INSERT INTO triage_run (run_id, repo_id, workflow_run_id, run_attempt, "
         "state, escalation_reason, proposal_step_id) VALUES (gen_random_uuid(), "
@@ -123,7 +126,7 @@ def test_proposal_step_id_is_optional_awaiting_approval_roundtrip(pg_dsn: str) -
 
 
 def test_enum_check_constraint_parity(pg_dsn: str) -> None:
-    assert applied_once(pg_dsn) == 1
+    assert applied_once(pg_dsn) == EXPECTED_MIGRATIONS
     constraints = check_defs(pg_dsn)
 
     state_def = constraints["ck_triage_run_state"]

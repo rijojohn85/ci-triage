@@ -9,6 +9,9 @@ dependencies = [
     "anthropic==1.8.0",
     "pydantic==2.13.5",
     "psycopg==3.3.6",
+    "PyYAML==6.0.3",
+    "starlette==1.7.0",
+    "uvicorn==0.54.0",
 ]
 
 [build-system]

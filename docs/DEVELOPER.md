@@ -27,6 +27,7 @@ Every message between orchestrator and agent is an A2A message whose data part i
 | 0.4 | Protected external demo repo: seeded Python package with green CI, AD-16 GitHub App + installation, default-branch ruleset (App not a bypass actor), read-back gate | `test-data/demo-repo-seed/`, `test-data/demo-repo.md`, `scripts/verify_demo_repo.py`, `scripts/ruleset-seed.json` |
 | 2.1 | The AD-1 run-state machine: `RunState` enum, one declarative transition table, pure guards, non-retryable `IllegalTransition`, pure AD-4 projection, generated state diagram + drift gate, `0001_triage_run` migration, thresholds loader | `workflow/run_states.py`, `workflow/transitions.py`, `workflow/projection.py`, `workflow/thresholds.py`, `workflow/diagram.py`, `scripts/generate_state_diagram.py`, `workflow/STATE_DIAGRAM.md`, `guardrails/thresholds.yaml`, `deploy/migrations/0001_triage_run.sql`, `tests/workflow/` |
 | 2.2 | The one confidence number (AD-9): Jev's `Choice`/`Noul` contracts, the frozen `ClassConfidence` min rule, the injection pre-screen cap, classification-branch cut-off predicates, the AD-27 blame-free attribution predicate, new cut-offs in `guardrails/thresholds.yaml` | `contracts/jev.py`, `contracts/verdict.py` (`effective_confidence`), `guardrails/confidence.py`, `workflow/attribution.py`, `workflow/thresholds.py`, `guardrails/thresholds.yaml`, `guardrails/schemas/JevClassification.json`, `tests/contracts/test_jev.py`, `tests/guardrails/`, `tests/workflow/test_attribution.py`, `tests/workflow/test_thresholds.py` |
+| 1.1 | Gateway intake: the webhook signature is checked over the raw bytes before parsing, unknown installations are refused, replayed deliveries and duplicate run identities collapse to one `triage_run(RECEIVED)`, bursts are shed, and run ids are time-ordered UUIDv7 | `gateway/`, `workflow/ids.py`, `config/gateway.yaml`, `deploy/migrations/0002_webhook_delivery.sql`, `deploy/gateway.Dockerfile`, `tests/security/` |
 
 ## Where things live
 
@@ -36,16 +37,19 @@ Every message between orchestrator and agent is an A2A message whose data part i
 | `guardrails/schemas/` | built (0.2) | JSON Schemas generated from `contracts/`; never edit by hand |
 | `guardrails/thresholds.yaml` | built (2.1, 2.2) | the one thresholds file (AD-19): `review.max_rounds`, `workflow_path_glob`, and the `confidence` cut-offs (`class_cutoff`, `no_route_cutoff`, `injection_screen_cutoff`, `injection_screen_cap`); consumed via `workflow.thresholds.load_thresholds` |
 | `guardrails/confidence.py` | built (2.2) | the AD-9 min rule as code: `ClassConfidence`, `RouteConfidence`, `apply_injection_screen`, `below_class_cutoff`, `class_escalation` |
-| `deploy/compose.yaml` | built (0.3) | postgres:18 + one-shot `migrate` job + placeholders for gateway/orchestrator/agents with AD-16 secret placement; see [deploy/README.md](../deploy/README.md) and [Compose and migrations](#compose-and-migrations-story-03) |
-| `deploy/migrations/` | built (0.3, 2.1) | forward-only `.sql` files + naming rules; runner is `workflow/migrate.py`; `0001_triage_run.sql` owns run state |
-| `scripts/` | built (0.1, 0.2, 0.4, 2.1) | `bootstrap.sh`, `check_layer_contract.py`, `generate_schemas.py`, `verify_demo_repo.py`, `generate_state_diagram.py`; `ruleset-seed.json` payload for the demo-repo ruleset |
+| `deploy/compose.yaml` | built (0.3, 1.1) | postgres:18 + one-shot `migrate` job + the real gateway (story 1.1) + orchestrator/agent placeholders, with AD-16 secret placement; see [deploy/README.md](../deploy/README.md) and [Compose and migrations](#compose-and-migrations-story-03) |
+| `deploy/migrations/` | built (0.3, 2.1, 1.1) | forward-only `.sql` files + naming rules; runner is `workflow/migrate.py`; `0001_triage_run.sql` owns run state, `0002_webhook_delivery.sql` records seen delivery ids for replay dedupe |
+| `scripts/` | built (0.1, 0.2, 0.4, 1.1, 2.1) | `bootstrap.sh`, `check_layer_contract.py`, `generate_schemas.py`, `verify_demo_repo.py`, `generate_state_diagram.py`; `ruleset-seed.json` payload for the demo-repo ruleset |
 | `tests/scripts/` | built (0.4) | unit tests of the demo-repo read-back comparison logic against recorded API fixtures; live `gh` path is `@pytest.mark.integration` |
 | `test-data/` | built (0.4) | demo-repo evidence: `demo-repo-expected.json` (AD-16 set, one source for script + docs), `demo-repo.md` (live facts + scenario slots), `demo-repo-seed/` (pushed verbatim to the demo repo) |
 | `tests/contracts/` | built (0.2) | contract tests, named after the ACs they prove |
-| `tests/workflow/`, `tests/security/` | built (0.3, 2.1) | migration-runner and compose secret-placement tests; state-machine, projection and diagram tests; `@pytest.mark.integration` ones need Docker (`pytest -m integration`) |
+| `tests/workflow/`, `tests/security/` | built (0.3, 2.1, 1.1) | migration-runner and compose secret-placement tests; state-machine, projection and diagram tests; gateway signature/intake/limits tests; `@pytest.mark.integration` ones need Docker (`pytest -m integration`) |
+| `gateway/` | built (1.1) | webhook intake only — signature, accepted events, load limits, one enqueue; see [gateway/README.md](../gateway/README.md) |
+| `workflow/ids.py` | built (1.1) | pure `new_run_id()`: the one UUIDv7 run identity (AD-4) |
+| `config/gateway.yaml` | built (1.1) | per-installation rate limit and per-repo queue-depth cap (AD-19); consumed via `gateway.settings.load_gateway_limits` |
 | `config/runtime.yaml` | placeholder | model IDs and per-skill `step_timeout` (AD-19) |
-| `deploy/` | partially built (0.3) | Compose, k8s manifests, migrations (0.3+); k8s manifests + `registry.<env>.yaml` still placeholders |
-| `gateway/`, `workflow/` (rest), `agents/`, `guardrails/` (validator, citation_check, risk_gate), `punch-out/`, `monitoring/` | placeholder | filled by Epics 1–6; each folder's README says what belongs there |
+| `deploy/` | partially built (0.3, 1.1) | Compose, gateway image, k8s manifests, migrations (0.3+); k8s manifests + `registry.<env>.yaml` still placeholders |
+| `workflow/` (rest), `agents/`, `guardrails/` (validator, citation_check, risk_gate), `punch-out/`, `monitoring/` | placeholder | filled by Epics 2–6; each folder's README says what belongs there |
 | `prompts/`, `*.test.yaml` | placeholder | agent prompts and their promptfoo evals (Epic 3) |
 
 Layer rules (enforced by `scripts/check_layer_contract.py`): `contracts/` imports only stdlib and pydantic; `guardrails/` imports only `contracts/`; agents hold no GitHub or Postgres clients; model IDs and timeouts live in YAML; secrets come from environment variables.
@@ -57,6 +61,7 @@ bash scripts/bootstrap.sh          # create .venv, install pinned Python and npm
 make check                         # every quality gate; must be green before a story is done
 python scripts/generate_schemas.py # regenerate guardrails/schemas/ after changing a contract
 python scripts/generate_state_diagram.py # regenerate workflow/STATE_DIAGRAM.md after a table change
+python -m gateway                  # run the intake gateway against a migrated database (POST /webhook on :8080)
 ```
 
 `make check` runs: bootstrap check, layer contract, schema drift, **state-diagram drift**, ruff (check + format), `mypy --strict`, pylint duplicate-code, `pytest --cov` (≥ 85% on `contracts`, `guardrails`, `workflow`). Integration tests that need Docker are marked `@pytest.mark.integration` and excluded from `make check` by default — run them with `make test-integration` (or `.venv/bin/pytest -m integration`). Individual targets are listed in the [Makefile](../Makefile).
@@ -97,8 +102,54 @@ docker compose --project-directory . -f deploy/compose.yaml down -v          # s
 - **Postgres 18** with a `pg_isready` healthcheck; data in the named `pgdata` volume (postgres:18 keeps its data at `/var/lib/postgresql`; see the image notes).
 - **Migrations** are forward-only `.sql` files in `deploy/migrations/`, applied in filename order by `workflow/migrate.py` ([AD-25](../_bmad-output/planning-artifacts/architecture/architecture-stage4-2026-09-25/ARCHITECTURE-SPINE.md)). No Alembic/SQLAlchemy, no advisory lock, no new dependencies. Each file commits atomically together with its `schema_migrations` row; a failing file rolls back completely, exits non-zero, and the `service_completed_successfully` dependency keeps all workers from starting on a broken schema. Re-running applies nothing new (idempotent).
 - **Secrets** come from `.env` (names in `.env.example`); [deploy/README.md](../deploy/README.md) links the scope rules. The placement contract is tested (AD-16): key scoping gateway/orchestrator, Claude agents-, Jev/orchestrator-only.
-- **Worker services** (gateway, orchestrator, agents) are busybox placeholders until their stories — the AD-16 env names are already in place and the migration gating is live.
+- **Worker services:** the gateway is real since story 1.1 (`deploy/gateway.Dockerfile`, `python -m gateway`); the orchestrator and agents are still busybox placeholders. The AD-16 env names are in place and the migration gating is live.
 - **Connection strings:** the migrate job builds its DSN from `POSTGRES_*` names inside the compose network; host-side tools use `DATABASE_URL` from `.env`.
+
+## Gateway intake (story 1.1)
+
+When CI fails, GitHub sends the gateway a `workflow_run` webhook. The gateway's
+only job is to prove the message is real, collapse repetition, shed floods,
+and hand on exactly one piece of work (AD-17).
+
+**The signature comes first.** GitHub signs the exact bytes it sent using a
+shared secret. The gateway recomputes that signature over the raw body and
+compares it in constant time. If it is missing or wrong there is no parse and
+the answer is `401`, so a forged message can never become work. The check
+takes a *tuple* of secrets, so webhook-secret rotation (AD-25) works with no
+change here — `GITHUB_WEBHOOK_SECRET` may hold two comma-separated secrets and
+either is accepted during the overlap.
+
+**Only one event matters.** A message enqueues only when the event is
+`workflow_run`, its action is `completed` and its conclusion is `failure`.
+Everything else — including `issue_comment` (the `/triage` command, out of
+scope for now) — is acknowledged and ignored. A signed message from an
+installation id we do not know is refused with no downstream call.
+
+**Then the limits.** A per-installation rate limit (messages per time window)
+and a per-repo cap on how many runs may already be waiting stop a burst from
+becoming work. Both numbers live only in `config/gateway.yaml` (AD-19), never
+in code.
+
+**Then one insert.** A message that passes everything is written as a single
+`triage_run` in `RECEIVED` and answered `202`. Repetition collapses two ways:
+a replayed `X-GitHub-Delivery` is a `2xx` no-op (seen ids are kept in
+`webhook_delivery`), and a new delivery id that still names the same
+`(repo, workflow_run, run_attempt)` creates no second run — the unique
+constraint does that. Delivery record and run row commit in one transaction,
+so a crash leaves neither half behind. The run id is a UUIDv7
+(`workflow/ids.py`): a millisecond timestamp first, so ids sort by time and
+keep the database index tidy.
+
+**What it deliberately is not:** no state-machine logic, and no LLM or GitHub
+call — enqueueing `RECEIVED` is the only write (AD-1, AD-17). The layer check
+fails the build if `gateway/` ever imports an LLM or GitHub client. The limits
+are in-process, which is correct for the one gateway under Compose v1 (AD-25);
+a future multi-replica gateway would move them to a shared store.
+
+**To extend it:** a new accepted event is one new entry in the registry in
+`gateway/events.py`, not a new branch; a new limit is a new field in
+`config/gateway.yaml` plus `GatewayLimits`. The run identity is generated by
+one factory (`workflow/ids.py::new_run_id`) that later stories reuse.
 
 ## Contracts (story 0.2)
 

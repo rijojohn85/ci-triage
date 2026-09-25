@@ -15,6 +15,7 @@ PY_PINS=(
   "anthropic 1.8.0"
   "pydantic 2.13.5"
   "psycopg 3.3.6"
+  "uvicorn 0.54.0"
 )
 NPM_PINS=(
   "promptfoo 0.123.1"
