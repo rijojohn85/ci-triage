@@ -25,6 +25,11 @@ Requirements: Docker with the Compose plugin (`docker compose version` prints â‰
    # edit .env â€” set POSTGRES_USER / POSTGRES_PASSWORD / POSTGRES_DB
    ```
 
+   The failure classifier (Jev) is reached through [OpenRouter](https://openrouter.ai/settings/keys).
+   Put your OpenRouter API key in `TYPESAFE_API_KEY` and set
+   `TYPESAFE_BASE_URL=https://openrouter.ai/api` (no trailing path). Compose fills in that address
+   by itself; scripts and evals you run outside Compose need it in `.env`.
+
 2. Start PostgreSQL 18 and let the one-shot migration job initialise the database:
 
    ```bash
