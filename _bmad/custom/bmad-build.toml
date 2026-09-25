@@ -1,0 +1,27 @@
+# Team overrides for bmad-build (merged over .claude/skills/bmad-build/customize.toml).
+# Lists append; arrays of tables merge by `id`.
+
+[workflow]
+
+persistent_facts = [
+  "file:{project-root}/_bmad/custom/engineering-standards.md",
+]
+
+activation_steps_append = [
+  """BUILD BRIEF FIRST. Before writing or changing any code, tell the user what is about to be built and HALT for an explicit go. The brief contains: (1) story id + title and the sprint-status key; (2) each AC in one line; (3) binding ADs and how each constrains this story; (4) files/modules to create or change, and what is deliberately NOT touched; (5) approach in 3-6 bullets, naming the SOLID/DRY decisions (new Protocols, registries, what is reused vs extracted); (6) tests that will prove each AC; (7) risks, open questions (OQ-n), prerequisites. The spec CHECKPOINT 1 summary must include this brief.""",
+  """NO ONESHOT ROUTE in this project. Always take the full plan route with CHECKPOINT 1, even for small changes; the oneshot early exit in step-02 is disabled.""",
+  """Every spec's frontmatter `context:` must include `{project-root}/_bmad/custom/engineering-standards.md`, so the implementation subagent loads the standards. Before marking a story done, run the harness (`make check` or its equivalent once story 0.1 has installed it) and paste the result; a red harness blocks `done`.""",
+]
+
+[[workflow.review_layers]]
+id = "clean-code"
+name = "Clean Code / SOLID / DRY Reviewer"
+instruction = """
+Launch a context-free subagent with this prompt:
+
+Read `{project-root}/_bmad/custom/engineering-standards.md` completely; it is your rubric.
+Review the unified diff at `{diff_file}` against it. Report only concrete violations in the changed code: SOLID breaches (mixed responsibilities, if/elif chains that should be table/registry entries, concrete clients imported into domain code, fat interfaces), DRY breaches (logic, prompts, schemas, model IDs or thresholds duplicated instead of loaded from their single source), and clean-code breaches (unclear names, functions doing several things, magic values, swallowed errors, comments that restate code). Also flag over-engineering: abstractions with one implementation and no test fake need.
+For each finding give file:line, the rule broken, and the smallest fix. Output a Markdown list of findings only, with no severity or ranking. If there are none, say "no violations" and list what you checked.
+
+Do not invoke any skill, and do not spawn subagents of your own. Return findings as text in your final message; do not route them through any findings-reporting tool.
+"""
