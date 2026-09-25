@@ -6,11 +6,11 @@ from pathlib import Path
 from typing import Final
 
 from guardrails.confidence import ConfidenceCutoffs
-from workflow.thresholds import load_thresholds
+from workflow.thresholds import DistillerLimits, load_thresholds
 
 FIXTURE_THRESHOLDS_PATH: Final[Path] = (
     Path(__file__).resolve().parent / "thresholds.test.yaml"
 )
-FIXTURE_CUTOFFS: Final[ConfidenceCutoffs] = load_thresholds(
-    FIXTURE_THRESHOLDS_PATH
-).confidence
+_FIXTURE_THRESHOLDS = load_thresholds(FIXTURE_THRESHOLDS_PATH)
+FIXTURE_CUTOFFS: Final[ConfidenceCutoffs] = _FIXTURE_THRESHOLDS.confidence
+FIXTURE_DISTILLER_LIMITS: Final[DistillerLimits] = _FIXTURE_THRESHOLDS.distiller

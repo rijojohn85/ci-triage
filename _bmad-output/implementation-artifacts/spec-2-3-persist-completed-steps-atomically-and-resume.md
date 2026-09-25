@@ -2,13 +2,21 @@
 title: 'Story 2.3 — Persist completed steps atomically and resume'
 type: 'feature'
 created: '2026-09-26'
-status: 'ready-for-dev'
+status: 'done'
 route: 'dispatch'
+baseline_revision: '88d5401a6345652fcc425342b1cc67c7f6818639'
 review_loop_iteration: 0
-followup_review_recommended: false
+followup_review_recommended: true
 context: ['{project-root}/AGENTS.md']
 warnings: ['oversized']
-deferred: []
+deferred:
+  - summary: >-
+      A failed step row has no error or reason column, so the why of a failed attempt is not stored.
+    evidence: |-
+      run_step.status can be 'failed' but output may be NULL and no diagnostic column exists. AD-22 failure detail and the transient-retry accounting arrive with story 2.8, which owns the failure shape.
+    location: >-
+      deploy/migrations/0004_run_step.sql
+    severity: low
 ---
 
 ## Build Brief
@@ -108,8 +116,74 @@ deferred: []
 **Manual checks:**
 - Confirm `workflow/steps.py` contains no `SKIP LOCKED`/`FOR UPDATE` lease SQL of its own (it must go through 1.2's guard).
 
+## Review Triage Log
+
+### 2026-09-26 — Review pass
+
+- verdicts: 27 findings — high 0, medium 2, low 25, false 0, maybe-false 0
+- findings:
+  - `[low]` `[reject]` `run_step.repo_id` has no composite FK to `triage_run` — AD-15 is enforced by binding `repo_id` on every query; a composite FK is a future hardening, not a 2.3 requirement.
+  - `[low]` `[reject]` failed attempts have no next-attempt reader, and a re-run would hit the unique key — retry/attempt accounting is story 2.8's; 2.3 only stores the row.
+  - `[low]` `[reject]` the unique key blocks a duplicate attempt, not a duplicate completion (docstring wording) — the backstop is per attempt by design; the wording is minor.
+  - `[low]` `[reject]` a duplicate completion surfaces a raw `UniqueViolation` — typed error mapping belongs to the retry story (2.8).
+  - `[low]` `[reject]` `StepRecord.output` is typed `object` — a JSON value alias would be nicer; callers pass JSON-serializable data and the integration test proves the round-trip.
+  - `[low]` `[reject]` `StepConnection`/`StepCursor` restate `LeaseConnection`/`LeaseCursor` — AGENTS.md SOLID-I asks for small per-consumer protocols, so the second pair is intentional.
+  - `[low]` `[reject]` the write path ignores the injected `connect` — `guarded_commit` owns the transaction connection; the injected connection serves the read-only `resume`, as the tests show.
+  - `[low]` `[reject]` `Claim` carries no `repo_id`, so a wrong repo surfaces as `LeaseLost` — the lease is run-scoped; tenant scope is a separate check and the distinction is not needed yet.
+  - `[low]` `[reject]` `resume` returns `None` for both a missing run and another tenant — both mean "nothing to resume for this caller"; a typed split adds surface with no consumer.
+  - `[low]` `[patch]` no test records a `StepStatus.FAILED` step, and none proves a failed row is excluded from `resume().completed_steps` — added unit and integration tests.
+  - `[low]` `[reject]` the fault-injection test leaves its trigger in place — the database is a fresh per-test container; the trigger is intentionally not dropped.
+  - `[low]` `[reject]` the resume index omits `status` — the index serves the repo/run lookup; the status predicate is cheap on the small per-run row set.
+  - `[low]` `[patch]` DEVELOPER says the unit tests use "a fake recorder" — reworded to the fake connection and fake lease store they actually use.
+  - `[low]` `[reject]` the schema guard no longer forbids `run_step` in a later migration — the added `CREATE TABLE` allowlist plus the `triage_run` allowlist cover new tables; an `ALTER` is unlikely and reviewable.
+  - `[low]` `[defer]` a failed step has no error/reason column — AD-22 failure detail arrives with the retry story (2.8).
+  - `[low]` `[patch]` DEVELOPER's version tags were out of order and the migrations README ended in a fragment — tidied.
+  - `[medium]` `[patch]` `_ADVANCE_STATE_SQL` never writes or clears `escalation_reason`, so the `ck_triage_run_escalation_iff_state` CHECK rejects every commit entering or leaving `AWAITING_APPROVAL` — the UPDATE now sets the reason on entry and clears it on every other move, with integration tests both ways.
+  - `[low]` `[reject]` `resume` completion is name-only, not attempt-scoped — the revision loop that re-runs a named step is story 2.10's; 2.3 resumes a linear run.
+  - `[low]` `[reject]` a non-JSON `output` raises an untyped `json.dumps` `TypeError` — the caller supplies JSON; typed mapping belongs with the retry/validation work (2.8).
+  - `[low]` `[patch]` the `resume` status filter against failed rows is untested (verification-gap) — added the failed-row exclusion test.
+  - `[low]` `[patch]` the `FAILED` status binding is untested (verification-gap) — added the failed-status unit test.
+  - `[low]` `[reject]` intent-alignment: the atomicity guarantee lives in unchanged `lease_store.py` and the tests fake that seam — reviewing composition is the point; the real guarantee is proven against Postgres integration.
+  - `[low]` `[patch]` duplicate of the untested `FAILED` status/row finding (clean-code).
+  - `[low]` `[patch]` `step_id` was minted with the run-identity factory `new_run_id()` — now `uuid.uuid4()`, so step and run identities are not conflated.
+  - `[low]` `[patch]` duplicate of the "fake recorder" doc wording finding (clean-code).
+  - `[low]` `[patch]` `test_status_values_match_the_migration_check_constraint` compared a hardcoded set instead of reading `0004` — now parses the migration's CHECK.
+  - `[medium]` `[patch]` orchestrator-flagged: `workflow/steps.py` mixed pure types with the `psycopg` adapter (AGENTS SOLID-S, matching the 1.2 review) — the Postgres side moved to `workflow/step_store.py`; `steps.py` is pure and imports no driver.
+
+### 2026-09-26 — Second review pass (post-finalization fixes)
+
+- `[high]` `[patch]` a duplicate `(run_id, step, attempt)` surfaced as a raw `psycopg.errors.UniqueViolation`; it is now mapped to a typed, non-retryable `DuplicateStepError` (AD-22).
+- `[medium]` `[patch]` a missing insert/update result was raised as `LeaseLost`, which it is not (the lease was already re-checked and the row was read in the same transaction); it is now a typed, non-retryable `StepWriteError`.
+- `[low]` no change: `StepConnection`/`StepCursor` duplicate `LeaseConnection`/`LeaseCursor`, which the rule of three allows until a third copy appears.
+
 ## Auto Run Result
 
-Status: ready-for-dev
-Blocking condition: none
-Planned: 2026-09-26. Halted after planning. Reused cached `epic-2-context.md` (valid); continuity context from done specs 2.1 and 2.2. No production code written. Assumes 1.1 (`0002`), 1.2 (`0003` + `RunLeaseStore.guarded_commit`) and 2.1 (`transition()`) have landed; this story ships `0004`.
+Status: done
+Baseline: `88d5401a6345652fcc425342b1cc67c7f6818639`.
+
+**Summary.** Built the AD-2 step-persistence boundary: `workflow/steps.py` holds the plain types and the small `StepRecorder` interface; `workflow/step_store.py` holds the one Postgres adapter that composes 1.2's lease-guarded commit so a completed step's `run_step` row and the `triage_run.state` move commit (or roll back) together, with the move validated by 2.1's transition table and `escalation_reason` written/cleared for pause transitions. `resume(run_id, repo_id)` returns the current state and the completed step names, repo-scoped so a reclaimed run skips finished work. Migration `0004` adds `run_step` with only the fields this story needs.
+
+**Files changed (one line each):**
+- `workflow/steps.py` — pure domain: `StepStatus`, `StepRecord`, `StepCommit`, `ResumeView`, `StepRecorder`.
+- `workflow/step_store.py` — Postgres adapter, SQL, and the escalation-reason handling.
+- `deploy/migrations/0004_run_step.sql`, `deploy/migrations/README.md` — the step table, unique identity, repo index.
+- `tests/workflow/{test_steps,test_step_integration}.py`, `tests/security/test_compose_secret_placement.py` — AC tests and the schema-guard allowlist.
+- `workflow/README.md`, `docs/DEVELOPER.md` — docs.
+
+**Review findings.** 27 reported: 0 high, 2 medium, 25 low. Patched 9 entries (the pause `escalation_reason` bug, the SOLID-S split, the failed-step/status tests, the step-id factory, the docs, and the migration-check test); deferred 1 (failed-step diagnostic column, 2.8); rejected 17 with reasons above.
+
+**Patched medium root causes:** (1) the state update now writes `escalation_reason` on entering a pause and clears it on every other move, so the AD-1 CHECK no longer rejects pause transitions; (2) the Postgres adapter moved out of `steps.py` into `step_store.py`, so the domain module builds no SQL.
+
+**Follow-up review recommendation: true.** Named unverified risk: the new escalation-reason path and the `step_store.py` split are fresh code added during patching and have not themselves been re-reviewed.
+
+**Verification performed:**
+- `git diff` reviewed since baseline, then re-generated after patches.
+- `make check` → PASS (230 tests, coverage 94.17%).
+- `.venv/bin/pytest -m integration -q` → 31 passed (postgres:18; atomic commit, fault rollback, pause entry/exit, resume, cross-tenant, stale owner, `0004`).
+- `rg "psycopg|SELECT|UPDATE" workflow/steps.py` → none (pure module).
+
+**Residual risks:** intermediate failed attempts and next-attempt derivation are 2.8's; the pause-reason value comes from the caller's `GuardInput`; `output` is JSON-by-convention; the unique identity is per attempt.
+
+## Spec Change Log
+
+<!-- none: no bad_spec loopback on this story -->

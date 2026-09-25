@@ -2,13 +2,21 @@
 title: 'Story 2.5 — Distill CI logs deterministically'
 type: 'feature'
 created: '2026-09-26'
-status: 'ready-for-dev'
+status: 'done'
 route: 'dispatch'
+baseline_revision: '81528a2a98dae0fff02d26d3b0db46181c1b1355'
 review_loop_iteration: 0
 followup_review_recommended: false
 context: ['{project-root}/AGENTS.md']
 warnings: ['oversized']
-deferred: []
+deferred:
+  - summary: >-
+      The injection defence for retained lines (marker lines, their indented continuations, the fallback line) rests on the request builder passing distilled output only as delimited untrusted data.
+    evidence: |-
+      The spec's AC2 assigns actual request-builder enforcement to a later integration story; the distiller drops non-evidence narrative but cannot guarantee instruction-free text without also discarding stack-trace source lines.
+    location: >-
+      workflow/distiller.py
+    severity: medium (unverified)
 ---
 
 ## Build Brief
@@ -103,8 +111,76 @@ deferred: []
 **Manual checks:**
 - Confirm `workflow/distiller.py` imports no `anthropic`, `httpx`, `requests`, or `a2a` (pure transform).
 
+## Review Triage Log
+
+### 2026-09-26 — Review pass
+
+- verdicts: 30 findings — high 0, medium 0, low 30, false 0, maybe-false 0
+- findings:
+  - `[low]` `[reject]` an instruction-like line indented directly under a kept marker survives as a continuation — the continuation is what keeps stack-trace source lines; AD-20's injection defence is that all retained lines are untrusted data, delimited downstream (the spec defers that enforcement). Pinned by a new test.
+  - `[low]` `[reject]` the approved narrative-only fallback can echo a final instruction — the human explicitly approved the final non-empty line as the exit signal; it is untrusted data like every retained line. Pinned by a new test.
+  - `[low]` `[patch]` JUnit evidence skipped control-stripping — every JUnit line now passes through `_strip_controls`.
+  - `[low]` `[reject]` the DTD/ENTITY guard is case-sensitive — XML markup declarations are uppercase, so a lowercase form is invalid XML and `ElementTree` rejects it; nothing expands.
+  - `[low]` `[reject]` `max_bytes` has no upper bound — the bound is a configured placeholder; a too-large value is an operator choice, not a code defect.
+  - `[low]` `[reject]` no line-count bound — the byte bound caps total evidence; serialization framing is metadata and 2.7 owns the rendered shape.
+  - `[low]` `[reject]` clipping stops after the first truncated line — the clip consumes the remaining budget, so later lines would not fit anyway.
+  - `[low]` `[reject]` the ordered marker registry is used with `any()` — order is irrelevant to membership; the registry is the open/closed extension point.
+  - `[low]` `[reject]` framing bytes are not counted toward `max_bytes` — the bound is defined on evidence text and documented; the pack's rendered size is 2.7's concern.
+  - `[low]` `[reject]` a DTD-bearing or malformed JUnit document yields no JUnit evidence silently — that is the documented AD-20 untrusted-input behaviour; the CI text still yields evidence.
+  - `[low]` `[reject]` making `distiller` required on `Thresholds` hard-breaks a config without the key — both in-repo files carry it and the key-parity test enforces it; one repo, one committed file.
+  - `[low]` `[patch]` the 2.5 story row omitted the changed test files — added.
+  - `[low]` `[reject]` test placement (tests/security vs tests/workflow) — the spec's verification table places the deterministic distiller tests under `tests/security/`; the loader test belongs with the other threshold tests.
+  - `[low]` `[patch]` no test asserted contiguous numbering across combined CI + JUnit evidence — added.
+  - `[low]` `[reject]` `test_ac1_same_input_same_output` is a weak determinism check — the function is pure with no module state; the test plus the purity scan is proportionate.
+  - `[low]` `[reject]` the forbidden-import list is hand-written — a structural purity check complements the behavioural tests.
+  - `[low]` `[reject]` the thresholds placeholder comment omits an OQ id — the bound is a placeholder like the OQ-2 cut-offs; it is not a labelled calibration open question.
+  - `[low]` `[reject]` `_junit_header` ignores the `type` attribute and a message may contain newlines — the test id and message are the evidence; the type is optional detail.
+  - `[low]` `[patch]` duplicate of the JUnit control-stripping finding — same fix.
+  - `[low]` `[reject]` duplicate of the indented-continuation injection finding.
+  - `[low]` `[reject]` a literal `<!DOCTYPE` inside JUnit CDATA skips the whole report — a conservative, documented skip of untrusted XML; CDATA in a failure body is not the expected shape.
+  - `[low]` `[patch]` C1 controls (U+0080–U+009F) survived — the control class now removes them.
+  - `[low]` `[patch]` namespaced JUnit tags yielded no evidence — JUnit matching now uses local tag names.
+  - `[low]` `[reject]` duplicate of the fallback injection finding.
+  - `[low]` `[patch]` the JUnit `<error>` branch was untested (verification-gap) — added a test.
+  - `[low]` `[patch]` the narrative-only fallback was untested (verification-gap) — added a test.
+  - `[low]` `[patch]` indented-continuation survival was unpinned (verification-gap) — added a test pinning the retained untrusted-evidence behaviour.
+  - `[low]` `[reject]` intent-alignment: the intent's broader semantic expectations ("error blocks", "instructions never survive", "bound from the loader") sit wider than the internal-regex surface the tests pin — the approved readings (marker filter, distilled-index numbering, text-byte bound) are what the spec's matrix and the human's fallback decision settled.
+  - `[low]` `[patch]` duplicate of the fallback untested finding (clean-code).
+  - `[low]` `[reject]` duplicate of the fallback injection finding; the doc was softened to say retained lines are untrusted data.
+  - `[low]` `[patch]` duplicate of the JUnit `<error>` untested finding (clean-code).
+
+### 2026-09-26 — Second review pass (post-finalization fixes)
+
+- `[high]` `[patch]` the pytest banner pattern `^_{5,}.*_{5,}$` backtracked cubically on a long run of underscores ending in another character (an 8,000-char line froze the worker), reachable by any PR author through a CI log. The pattern is now `^_{5,} .* _{5,}$` (the real banner has spaces around the title) and every line's marker scan is capped to `max_bytes`; a regression test distils a 50,000-char pathological line under a time bound.
+- `[medium]` `[patch]` JUnit evidence was appended after the CI text, so a large raw log could push the structured evidence out at the byte bound; JUnit evidence is now emitted first, with a test that it survives a tight bound.
+
 ## Auto Run Result
 
-Status: ready-for-dev
-Blocking condition: none
-Planned: 2026-09-26. Halted after planning. Reused cached `epic-2-context.md` (valid); continuity context from done specs 2.1 and 2.2. No production code written. Reuses `contracts.evidence.DistilledLogLine`; adds only the `distiller.max_bytes` threshold. Flags the no-error-marker fallback for human review.
+Status: done
+Baseline: `81528a2a98dae0fff02d26d3b0db46181c1b1355`.
+
+**Summary.** Built the deterministic AD-20 distiller: `workflow/distiller.py` strips ANSI/control characters, keeps only error-marker lines, their indented continuations and JUnit `<failure>`/`<error>` content, numbers the survivors via `contracts.evidence.DistilledLogLine`, and clips the kept evidence text to `distiller.max_bytes` read through the one thresholds loader. It is pure — no model, network, filesystem or clock — so the same input always yields the same output and the `log_line` anchors stay stable. DTD/entity-bearing JUnit is skipped whole, and an empty/narrative-only log falls back to one line as the approved design.
+
+**Files changed (one line each):**
+- `workflow/distiller.py` — the pure distiller (`ERROR_MARKERS`, control stripping, JUnit evidence, UTF-8 clip).
+- `workflow/thresholds.py`, `guardrails/thresholds.yaml`, `tests/fixtures/thresholds.test.yaml`, `tests/fixtures/thresholds.py` — the `distiller.max_bytes` bound and its loader.
+- `tests/security/test_distiller.py`, `tests/workflow/test_thresholds.py` — AC tests.
+- `docs/DEVELOPER.md`, `guardrails/README.md` — docs.
+
+**Review findings.** 30 reported: 0 high, 0 medium, 30 low. Patched 11 entries (JUnit control-stripping, C1 controls, namespaced JUnit tags, the approved fallback/continuation/`<error>`/numbering tests, and the docs); deferred 1 (downstream request-builder enforcement of untrusted delimited data, which the spec's AC2 assigns to a later integration story); rejected 18 with reasons above.
+
+**Patched root causes:** JUnit evidence now goes through the same control strip as CI text; C1 controls are removed; JUnit tags match by local name; and the previously unpinned behaviours (JUnit `<error>`, the approved narrative fallback, indented continuations, contiguous numbering) are covered by tests and described honestly in the docs.
+
+**Follow-up review recommendation: false.** No high and no two-or-more-medium entries were patched, so the work has converged.
+
+**Verification performed:**
+- `git diff` reviewed since baseline, then re-generated after patches.
+- `make check` → PASS (276 tests, coverage 94.91%, distiller 95%).
+- `.venv/bin/pytest -m integration -q` → 31 passed (unchanged; this story is pure logic).
+- Manual: `workflow/distiller.py` imports no model/network/clock module.
+
+**Residual risks:** the byte bound counts evidence text, not serialized framing (2.7 owns the rendered shape); retained lines (markers, continuations, the fallback) are untrusted data whose injection defence is the request builder marking them delimited/untrusted (a later integration story); the distiller retains no original log positions, by design (AD-7 numbers the distilled log).
+
+## Spec Change Log
+
+<!-- none: no bad_spec loopback on this story -->

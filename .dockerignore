@@ -1,0 +1,5 @@
+# Docker build context exclusions (deploy/*.Dockerfile build with context ".").
+.git
+.venv
+node_modules
+**/__pycache__

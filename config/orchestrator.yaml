@@ -1,0 +1,10 @@
+# config/orchestrator.yaml — the one orchestrator settings file (AD-19).
+# Values live here, never in code; loaded via
+# workflow.orchestrator_config.load_orchestrator_config.
+# A worker claims a run for `lease_seconds`; if a step runs long the owner
+# renews once `renew_after_seconds` or less remains, before the lease expires
+# (AD-23). `renew_after_seconds` must be smaller than `lease_seconds`.
+
+lease:
+  lease_seconds: 300
+  renew_after_seconds: 120

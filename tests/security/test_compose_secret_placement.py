@@ -129,12 +129,12 @@ class TestPostgresAndMigrationGating:
 
 class TestNoSpeculativeSchema:
     def test_ac3_no_speculative_domain_tables_triage_run_allowlisted(self) -> None:
-        # Story 0.3 AC3 forbade speculative domain tables; story 2.1 legitimately
-        # adds `triage_run` via 0001 — only that one file may name it. The
+        # Story 0.3 AC3 forbade speculative domain tables; stories 2.1 and 2.3
+        # legitimately add `triage_run` (0001) and `run_step` (0004). The
         # remaining domain tables still arrive with their consuming stories.
         sql_files = list(MIGRATIONS_DIR.glob("*.sql"))
         forbidden = re.compile(
-            r"\b(run_step|history|approval|a2a_db|a2a_db_"
+            r"\b(history|approval|a2a_db|a2a_db_"
             r"|DatabaseTaskStore)\b",
             re.IGNORECASE,
         )
@@ -144,13 +144,27 @@ class TestNoSpeculativeSchema:
             if forbidden.search(f.read_text(encoding="utf-8"))
         ]
         assert offending == []
-        allowed_triage_run = ["0001_triage_run.sql"]  # story 2.1 (AD-1, AD-17)
-        declared = [
+        allowed_triage_run = [
+            "0001_triage_run.sql",  # story 2.1 (AD-1, AD-17)
+            "0003_triage_run_lease.sql",  # story 1.2: ALTER ... lease columns (AD-23)
+            "0004_run_step.sql",  # story 2.3: `run_step` FK names it (AD-2, AD-4)
+        ]
+        declared = sorted(
             f.name
             for f in sql_files
             if re.search(r"\btriage_run\b", f.read_text(encoding="utf-8"), re.IGNORECASE)
-        ]
+        )
         assert declared == allowed_triage_run
+        created = {
+            match.group(1).lower()
+            for f in sql_files
+            for match in re.finditer(
+                r"\bCREATE\s+TABLE\s+(\w+)", f.read_text(encoding="utf-8"), re.IGNORECASE
+            )
+        }
+        assert created <= {"triage_run", "webhook_delivery", "run_step"}, (
+            "a new domain table must join the allowlist and its consuming story"
+        )
         # no a2a-db/taskstore service either
         compose = yaml.safe_load(COMPOSE.read_text(encoding="utf-8"))
         blob = str(compose)

@@ -12,8 +12,14 @@ Rules:
   non-zero, so dependent workers never start on a broken schema (AC1).
 - Startup (fresh DB) initialises `schema_migrations`; no other bootstrap.
 - Domain tables arrive with their consuming stories: `triage_run` with story
-  2.1 (`0001_triage_run.sql`, the AD-1/AD-4/AD-17 run-state owner); `run_step`,
-  `history` and the punch-out table later. No `a2a-db` /
+  2.1 (`0001_triage_run.sql`, the AD-1/AD-4/AD-17 run-state owner);
+  `webhook_delivery` with story 1.1 (`0002_webhook_delivery.sql`, the AD-17
+  delivery-replay record) — it does not own or alter `triage_run`. Story 1.2
+  alters `triage_run` (`0003_triage_run_lease.sql`) to add the AD-23 worker
+  lease columns (`lease_owner`, `lease_until`) and their claim index. Story 2.3
+  adds `run_step` (`0004_run_step.sql`, the AD-2 step record whose
+  `(run_id, step, attempt)` is unique), with a `run_id` FK to `triage_run`.
+  `history` and the punch-out table arrive with their own stories later. No `a2a-db` /
   DatabaseTaskStore schema (AD-4, story 2.4 owns its persistence).
 
 Apply locally:

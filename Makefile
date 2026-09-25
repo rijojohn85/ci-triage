@@ -28,19 +28,19 @@ state-diagram-drift:
 	@$(PY) scripts/generate_state_diagram.py --check
 
 ruff-check:
-	@if find contracts guardrails workflow -name "*.py" 2>/dev/null | grep -q .; then \
-		$(RUFF) check scripts/ contracts/ guardrails/ workflow/; \
+	@if find contracts guardrails workflow gateway -name "*.py" 2>/dev/null | grep -q .; then \
+		$(RUFF) check scripts/ contracts/ guardrails/ workflow/ gateway/; \
 	else \
 		$(RUFF) check scripts/; \
 	fi
 
 ruff-format:
-	@$(RUFF) format --check scripts/ contracts/ guardrails/ workflow/
+	@$(RUFF) format --check scripts/ contracts/ guardrails/ workflow/ gateway/
 
 mypy-check:
 	@$(MYPY) --strict scripts/
 	@src_dirs=""; \
-	for d in contracts guardrails workflow; do \
+	for d in contracts guardrails workflow gateway; do \
 		if find $$d -name "*.py" 2>/dev/null | grep -q .; then src_dirs="$$src_dirs $$d/"; fi; \
 	done; \
 	if [ -n "$$src_dirs" ]; then \
@@ -52,7 +52,7 @@ mypy-check:
 pylint-dup:
 	@$(PYLINT) --disable=all --enable=duplicate-code \
 		--min-similarity-lines=8 \
-		scripts/ contracts/ guardrails/ workflow/ 2>/dev/null; \
+		scripts/ contracts/ guardrails/ workflow/ gateway/ 2>/dev/null; \
 	rc=$$?; if [ $$rc -ne 0 ] && [ $$rc -ne 4 ]; then exit $$rc; fi
 	@# pylint exit 4 = duplicate-code finding surfaced above; 0 = clean.
 
