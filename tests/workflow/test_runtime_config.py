@@ -68,5 +68,7 @@ def test_ac3_real_config_declares_all_four_skills() -> None:
     raw = yaml.safe_load(RUNTIME_CONFIG_PATH.read_text(encoding="utf-8"))
 
     assert set(raw) == {"jev", "analyzer", "proposer", "reviewer"}
-    for key in ("jev", "analyzer", "proposer", "reviewer"):
+    for key in ("analyzer", "proposer", "reviewer"):
         assert set(raw[key]) == {"model", "step_timeout"}
+    # jev also pins its serve host/port (story 3.1, AD-19).
+    assert set(raw["jev"]) == {"model", "step_timeout", "host", "port"}
