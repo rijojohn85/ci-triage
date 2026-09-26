@@ -61,7 +61,7 @@ development_status:
   2-3-persist-completed-steps-atomically-and-resume: done
   2-4-serve-a-read-only-a2a-task-projection: done
   2-5-distill-ci-logs-deterministically: done
-  2-6-maintain-structured-tenant-scoped-history: review
+  2-6-maintain-structured-tenant-scoped-history: done
   2-7-build-and-persist-the-deterministic-evidence-pack: done
   2-8-shared-step-runner-ad-8-validation-retry-ad-22-transient-ret: done
   2-9-integrate-evaluated-classification-and-analysis-with-pauses: backlog
