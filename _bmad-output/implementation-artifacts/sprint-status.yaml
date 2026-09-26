@@ -101,7 +101,7 @@ development_status:
 
   epic-6: backlog
   6-1-collect-every-model-call-and-attempt-centrally: review
-  6-2-compute-versioned-null-aware-model-costs: backlog
+  6-2-compute-versioned-null-aware-model-costs: review
   6-3-calibrate-confidence-and-central-thresholds-on-labelled-data: backlog
   6-4-record-the-supplied-per-agent-quality-pass-decision: backlog
   6-5-verify-graded-operations-and-same-image-cluster-manifests: backlog
