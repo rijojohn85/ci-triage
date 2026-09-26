@@ -1,6 +1,6 @@
 # Epic 2 Context: Turn failures into durable, evidence-backed triage
 
-<!-- Compiled from planning artifacts. Edit freely. Regenerate with compile-epic-context if planning docs change. -->
+<!-- Generated from planning artifacts. Regenerate with compile-epic-context if planning docs change. -->
 
 ## Goal
 
@@ -20,6 +20,7 @@ Build the orchestrator workflow that turns a failed CI run into a durable, evide
 - Story 2.10: Integrate proposal review, revisions and risk gating
 - Story 2.11: Deliver idempotent drafts, quarantine metadata and reports
 - Story 2.12: Prove live-pipeline recovery and retry accounting
+- Story 2.13: Distil real GitHub Actions logs across stacks
 
 ## Requirements & Constraints
 
@@ -27,7 +28,7 @@ Build the orchestrator workflow that turns a failed CI run into a durable, evide
 - One effective confidence number drives routing and gating: the immutable Jev classification confidence capped downward by cited caps; nothing may raise it. A human class override changes neither confidence field — it skips only the low-confidence/unknown-class checks for the rest of the run. Final cutoffs are an open question (OQ-2): tests use explicit fixture thresholds, never accepted calibration.
 - A completed step's output and its state change commit atomically in one lease-guarded transaction; a reclaimed run re-enters its current state and never re-executes a completed step; stale-owner results are discarded.
 - The A2A task view is a read-only projection of authoritative run state — task identity equals the run ID; there is no independent task-state writer. Paused runs expose a blame-free evidence pack without scheduling a worker; no author attribution appears while paused or reporting.
-- CI logs are distilled deterministically before any model sees them: keep error blocks and stack traces, drop narrative, strip ANSI/control characters, number lines, bound size by config. Distilled output is the only log form ever exposed to request builders.
+- CI logs are distilled deterministically before any model sees them: keep error blocks and stack traces, drop narrative, strip ANSI/control characters **and CI-runner line prefixes (timestamps)**, number lines, bound size by config. The distiller must preserve the failing line of real GitHub Actions logs across common stacks (Go, TAP/Node, Rust, Dart/Flutter, npm, apt, Playwright, Elixir/Mix, Ruby, PHP, Java/Gradle): each stack is one new registry entry (open/closed), patterns stay linear-time, and marker matching runs against the line with its timestamp prefix removed. Distilled output is the only log form ever exposed to request builders.
 - History is structured-only (no free text), fingerprinted from normalized test identity and stack frames, tenant-scoped on every query, written once per terminal run by the orchestrator only; seed data enters via import and human PR feedback goes to separate storage.
 - The evidence pack is built deterministically: numbered distilled log, last-green baseline (same workflow/branch, else default-branch head), full SHAs of the commit range, deterministically ranked candidate suspects (file-intersection only), history rows, and runner metrics. Analyzer may pick suspects only from this set; every citation must resolve against it.
 - Two separate retry budgets in one shared step runner: validation failures get one feedback-fed retry then escalate as validation_failed (never emit an uncited verdict); transient failures (network, 429, 5xx, timeout, retryable agent errors) get at most three backoff attempts then the run fails terminally with history written once. Every attempt is its own audited step with usage (NULL counters stay NULL, never 0).
@@ -56,4 +57,5 @@ Build the orchestrator workflow that turns a failed CI run into a durable, evide
 - 2.8 (shared step runner) depends on 2.3, 2.6 and on fixture contracts from epics 4 and 6 (4.1, 6.1, 6.2); specialist calls in 2.8 are fixtures only.
 - 2.9 integrates the real agents and depends on evaluated agents from epic 3 (3.2, 3.4, 3.6, 3.8, 3.9), evidence/risk work from epics 4 (4.1, 4.3), and 6.1/6.2.
 - 2.10 needs 2.9 plus 3.6/3.8 and 4.2. 2.11 needs 2.10 plus 4.3. 2.12 needs 2.11 plus 3.10.
+- 2.13 (real-log distiller hardening, added 2026-09-27) depends on 2.5 and 3.2; it strengthens the evidence that 2.7/2.9 and every downstream agent consume, and its fixes are what the epic-3 Jev eval guards (3.11) build on.
 - Open question OQ-1 gates 2.9: no agent connects to the workflow without its independent evaluation receipt; never claim a pass without the user-supplied bar.

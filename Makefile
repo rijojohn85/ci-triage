@@ -75,8 +75,10 @@ test-integration:
 # real model calls and its committed cases file is a drift gate of its own.
 # `jev-eval-cases` regenerates test-data/jev-eval/cases.generated.yaml;
 # `eval-jev` runs the root suite once and writes results/jev-eval/<date>-<model>/.
+# `EVAL_ARGS` forwards harness flags (e.g. `--label`, `--compare`) so a
+# labelled/compared run is still `make eval-jev`.
 jev-eval-cases:
 	@$(PY) scripts/build_jev_eval_cases.py
 
 eval-jev:
-	@$(PY) scripts/run_jev_eval.py
+	@$(PY) scripts/run_jev_eval.py $(EVAL_ARGS)

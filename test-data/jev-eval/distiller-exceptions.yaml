@@ -1,0 +1,14 @@
+# test-data/jev-eval/distiller-exceptions.yaml
+#
+# Manifest ids whose `key_line` cannot survive distillation without weakening
+# AD-20 (the distiller keeps only error evidence, never narrative). Each entry
+# is one mapping with `id`, `reason` and `status`, where `status` is one of
+# `pending-human-approval` (awaiting a human) or `approved` (a human signed it
+# off). The `id` must be a manifest id. This is the sanctioned escape hatch, not
+# a silent allowance — the acceptance test
+# (`tests/security/test_distiller.py::test_ac2_manifest_key_lines_survive_real_distillation`)
+# excludes exactly these ids and reports them.
+#
+# Target: empty. Story 2.13 reached 38/38 without an exception; story 3.11
+# extends this list if a future log cannot be captured by a marker.
+[]

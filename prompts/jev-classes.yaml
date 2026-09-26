@@ -21,11 +21,17 @@ choice:
       The CI environment or runner failed, not the product: missing
       dependencies, out-of-disk or out-of-memory, container or network setup
       errors, runner crashes, or tooling/configuration problems in the
-      pipeline itself.
+      pipeline itself. Failures of the CI platform itself — downloading
+      actions, uploading or downloading artifacts, the cache service, or the
+      CI provider's own API or storage — are infra, even though those services
+      are hosted remotely.
     external: >-
       A third party outside the repository failed: an external service or API
       returned errors or was unreachable, a third-party package or registry
-      was down, or an upstream outage explains the failure.
+      was down, or an upstream outage explains the failure. A third party is a
+      service the project's own build or tests depend on — package registries,
+      container registries, OS package mirrors, remote APIs or servers the
+      tests call — not the CI platform that runs the job.
     unknown: >-
       The log does not contain enough evidence to decide any of the four
       classes above with confidence; say so rather than guessing.

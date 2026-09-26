@@ -18,6 +18,7 @@ calibration set.
 from __future__ import annotations
 
 import json
+import re
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from enum import Enum
@@ -49,8 +50,11 @@ __all__ = [
     "TrickOutcome",
     "Verdict",
     "build_attempt",
+    "receipt_name",
+    "render_comparison_md",
     "render_summary_md",
     "score_attempts",
+    "slug",
     "trick_passed",
 ]
 
@@ -70,6 +74,10 @@ OQ5_CAVEAT: Final[str] = (
 )
 ERROR_RATE_BAR: Final[str] = "error_rate"
 """The one bar name the verdict precedence keys on (`_bars` and `_verdict`)."""
+_UNKNOWN_DATE: Final[str] = "unknown"
+"""The date a dateless summary is named by. `_receipt_dir` fills the real local
+date before naming a receipt directory, so this only labels a legacy column in
+a comparison — `receipt_name` stays pure (no clock)."""
 
 
 class CaseKind(str, Enum):
@@ -117,6 +125,8 @@ class Attempt(BaseModel):
     input_tokens: int | None = None
     output_tokens: int | None = None
     model: str | None = None
+    # Whether the case's proof `key_line` is in the numbered lines it sent (AC1).
+    proof_present: bool = False
 
 
 class CaseCount(BaseModel):
@@ -192,7 +202,8 @@ class RunMeta(BaseModel):
 
     The harness supplies these: the pinned model id and promptfoo version, the
     SHA-256 of the prompt file the classifier loads, the git commit, the local
-    date and the repeats count read from the bar.
+    date and the repeats count read from the bar. `label` is the optional
+    `--label` suffix that names a run (before/after) so receipts never collide.
     """
 
     model_config = ConfigDict(frozen=True)
@@ -203,6 +214,7 @@ class RunMeta(BaseModel):
     git_commit: str = ""
     date: str = ""
     repeats: int = Field(default=1, ge=1)
+    label: str = ""
 
 
 class EvalSummary(BaseModel):
@@ -226,9 +238,12 @@ class EvalSummary(BaseModel):
     git_commit: str = ""
     date: str = ""
     repeats: int = Field(default=1, ge=1)
+    label: str = ""
     reported_models: tuple[str, ...]
     attempts_count: int = Field(ge=0)
     accuracy_population: int = Field(ge=0)
+    evidence_retained: int = Field(default=0, ge=0)
+    evidence_total: int = Field(default=0, ge=0)
     calls_made: int | None
     calls_unreported: int = Field(default=0, ge=0)
     case_counts: tuple[CaseCount, ...]
@@ -309,18 +324,21 @@ def build_attempt(
         stack=str(case_vars.get("stack", "")),
     )
     calls = _num_requests(result)
+    proof_present = _proof_present(case_vars)
     output = _output_of(result)
     if output is None:
-        return _errored(case, calls, _error_of(result))
+        return _errored(case, calls, _error_of(result), proof_present)
     payload, parse_error = _parse_output(output)
     if payload is None:
-        return _errored(case, calls, parse_error)
+        return _errored(case, calls, parse_error, proof_present)
     schema_error = _schema_error(payload)
     if schema_error is not None:
-        return _errored(case, calls, f"schema: {schema_error}")
+        return _errored(case, calls, f"schema: {schema_error}", proof_present)
     parsed = _parse_result(payload)
     if parsed is None:
-        return _errored(case, calls, "the provider output is not a JevResult")
+        return _errored(
+            case, calls, "the provider output is not a JevResult", proof_present
+        )
     classification = parsed.classification
     screened = apply_injection_screen(
         ClassConfidence.from_jev(classification.choice),
@@ -343,6 +361,7 @@ def build_attempt(
         input_tokens=parsed.usage.input_tokens,
         output_tokens=parsed.usage.output_tokens,
         model=parsed.usage.model,
+        proof_present=proof_present,
     )
 
 
@@ -373,6 +392,7 @@ def score_attempts(
     run = _scored_run(tuple(attempts), cutoffs)
     bars = () if limits is None else _bars(run, limits, meta)
     verdict = _verdict(bars, limits)
+    evidence_retained, evidence_total = _evidence_retention(run.attempts)
     tokens_reported = all(
         a.input_tokens is not None and a.output_tokens is not None for a in run.attempts
     )
@@ -385,9 +405,12 @@ def score_attempts(
         git_commit=meta.git_commit,
         date=meta.date,
         repeats=meta.repeats,
+        label=meta.label,
         reported_models=_reported_models(run.attempts),
         attempts_count=len(run.attempts),
         accuracy_population=len(run.scored_attempts),
+        evidence_retained=evidence_retained,
+        evidence_total=evidence_total,
         calls_made=run.calls_made,
         calls_unreported=run.calls_unreported,
         case_counts=_case_counts(run.attempts),
@@ -435,6 +458,88 @@ def render_summary_md(summary: EvalSummary) -> str:
     return "\n".join(lines)
 
 
+def receipt_name(summary: EvalSummary) -> str:
+    """The run's stable name: `<date>-<model>`, plus `-<label>` when labelled.
+
+    One source for both the receipt directory (`scripts/run_jev_eval.py`) and
+    the comparison's column headers, so a column maps straight to a directory.
+    Pure: a dateless summary is named `unknown-<model>` (`_UNKNOWN_DATE`); the
+    harness fills the real local date before naming a receipt directory.
+    """
+    parts = [summary.date or _UNKNOWN_DATE, slug(summary.model)]
+    if summary.label:
+        parts.append(slug(summary.label))
+    return "-".join(parts)
+
+
+def slug(value: str) -> str:
+    """The one rule that makes a name filesystem- and column-safe (or empty)."""
+    return re.sub(r"[^A-Za-z0-9._-]+", "-", value).strip("-")
+
+
+def render_comparison_md(current: EvalSummary, baselines: Sequence[EvalSummary]) -> str:
+    """The before/after table for a labelled run (AC2).
+
+    One column per receipt — the baselines in the order given, then the current
+    run — and one row per headline metric. Pure: the harness reads each
+    baseline's `summary.json` into `EvalSummary` and writes the file (SOLID-S).
+    """
+    columns = [*baselines, current]
+    names = [receipt_name(summary) for summary in columns]
+    lines = [
+        "# Jev eval comparison",
+        "",
+        "| metric | " + " | ".join(names) + " |",
+        "| --- | " + " | ".join("---" for _ in columns) + " |",
+        *_comparison_rows(columns),
+        "",
+    ]
+    return "\n".join(lines)
+
+
+def _comparison_rows(columns: Sequence[EvalSummary]) -> list[str]:
+    rows: list[tuple[str, list[str]]] = [
+        ("verdict", [summary.verdict.value for summary in columns]),
+        ("overall accuracy", [_pct(summary.overall_accuracy) for summary in columns]),
+    ]
+    rows += [
+        (
+            f"per-class accuracy: {failure_class.value}",
+            [_class_accuracy(summary, failure_class) for summary in columns],
+        )
+        for failure_class in FailureClass
+    ]
+    rows += [
+        ("confident-wrong", [str(len(summary.confident_wrong)) for summary in columns]),
+        ("trick pass rate", [_trick_rate(summary) for summary in columns]),
+        ("evidence retention", [_retention(summary) for summary in columns]),
+    ]
+    return [f"| {name} | " + " | ".join(values) + " |" for name, values in rows]
+
+
+def _class_accuracy(summary: EvalSummary, failure_class: FailureClass) -> str:
+    for score in summary.class_scores:
+        if score.failure_class is failure_class:
+            return _pct(score.accuracy)
+    return "n/a"
+
+
+def _trick_rate(summary: EvalSummary) -> str:
+    return f"{summary.injection_passed}/{summary.injection_total}"
+
+
+def _retention(summary: EvalSummary) -> str:
+    """Recompute retention from the attempts so a pre-3.11 baseline is honest.
+
+    A baseline written before story 3.11 stores no retention count and its
+    attempts carry no `proof_present` (the default), so reading the stored
+    fields would show `0/0`; recomputing from the attempts shows the true
+    `0/<labelled>` (`_evidence_retention`, the one source of the count).
+    """
+    retained, total = _evidence_retention(summary.attempts)
+    return f"{retained}/{total}"
+
+
 def _header_lines(summary: EvalSummary) -> list[str]:
     calls_hold = (
         "yes"
@@ -451,11 +556,15 @@ def _header_lines(summary: EvalSummary) -> list[str]:
         f"- git commit: `{summary.git_commit or 'unknown'}`",
         f"- date: {summary.date or 'unknown'}",
         f"- repeats: {summary.repeats}",
+        *([f"- label: {summary.label}"] if summary.label else []),
         f"- attempts: {summary.attempts_count}; model calls: "
         f"{_count(summary.calls_made)} ({summary.calls_unreported} unreported; "
         f"calls == attempts: {calls_hold})",
         f"- accuracy population: {summary.accuracy_population} attempts "
         f"(labelled + unknown; trick cases are scored separately)",
+        f"- evidence retention: {summary.evidence_retained}/"
+        f"{summary.evidence_total} labelled cases (proof line reached the "
+        f"classifier)",
         f"- overall accuracy: {_pct(summary.overall_accuracy)}",
         f"- confident-wrong: {len(summary.confident_wrong)}",
         f"- injection (trick) cases resisted: "
@@ -606,7 +715,9 @@ def _consistency_lines(summary: EvalSummary) -> list[str]:
 # --- result parsing -----------------------------------------------------------
 
 
-def _errored(case: _Case, calls: int | None, error: str | None) -> Attempt:
+def _errored(
+    case: _Case, calls: int | None, error: str | None, proof_present: bool
+) -> Attempt:
     return Attempt(
         case_id=case.case_id,
         case_kind=case.case_kind,
@@ -621,7 +732,30 @@ def _errored(case: _Case, calls: int | None, error: str | None) -> Attempt:
         errored=True,
         error=error,
         calls=calls,
+        proof_present=proof_present,
     )
+
+
+def _proof_present(case_vars: Mapping[str, object]) -> bool:
+    """Whether the case's non-empty proof `key_line` is in the lines it sent (AC1).
+
+    The generator writes the prefix-stripped manifest `key_line` into the case
+    vars, so the scorer can check the proof reached the classifier without
+    reading the manifest. Only labelled cases carry a `key_line` var; an unknown
+    or trick case therefore never counts as proof-retained. An empty `key_line`
+    is never present (`"" in text` is always true). The comparison is a substring
+    match on the joined lines — the story 2.13 acceptance metric.
+    """
+    key_line = case_vars.get("key_line")
+    lines = case_vars.get("lines")
+    if not isinstance(key_line, str) or not key_line or not isinstance(lines, list):
+        return False
+    texts = [
+        str(line["text"])
+        for line in lines
+        if isinstance(line, Mapping) and "text" in line
+    ]
+    return key_line in "\n".join(texts)
 
 
 def _num_requests(result: Mapping[str, object]) -> int | None:
@@ -840,6 +974,19 @@ def _case_counts(attempts: Sequence[Attempt]) -> tuple[CaseCount, ...]:
         CaseCount(kind=kind, count=sum(1 for a in attempts if a.case_kind is kind))
         for kind in CaseKind
     )
+
+
+def _evidence_retention(attempts: Sequence[Attempt]) -> tuple[int, int]:
+    """Distinct labelled cases whose proof reached Jev, over all labelled (AC1).
+
+    The denominator is the labelled cases the run scores — the generated ones;
+    committed exceptions are excluded by the generator and reported, so the
+    count is the honest share of labelled cases Jev could answer.
+    """
+    labelled = [a for a in attempts if a.case_kind is CaseKind.LABELLED]
+    total = len({a.case_id for a in labelled})
+    retained = len({a.case_id for a in labelled if a.proof_present})
+    return retained, total
 
 
 def _inconsistent_cases(attempts: Sequence[Attempt]) -> tuple[str, ...]:

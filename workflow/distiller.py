@@ -3,10 +3,12 @@
 A pure text transform (SOLID-S): no model, no network, no filesystem, no
 clock. Raw CI logs are untrusted and huge, so this module keeps only the
 useful evidence — error blocks, stack traces and JUnit failure/error content —
-strips ANSI/control characters, numbers the survivors through
-`contracts.evidence.DistilledLogLine` and clips the kept text to the byte
-bound read from `guardrails/thresholds.yaml` (AD-19). The same input always
-yields the same output, so the `log_line` citation numbers stay stable (AD-7).
+strips ANSI/control characters and the CI-runner ISO-8601 line prefix (the
+timestamp every real GitHub Actions line starts with), numbers the survivors
+through `contracts.evidence.DistilledLogLine` and clips the kept text to the
+byte bound read from `guardrails/thresholds.yaml` (AD-19). The same input
+always yields the same output, so the `log_line` citation numbers stay stable
+(AD-7).
 
 Adding a new CI error style is open/closed: add one entry to `ERROR_MARKERS`,
 never a new branch.
@@ -32,6 +34,13 @@ _ANSI_ESCAPE = re.compile(
 # the C1 controls (U+0080-U+009F).
 _CONTROL_CHARS = re.compile(r"[\x00-\x08\x0b-\x1f\x7f\u0080-\u009f]")
 
+# Real GitHub Actions lines start with the runner's ISO-8601 timestamp and a
+# trailing space: `2026-09-21T18:28:16.9542359Z <text>`. Stripping it in the
+# one cleaning pass (AD-20) means marker matching and the emitted line both see
+# `<text>`, so the `^`-anchored markers can match real logs; prefix-less logs
+# are unchanged. Anchored, so the scan stays linear.
+_RUNNER_LINE_PREFIX = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z ")
+
 # One ordered registry (SOLID-O): a new CI error style is a new entry.
 ERROR_MARKERS: tuple[re.Pattern[str], ...] = tuple(
     re.compile(pattern)
@@ -53,6 +62,26 @@ ERROR_MARKERS: tuple[re.Pattern[str], ...] = tuple(
         r"^goroutine \d+",
         r"^\s+at [\w.$]+\(",
         r"^FAILED\s",
+        # --- Story 2.13: one entry per failure style found in the committed
+        # real logs (test-data/jev-eval/logs/). Each is anchored or
+        # token-shaped so a narrative line that merely mentions a word is not
+        # swept in, and each stays linear on adversarial input (AD-20). ---
+        r"^--- FAIL: ",  # Go `go test` failure
+        r"error •",  # Dart/Flutter analyzer error
+        r"^E: ",  # apt/dpkg error
+        r"^\s*\d+\) \[",  # Playwright numbered failure
+        r"^\*\* \(Mix\)",  # Elixir/Mix
+        r"GitHub API error:",  # GitHub API client
+        r"Cache error:",  # zizmor/cache client
+        r"^Command: ",  # Node test runner
+        r"^Could not ",  # tool-setup failure
+        r"^\s*cause: ",  # uv/pip cause chain
+        # A generic uppercase result line (kind download verify, cargo test):
+        # it ends with FAILED, so anchor the end and the word start so a
+        # narrative sentence that merely contains the word is not swept in.
+        r"\bFAILED\s*$",
+        # Rails API-documentation lint message.
+        r"^New Ruby files must use Markdown for their API documentation\.",
     )
 )
 
@@ -73,6 +102,17 @@ def _strip_controls(text: str) -> str:
     and newlines."""
     without_ansi = _ANSI_ESCAPE.sub("", text)
     return _CONTROL_CHARS.sub("", without_ansi)
+
+
+def _strip_runner_prefix(text: str) -> str:
+    """Remove the CI-runner ISO-8601 line prefix from every line (AD-20).
+
+    Applied once, per line, in the cleaning pass so marker matching, the
+    emitted text and the fallback all read the same stripped line; a
+    prefix-less line is returned unchanged. JUnit evidence never passes through
+    here because JUnit XML has no runner prefix.
+    """
+    return "\n".join(_RUNNER_LINE_PREFIX.sub("", line) for line in text.split("\n"))
 
 
 def _matches_error_marker(line: str) -> bool:
@@ -197,7 +237,7 @@ def distill(
     JUnit evidence is emitted first: it is the parsed, structured signal, so it
     must survive the byte bound even when the raw CI text is huge (AD-20).
     """
-    cleaned = _strip_controls(ci_log)
+    cleaned = _strip_runner_prefix(_strip_controls(ci_log))
     evidence = _junit_evidence(junit_xml) + _evidence_text_lines(cleaned)
     if not evidence:
         evidence = _fallback_lines(cleaned)

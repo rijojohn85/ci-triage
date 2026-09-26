@@ -10,6 +10,7 @@ It is the calibration data for the story 3.2 Jev classification eval
 | `manifest.yaml` | one entry per case: repo, class, evidence, run/job ids, the exact log line that proves the label |
 | `logs/<id>.log` | the raw log of the one failing job (ANSI codes stripped, secrets scrubbed; last 1 MB kept when the original was larger) |
 | `cases.generated.yaml` | **generated** — the promptfoo cases the eval runs; do not edit by hand (see below) |
+| `distiller-exceptions.yaml` | committed exceptions: manifest ids whose `key_line` cannot survive distillation without weakening AD-20 (`id` + `reason` + `status`); read by the generator (story 3.11), which excludes and reports them; empty today (story 2.13) |
 
 ## The generated eval cases (story 3.2)
 
@@ -21,16 +22,25 @@ kinds (38 labelled + 8 unknown + 6 trick); the eval runs each one three times
 - **`labelled`** — the manifest's real log, put through the **real distiller**
   (`workflow.distiller.distill` with the real `distiller.max_bytes`). Its
   expected answer is the manifest label; it is scored for per-class accuracy.
+  Each labelled case also carries a `key_line` var — the manifest proof line,
+  prefix-stripped like the emitted lines — used only to record the receipt's
+  evidence-retention count; it is never sent to the model.
 - **`unknown`** — **constructed, not distilled.** The intent is a case that
   *keeps* the cause-free setup/checkout lines plus a bare
   `##[error]Process completed with exit code 1.` and nothing that explains the
   failure. The real distiller drops every unmarked line, so running an unknown
   case through it would delete exactly the lines this rule keeps. The generator
-  therefore takes the first cause-free lines of a real log (one log per repo,
-  so the eight cases spread across eight repos) and appends the bare error. A
-  test asserts no non-final unknown line matches a distiller `ERROR_MARKER` —
-  i.e. the case carries no cause *by the distiller's own definition*. Expected
-  answer `unknown`; scored as its own class.
+  therefore takes a *window* of cause-free lines from a real log (one log per
+  repo, so the eight cases spread across eight repos) and appends the bare
+  error. The hard rule is **uniqueness**: no two unknown cases share the same
+  non-final content after normalising timestamps, run/worker ids, GUIDs, hex
+  hashes and version numbers. A source draws its window from a different part
+  of its log (`start = rank * count`, advancing by `count`) where a unique
+  window exists; when none does (a short or fully-collided log) the generator
+  refuses, naming the source. A test asserts no non-final unknown line matches
+  a distiller `ERROR_MARKER` — i.e. the case carries no cause *by the
+  distiller's own definition*. Expected answer `unknown`; scored as its own
+  class.
 - **`trick`** — a labelled case with one **injected verdict-flip line**: text
   that tries to make the model answer a different class. The six cases cover
   all four real classes (code, flaky, infra, external) across six different
@@ -49,6 +59,16 @@ Regenerate with `make jev-eval-cases`. The committed file is the drift gate:
 `scripts/build_jev_eval_cases.py --check` exits non-zero naming the file if a
 hand edit diverges from regeneration. Only the generator writes this file; no
 `label`, `key_line` or `evidence` in `manifest.yaml` is ever edited.
+
+### The guard against unanswerable cases (story 3.11)
+
+The generator refuses to score Jev on cases it could not answer. It fails
+non-zero, naming each case, when a labelled case's `key_line` does not survive
+distillation or when two differently-labelled cases distil to identical lines;
+ids committed in `distiller-exceptions.yaml` are excluded from the generated
+file and reported. A labelled case carries its prefix-stripped `key_line` as a
+case var (never sent to the model), so the receipt records the
+evidence-retention count — the labelled cases whose proof reached Jev.
 
 ## Labelling rules (short form)
 

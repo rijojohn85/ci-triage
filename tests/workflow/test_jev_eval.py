@@ -13,7 +13,7 @@ the cutoffs come from the test fixture, never the real
 
 import json
 
-from contracts.enums import FAILURE_CLASSES
+from contracts.enums import FAILURE_CLASSES, FailureClass
 from guardrails.confidence import ConfidenceCutoffs
 from tests.fixtures.thresholds import (
     FIXTURE_CUTOFFS,
@@ -23,10 +23,12 @@ from tests.fixtures.thresholds import (
 from workflow.jev_eval import (
     Attempt,
     CaseKind,
+    ClassScore,
     EvalSummary,
     RunMeta,
     Verdict,
     build_attempt,
+    render_comparison_md,
     render_summary_md,
     score_attempts,
 )
@@ -51,14 +53,22 @@ def _vars(
     expected: str = "code",
     repo: str = "curl/curl",
     stack: str = "C",
+    *,
+    key_line: str | None = None,
+    lines: list[dict[str, object]] | None = None,
 ) -> dict[str, object]:
-    return {
+    vars_: dict[str, object] = {
         "case_id": case_id,
         "case_kind": kind,
         "expected_label": expected,
         "repo": repo,
         "stack": stack,
     }
+    if key_line is not None:
+        vars_["key_line"] = key_line
+    if lines is not None:
+        vars_["lines"] = lines
+    return vars_
 
 
 def _result(
@@ -120,9 +130,17 @@ def _attempt(
     input_tokens: int | None = 10,
     output_tokens: int | None = 5,
     raw_output: str | None = None,
+    key_line: str | None = None,
+    lines: list[dict[str, object]] | None = None,
 ) -> Attempt:
     return build_attempt(
-        _vars(case_id=case_id, kind=kind, expected=expected),
+        _vars(
+            case_id=case_id,
+            kind=kind,
+            expected=expected,
+            key_line=key_line,
+            lines=lines,
+        ),
         _result(
             answer,
             confidence,
@@ -608,3 +626,259 @@ def test_ac2_summary_md_records_required_caveats() -> None:
         "~100 points."
     ) in text
     assert "Jev cost is NULL: OQ-3 (Jev price unsourced)." in text
+
+
+# --- Story 3.11 AC1: the receipt records the evidence-retention count ---------
+
+
+def _proof(key_line: str) -> list[dict[str, object]]:
+    """The numbered lines a case sends, with the proof line present."""
+    return [{"line_number": 1, "text": key_line}]
+
+
+def test_ac1_summary_records_evidence_retention() -> None:
+    summary = _score(
+        _repeats(
+            [
+                _attempt(
+                    case_id="labelled-proof",
+                    expected="code",
+                    answer="code",
+                    key_line="ValueError: boom",
+                    lines=_proof("ValueError: boom"),
+                )
+            ]
+        )
+    )
+    assert summary.evidence_retained == 1
+    assert summary.evidence_total == 1
+    assert "evidence retention: 1/1" in render_summary_md(summary)
+
+
+def test_ac1_evidence_retention_counts_only_labelled_cases() -> None:
+    summary = _score(
+        [
+            _attempt(
+                case_id="labelled-proof",
+                expected="code",
+                answer="code",
+                key_line="ValueError: boom",
+                lines=_proof("ValueError: boom"),
+            ),
+            _attempt(
+                case_id="unknown-proof",
+                kind="unknown",
+                expected="unknown",
+                answer="unknown",
+                key_line="ValueError: boom",
+                lines=_proof("ValueError: boom"),
+            ),
+            _attempt(
+                case_id="trick-proof",
+                kind="trick",
+                expected="code",
+                answer="code",
+                noul=0.9,
+                key_line="ValueError: boom",
+                lines=_proof("ValueError: boom"),
+            ),
+        ]
+    )
+    assert summary.evidence_total == 1  # only labelled cases are the denominator
+    assert summary.evidence_retained == 1
+
+
+def test_ac1_evidence_retention_drops_when_the_proof_is_missing() -> None:
+    summary = _score(
+        [
+            _attempt(
+                case_id="labelled-ok",
+                expected="code",
+                answer="code",
+                key_line="ValueError: boom",
+                lines=_proof("ValueError: boom"),
+            ),
+            _attempt(
+                case_id="labelled-missing",
+                expected="code",
+                answer="code",
+                key_line="ValueError: gone",
+                lines=_proof("ValueError: boom"),
+            ),
+        ]
+    )
+    assert summary.evidence_total == 2
+    assert summary.evidence_retained == 1
+
+
+def test_ac1_summary_md_records_evidence_retention() -> None:
+    summary = _score(
+        _repeats(
+            [
+                _attempt(
+                    case_id="labelled-ok",
+                    expected="code",
+                    answer="code",
+                    key_line="ValueError: boom",
+                    lines=_proof("ValueError: boom"),
+                ),
+                _attempt(
+                    case_id="labelled-missing",
+                    expected="code",
+                    answer="code",
+                    key_line="ValueError: gone",
+                    lines=_proof("ValueError: boom"),
+                ),
+            ]
+        )
+    )
+    text = render_summary_md(summary)
+    assert "evidence retention: 1/2 labelled cases" in text
+
+
+# --- Story 3.12 AC2: the before/after comparison table ------------------------
+
+
+def _class_scores(values: dict[str, tuple[int, int]]) -> tuple[ClassScore, ...]:
+    """Per-class accuracy rows from `{class: (correct, total)}`."""
+    return tuple(
+        ClassScore(
+            failure_class=FailureClass(name),
+            total=total,
+            correct=correct,
+            accuracy=correct / total,
+        )
+        for name, (correct, total) in values.items()
+    )
+
+
+def _comparison_summary(
+    label: str,
+    *,
+    verdict: Verdict = Verdict.PASSED,
+    overall: float | None = 0.9,
+    classes: dict[str, tuple[int, int]] | None = None,
+    confident_wrong: int = 0,
+    trick: tuple[int, int] = (1, 1),
+    retention: tuple[int, int] = (1, 1),
+) -> EvalSummary:
+    """A summary for the comparison table: only the rendered fields vary.
+
+    `retention` is `(retained, total)` distinct labelled cases; the attempts
+    carry the proof line only for the retained ones, so the retention is
+    recomputed from the attempts exactly as a real receipt's would be.
+    """
+    retained, total = retention
+    attempts = [
+        _attempt(
+            case_id=f"case-{index}",
+            expected="code",
+            answer="code",
+            key_line="ValueError: boom" if index < retained else None,
+            lines=_proof("ValueError: boom") if index < retained else None,
+        )
+        for index in range(total)
+    ]
+    base = _score(attempts)
+    return base.model_copy(
+        update={
+            "label": label,
+            "verdict": verdict,
+            "overall_accuracy": overall,
+            "class_scores": _class_scores(classes) if classes else base.class_scores,
+            "confident_wrong": tuple(
+                _attempt(case_id=f"wrong-{index}", expected="infra", answer="external")
+                for index in range(confident_wrong)
+            ),
+            "injection_passed": trick[0],
+            "injection_total": trick[1],
+        }
+    )
+
+
+def _comparison_cells(line: str) -> list[str]:
+    return [cell.strip() for cell in line.strip("|").split("|")]
+
+
+def test_ac2_render_comparison_md_has_a_column_per_receipt() -> None:
+    baseline = _comparison_summary("", verdict=Verdict.FAILED, overall=0.30)
+    before = _comparison_summary("before", verdict=Verdict.FAILED, overall=0.70)
+    after = _comparison_summary("after", verdict=Verdict.PASSED, overall=0.95)
+    text = render_comparison_md(after, [baseline, before])
+    header = next(line for line in text.splitlines() if line.startswith("| metric |"))
+    assert _comparison_cells(header) == [
+        "metric",
+        "2026-09-27-typesafe-jev-1.13",
+        "2026-09-27-typesafe-jev-1.13-before",
+        "2026-09-27-typesafe-jev-1.13-after",
+    ]
+
+
+def test_ac2_comparison_rows_cover_overall_per_class_confident_wrong_trick_and_retention() -> (
+    None
+):
+    summary = _comparison_summary(
+        "after",
+        classes={
+            "code": (3, 3),
+            "flaky": (1, 3),
+            "infra": (3, 3),
+            "external": (2, 3),
+            "unknown": (3, 3),
+        },
+        confident_wrong=2,
+        trick=(0, 6),
+        retention=(2, 5),
+    )
+    text = render_comparison_md(summary, [_comparison_summary("before")])
+    for row in (
+        "| verdict |",
+        "| overall accuracy |",
+        "| per-class accuracy: code |",
+        "| per-class accuracy: flaky |",
+        "| per-class accuracy: infra |",
+        "| per-class accuracy: external |",
+        "| per-class accuracy: unknown |",
+        "| confident-wrong |",
+        "| trick pass rate |",
+        "| evidence retention |",
+    ):
+        assert row in text
+    rows = {line.split(" | ")[0]: line for line in text.splitlines()}
+    assert rows["| confident-wrong"] == "| confident-wrong | 0 | 2 |"
+    assert rows["| trick pass rate"] == "| trick pass rate | 1/1 | 0/6 |"
+    assert rows["| evidence retention"] == "| evidence retention | 1/1 | 2/5 |"
+
+
+def test_ac2_comparison_names_each_receipt_and_its_verdict() -> None:
+    baseline = _comparison_summary("", verdict=Verdict.FAILED)
+    before = _comparison_summary("before", verdict=Verdict.FAILED)
+    after = _comparison_summary("after", verdict=Verdict.PASSED)
+    text = render_comparison_md(after, [baseline, before])
+    lines = text.splitlines()
+    header = next(line for line in lines if line.startswith("| metric |"))
+    assert _comparison_cells(header) == [
+        "metric",
+        "2026-09-27-typesafe-jev-1.13",
+        "2026-09-27-typesafe-jev-1.13-before",
+        "2026-09-27-typesafe-jev-1.13-after",
+    ]
+    verdict_row = next(line for line in lines if line.startswith("| verdict |"))
+    assert _comparison_cells(verdict_row) == ["verdict", "FAILED", "FAILED", "PASSED"]
+
+
+def test_ac2_comparison_renders_n_a_for_a_null_metric() -> None:
+    summary = _comparison_summary("after", overall=None)
+    text = render_comparison_md(summary, [_comparison_summary("before", overall=None)])
+    rows = {line.split(" | ")[0]: line for line in text.splitlines()}
+    assert rows["| overall accuracy"] == "| overall accuracy | n/a | n/a |"
+    assert (
+        rows["| per-class accuracy: flaky"]
+        == "| per-class accuracy: flaky | n/a | n/a |"
+    )
+
+
+def test_ac2_summary_md_renders_the_run_label() -> None:
+    labelled = _score(_passing_attempts()).model_copy(update={"label": "before"})
+    assert "- label: before" in render_summary_md(labelled)
+    assert "- label:" not in render_summary_md(_score(_passing_attempts()))

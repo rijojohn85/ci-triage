@@ -68,7 +68,7 @@ development_status:
   2-10-integrate-proposal-review-revisions-and-risk-gating: backlog
   2-11-deliver-idempotent-drafts-quarantine-metadata-and-reports: backlog
   2-12-prove-live-pipeline-recovery-and-retry-accounting: backlog
-  2-13-distil-real-github-actions-logs-across-stacks: backlog
+  2-13-distil-real-github-actions-logs-across-stacks: review
   epic-2-retrospective: optional
 
   epic-3: in-progress
@@ -82,8 +82,8 @@ development_status:
   3-8-evaluate-reviewer-objections-before-connection: backlog
   3-9-pin-agent-discovery-and-implement-two-stage-routing: backlog
   3-10-prove-description-selection-and-no-route-pause: backlog
-  3-11-guard-the-jev-eval-against-unanswerable-cases: backlog
-  3-12-teach-jev-the-ci-platform-failure-convention: backlog
+  3-11-guard-the-jev-eval-against-unanswerable-cases: review
+  3-12-teach-jev-the-ci-platform-failure-convention: review
   3-13-give-jev-structured-flake-evidence: backlog
   epic-3-retrospective: optional
 
