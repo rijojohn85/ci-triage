@@ -1,0 +1,1046 @@
+﻿2026-09-22T07:45:02.7276729Z Current runner version: '2.337.0'
+2026-09-22T07:45:02.7302830Z ##[group]Runner Image Provisioner
+2026-09-22T07:45:02.7303695Z Hosted Compute Agent
+2026-09-22T07:45:02.7304278Z Version: 20260828.587
+2026-09-22T07:45:02.7304878Z Commit: abac92662cab4cc7352de4f9f9d2e2419aad9c29
+2026-09-22T07:45:02.7305573Z Build Date: 2026-08-28T16:44:25Z
+2026-09-22T07:45:02.7306213Z Worker ID: {540bacee-a822-4d01-abb1-78871c07600d}
+2026-09-22T07:45:02.7306872Z Azure Region: westus
+2026-09-22T07:45:02.7307372Z ##[endgroup]
+2026-09-22T07:45:02.7308835Z ##[group]Operating System
+2026-09-22T07:45:02.7309471Z Microsoft Windows Server 2025
+2026-09-22T07:45:02.7310085Z 10.0.26100
+2026-09-22T07:45:02.7310559Z Datacenter
+2026-09-22T07:45:02.7311039Z ##[endgroup]
+2026-09-22T07:45:02.7311539Z ##[group]Runner Image
+2026-09-22T07:45:02.7312104Z Image: windows-2025-vs2026
+2026-09-22T07:45:02.7312656Z Version: 20260907.229.1
+2026-09-22T07:45:02.7314087Z Included Software: https://github.com/actions/runner-images/blob/win25-vs2026/20260907.229/images/windows/Windows2025-VS2026-Readme.md
+2026-09-22T07:45:02.7315729Z Image Release: https://github.com/actions/runner-images/releases/tag/win25-vs2026%2F20260907.229
+2026-09-22T07:45:02.7316688Z ##[endgroup]
+2026-09-22T07:45:02.7317731Z ##[group]GITHUB_TOKEN Permissions
+2026-09-22T07:45:02.7319819Z Contents: read
+2026-09-22T07:45:02.7320402Z Metadata: read
+2026-09-22T07:45:02.7321449Z ##[endgroup]
+2026-09-22T07:45:02.7323695Z Secret source: Actions
+2026-09-22T07:45:02.7324616Z Cache mode: write
+2026-09-22T07:45:02.7325440Z Prepare workflow directory
+2026-09-22T07:45:02.7790096Z Prepare all required actions
+2026-09-22T07:45:02.7838006Z Getting action download info
+2026-09-22T07:45:03.1362362Z Download action repository 'actions/checkout@v7' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-09-22T07:45:03.2762896Z Download action repository 'dtolnay/rust-toolchain@stable' (SHA:6bed0761d98439e5a578e2877258200ad565ba87)
+2026-09-22T07:45:03.4812859Z Download action repository 'Swatinem/rust-cache@v2' (SHA:6323deb102c322ba6fcbdcafc7e3dddab59af2b6)
+2026-09-22T07:45:04.0775444Z Complete job name: Test hyper (windows-latest)
+2026-09-22T07:45:04.2363226Z ##[group]Run actions/checkout@v7
+2026-09-22T07:45:04.2364555Z with:
+2026-09-22T07:45:04.2365132Z   repository: tokio-rs/tokio
+2026-09-22T07:45:04.2370814Z   token: ***
+2026-09-22T07:45:04.2371384Z   ssh-strict: true
+2026-09-22T07:45:04.2371850Z   ssh-user: git
+2026-09-22T07:45:04.2372306Z   persist-credentials: true
+2026-09-22T07:45:04.2372823Z   clean: true
+2026-09-22T07:45:04.2373289Z   sparse-checkout-cone-mode: true
+2026-09-22T07:45:04.2373833Z   fetch-depth: 1
+2026-09-22T07:45:04.2374283Z   fetch-tags: false
+2026-09-22T07:45:04.2374757Z   show-progress: true
+2026-09-22T07:45:04.2375224Z   lfs: false
+2026-09-22T07:45:04.2375662Z   submodules: false
+2026-09-22T07:45:04.2376125Z   set-safe-directory: true
+2026-09-22T07:45:04.2376650Z   allow-unsafe-pr-checkout: false
+2026-09-22T07:45:04.2377414Z env:
+2026-09-22T07:45:04.2377885Z   RUSTFLAGS: -Dwarnings
+2026-09-22T07:45:04.2378376Z   RUST_BACKTRACE: 1
+2026-09-22T07:45:04.2378888Z   RUSTUP_WINDOWS_PATH_ADD_BIN: 1
+2026-09-22T07:45:04.2379422Z   rust_stable: stable
+2026-09-22T07:45:04.2379921Z   rust_nightly: nightly-2025-10-12
+2026-09-22T07:45:04.2380495Z   rust_miri_nightly: nightly-2026-06-29
+2026-09-22T07:45:04.2381128Z   rust_emscripten_nightly: nightly-2026-08-17
+2026-09-22T07:45:04.2382118Z   emsdk_version: 6.0.8
+2026-09-22T07:45:04.2382698Z   rust_clippy: 1.88
+2026-09-22T07:45:04.2383171Z   rust_min: 1.71
+2026-09-22T07:45:04.2383653Z   TOKIO_STABLE_FEATURES: full,test-util
+2026-09-22T07:45:04.2384228Z ##[endgroup]
+2026-09-22T07:45:04.3856560Z Syncing repository: tokio-rs/tokio
+2026-09-22T07:45:04.3858485Z ##[group]Getting Git version info
+2026-09-22T07:45:04.3859169Z Working directory is 'D:\a\tokio\tokio'
+2026-09-22T07:45:04.4832062Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-09-22T07:45:04.9842866Z git version 2.55.0.windows.5
+2026-09-22T07:45:04.9892348Z ##[endgroup]
+2026-09-22T07:45:04.9908950Z Temporarily overriding HOME='D:\a\_temp\2c212091-1749-4948-83a8-3bf72f657284' before making global git config changes
+2026-09-22T07:45:04.9912687Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-22T07:45:04.9919833Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\tokio\tokio
+2026-09-22T07:45:05.0963328Z Deleting the contents of 'D:\a\tokio\tokio'
+2026-09-22T07:45:05.0969374Z ##[group]Determining repository object format
+2026-09-22T07:45:05.0971482Z ##[endgroup]
+2026-09-22T07:45:05.0972955Z ##[group]Initializing the repository
+2026-09-22T07:45:05.0979792Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\tokio\tokio
+2026-09-22T07:45:05.1906188Z Initialized empty Git repository in D:/a/tokio/tokio/.git/
+2026-09-22T07:45:05.1953482Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/tokio-rs/tokio
+2026-09-22T07:45:05.2678850Z ##[endgroup]
+2026-09-22T07:45:05.2680740Z ##[group]Disabling automatic garbage collection
+2026-09-22T07:45:05.2688024Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2026-09-22T07:45:05.3004104Z ##[endgroup]
+2026-09-22T07:45:05.3005917Z ##[group]Setting up auth
+2026-09-22T07:45:05.3007244Z Removing SSH command configuration
+2026-09-22T07:45:05.3017929Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-09-22T07:45:05.3387364Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-09-22T07:45:07.1369832Z Removing HTTP extra header
+2026-09-22T07:45:07.1382767Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-22T07:45:07.1701409Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-09-22T07:45:07.6953262Z Removing includeIf entries pointing to credentials config files
+2026-09-22T07:45:07.6964568Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-22T07:45:07.7305702Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-09-22T07:45:08.2602580Z [command]"C:\Program Files\Git\bin\git.exe" config --file D:\a\_temp\git-credentials-090d298f-96b1-4006-8d75-8f0cc878e161.config http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-09-22T07:45:08.2917494Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:D:/a/tokio/tokio/.git.path D:\a\_temp\git-credentials-090d298f-96b1-4006-8d75-8f0cc878e161.config
+2026-09-22T07:45:08.3213378Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:D:/a/tokio/tokio/.git/worktrees/*.path D:\a\_temp\git-credentials-090d298f-96b1-4006-8d75-8f0cc878e161.config
+2026-09-22T07:45:08.3569931Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-090d298f-96b1-4006-8d75-8f0cc878e161.config
+2026-09-22T07:45:08.3880034Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-090d298f-96b1-4006-8d75-8f0cc878e161.config
+2026-09-22T07:45:08.4188309Z ##[endgroup]
+2026-09-22T07:45:08.4188753Z ##[group]Fetching the repository
+2026-09-22T07:45:08.4200173Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +dd826ef1efa9202a3ed3c897f17e4cbb8f687955:refs/remotes/origin/master
+2026-09-22T07:45:09.8103505Z From https://github.com/tokio-rs/tokio
+2026-09-22T07:45:09.8104723Z  * [new ref]         dd826ef1efa9202a3ed3c897f17e4cbb8f687955 -> origin/master
+2026-09-22T07:45:09.8160262Z [command]"C:\Program Files\Git\bin\git.exe" branch --list --remote origin/master
+2026-09-22T07:45:09.8577532Z   origin/master
+2026-09-22T07:45:09.8620725Z [command]"C:\Program Files\Git\bin\git.exe" rev-parse refs/remotes/origin/master
+2026-09-22T07:45:09.9031285Z dd826ef1efa9202a3ed3c897f17e4cbb8f687955
+2026-09-22T07:45:09.9066046Z ##[endgroup]
+2026-09-22T07:45:09.9066453Z ##[group]Determining the checkout info
+2026-09-22T07:45:09.9067071Z ##[endgroup]
+2026-09-22T07:45:09.9075844Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2026-09-22T07:45:09.9542352Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2026-09-22T07:45:09.9844894Z ##[group]Checking out the ref
+2026-09-22T07:45:09.9851177Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force -B master refs/remotes/origin/master
+2026-09-22T07:45:10.2882912Z Reset branch 'master'
+2026-09-22T07:45:10.2963407Z branch 'master' set up to track 'origin/master'.
+2026-09-22T07:45:10.3018228Z ##[endgroup]
+2026-09-22T07:45:10.3457939Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2026-09-22T07:45:10.3731785Z dd826ef1efa9202a3ed3c897f17e4cbb8f687955
+2026-09-22T07:45:10.4369013Z ##[group]Run dtolnay/rust-toolchain@stable
+2026-09-22T07:45:10.4369364Z with:
+2026-09-22T07:45:10.4369550Z   toolchain: stable
+2026-09-22T07:45:10.4369737Z env:
+2026-09-22T07:45:10.4369917Z   RUSTFLAGS: -Dwarnings
+2026-09-22T07:45:10.4370118Z   RUST_BACKTRACE: 1
+2026-09-22T07:45:10.4370316Z   RUSTUP_WINDOWS_PATH_ADD_BIN: 1
+2026-09-22T07:45:10.4370548Z   rust_stable: stable
+2026-09-22T07:45:10.4370761Z   rust_nightly: nightly-2025-10-12
+2026-09-22T07:45:10.4371014Z   rust_miri_nightly: nightly-2026-06-29
+2026-09-22T07:45:10.4371312Z   rust_emscripten_nightly: nightly-2026-08-17
+2026-09-22T07:45:10.4371602Z   emsdk_version: 6.0.8
+2026-09-22T07:45:10.4371805Z   rust_clippy: 1.88
+2026-09-22T07:45:10.4371993Z   rust_min: 1.71
+2026-09-22T07:45:10.4372196Z   TOKIO_STABLE_FEATURES: full,test-util
+2026-09-22T07:45:10.4372452Z ##[endgroup]
+2026-09-22T07:45:10.4436797Z ##[start-action display=Parse toolchain version;id=__dtolnay_rust-toolchain.parse]
+2026-09-22T07:45:10.4598812Z ##[group]Run if [[ -z $toolchain ]]; then
+2026-09-22T07:45:10.4599184Z if [[ -z $toolchain ]]; then
+2026-09-22T07:45:10.4599732Z   # GitHub does not enforce `required: true` inputs itself. https://github.com/actions/runner/issues/1070
+2026-09-22T07:45:10.4600298Z   echo "'toolchain' is a required input" >&2
+2026-09-22T07:45:10.4600585Z   exit 1
+2026-09-22T07:45:10.4600905Z elif [[ $toolchain =~ ^stable' '[0-9]+' '(year|month|week|day)s?' 'ago$ ]]; then
+2026-09-22T07:45:10.4601311Z   if [[ Windows == macOS ]]; then
+2026-09-22T07:45:10.4601832Z     echo "toolchain=1.$((($(date -v-$(sed 's/stable \([0-9]*\) \(.\).*/\1\2/' <<< $toolchain) +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT
+2026-09-22T07:45:10.4602351Z   else
+2026-09-22T07:45:10.4602737Z     echo "toolchain=1.$((($(date --date "${toolchain#stable }" +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT
+2026-09-22T07:45:10.4603187Z   fi
+2026-09-22T07:45:10.4603477Z elif [[ $toolchain =~ ^stable' 'minus' '[0-9]+' 'releases?$ ]]; then
+2026-09-22T07:45:10.4603997Z   echo "toolchain=1.$((($(date +%s)/60/60/24-16569)/7/6-${toolchain//[^0-9]/}))" >> $GITHUB_OUTPUT
+2026-09-22T07:45:10.4604460Z elif [[ $toolchain =~ ^1\.[0-9]+$ ]]; then
+2026-09-22T07:45:10.4605036Z   echo "toolchain=1.$((i=${toolchain#1.}, c=($(date +%s)/60/60/24-16569)/7/6, i+9*i*(10*i<=c)+90*i*(100*i<=c)))" >> $GITHUB_OUTPUT
+2026-09-22T07:45:10.4605543Z else
+2026-09-22T07:45:10.4605777Z   echo "toolchain=$toolchain" >> $GITHUB_OUTPUT
+2026-09-22T07:45:10.4606317Z fi
+2026-09-22T07:45:10.4627149Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-09-22T07:45:10.4627568Z env:
+2026-09-22T07:45:10.4627758Z   RUSTFLAGS: -Dwarnings
+2026-09-22T07:45:10.4627981Z   RUST_BACKTRACE: 1
+2026-09-22T07:45:10.4628192Z   RUSTUP_WINDOWS_PATH_ADD_BIN: 1
+2026-09-22T07:45:10.4628443Z   rust_stable: stable
+2026-09-22T07:45:10.4628661Z   rust_nightly: nightly-2025-10-12
+2026-09-22T07:45:10.4628923Z   rust_miri_nightly: nightly-2026-06-29
+2026-09-22T07:45:10.4629227Z   rust_emscripten_nightly: nightly-2026-08-17
+2026-09-22T07:45:10.4629500Z   emsdk_version: 6.0.8
+2026-09-22T07:45:10.4629700Z   rust_clippy: 1.88
+2026-09-22T07:45:10.4629889Z   rust_min: 1.71
+2026-09-22T07:45:10.4630087Z   TOKIO_STABLE_FEATURES: full,test-util
+2026-09-22T07:45:10.4630331Z   toolchain: stable
+2026-09-22T07:45:10.4630515Z ##[endgroup]
+2026-09-22T07:45:10.6956576Z ##[end-action id=__dtolnay_rust-toolchain.parse;outcome=success;conclusion=success;duration_ms=251]
+2026-09-22T07:45:10.6969851Z ##[start-action display=Construct rustup command line;id=__dtolnay_rust-toolchain.flags]
+2026-09-22T07:45:10.7118575Z ##[group]Run echo "targets=$(for t in ${targets//,/ }; do echo -n ' --target' $t; done)" >> $GITHUB_OUTPUT
+2026-09-22T07:45:10.7120982Z echo "targets=$(for t in ${targets//,/ }; do echo -n ' --target' $t; done)" >> $GITHUB_OUTPUT
+2026-09-22T07:45:10.7121713Z echo "components=$(for c in ${components//,/ }; do echo -n ' --component' $c; done)" >> $GITHUB_OUTPUT
+2026-09-22T07:45:10.7122207Z echo "downgrade=" >> $GITHUB_OUTPUT
+2026-09-22T07:45:10.7138927Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-09-22T07:45:10.7139315Z env:
+2026-09-22T07:45:10.7139499Z   RUSTFLAGS: -Dwarnings
+2026-09-22T07:45:10.7139707Z   RUST_BACKTRACE: 1
+2026-09-22T07:45:10.7139914Z   RUSTUP_WINDOWS_PATH_ADD_BIN: 1
+2026-09-22T07:45:10.7140159Z   rust_stable: stable
+2026-09-22T07:45:10.7140388Z   rust_nightly: nightly-2025-10-12
+2026-09-22T07:45:10.7140646Z   rust_miri_nightly: nightly-2026-06-29
+2026-09-22T07:45:10.7140928Z   rust_emscripten_nightly: nightly-2026-08-17
+2026-09-22T07:45:10.7141201Z   emsdk_version: 6.0.8
+2026-09-22T07:45:10.7141396Z   rust_clippy: 1.88
+2026-09-22T07:45:10.7141579Z   rust_min: 1.71
+2026-09-22T07:45:10.7141788Z   TOKIO_STABLE_FEATURES: full,test-util
+2026-09-22T07:45:10.7142037Z   targets: 
+2026-09-22T07:45:10.7142208Z   components: 
+2026-09-22T07:45:10.7142387Z ##[endgroup]
+2026-09-22T07:45:10.7842226Z ##[end-action id=__dtolnay_rust-toolchain.flags;outcome=success;conclusion=success;duration_ms=87]
+2026-09-22T07:45:10.7844857Z ##[start-action display=Set $CARGO_HOME;id=__dtolnay_rust-toolchain.__run]
+2026-09-22T07:45:10.7982559Z ##[group]Run echo CARGO_HOME=${CARGO_HOME:-"$USERPROFILE\.cargo"} >> $GITHUB_ENV
+2026-09-22T07:45:10.7983080Z echo CARGO_HOME=${CARGO_HOME:-"$USERPROFILE\.cargo"} >> $GITHUB_ENV
+2026-09-22T07:45:10.7999047Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-09-22T07:45:10.7999443Z env:
+2026-09-22T07:45:10.7999634Z   RUSTFLAGS: -Dwarnings
+2026-09-22T07:45:10.7999845Z   RUST_BACKTRACE: 1
+2026-09-22T07:45:10.8000049Z   RUSTUP_WINDOWS_PATH_ADD_BIN: 1
+2026-09-22T07:45:10.8000282Z   rust_stable: stable
+2026-09-22T07:45:10.8000515Z   rust_nightly: nightly-2025-10-12
+2026-09-22T07:45:10.8000774Z   rust_miri_nightly: nightly-2026-06-29
+2026-09-22T07:45:10.8001056Z   rust_emscripten_nightly: nightly-2026-08-17
+2026-09-22T07:45:10.8001321Z   emsdk_version: 6.0.8
+2026-09-22T07:45:10.8001517Z   rust_clippy: 1.88
+2026-09-22T07:45:10.8001700Z   rust_min: 1.71
+2026-09-22T07:45:10.8001906Z   TOKIO_STABLE_FEATURES: full,test-util
+2026-09-22T07:45:10.8002151Z ##[endgroup]
+2026-09-22T07:45:10.8403060Z ##[end-action id=__dtolnay_rust-toolchain.__run;outcome=success;conclusion=success;duration_ms=55]
+2026-09-22T07:45:10.8405656Z ##[start-action display=Install rustup if needed;id=__dtolnay_rust-toolchain.__run_2]
+2026-09-22T07:45:10.8417635Z ##[end-action id=__dtolnay_rust-toolchain.__run_2;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-09-22T07:45:10.8419903Z ##[start-action display=Install rustup if needed on windows;id=__dtolnay_rust-toolchain.__run_3]
+2026-09-22T07:45:10.8556519Z ##[group]Run if ! command -v rustup &>/dev/null; then
+2026-09-22T07:45:10.8556899Z if ! command -v rustup &>/dev/null; then
+2026-09-22T07:45:10.8557674Z   curl --proto '=https' --tlsv1.2 --retry 10 --retry-connrefused --location --silent --show-error --fail https://win.rustup.rs/x86_64 --output 'D:\a\_temp\rustup-init.exe'
+2026-09-22T07:45:10.8558558Z   'D:\a\_temp\rustup-init.exe' --default-toolchain none --no-modify-path -y
+2026-09-22T07:45:10.8558988Z   echo "$CARGO_HOME\bin" >> $GITHUB_PATH
+2026-09-22T07:45:10.8559257Z fi
+2026-09-22T07:45:10.8575504Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-09-22T07:45:10.8575907Z env:
+2026-09-22T07:45:10.8576088Z   RUSTFLAGS: -Dwarnings
+2026-09-22T07:45:10.8576301Z   RUST_BACKTRACE: 1
+2026-09-22T07:45:10.8576502Z   RUSTUP_WINDOWS_PATH_ADD_BIN: 1
+2026-09-22T07:45:10.8576733Z   rust_stable: stable
+2026-09-22T07:45:10.8576949Z   rust_nightly: nightly-2025-10-12
+2026-09-22T07:45:10.8577901Z   rust_miri_nightly: nightly-2026-06-29
+2026-09-22T07:45:10.8578230Z   rust_emscripten_nightly: nightly-2026-08-17
+2026-09-22T07:45:10.8578518Z   emsdk_version: 6.0.8
+2026-09-22T07:45:10.8578719Z   rust_clippy: 1.88
+2026-09-22T07:45:10.8578904Z   rust_min: 1.71
+2026-09-22T07:45:10.8579105Z   TOKIO_STABLE_FEATURES: full,test-util
+2026-09-22T07:45:10.8579378Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-09-22T07:45:10.8579628Z ##[endgroup]
+2026-09-22T07:45:10.9117909Z ##[end-action id=__dtolnay_rust-toolchain.__run_3;outcome=success;conclusion=success;duration_ms=69]
+2026-09-22T07:45:10.9122961Z ##[start-action display=rustup toolchain install stable;id=__dtolnay_rust-toolchain.__run_4]
+2026-09-22T07:45:10.9261301Z ##[group]Run rustup toolchain install stable --profile minimal --no-self-update
+2026-09-22T07:45:10.9261847Z rustup toolchain install stable --profile minimal --no-self-update
+2026-09-22T07:45:10.9279687Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-09-22T07:45:10.9280106Z env:
+2026-09-22T07:45:10.9280291Z   RUSTFLAGS: -Dwarnings
+2026-09-22T07:45:10.9280501Z   RUST_BACKTRACE: 1
+2026-09-22T07:45:10.9280707Z   RUSTUP_WINDOWS_PATH_ADD_BIN: 1
+2026-09-22T07:45:10.9280940Z   rust_stable: stable
+2026-09-22T07:45:10.9281157Z   rust_nightly: nightly-2025-10-12
+2026-09-22T07:45:10.9281420Z   rust_miri_nightly: nightly-2026-06-29
+2026-09-22T07:45:10.9281704Z   rust_emscripten_nightly: nightly-2026-08-17
+2026-09-22T07:45:10.9281971Z   emsdk_version: 6.0.8
+2026-09-22T07:45:10.9282176Z   rust_clippy: 1.88
+2026-09-22T07:45:10.9282362Z   rust_min: 1.71
+2026-09-22T07:45:10.9282563Z   TOKIO_STABLE_FEATURES: full,test-util
+2026-09-22T07:45:10.9282845Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-09-22T07:45:10.9283109Z   RUSTUP_PERMIT_COPY_RENAME: 1
+2026-09-22T07:45:10.9283330Z ##[endgroup]
+2026-09-22T07:45:14.9886039Z info: syncing channel updates for stable-x86_64-pc-windows-msvc
+2026-09-22T07:45:15.5115820Z 
+2026-09-22T07:45:15.5314906Z   stable-x86_64-pc-windows-msvc unchanged - rustc 1.98.1 (48a229cea 2026-09-01)
+2026-09-22T07:45:15.5315413Z 
+2026-09-22T07:45:15.5445142Z ##[end-action id=__dtolnay_rust-toolchain.__run_4;outcome=success;conclusion=success;duration_ms=4632]
+2026-09-22T07:45:15.5450589Z ##[start-action display=rustup default stable;id=__dtolnay_rust-toolchain.__run_5]
+2026-09-22T07:45:15.5581724Z ##[group]Run rustup default stable
+2026-09-22T07:45:15.5581991Z rustup default stable
+2026-09-22T07:45:15.5596834Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-09-22T07:45:15.5597515Z env:
+2026-09-22T07:45:15.5597705Z   RUSTFLAGS: -Dwarnings
+2026-09-22T07:45:15.5599001Z   RUST_BACKTRACE: 1
+2026-09-22T07:45:15.5599216Z   RUSTUP_WINDOWS_PATH_ADD_BIN: 1
+2026-09-22T07:45:15.5599448Z   rust_stable: stable
+2026-09-22T07:45:15.5599660Z   rust_nightly: nightly-2025-10-12
+2026-09-22T07:45:15.5599938Z   rust_miri_nightly: nightly-2026-06-29
+2026-09-22T07:45:15.5600241Z   rust_emscripten_nightly: nightly-2026-08-17
+2026-09-22T07:45:15.5600514Z   emsdk_version: 6.0.8
+2026-09-22T07:45:15.5600712Z   rust_clippy: 1.88
+2026-09-22T07:45:15.5600907Z   rust_min: 1.71
+2026-09-22T07:45:15.5601118Z   TOKIO_STABLE_FEATURES: full,test-util
+2026-09-22T07:45:15.5601387Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-09-22T07:45:15.5601637Z ##[endgroup]
+2026-09-22T07:45:15.6306465Z info: using existing install for stable-x86_64-pc-windows-msvc
+2026-09-22T07:45:15.6472722Z info: default toolchain set to stable-x86_64-pc-windows-msvc
+2026-09-22T07:45:15.6476568Z 
+2026-09-22T07:45:15.6675611Z   stable-x86_64-pc-windows-msvc unchanged - rustc 1.98.1 (48a229cea 2026-09-01)
+2026-09-22T07:45:15.6676029Z 
+2026-09-22T07:45:15.7561090Z ##[end-action id=__dtolnay_rust-toolchain.__run_5;outcome=success;conclusion=success;duration_ms=210]
+2026-09-22T07:45:15.7563525Z ##[start-action display=Create cachekey;id=__dtolnay_rust-toolchain.rustc-version]
+2026-09-22T07:45:15.7695127Z ##[group]Run DATE=$(rustc +stable --version --verbose | sed -ne 's/^commit-date: \(20[0-9][0-9]\)-\([01][0-9]\)-\([0-3][0-9]\)$/\1\2\3/p')
+2026-09-22T07:45:15.7696012Z DATE=$(rustc +stable --version --verbose | sed -ne 's/^commit-date: \(20[0-9][0-9]\)-\([01][0-9]\)-\([0-3][0-9]\)$/\1\2\3/p')
+2026-09-22T07:45:15.7696667Z HASH=$(rustc +stable --version --verbose | sed -ne 's/^commit-hash: //p')
+2026-09-22T07:45:15.7697485Z echo "cachekey=$(echo $DATE$HASH | head -c12)" >> $GITHUB_OUTPUT
+2026-09-22T07:45:15.7729195Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-09-22T07:45:15.7729827Z env:
+2026-09-22T07:45:15.7730130Z   RUSTFLAGS: -Dwarnings
+2026-09-22T07:45:15.7730456Z   RUST_BACKTRACE: 1
+2026-09-22T07:45:15.7730776Z   RUSTUP_WINDOWS_PATH_ADD_BIN: 1
+2026-09-22T07:45:15.7731145Z   rust_stable: stable
+2026-09-22T07:45:15.7731488Z   rust_nightly: nightly-2025-10-12
+2026-09-22T07:45:15.7731923Z   rust_miri_nightly: nightly-2026-06-29
+2026-09-22T07:45:15.7732407Z   rust_emscripten_nightly: nightly-2026-08-17
+2026-09-22T07:45:15.7732853Z   emsdk_version: 6.0.8
+2026-09-22T07:45:15.7733143Z   rust_clippy: 1.88
+2026-09-22T07:45:15.7733407Z   rust_min: 1.71
+2026-09-22T07:45:15.7733714Z   TOKIO_STABLE_FEATURES: full,test-util
+2026-09-22T07:45:15.7734146Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-09-22T07:45:15.7734573Z ##[endgroup]
+2026-09-22T07:45:17.8369109Z ##[end-action id=__dtolnay_rust-toolchain.rustc-version;outcome=success;conclusion=success;duration_ms=2080]
+2026-09-22T07:45:17.8371619Z ##[start-action display=Disable incremental compilation;id=__dtolnay_rust-toolchain.__run_6]
+2026-09-22T07:45:17.8515185Z ##[group]Run if [ -z "${CARGO_INCREMENTAL+set}" ]; then
+2026-09-22T07:45:17.8515568Z if [ -z "${CARGO_INCREMENTAL+set}" ]; then
+2026-09-22T07:45:17.8515885Z   echo CARGO_INCREMENTAL=0 >> $GITHUB_ENV
+2026-09-22T07:45:17.8516153Z fi
+2026-09-22T07:45:17.8531251Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-09-22T07:45:17.8531661Z env:
+2026-09-22T07:45:17.8531848Z   RUSTFLAGS: -Dwarnings
+2026-09-22T07:45:17.8532060Z   RUST_BACKTRACE: 1
+2026-09-22T07:45:17.8532264Z   RUSTUP_WINDOWS_PATH_ADD_BIN: 1
+2026-09-22T07:45:17.8532499Z   rust_stable: stable
+2026-09-22T07:45:17.8532708Z   rust_nightly: nightly-2025-10-12
+2026-09-22T07:45:17.8532959Z   rust_miri_nightly: nightly-2026-06-29
+2026-09-22T07:45:17.8533243Z   rust_emscripten_nightly: nightly-2026-08-17
+2026-09-22T07:45:17.8533520Z   emsdk_version: 6.0.8
+2026-09-22T07:45:17.8533720Z   rust_clippy: 1.88
+2026-09-22T07:45:17.8533910Z   rust_min: 1.71
+2026-09-22T07:45:17.8534286Z   TOKIO_STABLE_FEATURES: full,test-util
+2026-09-22T07:45:17.8534558Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-09-22T07:45:17.8534812Z ##[endgroup]
+2026-09-22T07:45:18.0947536Z ##[end-action id=__dtolnay_rust-toolchain.__run_6;outcome=success;conclusion=success;duration_ms=257]
+2026-09-22T07:45:18.0951161Z ##[start-action display=Enable colors in Cargo output;id=__dtolnay_rust-toolchain.__run_7]
+2026-09-22T07:45:18.1098422Z ##[group]Run if [ -z "${CARGO_TERM_COLOR+set}" ]; then
+2026-09-22T07:45:18.1099006Z if [ -z "${CARGO_TERM_COLOR+set}" ]; then
+2026-09-22T07:45:18.1099575Z   echo CARGO_TERM_COLOR=always >> $GITHUB_ENV
+2026-09-22T07:45:18.1100064Z fi
+2026-09-22T07:45:18.1125158Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-09-22T07:45:18.1125874Z env:
+2026-09-22T07:45:18.1126200Z   RUSTFLAGS: -Dwarnings
+2026-09-22T07:45:18.1126579Z   RUST_BACKTRACE: 1
+2026-09-22T07:45:18.1126930Z   RUSTUP_WINDOWS_PATH_ADD_BIN: 1
+2026-09-22T07:45:18.1127350Z   rust_stable: stable
+2026-09-22T07:45:18.1127724Z   rust_nightly: nightly-2025-10-12
+2026-09-22T07:45:18.1128164Z   rust_miri_nightly: nightly-2026-06-29
+2026-09-22T07:45:18.1128689Z   rust_emscripten_nightly: nightly-2026-08-17
+2026-09-22T07:45:18.1129174Z   emsdk_version: 6.0.8
+2026-09-22T07:45:18.1129527Z   rust_clippy: 1.88
+2026-09-22T07:45:18.1130165Z   rust_min: 1.71
+2026-09-22T07:45:18.1130556Z   TOKIO_STABLE_FEATURES: full,test-util
+2026-09-22T07:45:18.1131053Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-09-22T07:45:18.1131517Z   CARGO_INCREMENTAL: 0
+2026-09-22T07:45:18.1131862Z ##[endgroup]
+2026-09-22T07:45:18.1709292Z ##[end-action id=__dtolnay_rust-toolchain.__run_7;outcome=success;conclusion=success;duration_ms=75]
+2026-09-22T07:45:18.1712820Z ##[start-action display=Enable Cargo sparse registry;id=__dtolnay_rust-toolchain.__run_8]
+2026-09-22T07:45:18.1925672Z ##[group]Run # implemented in 1.66, stabilized in 1.68, made default in 1.70
+2026-09-22T07:45:18.1926611Z # implemented in 1.66, stabilized in 1.68, made default in 1.70
+2026-09-22T07:45:18.1927778Z if [ -z "${CARGO_REGISTRIES_CRATES_IO_PROTOCOL+set}" -o -f "D:\a\_temp"/.implicit_cargo_registries_crates_io_protocol ]; then
+2026-09-22T07:45:18.1929017Z   if rustc +stable --version --verbose | grep -q '^release: 1\.6[89]\.'; then
+2026-09-22T07:45:18.1929996Z     touch "D:\a\_temp"/.implicit_cargo_registries_crates_io_protocol || true
+2026-09-22T07:45:18.1986214Z     echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse >> $GITHUB_ENV
+2026-09-22T07:45:18.1987189Z   elif rustc +stable --version --verbose | grep -q '^release: 1\.6[67]\.'; then
+2026-09-22T07:45:18.1988161Z     touch "D:\a\_temp"/.implicit_cargo_registries_crates_io_protocol || true
+2026-09-22T07:45:18.1989010Z     echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=git >> $GITHUB_ENV
+2026-09-22T07:45:18.1989594Z   fi
+2026-09-22T07:45:18.1989897Z fi
+2026-09-22T07:45:18.2014318Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-09-22T07:45:18.2014987Z env:
+2026-09-22T07:45:18.2015288Z   RUSTFLAGS: -Dwarnings
+2026-09-22T07:45:18.2015647Z   RUST_BACKTRACE: 1
+2026-09-22T07:45:18.2016001Z   RUSTUP_WINDOWS_PATH_ADD_BIN: 1
+2026-09-22T07:45:18.2016383Z   rust_stable: stable
+2026-09-22T07:45:18.2016753Z   rust_nightly: nightly-2025-10-12
+2026-09-22T07:45:18.2017187Z   rust_miri_nightly: nightly-2026-06-29
+2026-09-22T07:45:18.2017665Z   rust_emscripten_nightly: nightly-2026-08-17
+2026-09-22T07:45:18.2018132Z   emsdk_version: 6.0.8
+2026-09-22T07:45:18.2018860Z   rust_clippy: 1.88
+2026-09-22T07:45:18.2019185Z   rust_min: 1.71
+2026-09-22T07:45:18.2019526Z   TOKIO_STABLE_FEATURES: full,test-util
+2026-09-22T07:45:18.2019963Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-09-22T07:45:18.2023550Z   CARGO_INCREMENTAL: 0
+2026-09-22T07:45:18.2023931Z   CARGO_TERM_COLOR: always
+2026-09-22T07:45:18.2024311Z ##[endgroup]
+2026-09-22T07:45:18.4877089Z ##[end-action id=__dtolnay_rust-toolchain.__run_8;outcome=success;conclusion=success;duration_ms=316]
+2026-09-22T07:45:18.4880556Z ##[start-action display=Work around spurious network errors in curl 8.0;id=__dtolnay_rust-toolchain.__run_9]
+2026-09-22T07:45:18.5041351Z ##[group]Run # https://rust-lang.zulipchat.com/#narrow/stream/246057-t-cargo/topic/timeout.20investigation
+2026-09-22T07:45:18.5042682Z # https://rust-lang.zulipchat.com/#narrow/stream/246057-t-cargo/topic/timeout.20investigation
+2026-09-22T07:45:18.5043782Z if rustc +stable --version --verbose | grep -q '^release: 1\.7[01]\.'; then
+2026-09-22T07:45:18.5044609Z   echo CARGO_HTTP_MULTIPLEXING=false >> $GITHUB_ENV
+2026-09-22T07:45:18.5045157Z fi
+2026-09-22T07:45:18.5070909Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-09-22T07:45:18.5071568Z env:
+2026-09-22T07:45:18.5071861Z   RUSTFLAGS: -Dwarnings
+2026-09-22T07:45:18.5072223Z   RUST_BACKTRACE: 1
+2026-09-22T07:45:18.5072567Z   RUSTUP_WINDOWS_PATH_ADD_BIN: 1
+2026-09-22T07:45:18.5072972Z   rust_stable: stable
+2026-09-22T07:45:18.5073324Z   rust_nightly: nightly-2025-10-12
+2026-09-22T07:45:18.5073777Z   rust_miri_nightly: nightly-2026-06-29
+2026-09-22T07:45:18.5074276Z   rust_emscripten_nightly: nightly-2026-08-17
+2026-09-22T07:45:18.5075668Z   emsdk_version: 6.0.8
+2026-09-22T07:45:18.5076054Z   rust_clippy: 1.88
+2026-09-22T07:45:18.5076379Z   rust_min: 1.71
+2026-09-22T07:45:18.5076718Z   TOKIO_STABLE_FEATURES: full,test-util
+2026-09-22T07:45:18.5077183Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-09-22T07:45:18.5078019Z   CARGO_INCREMENTAL: 0
+2026-09-22T07:45:18.5078383Z   CARGO_TERM_COLOR: always
+2026-09-22T07:45:18.5078739Z ##[endgroup]
+2026-09-22T07:45:18.6437095Z ##[end-action id=__dtolnay_rust-toolchain.__run_9;outcome=success;conclusion=success;duration_ms=155]
+2026-09-22T07:45:18.6441334Z ##[start-action display=rustc +stable --version --verbose;id=__dtolnay_rust-toolchain.__run_10]
+2026-09-22T07:45:18.6656628Z ##[group]Run rustc +stable --version --verbose
+2026-09-22T07:45:18.6657268Z rustc +stable --version --verbose
+2026-09-22T07:45:18.6684457Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-09-22T07:45:18.6685748Z env:
+2026-09-22T07:45:18.6686054Z   RUSTFLAGS: -Dwarnings
+2026-09-22T07:45:18.6686430Z   RUST_BACKTRACE: 1
+2026-09-22T07:45:18.6686786Z   RUSTUP_WINDOWS_PATH_ADD_BIN: 1
+2026-09-22T07:45:18.6687199Z   rust_stable: stable
+2026-09-22T07:45:18.6687561Z   rust_nightly: nightly-2025-10-12
+2026-09-22T07:45:18.6688006Z   rust_miri_nightly: nightly-2026-06-29
+2026-09-22T07:45:18.6688511Z   rust_emscripten_nightly: nightly-2026-08-17
+2026-09-22T07:45:18.6688994Z   emsdk_version: 6.0.8
+2026-09-22T07:45:18.6689342Z   rust_clippy: 1.88
+2026-09-22T07:45:18.6689677Z   rust_min: 1.71
+2026-09-22T07:45:18.6690024Z   TOKIO_STABLE_FEATURES: full,test-util
+2026-09-22T07:45:18.6690492Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-09-22T07:45:18.6690950Z   CARGO_INCREMENTAL: 0
+2026-09-22T07:45:18.6691296Z   CARGO_TERM_COLOR: always
+2026-09-22T07:45:18.6691660Z ##[endgroup]
+2026-09-22T07:45:18.7553104Z rustc 1.98.1 (48a229cea 2026-09-01)
+2026-09-22T07:45:18.7553592Z binary: rustc
+2026-09-22T07:45:18.7554161Z commit-hash: 48a229ceaefd4985c50990b14116b6d856af0985
+2026-09-22T07:45:18.7554733Z commit-date: 2026-09-01
+2026-09-22T07:45:18.7555117Z host: x86_64-pc-windows-msvc
+2026-09-22T07:45:18.7555507Z release: 1.98.1
+2026-09-22T07:45:18.7556472Z LLVM version: 22.1.8
+2026-09-22T07:45:18.7678511Z ##[end-action id=__dtolnay_rust-toolchain.__run_10;outcome=success;conclusion=success;duration_ms=123]
+2026-09-22T07:45:18.7839186Z ##[group]Run git clone https://github.com/hyperium/hyper.git
+2026-09-22T07:45:18.7839706Z git clone https://github.com/hyperium/hyper.git
+2026-09-22T07:45:18.7855113Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-09-22T07:45:18.7857696Z env:
+2026-09-22T07:45:18.7857964Z   RUSTFLAGS: -Dwarnings
+2026-09-22T07:45:18.7858184Z   RUST_BACKTRACE: 1
+2026-09-22T07:45:18.7858393Z   RUSTUP_WINDOWS_PATH_ADD_BIN: 1
+2026-09-22T07:45:18.7858629Z   rust_stable: stable
+2026-09-22T07:45:18.7858844Z   rust_nightly: nightly-2025-10-12
+2026-09-22T07:45:18.7859099Z   rust_miri_nightly: nightly-2026-06-29
+2026-09-22T07:45:18.7859487Z   rust_emscripten_nightly: nightly-2026-08-17
+2026-09-22T07:45:18.7859955Z   emsdk_version: 6.0.8
+2026-09-22T07:45:18.7860161Z   rust_clippy: 1.88
+2026-09-22T07:45:18.7860348Z   rust_min: 1.71
+2026-09-22T07:45:18.7860556Z   TOKIO_STABLE_FEATURES: full,test-util
+2026-09-22T07:45:18.7860872Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-09-22T07:45:18.7861133Z   CARGO_INCREMENTAL: 0
+2026-09-22T07:45:18.7861335Z   CARGO_TERM_COLOR: always
+2026-09-22T07:45:18.7861546Z ##[endgroup]
+2026-09-22T07:45:18.8559323Z Cloning into 'hyper'...
+2026-09-22T07:45:22.4294058Z ##[group]Run set -x
+2026-09-22T07:45:22.4294830Z set -x
+2026-09-22T07:45:22.4295234Z tag=$(git describe --abbrev=0 --tags)
+2026-09-22T07:45:22.4295764Z git checkout "${tag}"
+2026-09-22T07:45:22.4324388Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-09-22T07:45:22.4325070Z env:
+2026-09-22T07:45:22.4325382Z   RUSTFLAGS: -Dwarnings
+2026-09-22T07:45:22.4325753Z   RUST_BACKTRACE: 1
+2026-09-22T07:45:22.4326128Z   RUSTUP_WINDOWS_PATH_ADD_BIN: 1
+2026-09-22T07:45:22.4326533Z   rust_stable: stable
+2026-09-22T07:45:22.4326903Z   rust_nightly: nightly-2025-10-12
+2026-09-22T07:45:22.4327345Z   rust_miri_nightly: nightly-2026-06-29
+2026-09-22T07:45:22.4327844Z   rust_emscripten_nightly: nightly-2026-08-17
+2026-09-22T07:45:22.4328331Z   emsdk_version: 6.0.8
+2026-09-22T07:45:22.4329099Z   rust_clippy: 1.88
+2026-09-22T07:45:22.4329442Z   rust_min: 1.71
+2026-09-22T07:45:22.4329855Z   TOKIO_STABLE_FEATURES: full,test-util
+2026-09-22T07:45:22.4330341Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-09-22T07:45:22.4330811Z   CARGO_INCREMENTAL: 0
+2026-09-22T07:45:22.4331166Z   CARGO_TERM_COLOR: always
+2026-09-22T07:45:22.4331527Z ##[endgroup]
+2026-09-22T07:45:22.4853309Z ++ git describe --abbrev=0 --tags
+2026-09-22T07:45:22.5090980Z + tag=v1.11.1
+2026-09-22T07:45:22.5091368Z + git checkout v1.11.1
+2026-09-22T07:45:22.5811165Z Note: switching to 'v1.11.1'.
+2026-09-22T07:45:22.5811505Z 
+2026-09-22T07:45:22.5811832Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-09-22T07:45:22.5812412Z changes and commit them, and you can discard any commits you make in this
+2026-09-22T07:45:22.5812890Z state without impacting any branches by switching back to a branch.
+2026-09-22T07:45:22.5813170Z 
+2026-09-22T07:45:22.5813363Z If you want to create a new branch to retain commits you create, you may
+2026-09-22T07:45:22.5813789Z do so (now or later) by using -c with the switch command. Example:
+2026-09-22T07:45:22.5814061Z 
+2026-09-22T07:45:22.5814172Z   git switch -c <new-branch-name>
+2026-09-22T07:45:22.5814353Z 
+2026-09-22T07:45:22.5814440Z Or undo this operation with:
+2026-09-22T07:45:22.5814590Z 
+2026-09-22T07:45:22.5814659Z   git switch -
+2026-09-22T07:45:22.5814772Z 
+2026-09-22T07:45:22.5814969Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-09-22T07:45:22.5815263Z 
+2026-09-22T07:45:22.5815348Z HEAD is now at 6371cd42 v1.11.1
+2026-09-22T07:45:22.6055337Z ##[group]Run set -x
+2026-09-22T07:45:22.6055641Z set -x
+2026-09-22T07:45:22.6055864Z echo '[workspace]' >>Cargo.toml
+2026-09-22T07:45:22.6056162Z echo '[patch.crates-io]' >>Cargo.toml
+2026-09-22T07:45:22.6056497Z echo 'tokio = { path = "../tokio" }' >>Cargo.toml
+2026-09-22T07:45:22.6056887Z echo 'tokio-util = { path = "../tokio-util" }' >>Cargo.toml
+2026-09-22T07:45:22.6057318Z echo 'tokio-stream = { path = "../tokio-stream" }' >>Cargo.toml
+2026-09-22T07:45:22.6057741Z echo 'tokio-test = { path = "../tokio-test" }' >>Cargo.toml
+2026-09-22T07:45:22.6058768Z git diff
+2026-09-22T07:45:22.6072671Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-09-22T07:45:22.6073061Z env:
+2026-09-22T07:45:22.6073240Z   RUSTFLAGS: -Dwarnings
+2026-09-22T07:45:22.6073457Z   RUST_BACKTRACE: 1
+2026-09-22T07:45:22.6074126Z   RUSTUP_WINDOWS_PATH_ADD_BIN: 1
+2026-09-22T07:45:22.6074394Z   rust_stable: stable
+2026-09-22T07:45:22.6074612Z   rust_nightly: nightly-2025-10-12
+2026-09-22T07:45:22.6074866Z   rust_miri_nightly: nightly-2026-06-29
+2026-09-22T07:45:22.6075141Z   rust_emscripten_nightly: nightly-2026-08-17
+2026-09-22T07:45:22.6075410Z   emsdk_version: 6.0.8
+2026-09-22T07:45:22.6075608Z   rust_clippy: 1.88
+2026-09-22T07:45:22.6075791Z   rust_min: 1.71
+2026-09-22T07:45:22.6075987Z   TOKIO_STABLE_FEATURES: full,test-util
+2026-09-22T07:45:22.6076265Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-09-22T07:45:22.6076522Z   CARGO_INCREMENTAL: 0
+2026-09-22T07:45:22.6076734Z   CARGO_TERM_COLOR: always
+2026-09-22T07:45:22.6076948Z ##[endgroup]
+2026-09-22T07:45:22.6452255Z + echo '[workspace]'
+2026-09-22T07:45:22.6455753Z + echo '[patch.crates-io]'
+2026-09-22T07:45:22.6458913Z + echo 'tokio = { path = "../tokio" }'
+2026-09-22T07:45:22.6461656Z + echo 'tokio-util = { path = "../tokio-util" }'
+2026-09-22T07:45:22.6464494Z + echo 'tokio-stream = { path = "../tokio-stream" }'
+2026-09-22T07:45:22.6467170Z + echo 'tokio-test = { path = "../tokio-test" }'
+2026-09-22T07:45:22.6469639Z + git diff
+2026-09-22T07:45:22.7117028Z warning: in the working copy of 'Cargo.toml', LF will be replaced by CRLF the next time Git touches it
+2026-09-22T07:45:22.7183166Z diff --git a/Cargo.toml b/Cargo.toml
+2026-09-22T07:45:22.7184056Z index d9e081d5..8abcca77 100644
+2026-09-22T07:45:22.7184526Z --- a/Cargo.toml
+2026-09-22T07:45:22.7184899Z +++ b/Cargo.toml
+2026-09-22T07:45:22.7185338Z @@ -357,3 +357,9 @@ required-features = ["full"]
+2026-09-22T07:45:22.7185910Z  name = "h1_shutdown_while_buffered"
+2026-09-22T07:45:22.7186511Z  path = "tests/h1_shutdown_while_buffered.rs"
+2026-09-22T07:45:22.7187074Z  required-features = ["full"]
+2026-09-22T07:45:22.7187545Z +[workspace]
+2026-09-22T07:45:22.7187870Z +[patch.crates-io]
+2026-09-22T07:45:22.7188243Z +tokio = { path = "../tokio" }
+2026-09-22T07:45:22.7188763Z +tokio-util = { path = "../tokio-util" }
+2026-09-22T07:45:22.7189360Z +tokio-stream = { path = "../tokio-stream" }
+2026-09-22T07:45:22.7189791Z +tokio-test = { path = "../tokio-test" }
+2026-09-22T07:45:22.7470042Z ##[group]Run Swatinem/rust-cache@v2
+2026-09-22T07:45:22.7470368Z with:
+2026-09-22T07:45:22.7470557Z   workspaces: ./hyper
+2026-09-22T07:45:22.7470772Z   cache-bin: true
+2026-09-22T07:45:22.7471026Z   prefix-key: v0-rust
+2026-09-22T07:45:22.7471242Z   add-job-id-key: true
+2026-09-22T07:45:22.7471471Z   add-rust-environment-hash-key: true
+2026-09-22T07:45:22.7471730Z   cache-targets: true
+2026-09-22T07:45:22.7471935Z   cache-all-crates: false
+2026-09-22T07:45:22.7472174Z   cache-workspace-crates: false
+2026-09-22T07:45:22.7472402Z   save-if: true
+2026-09-22T07:45:22.7472591Z   cache-provider: github
+2026-09-22T07:45:22.7472808Z   lookup-only: false
+2026-09-22T07:45:22.7473003Z   cmd-format: {0}
+2026-09-22T07:45:22.7473182Z env:
+2026-09-22T07:45:22.7473357Z   RUSTFLAGS: -Dwarnings
+2026-09-22T07:45:22.7473576Z   RUST_BACKTRACE: 1
+2026-09-22T07:45:22.7473776Z   RUSTUP_WINDOWS_PATH_ADD_BIN: 1
+2026-09-22T07:45:22.7474006Z   rust_stable: stable
+2026-09-22T07:45:22.7474248Z   rust_nightly: nightly-2025-10-12
+2026-09-22T07:45:22.7474671Z   rust_miri_nightly: nightly-2026-06-29
+2026-09-22T07:45:22.7475056Z   rust_emscripten_nightly: nightly-2026-08-17
+2026-09-22T07:45:22.7475334Z   emsdk_version: 6.0.8
+2026-09-22T07:45:22.7475530Z   rust_clippy: 1.88
+2026-09-22T07:45:22.7475913Z   rust_min: 1.71
+2026-09-22T07:45:22.7476117Z   TOKIO_STABLE_FEATURES: full,test-util
+2026-09-22T07:45:22.7476380Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-09-22T07:45:22.7476853Z   CARGO_INCREMENTAL: 0
+2026-09-22T07:45:22.7477064Z   CARGO_TERM_COLOR: always
+2026-09-22T07:45:22.7477271Z ##[endgroup]
+2026-09-22T07:45:26.1842404Z ##[group]Cache Configuration
+2026-09-22T07:45:26.1842907Z Cache Provider:
+2026-09-22T07:45:26.1843236Z     github
+2026-09-22T07:45:26.1843509Z Workspaces:
+2026-09-22T07:45:26.1843793Z     D:\a\tokio\tokio\hyper
+2026-09-22T07:45:26.1862257Z Cache Paths:
+2026-09-22T07:45:26.1862616Z     C:\Users\runneradmin\.cargo\bin
+2026-09-22T07:45:26.1863093Z     C:\Users\runneradmin\.cargo\.crates.toml
+2026-09-22T07:45:26.1863615Z     C:\Users\runneradmin\.cargo\.crates2.json
+2026-09-22T07:45:26.1864125Z     C:\Users\runneradmin\.cargo\registry
+2026-09-22T07:45:26.1864568Z     C:\Users\runneradmin\.cargo\git
+2026-09-22T07:45:26.1865014Z     D:\a\tokio\tokio\hyper\target
+2026-09-22T07:45:26.1865398Z Restore Key:
+2026-09-22T07:45:26.1865750Z     v0-rust-test-hyper-Windows_NT-x64-f035d272
+2026-09-22T07:45:26.1866206Z Cache Key:
+2026-09-22T07:45:26.1866629Z     v0-rust-test-hyper-Windows_NT-x64-f035d272-83fde465
+2026-09-22T07:45:26.1867173Z .. Prefix:
+2026-09-22T07:45:26.1867503Z   - v0-rust-test-hyper-Windows_NT-x64
+2026-09-22T07:45:26.1867794Z .. Environment considered:
+2026-09-22T07:45:26.1868026Z   - Rust Versions:
+2026-09-22T07:45:26.1868343Z     - 1.98.1 x86_64-pc-windows-msvc 48a229ceaefd4985c50990b14116b6d856af0985
+2026-09-22T07:45:26.1868713Z   - CARGO_HOME
+2026-09-22T07:45:26.1868902Z   - CARGO_INCREMENTAL
+2026-09-22T07:45:26.1869181Z   - CARGO_TERM_COLOR
+2026-09-22T07:45:26.1869828Z   - RUST_BACKTRACE
+2026-09-22T07:45:26.1870035Z   - RUSTFLAGS
+2026-09-22T07:45:26.1870235Z   - RUSTUP_WINDOWS_PATH_ADD_BIN
+2026-09-22T07:45:26.1870620Z .. Lockfiles considered:
+2026-09-22T07:45:26.1871020Z   - D:\a\tokio\tokio\hyper\Cargo.toml
+2026-09-22T07:45:26.1871465Z ##[endgroup]
+2026-09-22T07:45:26.1871661Z 
+2026-09-22T07:45:26.1871793Z ... Restoring cache ...
+2026-09-22T07:45:26.5779019Z No cache found.
+2026-09-22T07:45:26.6066024Z ##[group]Run cargo test --features full
+2026-09-22T07:45:26.6066437Z cargo test --features full
+2026-09-22T07:45:26.6081428Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-09-22T07:45:26.6081825Z env:
+2026-09-22T07:45:26.6082017Z   RUSTFLAGS: -Dwarnings
+2026-09-22T07:45:26.6082235Z   RUST_BACKTRACE: 1
+2026-09-22T07:45:26.6082448Z   RUSTUP_WINDOWS_PATH_ADD_BIN: 1
+2026-09-22T07:45:26.6082687Z   rust_stable: stable
+2026-09-22T07:45:26.6082907Z   rust_nightly: nightly-2025-10-12
+2026-09-22T07:45:26.6083168Z   rust_miri_nightly: nightly-2026-06-29
+2026-09-22T07:45:26.6083455Z   rust_emscripten_nightly: nightly-2026-08-17
+2026-09-22T07:45:26.6083728Z   emsdk_version: 6.0.8
+2026-09-22T07:45:26.6083932Z   rust_clippy: 1.88
+2026-09-22T07:45:26.6084121Z   rust_min: 1.71
+2026-09-22T07:45:26.6084324Z   TOKIO_STABLE_FEATURES: full,test-util
+2026-09-22T07:45:26.6084596Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-09-22T07:45:26.6084887Z   CARGO_INCREMENTAL: 0
+2026-09-22T07:45:26.6085096Z   CARGO_TERM_COLOR: always
+2026-09-22T07:45:26.6085310Z   CACHE_ON_FAILURE: false
+2026-09-22T07:45:26.6085512Z ##[endgroup]
+2026-09-22T07:45:28.1658645Z     Updating crates.io index
+2026-09-22T07:45:29.0362864Z      Locking 72 packages to latest compatible versions
+2026-09-22T07:45:29.0795652Z  Downloading crates ...
+2026-09-22T07:45:29.1419788Z   Downloaded form_urlencoded v1.2.2
+2026-09-22T07:45:29.2166531Z   Downloaded httpdate v1.0.3
+2026-09-22T07:45:29.2379148Z   Downloaded lazy_static v1.5.0
+2026-09-22T07:45:29.2611176Z   Downloaded serde_core v1.0.229
+2026-09-22T07:45:29.2872936Z   Downloaded windows-link v0.2.1
+2026-09-22T07:45:29.3016942Z   Downloaded cfg-if v1.0.5
+2026-09-22T07:45:29.3147873Z   Downloaded tracing-attributes v0.1.31
+2026-09-22T07:45:29.3514250Z   Downloaded atomic-waker v1.1.2
+2026-09-22T07:45:29.3625443Z   Downloaded aho-corasick v1.1.5
+2026-09-22T07:45:29.4138780Z   Downloaded equivalent v1.0.2
+2026-09-22T07:45:29.4238960Z   Downloaded futures-core v0.3.34
+2026-09-22T07:45:29.4357348Z   Downloaded quote v1.0.47
+2026-09-22T07:45:29.4727350Z   Downloaded bytes v1.12.1
+2026-09-22T07:45:29.5120870Z   Downloaded pin-project-lite v0.2.17
+2026-09-22T07:45:29.5916537Z   Downloaded fnv v1.0.7
+2026-09-22T07:45:29.6002014Z   Downloaded pretty_env_logger v0.5.0
+2026-09-22T07:45:29.6188725Z   Downloaded env_logger v0.10.2
+2026-09-22T07:45:29.6487677Z   Downloaded nu-ansi-term v0.50.3
+2026-09-22T07:45:29.6824987Z   Downloaded once_cell v1.21.4
+2026-09-22T07:45:29.7127966Z   Downloaded http-body v1.1.0
+2026-09-22T07:45:29.7232713Z   Downloaded futures-channel v0.3.34
+2026-09-22T07:45:29.7408411Z   Downloaded log v0.4.34
+2026-09-22T07:45:29.7640084Z   Downloaded percent-encoding v2.3.2
+2026-09-22T07:45:29.7724865Z   Downloaded futures-task v0.3.34
+2026-09-22T07:45:29.7887513Z   Downloaded tracing-log v0.2.0
+2026-09-22T07:45:29.8004192Z   Downloaded want v0.3.1
+2026-09-22T07:45:29.8144540Z   Downloaded futures-sink v0.3.34
+2026-09-22T07:45:29.8228567Z   Downloaded is-terminal v0.4.17
+2026-09-22T07:45:29.8322511Z   Downloaded http-body-util v0.1.5
+2026-09-22T07:45:29.8554933Z   Downloaded indexmap v2.14.2
+2026-09-22T07:45:29.9015554Z   Downloaded try-lock v0.2.5
+2026-09-22T07:45:29.9172294Z   Downloaded thread_local v1.1.10
+2026-09-22T07:45:29.9296109Z   Downloaded spmc v0.3.0
+2026-09-22T07:45:29.9490480Z   Downloaded humantime v2.4.0
+2026-09-22T07:45:29.9673003Z   Downloaded slab v0.4.12
+2026-09-22T07:45:29.9787003Z   Downloaded smallvec v1.16.1
+2026-09-22T07:45:29.9893643Z   Downloaded itoa v1.0.18
+2026-09-22T07:45:30.0107352Z   Downloaded tracing-core v0.1.36
+2026-09-22T07:45:30.0454714Z   Downloaded zmij v1.0.23
+2026-09-22T07:45:30.0613066Z   Downloaded proc-macro2 v1.0.107
+2026-09-22T07:45:30.1001455Z   Downloaded unicode-ident v1.0.26
+2026-09-22T07:45:30.1352099Z   Downloaded regex v1.13.1
+2026-09-22T07:45:30.2075934Z   Downloaded termcolor v1.4.1
+2026-09-22T07:45:30.2291990Z   Downloaded tokio-macros v2.7.2
+2026-09-22T07:45:30.2449601Z   Downloaded winapi-util v0.1.11
+2026-09-22T07:45:30.2593009Z   Downloaded sharded-slab v0.1.7
+2026-09-22T07:45:30.2988713Z   Downloaded serde v1.0.229
+2026-09-22T07:45:30.3366045Z   Downloaded serde_derive v1.0.229
+2026-09-22T07:45:30.9374895Z   Downloaded socket2 v0.6.5
+2026-09-22T07:45:30.9547870Z   Downloaded httparse v1.10.1
+2026-09-22T07:45:30.9831755Z   Downloaded memchr v2.8.3
+2026-09-22T07:45:31.0447061Z   Downloaded mio v1.2.3
+2026-09-22T07:45:31.1111750Z   Downloaded futures-util v0.3.34
+2026-09-22T07:45:31.2859825Z   Downloaded http v1.5.0
+2026-09-22T07:45:31.3236991Z   Downloaded hashbrown v0.17.1
+2026-09-22T07:45:31.3713060Z   Downloaded h2 v0.4.19
+2026-09-22T07:45:31.4345853Z   Downloaded serde_json v1.0.151
+2026-09-22T07:45:31.5210487Z   Downloaded tracing-subscriber v0.3.23
+2026-09-22T07:45:31.6058335Z   Downloaded regex-syntax v0.8.11
+2026-09-22T07:45:31.6554300Z   Downloaded syn v3.0.6
+2026-09-22T07:45:31.7591227Z   Downloaded syn v2.0.119
+2026-09-22T07:45:32.3678527Z   Downloaded tracing v0.1.44
+2026-09-22T07:45:32.8651777Z   Downloaded regex-automata v0.4.18
+2026-09-22T07:45:33.6670200Z   Downloaded windows-sys v0.61.2
+2026-09-22T07:45:35.8244100Z    Compiling windows-link v0.2.1
+2026-09-22T07:45:35.8316395Z    Compiling proc-macro2 v1.0.107
+2026-09-22T07:45:35.8317422Z    Compiling unicode-ident v1.0.26
+2026-09-22T07:45:35.8317948Z    Compiling quote v1.0.47
+2026-09-22T07:45:44.4085995Z    Compiling windows-sys v0.61.2
+2026-09-22T07:45:48.4623118Z    Compiling bytes v1.12.1
+2026-09-22T07:45:49.8783619Z    Compiling pin-project-lite v0.2.17
+2026-09-22T07:45:50.0325515Z    Compiling futures-core v0.3.34
+2026-09-22T07:45:50.3189891Z    Compiling mio v1.2.3
+2026-09-22T07:45:51.3448705Z    Compiling socket2 v0.6.5
+2026-09-22T07:45:52.2119580Z    Compiling itoa v1.0.18
+2026-09-22T07:45:52.2762078Z    Compiling once_cell v1.21.4
+2026-09-22T07:45:52.5217855Z    Compiling memchr v2.8.3
+2026-09-22T07:45:52.6474568Z    Compiling tracing-core v0.1.36
+2026-09-22T07:45:52.7008426Z    Compiling futures-sink v0.3.34
+2026-09-22T07:45:52.8007574Z    Compiling http v1.5.0
+2026-09-22T07:45:54.4547464Z    Compiling aho-corasick v1.1.5
+2026-09-22T07:45:54.8572512Z    Compiling regex-syntax v0.8.11
+2026-09-22T07:45:55.4786742Z    Compiling log v0.4.34
+2026-09-22T07:45:55.7076612Z    Compiling syn v3.0.6
+2026-09-22T07:45:55.7692649Z    Compiling syn v2.0.119
+2026-09-22T07:45:59.6227880Z    Compiling serde_core v1.0.229
+2026-09-22T07:45:59.7339683Z    Compiling regex-automata v0.4.18
+2026-09-22T07:46:00.1214100Z    Compiling winapi-util v0.1.11
+2026-09-22T07:46:00.5789090Z    Compiling hashbrown v0.17.1
+2026-09-22T07:46:01.5395997Z    Compiling slab v0.4.12
+2026-09-22T07:46:01.7569998Z    Compiling equivalent v1.0.2
+2026-09-22T07:46:01.8298792Z    Compiling zmij v1.0.23
+2026-09-22T07:46:02.1853109Z    Compiling httparse v1.10.1
+2026-09-22T07:46:02.5926111Z    Compiling tokio-macros v2.7.2
+2026-09-22T07:46:02.7297876Z    Compiling indexmap v2.14.2
+2026-09-22T07:46:03.7935022Z    Compiling regex v1.13.1
+2026-09-22T07:46:03.8772389Z    Compiling tokio v1.53.1 (D:\a\tokio\tokio\tokio)
+2026-09-22T07:46:04.1271502Z    Compiling tracing-attributes v0.1.31
+2026-09-22T07:46:04.6086322Z    Compiling termcolor v1.4.1
+2026-09-22T07:46:06.2024079Z    Compiling tracing v0.1.44
+2026-09-22T07:46:06.5293504Z    Compiling http-body v1.1.0
+2026-09-22T07:46:06.6919713Z    Compiling is-terminal v0.4.17
+2026-09-22T07:46:07.0360143Z    Compiling lazy_static v1.5.0
+2026-09-22T07:46:07.1217773Z    Compiling atomic-waker v1.1.2
+2026-09-22T07:46:07.2549966Z    Compiling humantime v2.4.0
+2026-09-22T07:46:07.7226480Z    Compiling fnv v1.0.7
+2026-09-22T07:46:07.8036101Z    Compiling serde_json v1.0.151
+2026-09-22T07:46:08.0618859Z    Compiling cfg-if v1.0.5
+2026-09-22T07:46:08.1172866Z    Compiling try-lock v0.2.5
+2026-09-22T07:46:08.2084195Z    Compiling smallvec v1.16.1
+2026-09-22T07:46:08.2890622Z    Compiling serde v1.0.229
+2026-09-22T07:46:08.4915352Z    Compiling want v0.3.1
+2026-09-22T07:46:08.6939473Z    Compiling thread_local v1.1.10
+2026-09-22T07:46:08.7288603Z    Compiling env_logger v0.10.2
+2026-09-22T07:46:09.0610796Z    Compiling sharded-slab v0.1.7
+2026-09-22T07:46:09.8942150Z    Compiling serde_derive v1.0.229
+2026-09-22T07:46:09.9121398Z    Compiling tracing-log v0.2.0
+2026-09-22T07:46:10.2752511Z    Compiling tokio-util v0.7.19 (D:\a\tokio\tokio\tokio-util)
+2026-09-22T07:46:10.3556809Z    Compiling tokio-stream v0.1.19 (D:\a\tokio\tokio\tokio-stream)
+2026-09-22T07:46:11.0472013Z    Compiling futures-channel v0.3.34
+2026-09-22T07:46:11.4692033Z    Compiling h2 v0.4.19
+2026-09-22T07:46:11.6025841Z    Compiling nu-ansi-term v0.50.3
+2026-09-22T07:46:12.2103777Z    Compiling httpdate v1.0.3
+2026-09-22T07:46:12.5919730Z    Compiling futures-task v0.3.34
+2026-09-22T07:46:12.8529369Z    Compiling percent-encoding v2.3.2
+2026-09-22T07:46:13.1665168Z    Compiling form_urlencoded v1.2.2
+2026-09-22T07:46:13.4211329Z    Compiling futures-util v0.3.34
+2026-09-22T07:46:16.1884257Z    Compiling tracing-subscriber v0.3.23
+2026-09-22T07:46:16.2218726Z    Compiling tokio-test v0.4.5 (D:\a\tokio\tokio\tokio-test)
+2026-09-22T07:46:16.9166765Z    Compiling pretty_env_logger v0.5.0
+2026-09-22T07:46:17.1466195Z    Compiling http-body-util v0.1.5
+2026-09-22T07:46:17.5285257Z    Compiling spmc v0.3.0
+2026-09-22T07:46:17.6440842Z    Compiling hyper v1.11.1 (D:\a\tokio\tokio\hyper)
+2026-09-22T07:47:05.7052370Z     Finished `test` profile [unoptimized + debuginfo] target(s) in 1m 39s
+2026-09-22T07:47:05.7777817Z      Running unittests src\lib.rs (target\debug\deps\hyper-a6ccd33df67edebe.exe)
+2026-09-22T07:47:05.7888060Z 
+2026-09-22T07:47:05.7888434Z running 121 tests
+2026-09-22T07:47:05.7906853Z test body::incoming::tests::channel_buffers_one ... ok
+2026-09-22T07:47:05.7907634Z test body::incoming::tests::channel_notices_closure ... ok
+2026-09-22T07:47:05.7908277Z test body::incoming::tests::channel_abort ... ok
+2026-09-22T07:47:05.7908978Z test body::incoming::tests::channel_abort_when_buffer_is_full ... ok
+2026-09-22T07:47:05.7911108Z test body::incoming::tests::channel_empty ... ok
+2026-09-22T07:47:05.7911751Z test body::incoming::tests::channel_ready ... ok
+2026-09-22T07:47:05.7913445Z test body::incoming::tests::channel_wanter ... ok
+2026-09-22T07:47:05.7914298Z test body::incoming::tests::size_hint ... ok
+2026-09-22T07:47:05.7915656Z test body::incoming::tests::test_size_of ... ok
+2026-09-22T07:47:05.7916514Z test client::conn::http2::tests::not_send_not_sync_executor_of_not_send_futures ... ignored
+2026-09-22T07:47:05.7917524Z test body::length::tests::sub_if_chunked ... ok
+2026-09-22T07:47:05.7918422Z test client::conn::http2::tests::send_not_sync_executor_of_not_send_futures ... ignored
+2026-09-22T07:47:05.7919632Z test client::conn::http2::tests::send_not_sync_executor_of_send_futures ... ignored
+2026-09-22T07:47:05.7920409Z test body::length::tests::sub_if_known ... ok
+2026-09-22T07:47:05.7921108Z test client::conn::http2::tests::send_sync_executor_of_non_send_futures ... ignored
+2026-09-22T07:47:05.7922003Z test client::conn::http2::tests::send_sync_executor_of_send_futures ... ignored
+2026-09-22T07:47:05.7924181Z test client::dispatch::tests::unbounded_sender_doesnt_bound_on_want ... ok
+2026-09-22T07:47:05.7925130Z test client::dispatch::tests::sender_checks_for_want_on_send ... ok
+2026-09-22T07:47:05.7927282Z test client::dispatch::tests::drop_receiver_sends_cancel_errors ... ok
+2026-09-22T07:47:05.7950561Z test common::buf::tests::to_bytes_eq ... ok
+2026-09-22T07:47:05.7952360Z test common::buf::tests::one_long_buf_to_bytes ... ok
+2026-09-22T07:47:05.7952998Z test common::buf::tests::to_bytes_longer ... ok
+2026-09-22T07:47:05.7955065Z test common::buf::tests::to_bytes_shorter ... ok
+2026-09-22T07:47:05.7957845Z test common::date::tests::test_date_len ... ok
+2026-09-22T07:47:05.8298433Z test common::io::rewind::tests::full_rewind ... ok
+2026-09-22T07:47:05.8299313Z test common::io::rewind::tests::partial_rewind ... ok
+2026-09-22T07:47:05.8300242Z test error::tests::error_satisfies_send_sync ... ok
+2026-09-22T07:47:05.8303292Z test error::tests::error_size_of ... ok
+2026-09-22T07:47:05.8304180Z test error::tests::h2_reason_nested ... ok
+2026-09-22T07:47:05.8306974Z test error::tests::h2_reason_one_level ... ok
+2026-09-22T07:47:05.8308355Z test error::tests::h2_reason_unknown ... ok
+2026-09-22T07:47:05.8309478Z test ext::h1_reason_phrase::tests::basic_valid ... ok
+2026-09-22T07:47:05.8312954Z test ext::h1_reason_phrase::tests::cr_invalid_err ... ok
+2026-09-22T07:47:05.8314617Z test ext::h1_reason_phrase::tests::empty_valid ... ok
+2026-09-22T07:47:05.8316192Z test ext::h1_reason_phrase::tests::newline_invalid_err ... ok
+2026-09-22T07:47:05.8318834Z test ext::h1_reason_phrase::tests::obs_text_valid ... ok
+2026-09-22T07:47:05.8323474Z test headers::tests::te_is_trailers_accepts_comma_separated_values ... ok
+2026-09-22T07:47:05.8327037Z test headers::tests::te_is_trailers_accepts_multiple_header_lines ... ok
+2026-09-22T07:47:05.8330023Z test headers::tests::te_is_trailers_rejects_missing_trailers_token ... ok
+2026-09-22T07:47:05.8333969Z test proto::h1::conn::tests::client_rejects_eof_while_busy ... ok
+2026-09-22T07:47:05.8338108Z test proto::h1::conn::tests::client_request_connection_close_disables_keep_alive ... ok
+2026-09-22T07:47:05.8340714Z test proto::h1::conn::tests::closed_conn_cannot_read_or_write ... ok
+2026-09-22T07:47:05.8344548Z test proto::h1::conn::tests::conn_accepts_eof_when_idle ... ok
+2026-09-22T07:47:05.8349256Z test proto::h1::conn::tests::conn_reads_body_and_reports_end ... ok
+2026-09-22T07:47:05.8352834Z test proto::h1::conn::tests::conn_reads_empty_response_before_eof ... ok
+2026-09-22T07:47:05.8357044Z test proto::h1::conn::tests::conn_reads_partial_request_head ... ok
+2026-09-22T07:47:05.8360590Z test proto::h1::conn::tests::conn_reads_request_head ... ok
+2026-09-22T07:47:05.8364396Z test proto::h1::conn::tests::conn_rejects_eof_during_partial_head ... ok
+2026-09-22T07:47:05.8367999Z test proto::h1::conn::tests::conn_writes_chunked_body ... ok
+2026-09-22T07:47:05.8371107Z test proto::h1::conn::tests::server_accepts_eof_while_busy ... ok
+2026-09-22T07:47:05.8374403Z test proto::h1::decode::tests::test_decode_trailers ... ok
+2026-09-22T07:47:05.8377562Z test proto::h1::decode::tests::test_decode_trailers_preserves_duplicate_values ... ok
+2026-09-22T07:47:05.8382992Z test proto::h1::decode::tests::test_read_chunk_size ... ok
+2026-09-22T07:47:05.8388418Z test proto::h1::decode::tests::test_read_chunked_after_eof ... ok
+2026-09-22T07:47:05.8900710Z test common::buf::tests::buf_to_bytes_too_many - should panic ... ok
+2026-09-22T07:47:05.8906686Z test proto::h1::decode::tests::test_read_chunked_early_eof ... ok
+2026-09-22T07:47:05.8915292Z test ext::h1_reason_phrase::tests::cr_invalid_panic - should panic ... ok
+2026-09-22T07:47:05.8921757Z test proto::h1::decode::tests::test_read_chunked_single_read ... ok
+2026-09-22T07:47:05.8927570Z test proto::h1::decode::tests::test_read_chunked_trailer_with_missing_lf ... ok
+2026-09-22T07:47:05.8930960Z test ext::h1_reason_phrase::tests::newline_invalid_panic - should panic ... ok
+2026-09-22T07:47:05.8931934Z test proto::h1::decode::tests::test_read_chunked_with_missing_zero_digit ... ok
+2026-09-22T07:47:05.8939103Z test proto::h1::decode::tests::test_read_chunked_extensions_over_limit ... ok
+2026-09-22T07:47:05.8942291Z test proto::h1::decode::tests::test_read_sized_early_eof ... ok
+2026-09-22T07:47:05.8947925Z test proto::h1::decode::tests::test_trailer_max_header_size_huge_trailer ... ok
+2026-09-22T07:47:05.8952799Z test proto::h1::decode::tests::test_trailer_max_header_size_many_small_trailers ... ok
+2026-09-22T07:47:05.8957184Z test proto::h1::decode::tests::test_trailer_max_headers_allows_exact_limit ... ok
+2026-09-22T07:47:05.8961634Z test proto::h1::decode::tests::test_trailer_max_headers_enforced ... ok
+2026-09-22T07:47:05.8966731Z test proto::h1::dispatch::tests::body_empty_chunks_ignored ... ok
+2026-09-22T07:47:05.8972703Z test proto::h1::dispatch::tests::client_flushing_is_not_ready_for_next_request ... ok
+2026-09-22T07:47:05.8976420Z test proto::h1::dispatch::tests::client_read_bytes_before_writing_request ... ok
+2026-09-22T07:47:05.8979603Z test proto::h1::encode::tests::chunked ... ok
+2026-09-22T07:47:05.8983012Z test proto::h1::encode::tests::chunked_trailers_case_insensitive_matching ... ok
+2026-09-22T07:47:05.8986314Z test proto::h1::encode::tests::chunked_with_duplicate_trailer_values ... ok
+2026-09-22T07:47:05.8989436Z test proto::h1::encode::tests::chunked_with_invalid_trailers ... ok
+2026-09-22T07:47:05.8992801Z test proto::h1::encode::tests::chunked_with_multiple_trailer_headers ... ok
+2026-09-22T07:47:05.8995474Z test proto::h1::encode::tests::chunked_with_no_trailer_header ... ok
+2026-09-22T07:47:05.8999036Z test proto::h1::encode::tests::chunked_with_title_case_headers ... ok
+2026-09-22T07:47:05.9001529Z test proto::h1::encode::tests::chunked_with_valid_trailers ... ok
+2026-09-22T07:47:05.9004165Z test proto::h1::encode::tests::eof ... ok
+2026-09-22T07:47:05.9007110Z test proto::h1::encode::tests::length ... ok
+2026-09-22T07:47:05.9007741Z test proto::h1::io::tests::iobuf_write_empty_slice ... ignored
+2026-09-22T07:47:05.9011440Z test proto::h1::io::tests::parse_reads_until_blocked ... ok
+2026-09-22T07:47:05.9014029Z test proto::h1::io::tests::read_strategy_adaptive_decrements ... ok
+2026-09-22T07:47:05.9016720Z test proto::h1::io::tests::read_strategy_adaptive_increments ... ok
+2026-09-22T07:47:05.9020340Z test proto::h1::io::tests::read_strategy_adaptive_max_fuzz ... ok
+2026-09-22T07:47:05.9023186Z test proto::h1::io::tests::read_strategy_adaptive_stays_the_same ... ok
+2026-09-22T07:47:05.9027293Z test proto::h1::io::tests::write_buf_flatten ... ok
+2026-09-22T07:47:05.9030349Z test proto::h1::io::tests::write_buf_flatten_partially_flushed ... ok
+2026-09-22T07:47:05.9034321Z test proto::h1::io::tests::write_buf_queue_disable_auto ... ok
+2026-09-22T07:47:05.9049488Z test proto::h1::io::tests::write_buf_requires_non_empty_bufs - should panic ... ok
+2026-09-22T07:47:05.9052370Z test proto::h1::role::tests::parse_header_htabs ... ok
+2026-09-22T07:47:05.9091438Z test proto::h1::role::tests::parse_too_large_headers ... ok
+2026-09-22T07:47:05.9095284Z test proto::h1::role::tests::test_client_obs_fold_line ... ok
+2026-09-22T07:47:05.9097348Z test proto::h1::role::tests::test_client_request_encode_orig_and_title_case ... ok
+2026-09-22T07:47:05.9100588Z test proto::h1::role::tests::test_client_request_encode_orig_case ... ok
+2026-09-22T07:47:05.9103469Z test proto::h1::role::tests::test_client_request_encode_title_case ... ok
+2026-09-22T07:47:05.9107818Z test proto::h1::role::tests::test_decoder_request ... ok
+2026-09-22T07:47:05.9112035Z test proto::h1::role::tests::test_decoder_response ... ok
+2026-09-22T07:47:05.9115037Z test proto::h1::role::tests::test_disabled_date_header ... ok
+2026-09-22T07:47:05.9118509Z test proto::h1::role::tests::test_is_complete_fast ... ok
+2026-09-22T07:47:05.9121503Z test proto::h1::role::tests::test_parse_accepts_lf_crlf_terminator ... ok
+2026-09-22T07:47:05.9125296Z test proto::h1::role::tests::test_parse_allow_request_with_multiple_spaces_in_request_line ... ok
+2026-09-22T07:47:05.9128296Z test proto::h1::role::tests::test_parse_allow_response_with_spaces_before_colons ... ok
+2026-09-22T07:47:05.9131531Z test proto::h1::role::tests::test_parse_preserve_header_case_in_request ... ok
+2026-09-22T07:47:05.9134625Z test proto::h1::role::tests::test_parse_reject_request_with_multiple_spaces_in_request_line ... ok
+2026-09-22T07:47:05.9137732Z test proto::h1::role::tests::test_parse_reject_response_with_spaces_before_colons ... ok
+2026-09-22T07:47:05.9140823Z test proto::h1::role::tests::test_parse_request ... ok
+2026-09-22T07:47:05.9143724Z test proto::h1::role::tests::test_parse_request_errors ... ok
+2026-09-22T07:47:05.9146895Z test proto::h1::role::tests::test_parse_response ... ok
+2026-09-22T07:47:05.9149915Z test proto::h1::role::tests::test_parse_response_h09_allowed ... ok
+2026-09-22T07:47:05.9152896Z test proto::h1::role::tests::test_parse_response_h09_rejected ... ok
+2026-09-22T07:47:05.9155758Z test proto::h1::role::tests::test_server_encode_connect_method ... ok
+2026-09-22T07:47:05.9158855Z test proto::h1::role::tests::test_server_response_encode_orig_and_title_case ... ok
+2026-09-22T07:47:05.9161717Z test proto::h1::role::tests::test_server_response_encode_orig_case ... ok
+2026-09-22T07:47:05.9164580Z test proto::h1::role::tests::test_server_response_encode_title_case ... ok
+2026-09-22T07:47:05.9167333Z test proto::h1::role::tests::test_write_headers_orig_case_empty_value ... ok
+2026-09-22T07:47:05.9170149Z test proto::h1::role::tests::test_write_headers_orig_case_multiple_entries ... ok
+2026-09-22T07:47:05.9172531Z test upgrade::tests::upgraded_downcast ... ok
+2026-09-22T07:47:05.9815998Z test proto::h1::decode::tests::test_read_eof_async ... ok
+2026-09-22T07:47:05.9853006Z test proto::h1::decode::tests::test_read_length_async ... ok
+2026-09-22T07:47:06.1440586Z test proto::h1::decode::tests::test_read_chunked_async ... ok
+2026-09-22T07:47:06.1441127Z 
+2026-09-22T07:47:06.1441579Z test result: ok. 115 passed; 0 failed; 6 ignored; 0 measured; 0 filtered out; finished in 0.36s
+2026-09-22T07:47:06.1442268Z 
+2026-09-22T07:47:06.1491209Z      Running tests\client.rs (target\debug\deps\client-46af17d2ef9a9105.exe)
+2026-09-22T07:47:06.1608330Z 
+2026-09-22T07:47:06.1608626Z running 66 tests
+2026-09-22T07:47:06.1674772Z test client_always_rejects_http09 ... ok
+2026-09-22T07:47:06.1717807Z test client_connect_method_with_absolute_uri ... ok
+2026-09-22T07:47:06.1719245Z test client_connect_method ... ok
+2026-09-22T07:47:06.1719728Z test client_100_continue ... ok
+2026-09-22T07:47:06.1721816Z test client_allows_http09_when_requested ... ok
+2026-09-22T07:47:06.1737633Z test client_error_parse_status_out_of_range ... ok
+2026-09-22T07:47:06.1746076Z test client_error_parse_status_syntactically_invalid ... ok
+2026-09-22T07:47:06.1751323Z test client_error_parse_version ... ok
+2026-09-22T07:47:06.1759467Z test client_error_unexpected_eof ... ok
+2026-09-22T07:47:06.1770287Z test client_get ... ok
+2026-09-22T07:47:06.1771711Z test client_get_query ... ok
+2026-09-22T07:47:06.1784215Z test client_get_req_body_chunked ... ok
+2026-09-22T07:47:06.1794075Z test client_get_req_body_chunked_http10 ... ok
+2026-09-22T07:47:06.1796445Z test client_get_req_body_chunked_with_multiple_trailers ... ok
+2026-09-22T07:47:06.1808559Z test client_get_req_body_chunked_with_trailer ... ok
+2026-09-22T07:47:06.1816167Z test client_get_req_body_sized ... ok
+2026-09-22T07:47:06.1823078Z test client_get_req_body_implicitly_empty ... ok
+2026-09-22T07:47:06.1828798Z test client_get_req_body_unknown ... ok
+2026-09-22T07:47:06.1834625Z test client_h1_rejects_http2 ... ok
+2026-09-22T07:47:06.1837275Z test client_get_req_body_unknown_http10 ... ok
+2026-09-22T07:47:06.1872905Z test client_error_parse_too_large ... ok
+2026-09-22T07:47:06.1878713Z test client_obs_fold_headers ... ok
+2026-09-22T07:47:06.1916647Z test client_post_chunked ... ok
+2026-09-22T07:47:06.1929986Z test client_post_empty ... ok
+2026-09-22T07:47:06.1945394Z test client_post_req_body_chunked_with_trailer ... ok
+2026-09-22T07:47:06.1959835Z test client_post_req_body_chunked_with_trailer_titlecase ... ok
+2026-09-22T07:47:06.1974141Z test client_post_sized ... ok
+2026-09-22T07:47:06.1988862Z test client_post_unknown ... ok
+2026-09-22T07:47:06.1995102Z test client_requires_absolute_uri ... ok
+2026-09-22T07:47:06.2012122Z test client_res_body_chunked_with_pathological_trailers ... ok
+2026-09-22T07:47:06.2026937Z test client_res_body_chunked_with_trailer ... ok
+2026-09-22T07:47:06.2041409Z test client_res_body_chunked_with_trailer_titlecase ... ok
+2026-09-22T07:47:06.2056409Z test client_response_transfer_encoding_not_chunked ... ok
+2026-09-22T07:47:06.2071291Z test client_set_host_false ... ok
+2026-09-22T07:47:06.2085834Z test client_set_http1_title_case_headers ... ok
+2026-09-22T07:47:06.2100336Z test client_transfer_encoding_repair ... ok
+2026-09-22T07:47:06.2118796Z test conn::aborted_body_isnt_completed ... ok
+2026-09-22T07:47:06.3144277Z test conn::client_100_then_http09 ... ok
+2026-09-22T07:47:06.3159701Z test conn::client_on_informational_ext ... ok
+2026-09-22T07:47:06.3735216Z test client_handles_contentlength_values_on_same_line ... ok
+2026-09-22T07:47:06.3757871Z test conn::dropped_conn_sends_incomplete_body_error ... ok
+2026-09-22T07:47:06.3773610Z test conn::get ... ok
+2026-09-22T07:47:06.3789323Z test conn::get_custom_reason_phrase ... ok
+2026-09-22T07:47:06.3829042Z test client_head_ignores_body ... ok
+2026-09-22T07:47:06.3843669Z test conn::h2_connect_rejected ... ok
+2026-09-22T07:47:06.3887124Z test conn::h2_idle_stream_does_not_pin_connection_window ... ok
+2026-09-22T07:47:06.3895756Z test client_pipeline_responses_extra ... ok
+2026-09-22T07:47:06.3961465Z test conn::h2_connect ... ok
+2026-09-22T07:47:06.3975655Z test conn::h2_pipe_task_cancelled_on_response_future_drop ... ok
+2026-09-22T07:47:06.5074891Z test conn::http1_half_closed_peer_with_open_request_body_does_not_spin ... ok
+2026-09-22T07:47:06.5236435Z test conn::connect_method ... ok
+2026-09-22T07:47:06.6023712Z test conn::http1_conn_coerces_http2_request ... ok
+2026-09-22T07:47:06.6125362Z test conn::http2_detect_conn_eof ... ok
+2026-09-22T07:47:07.4164828Z test conn::http2_connect_detect_close ... FAILED
+2026-09-22T07:47:08.5506719Z test conn::http2_keep_alive_closes_open_streams ... ok
+2026-09-22T07:47:08.5529909Z test conn::http2_responds_before_consuming_request_body_no_trailers ... ok
+2026-09-22T07:47:08.5549718Z test conn::http2_responds_before_consuming_request_body_with_trailers ... ok
+2026-09-22T07:47:08.6197682Z test conn::http2_keep_alive_detects_unresponsive_server ... ok
+2026-09-22T07:47:08.7579991Z test conn::incoming_content_length ... ok
+2026-09-22T07:47:08.7666317Z test conn::test_body_panics ... ok
+2026-09-22T07:47:08.7672810Z test conn::test_try_send_request ... ok
+2026-09-22T07:47:08.8347058Z test conn::pipeline ... ok
+2026-09-22T07:47:08.9698128Z test conn::upgrade ... ok
+2026-09-22T07:47:09.0406151Z test conn::uri_absolute_form ... ok
+2026-09-22T07:47:10.6239000Z test conn::http2_keep_alive_not_while_idle ... ok
+2026-09-22T07:47:11.4312623Z test conn::http2_keep_alive_with_responsive_server ... ok
+2026-09-22T07:47:11.4313612Z 
+2026-09-22T07:47:11.4313767Z failures:
+2026-09-22T07:47:11.4314148Z 
+2026-09-22T07:47:11.4314564Z ---- conn::http2_connect_detect_close stdout ----
+2026-09-22T07:47:11.4314945Z 
+2026-09-22T07:47:11.4316249Z thread 'conn::http2_connect_detect_close' (8228) panicked at tests\client.rs:2524:14:
+2026-09-22T07:47:11.4316930Z drop with 1s: Elapsed(())
+2026-09-22T07:47:11.4317326Z stack backtrace:
+2026-09-22T07:47:11.4317635Z    0: std::panicking::panic_handler
+2026-09-22T07:47:11.4318304Z              at /rustc/48a229ceaefd4985c50990b14116b6d856af0985/library\std\src\panicking.rs:679
+2026-09-22T07:47:11.4319037Z    1: core::panicking::panic_fmt
+2026-09-22T07:47:11.4319786Z              at /rustc/48a229ceaefd4985c50990b14116b6d856af0985/library\core\src\panicking.rs:80
+2026-09-22T07:47:11.4320654Z    2: core::result::unwrap_failed
+2026-09-22T07:47:11.4321523Z              at /rustc/48a229ceaefd4985c50990b14116b6d856af0985/library\core\src\result.rs:1870
+2026-09-22T07:47:11.4323684Z    3: enum2$<core::result::Result<enum2$<core::result::Result<tuple$<>,futures_channel::oneshot::Canceled> >,tokio::time::error::Elapsed> >::expect<enum2$<core::result::Result<tuple$<>,futures_channel::oneshot::Canceled> >,tokio::time::error::Elapsed>
+2026-09-22T07:47:11.4325217Z              at /rustc/48a229ceaefd4985c50990b14116b6d856af0985/library\core\src\result.rs:1183
+2026-09-22T07:47:11.4326177Z    4: client::conn::http2_connect_detect_close::async_block$0
+2026-09-22T07:47:11.4326559Z              at .\tests\client.rs:2524
+2026-09-22T07:47:11.4327101Z    5: core::future::future::impl$1::poll<ref_mut$<dyn$<core::future::future::Future<assoc$<Output,tuple$<> > > > > >
+2026-09-22T07:47:11.4327867Z              at /rustc/48a229ceaefd4985c50990b14116b6d856af0985/library\core\src\future\future.rs:133
+2026-09-22T07:47:11.4328767Z    6: tokio::runtime::park::impl$4::block_on::closure$0<core::pin::Pin<ref_mut$<dyn$<core::future::future::Future<assoc$<Output,tuple$<> > > > > > >
+2026-09-22T07:47:11.4329869Z              at D:\a\tokio\tokio\tokio\src\runtime\park.rs:284
+2026-09-22T07:47:11.4330220Z    7: tokio::task::coop::with_budget
+2026-09-22T07:47:11.4330548Z              at D:\a\tokio\tokio\tokio\src\task\coop\mod.rs:167
+2026-09-22T07:47:11.4330891Z    8: tokio::task::coop::budget
+2026-09-22T07:47:11.4331186Z              at D:\a\tokio\tokio\tokio\src\task\coop\mod.rs:133
+2026-09-22T07:47:11.4331850Z    9: tokio::runtime::park::CachedParkThread::block_on<core::pin::Pin<ref_mut$<dyn$<core::future::future::Future<assoc$<Output,tuple$<> > > > > > >
+2026-09-22T07:47:11.4332516Z              at D:\a\tokio\tokio\tokio\src\runtime\park.rs:284
+2026-09-22T07:47:11.4333207Z   10: tokio::runtime::context::blocking::BlockingRegionGuard::block_on<core::pin::Pin<ref_mut$<dyn$<core::future::future::Future<assoc$<Output,tuple$<> > > > > > >
+2026-09-22T07:47:11.4333934Z              at D:\a\tokio\tokio\tokio\src\runtime\context\blocking.rs:66
+2026-09-22T07:47:11.4334663Z   11: tokio::runtime::scheduler::multi_thread::impl$0::block_on::closure$0<core::pin::Pin<ref_mut$<dyn$<core::future::future::Future<assoc$<Output,tuple$<> > > > > > >
+2026-09-22T07:47:11.4335411Z              at D:\a\tokio\tokio\tokio\src\runtime\scheduler\multi_thread\mod.rs:90
+2026-09-22T07:47:11.4336377Z   12: tokio::runtime::context::runtime::enter_runtime<tokio::runtime::scheduler::multi_thread::impl$0::block_on::closure_env$0<core::pin::Pin<ref_mut$<dyn$<core::future::future::Future<assoc$<Output,tuple$<> > > > > > >,tuple$<> >
+2026-09-22T07:47:11.4337309Z              at D:\a\tokio\tokio\tokio\src\runtime\context\runtime.rs:65
+2026-09-22T07:47:11.4338007Z   13: tokio::runtime::scheduler::multi_thread::MultiThread::block_on<core::pin::Pin<ref_mut$<dyn$<core::future::future::Future<assoc$<Output,tuple$<> > > > > > >
+2026-09-22T07:47:11.4338735Z              at D:\a\tokio\tokio\tokio\src\runtime\scheduler\multi_thread\mod.rs:89
+2026-09-22T07:47:11.4339526Z   14: tokio::runtime::runtime::Runtime::block_on_inner<core::pin::Pin<ref_mut$<dyn$<core::future::future::Future<assoc$<Output,tuple$<> > > > > > >
+2026-09-22T07:47:11.4340167Z              at D:\a\tokio\tokio\tokio\src\runtime\runtime.rs:381
+2026-09-22T07:47:11.4340783Z   15: tokio::runtime::runtime::Runtime::block_on<core::pin::Pin<ref_mut$<dyn$<core::future::future::Future<assoc$<Output,tuple$<> > > > > > >
+2026-09-22T07:47:11.4341390Z              at D:\a\tokio\tokio\tokio\src\runtime\runtime.rs:348
+2026-09-22T07:47:11.4341722Z   16: client::conn::http2_connect_detect_close
+2026-09-22T07:47:11.4342007Z              at .\tests\client.rs:2525
+2026-09-22T07:47:11.4342306Z   17: client::conn::http2_connect_detect_close::closure$0
+2026-09-22T07:47:11.4342610Z              at .\tests\client.rs:2455
+2026-09-22T07:47:11.4343070Z   18: core::ops::function::FnOnce::call_once<client::conn::http2_connect_detect_close::closure_env$0,tuple$<> >
+2026-09-22T07:47:11.4343735Z              at /rustc/48a229ceaefd4985c50990b14116b6d856af0985/library\core\src\ops\function.rs:250
+2026-09-22T07:47:11.4344210Z   19: core::ops::function::FnOnce::call_once
+2026-09-22T07:47:11.4344661Z              at /rustc/48a229ceaefd4985c50990b14116b6d856af0985/library\core\src\ops\function.rs:250
+2026-09-22T07:47:11.4345263Z note: Some details are omitted, run with `RUST_BACKTRACE=full` for a verbose backtrace.
+2026-09-22T07:47:11.4345681Z 
+2026-09-22T07:47:11.4345701Z 
+2026-09-22T07:47:11.4346012Z failures:
+2026-09-22T07:47:11.4346221Z     conn::http2_connect_detect_close
+2026-09-22T07:47:11.4346404Z 
+2026-09-22T07:47:11.4346659Z test result: FAILED. 65 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 5.27s
+2026-09-22T07:47:11.4347021Z 
+2026-09-22T07:47:11.4417823Z error: test failed, to rerun pass `--test client`
+2026-09-22T07:47:11.4560531Z ##[error]Process completed with exit code 101.
+2026-09-22T07:47:11.4814496Z Post job cleanup.
+2026-09-22T07:47:11.6889549Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-09-22T07:47:11.7166537Z git version 2.55.0.windows.5
+2026-09-22T07:47:11.7231876Z Temporarily overriding HOME='D:\a\_temp\c94620c3-02f2-4477-889d-66dd78d15d72' before making global git config changes
+2026-09-22T07:47:11.7232920Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-22T07:47:11.7242818Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\tokio\tokio
+2026-09-22T07:47:11.7540122Z Removing SSH command configuration
+2026-09-22T07:47:11.7551000Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-09-22T07:47:11.7867531Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-09-22T07:47:12.3426225Z Removing HTTP extra header
+2026-09-22T07:47:12.3440478Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-22T07:47:12.3760539Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-09-22T07:47:12.9229058Z Removing includeIf entries pointing to credentials config files
+2026-09-22T07:47:12.9240703Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-22T07:47:12.9509210Z includeif.gitdir:D:/a/tokio/tokio/.git.path
+2026-09-22T07:47:12.9509957Z includeif.gitdir:D:/a/tokio/tokio/.git/worktrees/*.path
+2026-09-22T07:47:12.9510433Z includeif.gitdir:/github/workspace/.git.path
+2026-09-22T07:47:12.9510907Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-09-22T07:47:12.9553811Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:D:/a/tokio/tokio/.git.path
+2026-09-22T07:47:12.9817728Z D:\a\_temp\git-credentials-090d298f-96b1-4006-8d75-8f0cc878e161.config
+2026-09-22T07:47:12.9863330Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:D:/a/tokio/tokio/.git.path D\:\\a\\_temp\\git\-credentials\-090d298f\-96b1\-4006\-8d75\-8f0cc878e161\.config
+2026-09-22T07:47:13.0176255Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:D:/a/tokio/tokio/.git/worktrees/*.path
+2026-09-22T07:47:13.0439710Z D:\a\_temp\git-credentials-090d298f-96b1-4006-8d75-8f0cc878e161.config
+2026-09-22T07:47:13.0482448Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:D:/a/tokio/tokio/.git/worktrees/*.path D\:\\a\\_temp\\git\-credentials\-090d298f\-96b1\-4006\-8d75\-8f0cc878e161\.config
+2026-09-22T07:47:13.0781742Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-09-22T07:47:13.1043757Z /github/runner_temp/git-credentials-090d298f-96b1-4006-8d75-8f0cc878e161.config
+2026-09-22T07:47:13.1087135Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-090d298f\-96b1\-4006\-8d75\-8f0cc878e161\.config
+2026-09-22T07:47:13.1384909Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-09-22T07:47:13.1634269Z /github/runner_temp/git-credentials-090d298f-96b1-4006-8d75-8f0cc878e161.config
+2026-09-22T07:47:13.1711199Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-090d298f\-96b1\-4006\-8d75\-8f0cc878e161\.config
+2026-09-22T07:47:13.2022867Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-09-22T07:47:13.7787912Z Removing credentials config 'D:\a\_temp\git-credentials-090d298f-96b1-4006-8d75-8f0cc878e161.config'
+2026-09-22T07:47:13.8046786Z Cleaning up orphan processes
+2026-09-22T07:47:13.8586742Z Terminate orphan process: pid (6120) (vctip)

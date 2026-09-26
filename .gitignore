@@ -18,6 +18,9 @@ runs/*
 !runs/README.md
 results/*
 !results/README.md
+# The story 3.2 Jev eval receipts are committed evidence, not run artifacts.
+!results/jev-eval/
+!results/jev-eval/**
 deploy/smoke/*
 !deploy/smoke/README.md
 

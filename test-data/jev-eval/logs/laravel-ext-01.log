@@ -1,0 +1,60 @@
+﻿2026-08-02T15:14:18.6260838Z Current runner version: '2.336.0'
+2026-08-02T15:14:18.6295161Z ##[group]Runner Image Provisioner
+2026-08-02T15:14:18.6296368Z Hosted Compute Agent
+2026-08-02T15:14:18.6297261Z Version: 20260707.563
+2026-08-02T15:14:18.6298231Z Commit: 02667638d2b423fbc733a8e32a88b44996a3ba6e
+2026-08-02T15:14:18.6299408Z Build Date: 2026-07-07T19:33:50Z
+2026-08-02T15:14:18.6300408Z Worker ID: {56b81909-ca7b-452a-b192-8067a5a07d47}
+2026-08-02T15:14:18.6301518Z Azure Region: eastus
+2026-08-02T15:14:18.6302462Z ##[endgroup]
+2026-08-02T15:14:18.6304487Z ##[group]Operating System
+2026-08-02T15:14:18.6305886Z Ubuntu
+2026-08-02T15:14:18.6306660Z 24.04.4
+2026-08-02T15:14:18.6307376Z LTS
+2026-08-02T15:14:18.6308278Z ##[endgroup]
+2026-08-02T15:14:18.6309085Z ##[group]Runner Image
+2026-08-02T15:14:18.6310041Z Image: ubuntu-24.04
+2026-08-02T15:14:18.6310930Z Version: 20260720.247.2
+2026-08-02T15:14:18.6312989Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260720.247/images/ubuntu/Ubuntu2404-Readme.md
+2026-08-02T15:14:18.6315632Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260720.247
+2026-08-02T15:14:18.6317178Z ##[endgroup]
+2026-08-02T15:14:18.6318818Z ##[group]GITHUB_TOKEN Permissions
+2026-08-02T15:14:18.6321730Z Contents: read
+2026-08-02T15:14:18.6322584Z Metadata: read
+2026-08-02T15:14:18.6323475Z ##[endgroup]
+2026-08-02T15:14:18.6326627Z Secret source: None
+2026-08-02T15:14:18.6328453Z Prepare workflow directory
+2026-08-02T15:14:18.6916639Z Prepare all required actions
+2026-08-02T15:14:18.6982812Z Getting action download info
+2026-08-02T15:14:18.8731820Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-08-02T15:14:19.2108587Z Complete job name: MySQL 8
+2026-08-02T15:14:19.2595180Z ##[group]Checking docker version
+2026-08-02T15:14:19.2608753Z ##[command]/usr/bin/docker version --format '{{.Server.APIVersion}}'
+2026-08-02T15:14:20.4016299Z '1.48'
+2026-08-02T15:14:20.4033910Z Docker daemon API version: '1.48'
+2026-08-02T15:14:20.4035589Z ##[command]/usr/bin/docker version --format '{{.Client.APIVersion}}'
+2026-08-02T15:14:20.4216187Z '1.48'
+2026-08-02T15:14:20.4229047Z Docker client API version: '1.48'
+2026-08-02T15:14:20.4236006Z ##[endgroup]
+2026-08-02T15:14:20.4239119Z ##[group]Clean up resources from previous jobs
+2026-08-02T15:14:20.4245572Z ##[command]/usr/bin/docker ps --all --quiet --no-trunc --filter "label=46c3b5"
+2026-08-02T15:14:20.4431766Z ##[command]/usr/bin/docker network prune --force --filter "label=46c3b5"
+2026-08-02T15:14:20.4565998Z ##[endgroup]
+2026-08-02T15:14:20.4567300Z ##[group]Create local container network
+2026-08-02T15:14:20.4579380Z ##[command]/usr/bin/docker network create --label 46c3b5 github_network_28cc01f97cd04c978159e37f94a2cb92
+2026-08-02T15:14:20.5076073Z aaf0f852d90fb191e39e9a83eb0cf6eb986c4b647e2e5ec750a2beef8e8b3f5f
+2026-08-02T15:14:20.5093107Z ##[endgroup]
+2026-08-02T15:14:20.5121800Z ##[group]Starting mysql service container
+2026-08-02T15:14:20.5143813Z ##[command]/usr/bin/docker pull mysql:8
+2026-08-02T15:14:35.5369240Z Error response from daemon: Get "https://registry-1.docker.io/v2/": net/http: request canceled while waiting for connection (Client.Timeout exceeded while awaiting headers)
+2026-08-02T15:14:35.5400327Z ##[warning]Docker pull failed with exit code 1, back off 4.623 seconds before retry.
+2026-08-02T15:14:40.1639939Z ##[command]/usr/bin/docker pull mysql:8
+2026-08-02T15:14:55.1812087Z Error response from daemon: Get "https://registry-1.docker.io/v2/": net/http: request canceled while waiting for connection (Client.Timeout exceeded while awaiting headers)
+2026-08-02T15:14:55.1826688Z ##[warning]Docker pull failed with exit code 1, back off 4.218 seconds before retry.
+2026-08-02T15:14:59.4007017Z ##[command]/usr/bin/docker pull mysql:8
+2026-08-02T15:15:14.4159792Z Error response from daemon: Get "https://registry-1.docker.io/v2/": net/http: request canceled while waiting for connection (Client.Timeout exceeded while awaiting headers)
+2026-08-02T15:15:14.4261539Z ##[error]Docker pull failed with exit code 1
+2026-08-02T15:15:14.4367764Z Remove container network: github_network_28cc01f97cd04c978159e37f94a2cb92
+2026-08-02T15:15:14.4372118Z ##[command]/usr/bin/docker network rm github_network_28cc01f97cd04c978159e37f94a2cb92
+2026-08-02T15:15:14.5393811Z github_network_28cc01f97cd04c978159e37f94a2cb92
+2026-08-02T15:15:14.5473050Z Cleaning up orphan processes

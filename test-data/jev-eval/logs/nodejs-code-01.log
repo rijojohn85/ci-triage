@@ -1,0 +1,342 @@
+﻿2026-09-25T08:34:34.7540105Z Current runner version: '2.337.0'
+2026-09-25T08:34:34.7566740Z ##[group]Runner Image Provisioner
+2026-09-25T08:34:34.7567693Z Hosted Compute Agent
+2026-09-25T08:34:34.7568257Z Version: 20260828.587
+2026-09-25T08:34:34.7569333Z Commit: abac92662cab4cc7352de4f9f9d2e2419aad9c29
+2026-09-25T08:34:34.7570080Z Build Date: 2026-08-28T16:44:25Z
+2026-09-25T08:34:34.7570738Z Worker ID: {92606238-24ef-4957-bbcc-44b9f3c2afec}
+2026-09-25T08:34:34.7571482Z Azure Region: westus3
+2026-09-25T08:34:34.7572018Z ##[endgroup]
+2026-09-25T08:34:34.7573780Z ##[group]VM Image
+2026-09-25T08:34:34.7574381Z - OS: Linux (x64)
+2026-09-25T08:34:34.7574937Z - Source: Docker
+2026-09-25T08:34:34.7575503Z - Name: ubuntu:24.04
+2026-09-25T08:34:34.7576054Z - Version: 20260922.6.5
+2026-09-25T08:34:34.7576612Z ##[endgroup]
+2026-09-25T08:34:34.7577698Z ##[group]GITHUB_TOKEN Permissions
+2026-09-25T08:34:34.7579907Z Contents: read
+2026-09-25T08:34:34.7580582Z Metadata: read
+2026-09-25T08:34:34.7581146Z ##[endgroup]
+2026-09-25T08:34:34.7583367Z Secret source: None
+2026-09-25T08:34:34.7584382Z Cache mode: write
+2026-09-25T08:34:34.7585061Z Prepare workflow directory
+2026-09-25T08:34:34.8097994Z Prepare all required actions
+2026-09-25T08:34:34.8154968Z Getting action download info
+2026-09-25T08:34:35.3387301Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-09-25T08:34:35.5554541Z Download action repository 'actions/setup-node@820762786026740c76f36085b0efc47a31fe5020' (SHA:820762786026740c76f36085b0efc47a31fe5020)
+2026-09-25T08:34:35.8429778Z Complete job name: lint-js-and-md
+2026-09-25T08:34:35.9081871Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+2026-09-25T08:34:35.9083015Z with:
+2026-09-25T08:34:35.9083470Z   persist-credentials: false
+2026-09-25T08:34:35.9083999Z   repository: nodejs/node
+2026-09-25T08:34:35.9087887Z   token: ***
+2026-09-25T08:34:35.9088326Z   ssh-strict: true
+2026-09-25T08:34:35.9089045Z   ssh-user: git
+2026-09-25T08:34:35.9089497Z   clean: true
+2026-09-25T08:34:35.9089941Z   sparse-checkout-cone-mode: true
+2026-09-25T08:34:35.9090465Z   fetch-depth: 1
+2026-09-25T08:34:35.9090898Z   fetch-tags: false
+2026-09-25T08:34:35.9091335Z   show-progress: true
+2026-09-25T08:34:35.9091772Z   lfs: false
+2026-09-25T08:34:35.9092188Z   submodules: false
+2026-09-25T08:34:35.9092635Z   set-safe-directory: true
+2026-09-25T08:34:35.9093146Z   allow-unsafe-pr-checkout: false
+2026-09-25T08:34:35.9093956Z env:
+2026-09-25T08:34:35.9094368Z   PYTHON_VERSION: 3.14
+2026-09-25T08:34:35.9094839Z   NODE_VERSION: lts/*
+2026-09-25T08:34:35.9095277Z ##[endgroup]
+2026-09-25T08:34:36.9460560Z Syncing repository: nodejs/node
+2026-09-25T08:34:36.9462285Z ##[group]Getting Git version info
+2026-09-25T08:34:36.9462978Z Working directory is '/home/runner/work/node/node'
+2026-09-25T08:34:36.9463919Z [command]/usr/bin/git version
+2026-09-25T08:34:36.9464418Z git version 2.55.0
+2026-09-25T08:34:36.9465963Z ##[endgroup]
+2026-09-25T08:34:36.9470532Z Temporarily overriding HOME='/home/runner/work/_temp/1e8509db-7f42-4487-9e87-239281d135b0' before making global git config changes
+2026-09-25T08:34:36.9472688Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-25T08:34:36.9473754Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/node/node
+2026-09-25T08:34:36.9475220Z Deleting the contents of '/home/runner/work/node/node'
+2026-09-25T08:34:36.9476227Z ##[group]Determining repository object format
+2026-09-25T08:34:36.9477161Z ##[endgroup]
+2026-09-25T08:34:36.9477860Z ##[group]Initializing the repository
+2026-09-25T08:34:36.9478701Z [command]/usr/bin/git init /home/runner/work/node/node
+2026-09-25T08:34:36.9479558Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-09-25T08:34:36.9480583Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-09-25T08:34:36.9481487Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-09-25T08:34:36.9482499Z hint: call:
+2026-09-25T08:34:36.9482894Z hint:
+2026-09-25T08:34:36.9483401Z hint: 	git config --global init.defaultBranch <name>
+2026-09-25T08:34:36.9484010Z hint:
+2026-09-25T08:34:36.9484612Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-09-25T08:34:36.9485519Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-09-25T08:34:36.9486242Z hint:
+2026-09-25T08:34:36.9486647Z hint: 	git branch -m <name>
+2026-09-25T08:34:36.9487118Z hint:
+2026-09-25T08:34:36.9487731Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-09-25T08:34:36.9488893Z Initialized empty Git repository in /home/runner/work/node/node/.git/
+2026-09-25T08:34:36.9490356Z [command]/usr/bin/git remote add origin https://github.com/nodejs/node
+2026-09-25T08:34:36.9491888Z ##[endgroup]
+2026-09-25T08:34:36.9492609Z ##[group]Disabling automatic garbage collection
+2026-09-25T08:34:36.9493255Z [command]/usr/bin/git config --local gc.auto 0
+2026-09-25T08:34:36.9494580Z ##[endgroup]
+2026-09-25T08:34:36.9495261Z ##[group]Setting up auth
+2026-09-25T08:34:36.9495751Z Removing SSH command configuration
+2026-09-25T08:34:36.9496472Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-25T08:34:36.9498473Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-25T08:34:36.9500433Z Removing HTTP extra header
+2026-09-25T08:34:36.9501446Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-25T08:34:36.9503859Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-25T08:34:36.9506023Z Removing includeIf entries pointing to credentials config files
+2026-09-25T08:34:36.9508789Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-25T08:34:36.9510716Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-25T08:34:36.9513455Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-8424e1bb-47a5-4abb-b9d1-bb9f8fe8e499.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-09-25T08:34:36.9516418Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/node/node/.git.path /home/runner/work/_temp/git-credentials-8424e1bb-47a5-4abb-b9d1-bb9f8fe8e499.config
+2026-09-25T08:34:36.9519366Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/node/node/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-8424e1bb-47a5-4abb-b9d1-bb9f8fe8e499.config
+2026-09-25T08:34:36.9522014Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-8424e1bb-47a5-4abb-b9d1-bb9f8fe8e499.config
+2026-09-25T08:34:36.9524607Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-8424e1bb-47a5-4abb-b9d1-bb9f8fe8e499.config
+2026-09-25T08:34:36.9526682Z ##[endgroup]
+2026-09-25T08:34:36.9527371Z ##[group]Fetching the repository
+2026-09-25T08:34:36.9528921Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +d4347665b268bde053d62e0ff5995cb87d817cb8:refs/remotes/pull/66275/merge
+2026-09-25T08:34:45.9385809Z From https://github.com/nodejs/node
+2026-09-25T08:34:45.9398112Z  * [new ref]           d4347665b268bde053d62e0ff5995cb87d817cb8 -> pull/66275/merge
+2026-09-25T08:34:45.9400378Z ##[endgroup]
+2026-09-25T08:34:45.9401211Z ##[group]Determining the checkout info
+2026-09-25T08:34:45.9402113Z ##[endgroup]
+2026-09-25T08:34:45.9402654Z [command]/usr/bin/git sparse-checkout disable
+2026-09-25T08:34:45.9404139Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-09-25T08:34:45.9406125Z ##[group]Checking out the ref
+2026-09-25T08:34:45.9406962Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/66275/merge
+2026-09-25T08:34:46.4997762Z Updating files:  19% (10340/51857)
+2026-09-25T08:34:46.5501093Z Updating files:  20% (10372/51857)
+2026-09-25T08:34:46.6051728Z Updating files:  21% (10890/51857)
+2026-09-25T08:34:46.6456831Z Updating files:  22% (11409/51857)
+2026-09-25T08:34:46.6902661Z Updating files:  23% (11928/51857)
+2026-09-25T08:34:46.7306121Z Updating files:  24% (12446/51857)
+2026-09-25T08:34:46.7739379Z Updating files:  25% (12965/51857)
+2026-09-25T08:34:46.8195906Z Updating files:  26% (13483/51857)
+2026-09-25T08:34:46.8817907Z Updating files:  27% (14002/51857)
+2026-09-25T08:34:46.9170253Z Updating files:  28% (14520/51857)
+2026-09-25T08:34:46.9466739Z Updating files:  29% (15039/51857)
+2026-09-25T08:34:47.1068285Z Updating files:  30% (15558/51857)
+2026-09-25T08:34:47.1461740Z Updating files:  31% (16076/51857)
+2026-09-25T08:34:47.2076420Z Updating files:  32% (16595/51857)
+2026-09-25T08:34:47.4536265Z Updating files:  33% (17113/51857)
+2026-09-25T08:34:47.4965579Z Updating files:  34% (17632/51857)
+2026-09-25T08:34:47.5166073Z Updating files:  34% (17950/51857)
+2026-09-25T08:34:47.5712610Z Updating files:  35% (18150/51857)
+2026-09-25T08:34:47.6224383Z Updating files:  36% (18669/51857)
+2026-09-25T08:34:47.6821523Z Updating files:  37% (19188/51857)
+2026-09-25T08:34:47.7359640Z Updating files:  38% (19706/51857)
+2026-09-25T08:34:47.7842051Z Updating files:  39% (20225/51857)
+2026-09-25T08:34:47.8062021Z Updating files:  40% (20743/51857)
+2026-09-25T08:34:47.8271440Z Updating files:  41% (21262/51857)
+2026-09-25T08:34:47.8482518Z Updating files:  42% (21780/51857)
+2026-09-25T08:34:47.8747605Z Updating files:  43% (22299/51857)
+2026-09-25T08:34:47.8933347Z Updating files:  44% (22818/51857)
+2026-09-25T08:34:47.9382974Z Updating files:  45% (23336/51857)
+2026-09-25T08:34:47.9637376Z Updating files:  46% (23855/51857)
+2026-09-25T08:34:47.9896281Z Updating files:  47% (24373/51857)
+2026-09-25T08:34:48.0153617Z Updating files:  48% (24892/51857)
+2026-09-25T08:34:48.0379380Z Updating files:  49% (25410/51857)
+2026-09-25T08:34:48.0593833Z Updating files:  50% (25929/51857)
+2026-09-25T08:34:48.0863325Z Updating files:  51% (26448/51857)
+2026-09-25T08:34:48.1066480Z Updating files:  52% (26966/51857)
+2026-09-25T08:34:48.1250969Z Updating files:  53% (27485/51857)
+2026-09-25T08:34:48.1437802Z Updating files:  54% (28003/51857)
+2026-09-25T08:34:48.1718281Z Updating files:  55% (28522/51857)
+2026-09-25T08:34:48.1889632Z Updating files:  56% (29040/51857)
+2026-09-25T08:34:48.2114856Z Updating files:  57% (29559/51857)
+2026-09-25T08:34:48.2315460Z Updating files:  58% (30078/51857)
+2026-09-25T08:34:48.2620998Z Updating files:  59% (30596/51857)
+2026-09-25T08:34:48.3135346Z Updating files:  60% (31115/51857)
+2026-09-25T08:34:48.3583844Z Updating files:  61% (31633/51857)
+2026-09-25T08:34:48.4776372Z Updating files:  62% (32152/51857)
+2026-09-25T08:34:48.4973388Z Updating files:  63% (32670/51857)
+2026-09-25T08:34:48.5064318Z Updating files:  63% (33028/51857)
+2026-09-25T08:34:48.5283326Z Updating files:  64% (33189/51857)
+2026-09-25T08:34:48.5750832Z Updating files:  65% (33708/51857)
+2026-09-25T08:34:48.6193043Z Updating files:  66% (34226/51857)
+2026-09-25T08:34:48.6369552Z Updating files:  67% (34745/51857)
+2026-09-25T08:34:48.7164179Z Updating files:  68% (35263/51857)
+2026-09-25T08:34:48.7517452Z Updating files:  69% (35782/51857)
+2026-09-25T08:34:48.7840594Z Updating files:  70% (36300/51857)
+2026-09-25T08:34:48.8420111Z Updating files:  71% (36819/51857)
+2026-09-25T08:34:48.9421850Z Updating files:  72% (37338/51857)
+2026-09-25T08:34:48.9973129Z Updating files:  73% (37856/51857)
+2026-09-25T08:34:49.0275564Z Updating files:  74% (38375/51857)
+2026-09-25T08:34:49.0481028Z Updating files:  75% (38893/51857)
+2026-09-25T08:34:49.0709950Z Updating files:  76% (39412/51857)
+2026-09-25T08:34:49.0897169Z Updating files:  77% (39930/51857)
+2026-09-25T08:34:49.1405676Z Updating files:  78% (40449/51857)
+2026-09-25T08:34:49.2033499Z Updating files:  79% (40968/51857)
+2026-09-25T08:34:49.2217168Z Updating files:  80% (41486/51857)
+2026-09-25T08:34:49.2530273Z Updating files:  81% (42005/51857)
+2026-09-25T08:34:49.3101691Z Updating files:  82% (42523/51857)
+2026-09-25T08:34:49.3336031Z Updating files:  83% (43042/51857)
+2026-09-25T08:34:49.3549175Z Updating files:  84% (43560/51857)
+2026-09-25T08:34:49.3849884Z Updating files:  85% (44079/51857)
+2026-09-25T08:34:49.4040118Z Updating files:  86% (44598/51857)
+2026-09-25T08:34:49.4237908Z Updating files:  87% (45116/51857)
+2026-09-25T08:34:49.4494361Z Updating files:  88% (45635/51857)
+2026-09-25T08:34:49.4779331Z Updating files:  89% (46153/51857)
+2026-09-25T08:34:49.4964150Z Updating files:  90% (46672/51857)
+2026-09-25T08:34:49.5001261Z Updating files:  90% (47109/51857)
+2026-09-25T08:34:49.5232706Z Updating files:  91% (47190/51857)
+2026-09-25T08:34:49.5439305Z Updating files:  92% (47709/51857)
+2026-09-25T08:34:49.5710546Z Updating files:  93% (48228/51857)
+2026-09-25T08:34:49.5939585Z Updating files:  94% (48746/51857)
+2026-09-25T08:34:49.6205977Z Updating files:  95% (49265/51857)
+2026-09-25T08:34:49.6431565Z Updating files:  96% (49783/51857)
+2026-09-25T08:34:49.6733971Z Updating files:  97% (50302/51857)
+2026-09-25T08:34:49.6938235Z Updating files:  98% (50820/51857)
+2026-09-25T08:34:49.7357008Z Updating files:  99% (51339/51857)
+2026-09-25T08:34:49.7362170Z Updating files: 100% (51857/51857)
+2026-09-25T08:34:49.7363734Z Updating files: 100% (51857/51857), done.
+2026-09-25T08:34:49.9097739Z Note: switching to 'refs/remotes/pull/66275/merge'.
+2026-09-25T08:34:49.9099298Z 
+2026-09-25T08:34:49.9100227Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-09-25T08:34:49.9106177Z changes and commit them, and you can discard any commits you make in this
+2026-09-25T08:34:49.9112510Z state without impacting any branches by switching back to a branch.
+2026-09-25T08:34:49.9113907Z 
+2026-09-25T08:34:49.9114788Z If you want to create a new branch to retain commits you create, you may
+2026-09-25T08:34:49.9132474Z do so (now or later) by using -c with the switch command. Example:
+2026-09-25T08:34:49.9133790Z 
+2026-09-25T08:34:49.9134305Z   git switch -c <new-branch-name>
+2026-09-25T08:34:49.9135165Z 
+2026-09-25T08:34:49.9135644Z Or undo this operation with:
+2026-09-25T08:34:49.9136420Z 
+2026-09-25T08:34:49.9136841Z   git switch -
+2026-09-25T08:34:49.9137406Z 
+2026-09-25T08:34:49.9138420Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-09-25T08:34:49.9181826Z 
+2026-09-25T08:34:49.9183558Z HEAD is now at d4347665 Merge 919e61f8c9ae6edf19ddedf53e6836824006bd71 into a3bb551ea70c7e0b1377c5b97d5d186cd66095cd
+2026-09-25T08:34:49.9232479Z ##[endgroup]
+2026-09-25T08:34:49.9276332Z [command]/usr/bin/git log -1 --format=%H
+2026-09-25T08:34:49.9302832Z d4347665b268bde053d62e0ff5995cb87d817cb8
+2026-09-25T08:34:49.9323475Z ##[group]Removing auth
+2026-09-25T08:34:49.9324701Z Removing SSH command configuration
+2026-09-25T08:34:49.9327366Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-25T08:34:49.9360745Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-25T08:34:49.9752753Z Removing HTTP extra header
+2026-09-25T08:34:49.9810860Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-25T08:34:49.9854033Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-25T08:34:50.0075046Z Removing includeIf entries pointing to credentials config files
+2026-09-25T08:34:50.0086961Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-25T08:34:50.0113442Z includeif.gitdir:/home/runner/work/node/node/.git.path
+2026-09-25T08:34:50.0115612Z includeif.gitdir:/home/runner/work/node/node/.git/worktrees/*.path
+2026-09-25T08:34:50.0117566Z includeif.gitdir:/github/workspace/.git.path
+2026-09-25T08:34:50.0121714Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-09-25T08:34:50.0156889Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/node/node/.git.path
+2026-09-25T08:34:50.0180656Z /home/runner/work/_temp/git-credentials-8424e1bb-47a5-4abb-b9d1-bb9f8fe8e499.config
+2026-09-25T08:34:50.0201263Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/node/node/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-8424e1bb\-47a5\-4abb\-b9d1\-bb9f8fe8e499\.config
+2026-09-25T08:34:50.3762078Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/node/node/.git/worktrees/*.path
+2026-09-25T08:34:50.3784534Z /home/runner/work/_temp/git-credentials-8424e1bb-47a5-4abb-b9d1-bb9f8fe8e499.config
+2026-09-25T08:34:50.3805478Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/node/node/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-8424e1bb\-47a5\-4abb\-b9d1\-bb9f8fe8e499\.config
+2026-09-25T08:34:50.4169316Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-09-25T08:34:50.4197248Z /github/runner_temp/git-credentials-8424e1bb-47a5-4abb-b9d1-bb9f8fe8e499.config
+2026-09-25T08:34:50.4222871Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-8424e1bb\-47a5\-4abb\-b9d1\-bb9f8fe8e499\.config
+2026-09-25T08:34:50.8627785Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-09-25T08:34:50.8668308Z /github/runner_temp/git-credentials-8424e1bb-47a5-4abb-b9d1-bb9f8fe8e499.config
+2026-09-25T08:34:50.8694452Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-8424e1bb\-47a5\-4abb\-b9d1\-bb9f8fe8e499\.config
+2026-09-25T08:34:51.0706364Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-25T08:34:51.1080268Z Removing credentials config '/home/runner/work/_temp/git-credentials-8424e1bb-47a5-4abb-b9d1-bb9f8fe8e499.config'
+2026-09-25T08:34:51.1102096Z ##[endgroup]
+2026-09-25T08:34:51.2507903Z ##[group]Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+2026-09-25T08:34:51.2509877Z with:
+2026-09-25T08:34:51.2510742Z   node-version: lts/*
+2026-09-25T08:34:51.2511727Z   check-latest: false
+2026-09-25T08:34:51.2521511Z   token: ***
+2026-09-25T08:34:51.2522479Z   package-manager-cache: true
+2026-09-25T08:34:51.2523555Z env:
+2026-09-25T08:34:51.2524407Z   PYTHON_VERSION: 3.14
+2026-09-25T08:34:51.2525397Z   NODE_VERSION: lts/*
+2026-09-25T08:34:51.2526368Z ##[endgroup]
+2026-09-25T08:34:51.4755698Z Attempt to resolve LTS alias from manifest...
+2026-09-25T08:34:52.5524427Z Attempting to download 24...
+2026-09-25T08:34:52.5628981Z Acquiring 24.21.0 - x64 from https://github.com/actions/node-versions/releases/download/24.21.0-34304089047/node-24.21.0-linux-x64.tar.gz
+2026-09-25T08:34:53.4984342Z Extracting ...
+2026-09-25T08:34:53.5192796Z [command]/usr/bin/tar xz --strip 1 --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/926d3977-299f-48d3-b173-73338c23b3bc -f /home/runner/work/_temp/a4d2624a-7e60-4d06-8815-c09f15f9f377
+2026-09-25T08:34:55.6970495Z Adding to the cache ...
+2026-09-25T08:35:00.6623829Z ##[group]Environment details
+2026-09-25T08:35:00.7990027Z node: v24.21.0
+2026-09-25T08:35:00.7990560Z npm: 11.19.0
+2026-09-25T08:35:00.7991085Z yarn: 
+2026-09-25T08:35:00.7991799Z ##[endgroup]
+2026-09-25T08:35:00.8193024Z ##[group]Run set +e
+2026-09-25T08:35:00.8193355Z set +e
+2026-09-25T08:35:00.8193620Z NODE=$(command -v node) make lint-js
+2026-09-25T08:35:00.8194169Z EXIT_CODE="$?"
+2026-09-25T08:35:00.8194417Z if [ "$EXIT_CODE" != "0" ]; then
+2026-09-25T08:35:00.8194676Z   echo
+2026-09-25T08:35:00.8195044Z   echo 'ERROR: The JavaScript lint validation failed (the errors are logged above).'
+2026-09-25T08:35:00.8195510Z   echo '       Please fix the lint errors.'
+2026-09-25T08:35:00.8195921Z   if NODE=$(command -v node) make lint-js-fix > /dev/null 2>&1; then
+2026-09-25T08:35:00.8196306Z     echo '       Run:'
+2026-09-25T08:35:00.8196575Z     echo '          make lint-js-fix'
+2026-09-25T08:35:00.8196882Z     echo '       to fix the lint issues.'
+2026-09-25T08:35:00.8197181Z     git --no-pager diff
+2026-09-25T08:35:00.8197505Z   elif git diff --quiet --exit-code; then
+2026-09-25T08:35:00.8197900Z     echo '       None of the issue is auto-fixable, so manual fixes for'
+2026-09-25T08:35:00.8198306Z     echo '       all of the issues are required.'
+2026-09-25T08:35:00.8199021Z   else
+2026-09-25T08:35:00.8199235Z     echo '       Run:'
+2026-09-25T08:35:00.8199496Z     echo '          make lint-js-fix'
+2026-09-25T08:35:00.8200774Z     echo '       to fix the auto-fixable lint issues.'
+2026-09-25T08:35:00.8201212Z     echo '       Note that some manual fixes are also required.'
+2026-09-25T08:35:00.8201563Z   fi
+2026-09-25T08:35:00.8201760Z   echo
+2026-09-25T08:35:00.8201992Z   exit "$EXIT_CODE"
+2026-09-25T08:35:00.8202245Z fi
+2026-09-25T08:35:00.8212728Z shell: /usr/bin/bash -e {0}
+2026-09-25T08:35:00.8212993Z env:
+2026-09-25T08:35:00.8213198Z   PYTHON_VERSION: 3.14
+2026-09-25T08:35:00.8213432Z   NODE_VERSION: lts/*
+2026-09-25T08:35:00.8213669Z ##[endgroup]
+2026-09-25T08:35:01.0621611Z cd tools/eslint && if [ -x '/opt/hostedtoolcache/node/24.21.0/x64/bin/node' ] && [ -e '/opt/hostedtoolcache/node/24.21.0/x64/bin/node' ]; then PATH='/home/runner/work/node/node/out/Release:$PATH' '/opt/hostedtoolcache/node/24.21.0/x64/bin/node' /home/runner/work/node/node/./deps/npm/bin/npm-cli.js ci --omit=dev; elif [ -x `command -v node` ] && [ -e `command -v node` ] && [ `command -v node` ]; then `command -v node` /home/runner/work/node/node/./deps/npm/bin/npm-cli.js ci --omit=dev; else echo "No available node, cannot run \"node /home/runner/work/node/node/./deps/npm/bin/npm-cli.js ci --omit=dev\""; exit 1; fi;
+2026-09-25T08:35:05.8710146Z 
+2026-09-25T08:35:05.8711135Z added 235 packages, and audited 236 packages in 5s
+2026-09-25T08:35:05.8713715Z 
+2026-09-25T08:35:05.8715937Z 99 packages are looking for funding
+2026-09-25T08:35:05.8717968Z   run `npm fund` for details
+2026-09-25T08:35:05.8729683Z 
+2026-09-25T08:35:05.8729980Z found 0 vulnerabilities
+2026-09-25T08:35:05.9343509Z Running JS linter...
+2026-09-25T08:39:02.2452760Z 
+2026-09-25T08:39:02.2504758Z /home/runner/work/node/node/test/parallel/test-fastutf8stream-flush.js
+2026-09-25T08:39:02.3354747Z ##[error]   31:1   error  Comments should not begin with a lowercase character                          capitalized-comments
+2026-09-25T08:39:02.3464532Z ##[error]   44:24  error  Please use common.mustSucceed instead of common.mustCall with assert.ifError  node-core/prefer-common-mustsucceed
+2026-09-25T08:39:02.3467131Z ##[error]   54:38  error  Do not use an empty function, omit the parameter altogether                   no-restricted-syntax
+2026-09-25T08:39:02.3469135Z ##[error]  170:5   error  Comments should not begin with a lowercase character                          capitalized-comments
+2026-09-25T08:39:02.3470824Z ##[error]  216:5   error  Comments should not begin with a lowercase character                          capitalized-comments
+2026-09-25T08:39:02.3473132Z ##[error]  223:22  error  Please use common.mustSucceed instead of common.mustCall with assert.ifError  node-core/prefer-common-mustsucceed
+2026-09-25T08:39:02.3474782Z ##[error]  231:15  error  'callback' is assigned a value but never used                                 no-unused-vars
+2026-09-25T08:39:02.3476608Z ##[error]  232:22  error  Please use common.mustSucceed instead of common.mustCall with assert.ifError  node-core/prefer-common-mustsucceed
+2026-09-25T08:39:02.3477551Z 
+2026-09-25T08:39:02.3769913Z ✖ 8 problems (8 errors, 0 warnings)
+2026-09-25T08:39:02.3770496Z   3 errors and 0 warnings potentially fixable with the `--fix` option.
+2026-09-25T08:39:02.3770795Z 
+2026-09-25T08:39:02.6653527Z make: *** [Makefile:1536: lint-js] Error 1
+2026-09-25T08:39:02.6719187Z 
+2026-09-25T08:39:02.6720087Z ERROR: The JavaScript lint validation failed (the errors are logged above).
+2026-09-25T08:39:02.6745160Z        Please fix the lint errors.
+2026-09-25T08:39:08.2960343Z        Run:
+2026-09-25T08:39:08.2960742Z           make lint-js-fix
+2026-09-25T08:39:08.2961530Z        to fix the auto-fixable lint issues.
+2026-09-25T08:39:08.2961940Z        Note that some manual fixes are also required.
+2026-09-25T08:39:08.2962195Z 
+2026-09-25T08:39:08.3002918Z ##[error]Process completed with exit code 2.
+2026-09-25T08:39:08.3272858Z Post job cleanup.
+2026-09-25T08:39:08.4471583Z [command]/usr/bin/git version
+2026-09-25T08:39:08.4587878Z git version 2.55.0
+2026-09-25T08:39:08.4753512Z Temporarily overriding HOME='/home/runner/work/_temp/85d2ae22-301e-415a-9b29-b9efab13ba74' before making global git config changes
+2026-09-25T08:39:08.4759704Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-25T08:39:08.4768014Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/node/node
+2026-09-25T08:39:08.4810750Z Removing SSH command configuration
+2026-09-25T08:39:08.4816267Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-25T08:39:08.4853637Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-25T08:39:08.5108326Z Removing HTTP extra header
+2026-09-25T08:39:08.5111996Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-25T08:39:08.5154862Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-25T08:39:08.5401123Z Removing includeIf entries pointing to credentials config files
+2026-09-25T08:39:08.5406686Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-25T08:39:08.5441355Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-25T08:39:08.5923512Z Cleaning up orphan processes

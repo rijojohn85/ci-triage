@@ -1,0 +1,36 @@
+﻿2026-08-17T16:05:27.8337747Z Current runner version: '2.336.0'
+2026-08-17T16:05:27.8361634Z ##[group]Runner Image Provisioner
+2026-08-17T16:05:27.8362530Z Hosted Compute Agent
+2026-08-17T16:05:27.8363205Z Version: 20260729.566
+2026-08-17T16:05:27.8364088Z Commit: cf7153fe6e25b664e8693c24944bf2b00355d109
+2026-08-17T16:05:27.8364869Z Build Date: 2026-07-29T19:17:02Z
+2026-08-17T16:05:27.8365582Z Worker ID: {fafc9951-e8c2-4374-bfc5-104c74b6a1b7}
+2026-08-17T16:05:27.8366289Z Azure Region: westus
+2026-08-17T16:05:27.8366889Z ##[endgroup]
+2026-08-17T16:05:27.8368389Z ##[group]Operating System
+2026-08-17T16:05:27.8369021Z Ubuntu
+2026-08-17T16:05:27.8369642Z 24.04.4
+2026-08-17T16:05:27.8370145Z LTS
+2026-08-17T16:05:27.8370688Z ##[endgroup]
+2026-08-17T16:05:27.8371245Z ##[group]Runner Image
+2026-08-17T16:05:27.8371860Z Image: ubuntu-24.04
+2026-08-17T16:05:27.8372464Z Version: 20260810.271.1
+2026-08-17T16:05:27.8373975Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260810.271/images/ubuntu/Ubuntu2404-Readme.md
+2026-08-17T16:05:27.8375557Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260810.271
+2026-08-17T16:05:27.8376550Z ##[endgroup]
+2026-08-17T16:05:27.8377786Z ##[group]GITHUB_TOKEN Permissions
+2026-08-17T16:05:27.8379664Z Contents: read
+2026-08-17T16:05:27.8380349Z Issues: write
+2026-08-17T16:05:27.8380965Z Metadata: read
+2026-08-17T16:05:27.8381524Z ##[endgroup]
+2026-08-17T16:05:27.8383810Z Secret source: Actions
+2026-08-17T16:05:27.8384901Z Prepare workflow directory
+2026-08-17T16:05:27.8722685Z Prepare all required actions
+2026-08-17T16:05:27.8771615Z Getting action download info
+2026-08-17T16:05:28.2191040Z Download action repository 'actions/stale@v10' (SHA:1e223db275d687790206a7acac4d1a11bd6fe629)
+2026-08-17T16:05:28.8746644Z ##[warning]Failed to download action 'https://codeload.github.com/actions/stale/tar.gz/1e223db275d687790206a7acac4d1a11bd6fe629'. Error: Response status code does not indicate success: 503 (Service Unavailable). 0C00:361CE3:91A9A09:91C107E:6A833148
+2026-08-17T16:05:28.8762636Z ##[warning]Back off 25.981 seconds before retry.
+2026-08-17T16:06:10.9750011Z ##[warning]Failed to download action 'https://codeload.github.com/actions/stale/tar.gz/1e223db275d687790206a7acac4d1a11bd6fe629'. Error: Response status code does not indicate success: 429 (Too Many Requests). 0C00:361CE3:9336D65:934EAE8:6A833162
+2026-08-17T16:06:10.9753117Z ##[warning]Back off 17.959 seconds before retry.
+2026-08-17T16:06:37.5109591Z ##[error]Response status code does not indicate success: 429 (Too Many Requests).
+2026-08-17T16:06:37.5127894Z ##[error]Failed to download archive 'https://codeload.github.com/actions/stale/tar.gz/1e223db275d687790206a7acac4d1a11bd6fe629' after 3 attempts.

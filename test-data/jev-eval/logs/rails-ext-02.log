@@ -1,0 +1,1213 @@
+﻿2026-06-30T09:38:47.8883613Z Current runner version: '2.335.1'
+2026-06-30T09:38:47.8920187Z ##[group]Runner Image Provisioner
+2026-06-30T09:38:47.8921521Z Hosted Compute Agent
+2026-06-30T09:38:47.8922473Z Version: 20260611.554
+2026-06-30T09:38:47.8923606Z Commit: 5e0782fdc9014723d3be820dd114dd31555c2bd1
+2026-06-30T09:38:47.8924771Z Build Date: 2026-06-11T21:40:46Z
+2026-06-30T09:38:47.8926254Z Worker ID: {d9c12b7d-c404-4e3a-bdfc-c47d841f4800}
+2026-06-30T09:38:47.8927439Z Azure Region: eastus
+2026-06-30T09:38:47.8928299Z ##[endgroup]
+2026-06-30T09:38:47.8931146Z ##[group]Operating System
+2026-06-30T09:38:47.8932230Z Ubuntu
+2026-06-30T09:38:47.8933263Z 24.04.4
+2026-06-30T09:38:47.8934119Z LTS
+2026-06-30T09:38:47.8934898Z ##[endgroup]
+2026-06-30T09:38:47.8936245Z ##[group]Runner Image
+2026-06-30T09:38:47.8937311Z Image: ubuntu-24.04
+2026-06-30T09:38:47.8938397Z Version: 20260622.220.1
+2026-06-30T09:38:47.8940524Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260622.220/images/ubuntu/Ubuntu2404-Readme.md
+2026-06-30T09:38:47.8943315Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260622.220
+2026-06-30T09:38:47.8944950Z ##[endgroup]
+2026-06-30T09:38:47.8947257Z ##[group]GITHUB_TOKEN Permissions
+2026-06-30T09:38:47.8950882Z Contents: read
+2026-06-30T09:38:47.8952016Z Metadata: read
+2026-06-30T09:38:47.8953011Z ##[endgroup]
+2026-06-30T09:38:47.8957106Z Secret source: None
+2026-06-30T09:38:47.8958312Z Prepare workflow directory
+2026-06-30T09:38:47.9542192Z Prepare all required actions
+2026-06-30T09:38:47.9600332Z Getting action download info
+2026-06-30T09:38:48.1704498Z Download action repository 'actions/checkout@v7' (SHA:9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0)
+2026-06-30T09:38:48.2986913Z Download action repository 'ruby/setup-ruby@v1' (SHA:9eb537ca036ebaed86729dcb9309076e4c5c3b74)
+2026-06-30T09:38:48.4468411Z Download action repository 'zzak/action-discord@4cd181470664aa174b7252e5afb2ecf896001817' (SHA:4cd181470664aa174b7252e5afb2ecf896001817)
+2026-06-30T09:38:48.6551513Z Getting action download info
+2026-06-30T09:38:48.7261852Z Download action repository 'actions/checkout@v3' (SHA:f43a0e5ff2bd294095638e18286ca9a3d1956744)
+2026-06-30T09:38:48.7963423Z Complete job name: rails-new-docker
+2026-06-30T09:38:48.8768058Z ##[group]Run actions/checkout@v7
+2026-06-30T09:38:48.8769059Z with:
+2026-06-30T09:38:48.8769508Z   repository: rails/rails
+2026-06-30T09:38:48.8773978Z   token: ***
+2026-06-30T09:38:48.8774430Z   ssh-strict: true
+2026-06-30T09:38:48.8774872Z   ssh-user: git
+2026-06-30T09:38:48.8775593Z   persist-credentials: true
+2026-06-30T09:38:48.8776095Z   clean: true
+2026-06-30T09:38:48.8776545Z   sparse-checkout-cone-mode: true
+2026-06-30T09:38:48.8777099Z   fetch-depth: 1
+2026-06-30T09:38:48.8777535Z   fetch-tags: false
+2026-06-30T09:38:48.8777972Z   show-progress: true
+2026-06-30T09:38:48.8778425Z   lfs: false
+2026-06-30T09:38:48.8778829Z   submodules: false
+2026-06-30T09:38:48.8779276Z   set-safe-directory: true
+2026-06-30T09:38:48.8779782Z   allow-unsafe-pr-checkout: false
+2026-06-30T09:38:48.8780583Z env:
+2026-06-30T09:38:48.8780994Z   APP_NAME: devrails
+2026-06-30T09:38:48.8781457Z   APP_PATH: dev/devrails
+2026-06-30T09:38:48.8781976Z   BUNDLE_WITHOUT: db:job:cable:storage
+2026-06-30T09:38:48.8782552Z ##[endgroup]
+2026-06-30T09:38:48.9917881Z Syncing repository: rails/rails
+2026-06-30T09:38:48.9920199Z ##[group]Getting Git version info
+2026-06-30T09:38:48.9921221Z Working directory is '/home/runner/work/rails/rails'
+2026-06-30T09:38:48.9922312Z [command]/usr/bin/git version
+2026-06-30T09:38:48.9974417Z git version 2.54.0
+2026-06-30T09:38:49.0074516Z ##[endgroup]
+2026-06-30T09:38:49.0082451Z Temporarily overriding HOME='/home/runner/work/_temp/c6f550bf-1d83-4426-bd2c-bdffa4a0db2a' before making global git config changes
+2026-06-30T09:38:49.0084844Z Adding repository directory to the temporary git global config as a safe directory
+2026-06-30T09:38:49.0087150Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/rails/rails
+2026-06-30T09:38:49.0089618Z Deleting the contents of '/home/runner/work/rails/rails'
+2026-06-30T09:38:49.0092035Z ##[group]Determining repository object format
+2026-06-30T09:38:49.0093257Z ##[endgroup]
+2026-06-30T09:38:49.0094250Z ##[group]Initializing the repository
+2026-06-30T09:38:49.0094924Z [command]/usr/bin/git init /home/runner/work/rails/rails
+2026-06-30T09:38:49.0182442Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-06-30T09:38:49.0183570Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-06-30T09:38:49.0184525Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-06-30T09:38:49.0185695Z hint: call:
+2026-06-30T09:38:49.0186184Z hint:
+2026-06-30T09:38:49.0186967Z hint: 	git config --global init.defaultBranch <name>
+2026-06-30T09:38:49.0188081Z hint:
+2026-06-30T09:38:49.0189074Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-06-30T09:38:49.0190775Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-06-30T09:38:49.0192201Z hint:
+2026-06-30T09:38:49.0192978Z hint: 	git branch -m <name>
+2026-06-30T09:38:49.0193822Z hint:
+2026-06-30T09:38:49.0194935Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-06-30T09:38:49.0196920Z Initialized empty Git repository in /home/runner/work/rails/rails/.git/
+2026-06-30T09:38:49.0202023Z [command]/usr/bin/git remote add origin https://github.com/rails/rails
+2026-06-30T09:38:49.0250806Z ##[endgroup]
+2026-06-30T09:38:49.0252122Z ##[group]Disabling automatic garbage collection
+2026-06-30T09:38:49.0255139Z [command]/usr/bin/git config --local gc.auto 0
+2026-06-30T09:38:49.0288651Z ##[endgroup]
+2026-06-30T09:38:49.0289921Z ##[group]Setting up auth
+2026-06-30T09:38:49.0290869Z Removing SSH command configuration
+2026-06-30T09:38:49.0296032Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-06-30T09:38:49.0333195Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-06-30T09:38:49.0666758Z Removing HTTP extra header
+2026-06-30T09:38:49.0674216Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-06-30T09:38:49.0709379Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-06-30T09:38:49.0934461Z Removing includeIf entries pointing to credentials config files
+2026-06-30T09:38:49.0940465Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-06-30T09:38:49.0983821Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-06-30T09:38:49.1222954Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-9c0087e0-eb2c-4364-857d-f337cc9884da.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-06-30T09:38:49.1264292Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/rails/rails/.git.path /home/runner/work/_temp/git-credentials-9c0087e0-eb2c-4364-857d-f337cc9884da.config
+2026-06-30T09:38:49.1297053Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/rails/rails/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-9c0087e0-eb2c-4364-857d-f337cc9884da.config
+2026-06-30T09:38:49.1333891Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-9c0087e0-eb2c-4364-857d-f337cc9884da.config
+2026-06-30T09:38:49.1370770Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-9c0087e0-eb2c-4364-857d-f337cc9884da.config
+2026-06-30T09:38:49.1398657Z ##[endgroup]
+2026-06-30T09:38:49.1399415Z ##[group]Fetching the repository
+2026-06-30T09:38:49.1407802Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +607f650158b39d74a68a9165ebf8b38d238c4351:refs/remotes/pull/57929/merge
+2026-06-30T09:38:50.9942248Z From https://github.com/rails/rails
+2026-06-30T09:38:50.9944520Z  * [new ref]         607f650158b39d74a68a9165ebf8b38d238c4351 -> pull/57929/merge
+2026-06-30T09:38:50.9980933Z ##[endgroup]
+2026-06-30T09:38:50.9982844Z ##[group]Determining the checkout info
+2026-06-30T09:38:50.9984869Z ##[endgroup]
+2026-06-30T09:38:50.9987517Z [command]/usr/bin/git sparse-checkout disable
+2026-06-30T09:38:51.0034885Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-06-30T09:38:51.0066344Z ##[group]Checking out the ref
+2026-06-30T09:38:51.0068928Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/57929/merge
+2026-06-30T09:38:51.3456344Z Note: switching to 'refs/remotes/pull/57929/merge'.
+2026-06-30T09:38:51.3457968Z 
+2026-06-30T09:38:51.3459247Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-06-30T09:38:51.3460511Z changes and commit them, and you can discard any commits you make in this
+2026-06-30T09:38:51.3461667Z state without impacting any branches by switching back to a branch.
+2026-06-30T09:38:51.3462342Z 
+2026-06-30T09:38:51.3462845Z If you want to create a new branch to retain commits you create, you may
+2026-06-30T09:38:51.3463888Z do so (now or later) by using -c with the switch command. Example:
+2026-06-30T09:38:51.3464473Z 
+2026-06-30T09:38:51.3464788Z   git switch -c <new-branch-name>
+2026-06-30T09:38:51.3465478Z 
+2026-06-30T09:38:51.3465810Z Or undo this operation with:
+2026-06-30T09:38:51.3466219Z 
+2026-06-30T09:38:51.3466470Z   git switch -
+2026-06-30T09:38:51.3466897Z 
+2026-06-30T09:38:51.3467234Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-06-30T09:38:51.3467670Z 
+2026-06-30T09:38:51.3468137Z HEAD is now at 607f650 Merge fca70927013edfeecf5b1a016ae0343eb91c469c into fd740ab35e618115879639bc6664efcd10c77b79
+2026-06-30T09:38:51.3471888Z ##[endgroup]
+2026-06-30T09:38:51.3517592Z [command]/usr/bin/git log -1 --format=%H
+2026-06-30T09:38:51.3544549Z 607f650158b39d74a68a9165ebf8b38d238c4351
+2026-06-30T09:38:51.3755776Z ##[group]Run rm -f Gemfile.lock
+2026-06-30T09:38:51.3756445Z rm -f Gemfile.lock
+2026-06-30T09:38:51.3896941Z shell: /usr/bin/bash -e {0}
+2026-06-30T09:38:51.3897623Z env:
+2026-06-30T09:38:51.3898117Z   APP_NAME: devrails
+2026-06-30T09:38:51.3898637Z   APP_PATH: dev/devrails
+2026-06-30T09:38:51.3899192Z   BUNDLE_WITHOUT: db:job:cable:storage
+2026-06-30T09:38:51.3899801Z ##[endgroup]
+2026-06-30T09:38:51.4107467Z ##[group]Run ruby/setup-ruby@v1
+2026-06-30T09:38:51.4108000Z with:
+2026-06-30T09:38:51.4108372Z   ruby-version: 3.4
+2026-06-30T09:38:51.4108765Z   bundler-cache: true
+2026-06-30T09:38:51.4112143Z   token: ***
+2026-06-30T09:38:51.4112518Z env:
+2026-06-30T09:38:51.4112872Z   APP_NAME: devrails
+2026-06-30T09:38:51.4113267Z   APP_PATH: dev/devrails
+2026-06-30T09:38:51.4113725Z   BUNDLE_WITHOUT: db:job:cable:storage
+2026-06-30T09:38:51.4114169Z ##[endgroup]
+2026-06-30T09:38:51.5605852Z ##[group]Modifying PATH
+2026-06-30T09:38:51.5607043Z Entries added to PATH to use selected Ruby:
+2026-06-30T09:38:51.5609433Z   /opt/hostedtoolcache/Ruby/3.4.9/x64/bin
+2026-06-30T09:38:51.5614650Z ##[endgroup]
+2026-06-30T09:38:51.5616168Z ##[group]Print Ruby version
+2026-06-30T09:38:51.5698872Z [command]/opt/hostedtoolcache/Ruby/3.4.9/x64/bin/ruby --version
+2026-06-30T09:38:51.8658276Z ruby 3.4.9 (2026-03-11 revision 76cca827ab) +PRISM [x86_64-linux]
+2026-06-30T09:38:51.8686136Z Took   0.31 seconds
+2026-06-30T09:38:51.8687554Z ##[endgroup]
+2026-06-30T09:38:51.8688404Z ##[group]Installing Bundler
+2026-06-30T09:38:51.8691730Z Using Bundler shipped with ruby-3.4.9
+2026-06-30T09:38:51.8692909Z Took   0.00 seconds
+2026-06-30T09:38:51.8693763Z ##[endgroup]
+2026-06-30T09:38:51.8694505Z > bundle install
+2026-06-30T09:38:51.8698578Z Setting BUNDLER_VERSION=2 for "bundle config|lock" commands below to ensure Bundler 2 is used
+2026-06-30T09:38:51.8717937Z [command]/opt/hostedtoolcache/Ruby/3.4.9/x64/bin/bundle config set --local path /home/runner/work/rails/rails/vendor/bundle
+2026-06-30T09:38:53.1067249Z [command]/opt/hostedtoolcache/Ruby/3.4.9/x64/bin/bundle lock
+2026-06-30T09:38:54.3931290Z Writing lockfile to /home/runner/work/rails/rails/Gemfile.lock
+2026-06-30T09:38:56.8620545Z Fetching gem metadata from https://rubygems.org/........
+2026-06-30T09:38:57.3420129Z Resolving dependencies...
+2026-06-30T09:38:58.9905746Z ##[group]Print lockfile
+2026-06-30T09:38:58.9920915Z [command]/usr/bin/cat Gemfile.lock
+2026-06-30T09:38:58.9947066Z PATH
+2026-06-30T09:38:58.9947658Z   remote: .
+2026-06-30T09:38:58.9948101Z   specs:
+2026-06-30T09:38:58.9948571Z     actioncable (8.2.0.alpha)
+2026-06-30T09:38:58.9949165Z       actionpack (= 8.2.0.alpha)
+2026-06-30T09:38:58.9949764Z       activesupport (= 8.2.0.alpha)
+2026-06-30T09:38:58.9950323Z       nio4r (~> 2.0)
+2026-06-30T09:38:58.9950899Z       websocket-driver (>= 0.6.1)
+2026-06-30T09:38:58.9951560Z       zeitwerk (~> 2.6)
+2026-06-30T09:38:58.9952137Z     actionmailbox (8.2.0.alpha)
+2026-06-30T09:38:58.9952800Z       actionpack (= 8.2.0.alpha)
+2026-06-30T09:38:58.9953455Z       activejob (= 8.2.0.alpha)
+2026-06-30T09:38:58.9954125Z       activerecord (= 8.2.0.alpha)
+2026-06-30T09:38:58.9954936Z       activestorage (= 8.2.0.alpha)
+2026-06-30T09:38:58.9955842Z       activesupport (= 8.2.0.alpha)
+2026-06-30T09:38:58.9957040Z       mail (>= 2.8.0)
+2026-06-30T09:38:58.9957447Z     actionmailer (8.2.0.alpha)
+2026-06-30T09:38:58.9957902Z       actionpack (= 8.2.0.alpha)
+2026-06-30T09:38:58.9958356Z       actionview (= 8.2.0.alpha)
+2026-06-30T09:38:58.9958789Z       activejob (= 8.2.0.alpha)
+2026-06-30T09:38:58.9959225Z       activesupport (= 8.2.0.alpha)
+2026-06-30T09:38:58.9959677Z       mail (>= 2.8.0)
+2026-06-30T09:38:58.9960080Z       rails-dom-testing (~> 2.2)
+2026-06-30T09:38:58.9960522Z     actionpack (8.2.0.alpha)
+2026-06-30T09:38:58.9960982Z       actionview (= 8.2.0.alpha)
+2026-06-30T09:38:58.9961407Z       activesupport (= 8.2.0.alpha)
+2026-06-30T09:38:58.9961836Z       nokogiri (>= 1.8.5)
+2026-06-30T09:38:58.9962233Z       rack (>= 2.2.4)
+2026-06-30T09:38:58.9962603Z       rack-session (>= 1.0.1)
+2026-06-30T09:38:58.9962983Z       rack-test (>= 0.6.3)
+2026-06-30T09:38:58.9963359Z       rails-dom-testing (~> 2.2)
+2026-06-30T09:38:58.9963765Z       rails-html-sanitizer (~> 1.7)
+2026-06-30T09:38:58.9964202Z       useragent (~> 0.16)
+2026-06-30T09:38:58.9964615Z     actiontext (8.2.0.alpha)
+2026-06-30T09:38:58.9965053Z       action_text-trix (~> 2.1.16)
+2026-06-30T09:38:58.9966340Z       actionpack (= 8.2.0.alpha)
+2026-06-30T09:38:58.9966883Z       activerecord (= 8.2.0.alpha)
+2026-06-30T09:38:58.9967339Z       activestorage (= 8.2.0.alpha)
+2026-06-30T09:38:58.9967810Z       activesupport (= 8.2.0.alpha)
+2026-06-30T09:38:58.9968277Z       globalid (>= 0.6.0)
+2026-06-30T09:38:58.9968689Z       nokogiri (>= 1.8.5)
+2026-06-30T09:38:58.9969124Z     actionview (8.2.0.alpha)
+2026-06-30T09:38:58.9969585Z       activesupport (= 8.2.0.alpha)
+2026-06-30T09:38:58.9970069Z       builder (~> 3.1)
+2026-06-30T09:38:58.9970455Z       erubi (~> 1.11)
+2026-06-30T09:38:58.9970851Z       rails-dom-testing (~> 2.2)
+2026-06-30T09:38:58.9971703Z       rails-html-sanitizer (~> 1.7)
+2026-06-30T09:38:58.9972133Z     activejob (8.2.0.alpha)
+2026-06-30T09:38:58.9972702Z       activesupport (= 8.2.0.alpha)
+2026-06-30T09:38:58.9973287Z       globalid (>= 0.3.6)
+2026-06-30T09:38:58.9973845Z     activemodel (8.2.0.alpha)
+2026-06-30T09:38:58.9974480Z       activesupport (= 8.2.0.alpha)
+2026-06-30T09:38:58.9975378Z     activerecord (8.2.0.alpha)
+2026-06-30T09:38:58.9976067Z       activemodel (= 8.2.0.alpha)
+2026-06-30T09:38:58.9976871Z       activesupport (= 8.2.0.alpha)
+2026-06-30T09:38:58.9977341Z       timeout (>= 0.4.0)
+2026-06-30T09:38:58.9977742Z     activestorage (8.2.0.alpha)
+2026-06-30T09:38:58.9978154Z       actionpack (= 8.2.0.alpha)
+2026-06-30T09:38:58.9978585Z       activejob (= 8.2.0.alpha)
+2026-06-30T09:38:58.9979315Z       activerecord (= 8.2.0.alpha)
+2026-06-30T09:38:58.9979793Z       activesupport (= 8.2.0.alpha)
+2026-06-30T09:38:58.9980258Z       marcel (~> 1.0)
+2026-06-30T09:38:58.9980684Z     activesupport (8.2.0.alpha)
+2026-06-30T09:38:58.9981166Z       base64
+2026-06-30T09:38:58.9981685Z       bigdecimal
+2026-06-30T09:38:58.9982085Z       concurrent-ruby (~> 1.0, >= 1.3.1)
+2026-06-30T09:38:58.9982589Z       connection_pool (>= 2.2.5)
+2026-06-30T09:38:58.9983028Z       drb
+2026-06-30T09:38:58.9983365Z       i18n (>= 1.6, < 2)
+2026-06-30T09:38:58.9983748Z       json
+2026-06-30T09:38:58.9984074Z       logger (>= 1.4.2)
+2026-06-30T09:38:58.9984461Z       minitest (>= 5.1)
+2026-06-30T09:38:58.9984892Z       psych (>= 4)
+2026-06-30T09:38:58.9986091Z       securerandom (>= 0.3)
+2026-06-30T09:38:58.9986549Z       tzinfo (~> 2.0, >= 2.0.5)
+2026-06-30T09:38:58.9986991Z       uri (>= 0.13.1)
+2026-06-30T09:38:58.9987373Z     rails (8.2.0.alpha)
+2026-06-30T09:38:58.9987793Z       actioncable (= 8.2.0.alpha)
+2026-06-30T09:38:58.9988305Z       actionmailbox (= 8.2.0.alpha)
+2026-06-30T09:38:58.9988800Z       actionmailer (= 8.2.0.alpha)
+2026-06-30T09:38:58.9989761Z       actionpack (= 8.2.0.alpha)
+2026-06-30T09:38:58.9990247Z       actiontext (= 8.2.0.alpha)
+2026-06-30T09:38:58.9990720Z       actionview (= 8.2.0.alpha)
+2026-06-30T09:38:58.9991201Z       activejob (= 8.2.0.alpha)
+2026-06-30T09:38:58.9991660Z       activemodel (= 8.2.0.alpha)
+2026-06-30T09:38:58.9992138Z       activerecord (= 8.2.0.alpha)
+2026-06-30T09:38:58.9992625Z       activestorage (= 8.2.0.alpha)
+2026-06-30T09:38:58.9993120Z       activesupport (= 8.2.0.alpha)
+2026-06-30T09:38:58.9993599Z       bundler (>= 1.15.0)
+2026-06-30T09:38:58.9994021Z       railties (= 8.2.0.alpha)
+2026-06-30T09:38:58.9994460Z     railties (8.2.0.alpha)
+2026-06-30T09:38:58.9994886Z       actionpack (= 8.2.0.alpha)
+2026-06-30T09:38:58.9995663Z       activesupport (= 8.2.0.alpha)
+2026-06-30T09:38:58.9996137Z       irb (~> 1.13)
+2026-06-30T09:38:58.9996514Z       rackup (>= 1.0.0)
+2026-06-30T09:38:58.9996922Z       rake (>= 12.2)
+2026-06-30T09:38:58.9997323Z       thor (~> 1.0, >= 1.2.2)
+2026-06-30T09:38:58.9997769Z       tsort (>= 0.2)
+2026-06-30T09:38:58.9998170Z       zeitwerk (~> 2.6)
+2026-06-30T09:38:58.9998438Z 
+2026-06-30T09:38:58.9998590Z PATH
+2026-06-30T09:38:58.9998960Z   remote: tools/releaser
+2026-06-30T09:38:58.9999387Z   specs:
+2026-06-30T09:38:58.9999738Z     releaser (1.0.0)
+2026-06-30T09:38:59.0000115Z       minitest
+2026-06-30T09:38:59.0000482Z       rake (~> 13.0)
+2026-06-30T09:38:59.0000719Z 
+2026-06-30T09:38:59.0000857Z GEM
+2026-06-30T09:38:59.0001579Z   remote: https://rubygems.org/
+2026-06-30T09:38:59.0002097Z   specs:
+2026-06-30T09:38:59.0002465Z     action_text-trix (2.1.19)
+2026-06-30T09:38:59.0002917Z       railties
+2026-06-30T09:38:59.0003293Z     addressable (2.9.0)
+2026-06-30T09:38:59.0003746Z       public_suffix (>= 2.0.2, < 8.0)
+2026-06-30T09:38:59.0004285Z     amq-protocol (2.8.0)
+2026-06-30T09:38:59.0004716Z     argon2 (2.3.3)
+2026-06-30T09:38:59.0005347Z       ffi (~> 1.15)
+2026-06-30T09:38:59.0005760Z       ffi-compiler (~> 1.0)
+2026-06-30T09:38:59.0006184Z     ast (2.4.3)
+2026-06-30T09:38:59.0006562Z     aws-eventstream (1.4.0)
+2026-06-30T09:38:59.0007036Z     aws-partitions (1.1262.0)
+2026-06-30T09:38:59.0007501Z     aws-sdk-core (3.252.0)
+2026-06-30T09:38:59.0007947Z       aws-eventstream (~> 1, >= 1.3.0)
+2026-06-30T09:38:59.0008461Z       aws-partitions (~> 1, >= 1.992.0)
+2026-06-30T09:38:59.0008935Z       aws-sigv4 (~> 1.9)
+2026-06-30T09:38:59.0009310Z       base64
+2026-06-30T09:38:59.0009645Z       bigdecimal
+2026-06-30T09:38:59.0010024Z       jmespath (~> 1, >= 1.6.1)
+2026-06-30T09:38:59.0010455Z       logger
+2026-06-30T09:38:59.0010807Z     aws-sdk-kms (1.129.0)
+2026-06-30T09:38:59.0011229Z       aws-sdk-core (~> 3, >= 3.248.0)
+2026-06-30T09:38:59.0011719Z       aws-sigv4 (~> 1.5)
+2026-06-30T09:38:59.0012152Z     aws-sdk-s3 (1.226.0)
+2026-06-30T09:38:59.0012587Z       aws-sdk-core (~> 3, >= 3.248.0)
+2026-06-30T09:38:59.0013364Z       aws-sdk-kms (~> 1)
+2026-06-30T09:38:59.0013784Z       aws-sigv4 (~> 1.5)
+2026-06-30T09:38:59.0014230Z     aws-sdk-sns (1.117.0)
+2026-06-30T09:38:59.0014672Z       aws-sdk-core (~> 3, >= 3.248.0)
+2026-06-30T09:38:59.0016026Z       aws-sigv4 (~> 1.5)
+2026-06-30T09:38:59.0016526Z     aws-sigv4 (1.12.1)
+2026-06-30T09:38:59.0016919Z       aws-eventstream (~> 1, >= 1.0.2)
+2026-06-30T09:38:59.0017379Z     backburner (1.7.0)
+2026-06-30T09:38:59.0017798Z       beaneater (~> 1.0)
+2026-06-30T09:38:59.0018256Z       concurrent-ruby (~> 1.0, >= 1.0.1)
+2026-06-30T09:38:59.0018725Z       dante (> 0.1.5)
+2026-06-30T09:38:59.0019081Z     base64 (0.3.0)
+2026-06-30T09:38:59.0019420Z     bcrypt (3.1.22)
+2026-06-30T09:38:59.0019809Z     bcrypt_pbkdf (1.1.2)
+2026-06-30T09:38:59.0020200Z     beaneater (1.1.4)
+2026-06-30T09:38:59.0020587Z     bigdecimal (4.1.2)
+2026-06-30T09:38:59.0020995Z     bindex (0.8.1)
+2026-06-30T09:38:59.0021368Z     bootsnap (1.24.6)
+2026-06-30T09:38:59.0021752Z       msgpack (~> 1.2)
+2026-06-30T09:38:59.0022121Z     brakeman (8.0.5)
+2026-06-30T09:38:59.0022468Z       racc
+2026-06-30T09:38:59.0022792Z     builder (3.3.0)
+2026-06-30T09:38:59.0023171Z     bundler-audit (0.9.3)
+2026-06-30T09:38:59.0023578Z       bundler (>= 1.2.0)
+2026-06-30T09:38:59.0023979Z       thor (~> 1.0)
+2026-06-30T09:38:59.0024346Z     bunny (2.24.0)
+2026-06-30T09:38:59.0024738Z       amq-protocol (~> 2.3)
+2026-06-30T09:38:59.0025425Z       sorted_set (~> 1, >= 1.0.2)
+2026-06-30T09:38:59.0025866Z     capybara (3.40.0)
+2026-06-30T09:38:59.0026245Z       addressable
+2026-06-30T09:38:59.0026579Z       matrix
+2026-06-30T09:38:59.0026910Z       mini_mime (>= 0.1.3)
+2026-06-30T09:38:59.0027277Z       nokogiri (~> 1.11)
+2026-06-30T09:38:59.0027623Z       rack (>= 1.6.0)
+2026-06-30T09:38:59.0027964Z       rack-test (>= 0.6.3)
+2026-06-30T09:38:59.0028358Z       regexp_parser (>= 1.5, < 3.0)
+2026-06-30T09:38:59.0028813Z       xpath (~> 3.2)
+2026-06-30T09:38:59.0029212Z     chef-utils (19.3.15)
+2026-06-30T09:38:59.0029630Z       concurrent-ruby
+2026-06-30T09:38:59.0030044Z     childprocess (5.1.0)
+2026-06-30T09:38:59.0030459Z       logger (~> 1.5)
+2026-06-30T09:38:59.0030855Z     concurrent-ruby (1.3.7)
+2026-06-30T09:38:59.0031308Z     connection_pool (3.0.2)
+2026-06-30T09:38:59.0031726Z     crack (1.0.1)
+2026-06-30T09:38:59.0032088Z       bigdecimal
+2026-06-30T09:38:59.0032433Z       rexml
+2026-06-30T09:38:59.0032759Z     crass (1.0.7)
+2026-06-30T09:38:59.0033150Z     cssbundling-rails (1.4.3)
+2026-06-30T09:38:59.0033605Z       railties (>= 6.0.0)
+2026-06-30T09:38:59.0034031Z     dalli (5.0.5)
+2026-06-30T09:38:59.0034389Z       logger
+2026-06-30T09:38:59.0034970Z     dante (0.2.0)
+2026-06-30T09:38:59.0035645Z     dartsass-rails (0.5.1)
+2026-06-30T09:38:59.0036086Z       railties (>= 6.0.0)
+2026-06-30T09:38:59.0036531Z       sass-embedded (~> 1.63)
+2026-06-30T09:38:59.0036973Z     date (3.5.1)
+2026-06-30T09:38:59.0037341Z     debug (1.11.1)
+2026-06-30T09:38:59.0037726Z       irb (~> 1.10)
+2026-06-30T09:38:59.0038109Z       reline (>= 0.3.8)
+2026-06-30T09:38:59.0038571Z     declarative (0.0.20)
+2026-06-30T09:38:59.0038972Z     digest-crc (0.7.0)
+2026-06-30T09:38:59.0039392Z       rake (>= 12.0.0, < 14.0.0)
+2026-06-30T09:38:59.0039863Z     dotenv (3.2.0)
+2026-06-30T09:38:59.0040235Z     drb (2.2.3)
+2026-06-30T09:38:59.0040605Z     ed25519 (1.4.0)
+2026-06-30T09:38:59.0040975Z     erb (6.0.4)
+2026-06-30T09:38:59.0041340Z     erubi (1.13.1)
+2026-06-30T09:38:59.0041715Z     et-orbi (1.4.0)
+2026-06-30T09:38:59.0042086Z       tzinfo
+2026-06-30T09:38:59.0042455Z     event_emitter (0.2.6)
+2026-06-30T09:38:59.0042882Z     execjs (2.10.1)
+2026-06-30T09:38:59.0043291Z     faraday (2.14.3)
+2026-06-30T09:38:59.0043724Z       faraday-net_http (>= 2.0, < 3.5)
+2026-06-30T09:38:59.0044185Z       json
+2026-06-30T09:38:59.0044521Z       logger
+2026-06-30T09:38:59.0044925Z     faraday-follow_redirects (0.5.0)
+2026-06-30T09:38:59.0045995Z       faraday (>= 1, < 3)
+2026-06-30T09:38:59.0046461Z     faraday-net_http (3.4.4)
+2026-06-30T09:38:59.0046902Z       net-http (~> 0.5)
+2026-06-30T09:38:59.0047765Z     ffi (1.17.4-aarch64-linux-gnu)
+2026-06-30T09:38:59.0048260Z     ffi (1.17.4-aarch64-linux-musl)
+2026-06-30T09:38:59.0048770Z     ffi (1.17.4-arm-linux-gnu)
+2026-06-30T09:38:59.0049244Z     ffi (1.17.4-arm-linux-musl)
+2026-06-30T09:38:59.0049722Z     ffi (1.17.4-x86_64-linux-gnu)
+2026-06-30T09:38:59.0050201Z     ffi (1.17.4-x86_64-linux-musl)
+2026-06-30T09:38:59.0050682Z     ffi-compiler (1.4.2)
+2026-06-30T09:38:59.0051096Z       ffi (>= 1.15.5)
+2026-06-30T09:38:59.0051454Z       rake
+2026-06-30T09:38:59.0051779Z     fugit (1.12.2)
+2026-06-30T09:38:59.0052133Z       et-orbi (~> 1.4)
+2026-06-30T09:38:59.0052500Z       raabro (~> 1.4)
+2026-06-30T09:38:59.0052858Z     globalid (1.4.0)
+2026-06-30T09:38:59.0053227Z       activesupport (>= 6.1)
+2026-06-30T09:38:59.0053646Z     google-apis-core (1.2.4)
+2026-06-30T09:38:59.0054055Z       addressable (~> 2.9)
+2026-06-30T09:38:59.0054441Z       faraday (~> 2.13)
+2026-06-30T09:38:59.0054837Z       faraday-follow_redirects (~> 0.3)
+2026-06-30T09:38:59.0055536Z       googleauth (~> 1.14)
+2026-06-30T09:38:59.0055950Z       mini_mime (~> 1.1)
+2026-06-30T09:38:59.0056333Z       multi_json (~> 1.11)
+2026-06-30T09:38:59.0056719Z       representable (~> 3.0)
+2026-06-30T09:38:59.0057140Z       retriable (>= 3.1, < 5.0)
+2026-06-30T09:38:59.0057593Z     google-apis-iamcredentials_v1 (0.28.0)
+2026-06-30T09:38:59.0058080Z       google-apis-core (>= 0.15.0, < 2.a)
+2026-06-30T09:38:59.0058528Z     google-apis-storage_v1 (0.64.0)
+2026-06-30T09:38:59.0058954Z       google-apis-core (>= 0.15.0, < 2.a)
+2026-06-30T09:38:59.0059390Z     google-cloud-core (1.9.0)
+2026-06-30T09:38:59.0059776Z       google-cloud-env (>= 1.0, < 3.a)
+2026-06-30T09:38:59.0060177Z       google-cloud-errors (~> 1.0)
+2026-06-30T09:38:59.0060596Z     google-cloud-env (2.3.1)
+2026-06-30T09:38:59.0060979Z       base64 (~> 0.2)
+2026-06-30T09:38:59.0061321Z       faraday (>= 1.0, < 3.a)
+2026-06-30T09:38:59.0061713Z     google-cloud-errors (1.6.0)
+2026-06-30T09:38:59.0062134Z     google-cloud-storage (1.61.0)
+2026-06-30T09:38:59.0062554Z       addressable (~> 2.8)
+2026-06-30T09:38:59.0062937Z       digest-crc (~> 0.4)
+2026-06-30T09:38:59.0063329Z       google-apis-core (>= 0.18, < 2)
+2026-06-30T09:38:59.0063810Z       google-apis-iamcredentials_v1 (~> 0.18)
+2026-06-30T09:38:59.0064304Z       google-apis-storage_v1 (>= 0.42)
+2026-06-30T09:38:59.0064938Z       google-cloud-core (~> 1.6)
+2026-06-30T09:38:59.0065686Z       googleauth (~> 1.9)
+2026-06-30T09:38:59.0065947Z       mini_mime (~> 1.0)
+2026-06-30T09:38:59.0066182Z     google-logging-utils (0.2.0)
+2026-06-30T09:38:59.0066441Z     google-protobuf (4.35.1)
+2026-06-30T09:38:59.0066897Z       bigdecimal
+2026-06-30T09:38:59.0067117Z       rake (~> 13.3)
+2026-06-30T09:38:59.0067368Z     google-protobuf (4.35.1-aarch64-linux-gnu)
+2026-06-30T09:38:59.0067658Z       bigdecimal
+2026-06-30T09:38:59.0067857Z       rake (~> 13.3)
+2026-06-30T09:38:59.0068099Z     google-protobuf (4.35.1-aarch64-linux-musl)
+2026-06-30T09:38:59.0068391Z       bigdecimal
+2026-06-30T09:38:59.0068589Z       rake (~> 13.3)
+2026-06-30T09:38:59.0068822Z     google-protobuf (4.35.1-x86_64-linux-gnu)
+2026-06-30T09:38:59.0069093Z       bigdecimal
+2026-06-30T09:38:59.0069284Z       rake (~> 13.3)
+2026-06-30T09:38:59.0069510Z     google-protobuf (4.35.1-x86_64-linux-musl)
+2026-06-30T09:38:59.0069782Z       bigdecimal
+2026-06-30T09:38:59.0069975Z       rake (~> 13.3)
+2026-06-30T09:38:59.0070177Z     googleauth (1.17.1)
+2026-06-30T09:38:59.0070396Z       faraday (>= 1.0, < 3.a)
+2026-06-30T09:38:59.0070646Z       google-cloud-env (~> 2.2)
+2026-06-30T09:38:59.0071040Z       google-logging-utils (~> 0.1)
+2026-06-30T09:38:59.0071306Z       jwt (>= 1.4, < 4.0)
+2026-06-30T09:38:59.0071518Z       os (>= 0.9, < 2.0)
+2026-06-30T09:38:59.0071731Z       pstore (~> 0.1)
+2026-06-30T09:38:59.0071941Z       signet (>= 0.16, < 2.a)
+2026-06-30T09:38:59.0072167Z     hashdiff (1.2.1)
+2026-06-30T09:38:59.0072364Z     i18n (1.15.2)
+2026-06-30T09:38:59.0072572Z       concurrent-ruby (~> 1.0)
+2026-06-30T09:38:59.0072960Z     image_processing (2.0.2)
+2026-06-30T09:38:59.0073200Z     importmap-rails (2.2.3)
+2026-06-30T09:38:59.0073431Z       actionpack (>= 6.0.0)
+2026-06-30T09:38:59.0073660Z       activesupport (>= 6.0.0)
+2026-06-30T09:38:59.0073898Z       railties (>= 6.0.0)
+2026-06-30T09:38:59.0074115Z     io-console (0.8.2)
+2026-06-30T09:38:59.0074320Z     irb (1.18.0)
+2026-06-30T09:38:59.0074540Z       pp (>= 0.6.0)
+2026-06-30T09:38:59.0074744Z       prism (>= 1.3.0)
+2026-06-30T09:38:59.0074949Z       rdoc (>= 4.0.0)
+2026-06-30T09:38:59.0075643Z       reline (>= 0.4.2)
+2026-06-30T09:38:59.0076049Z     jbuilder (2.15.1)
+2026-06-30T09:38:59.0076399Z       actionview (>= 7.0.0)
+2026-06-30T09:38:59.0076638Z       activesupport (>= 7.0.0)
+2026-06-30T09:38:59.0076872Z     jmespath (1.6.2)
+2026-06-30T09:38:59.0077087Z     jsbundling-rails (1.3.1)
+2026-06-30T09:38:59.0077319Z       railties (>= 6.0.0)
+2026-06-30T09:38:59.0077530Z     json (2.20.0)
+2026-06-30T09:38:59.0077732Z     jwt (3.2.0)
+2026-06-30T09:38:59.0077920Z       base64
+2026-06-30T09:38:59.0078117Z     kamal (2.12.0)
+2026-06-30T09:38:59.0101688Z       activesupport (>= 7.0)
+2026-06-30T09:38:59.0102108Z       base64 (~> 0.2)
+2026-06-30T09:38:59.0102415Z       bcrypt_pbkdf (~> 1.0)
+2026-06-30T09:38:59.0102678Z       concurrent-ruby (~> 1.2)
+2026-06-30T09:38:59.0102940Z       dotenv (~> 3.1)
+2026-06-30T09:38:59.0103160Z       ed25519 (~> 1.4)
+2026-06-30T09:38:59.0103397Z       net-ssh (~> 7.3)
+2026-06-30T09:38:59.0103732Z       sshkit (>= 1.23.0, < 2.0)
+2026-06-30T09:38:59.0104170Z       thor (~> 1.3)
+2026-06-30T09:38:59.0104511Z       zeitwerk (>= 2.6.18, < 3.0)
+2026-06-30T09:38:59.0104945Z     kramdown (2.5.2)
+2026-06-30T09:38:59.0105546Z       rexml (>= 3.4.4)
+2026-06-30T09:38:59.0105790Z     kramdown-parser-gfm (1.1.0)
+2026-06-30T09:38:59.0106042Z       kramdown (~> 2.0)
+2026-06-30T09:38:59.0106281Z     language_server-protocol (3.17.0.5)
+2026-06-30T09:38:59.0106549Z     launchy (3.1.1)
+2026-06-30T09:38:59.0106758Z       addressable (~> 2.8)
+2026-06-30T09:38:59.0107004Z       childprocess (~> 5.0)
+2026-06-30T09:38:59.0107250Z       logger (~> 1.6)
+2026-06-30T09:38:59.0107613Z     libxml-ruby (6.0.0)
+2026-06-30T09:38:59.0107972Z     lint_roller (1.1.0)
+2026-06-30T09:38:59.0108325Z     listen (3.10.0)
+2026-06-30T09:38:59.0108561Z       logger
+2026-06-30T09:38:59.0108767Z       rb-fsevent (~> 0.10, >= 0.10.3)
+2026-06-30T09:38:59.0109037Z       rb-inotify (~> 0.9, >= 0.9.10)
+2026-06-30T09:38:59.0109283Z     logger (1.7.0)
+2026-06-30T09:38:59.0109485Z     loofah (2.25.1)
+2026-06-30T09:38:59.0109685Z       crass (~> 1.0.2)
+2026-06-30T09:38:59.0109895Z       nokogiri (>= 1.12.0)
+2026-06-30T09:38:59.0110415Z     mail (2.9.0)
+2026-06-30T09:38:59.0110620Z       logger
+2026-06-30T09:38:59.0110812Z       mini_mime (>= 0.1.1)
+2026-06-30T09:38:59.0111030Z       net-imap
+2026-06-30T09:38:59.0111225Z       net-pop
+2026-06-30T09:38:59.0111418Z       net-smtp
+2026-06-30T09:38:59.0111614Z     marcel (1.2.1)
+2026-06-30T09:38:59.0111816Z     matrix (0.4.3)
+2026-06-30T09:38:59.0112026Z     mdl (0.17.0)
+2026-06-30T09:38:59.0112229Z       kramdown (~> 2.5)
+2026-06-30T09:38:59.0112468Z       kramdown-parser-gfm (~> 1.1)
+2026-06-30T09:38:59.0112723Z       mixlib-cli
+2026-06-30T09:38:59.0112920Z       mixlib-config
+2026-06-30T09:38:59.0113129Z       mixlib-shellout
+2026-06-30T09:38:59.0113345Z     mini_magick (5.3.1)
+2026-06-30T09:38:59.0113555Z       logger
+2026-06-30T09:38:59.0113746Z     mini_mime (1.1.5)
+2026-06-30T09:38:59.0113954Z     minitest (6.0.6)
+2026-06-30T09:38:59.0114156Z       drb (~> 2.0)
+2026-06-30T09:38:59.0114351Z       prism (~> 1.5)
+2026-06-30T09:38:59.0114562Z     minitest-mock (5.27.0)
+2026-06-30T09:38:59.0114806Z     minitest-retry (0.3.1)
+2026-06-30T09:38:59.0115030Z       minitest (>= 5.0)
+2026-06-30T09:38:59.0115547Z     mixlib-cli (2.1.8)
+2026-06-30T09:38:59.0115934Z     mixlib-config (3.0.27)
+2026-06-30T09:38:59.0116298Z       tomlrb
+2026-06-30T09:38:59.0116624Z     mixlib-shellout (3.4.10)
+2026-06-30T09:38:59.0116875Z       chef-utils
+2026-06-30T09:38:59.0117257Z     mono_logger (1.1.2)
+2026-06-30T09:38:59.0117467Z     msgpack (1.8.3)
+2026-06-30T09:38:59.0117670Z     multi_json (1.21.1)
+2026-06-30T09:38:59.0117879Z     mustermann (3.1.1)
+2026-06-30T09:38:59.0118083Z     mutex_m (0.3.0)
+2026-06-30T09:38:59.0118276Z     mysql2 (0.5.6)
+2026-06-30T09:38:59.0118478Z     net-http (0.9.1)
+2026-06-30T09:38:59.0118679Z       uri (>= 0.11.1)
+2026-06-30T09:38:59.0118881Z     net-imap (0.6.4.1)
+2026-06-30T09:38:59.0119082Z       date
+2026-06-30T09:38:59.0119268Z       net-protocol
+2026-06-30T09:38:59.0119468Z     net-pop (0.1.2)
+2026-06-30T09:38:59.0119669Z       net-protocol
+2026-06-30T09:38:59.0119926Z     net-protocol (0.2.2)
+2026-06-30T09:38:59.0120144Z       timeout
+2026-06-30T09:38:59.0120335Z     net-scp (4.1.0)
+2026-06-30T09:38:59.0120535Z       net-ssh (>= 2.6.5, < 8.0.0)
+2026-06-30T09:38:59.0120776Z     net-sftp (4.0.0)
+2026-06-30T09:38:59.0120987Z       net-ssh (>= 5.0.0, < 8.0.0)
+2026-06-30T09:38:59.0121218Z     net-smtp (0.5.1)
+2026-06-30T09:38:59.0121418Z       net-protocol
+2026-06-30T09:38:59.0121622Z     net-ssh (7.3.3)
+2026-06-30T09:38:59.0121816Z     nio4r (2.7.5)
+2026-06-30T09:38:59.0122031Z     nokogiri (1.19.4-aarch64-linux-gnu)
+2026-06-30T09:38:59.0122292Z       racc (~> 1.4)
+2026-06-30T09:38:59.0122510Z     nokogiri (1.19.4-aarch64-linux-musl)
+2026-06-30T09:38:59.0122769Z       racc (~> 1.4)
+2026-06-30T09:38:59.0122978Z     nokogiri (1.19.4-arm-linux-gnu)
+2026-06-30T09:38:59.0123225Z       racc (~> 1.4)
+2026-06-30T09:38:59.0123436Z     nokogiri (1.19.4-arm-linux-musl)
+2026-06-30T09:38:59.0123685Z       racc (~> 1.4)
+2026-06-30T09:38:59.0123896Z     nokogiri (1.19.4-x86_64-linux-gnu)
+2026-06-30T09:38:59.0124152Z       racc (~> 1.4)
+2026-06-30T09:38:59.0124365Z     nokogiri (1.19.4-x86_64-linux-musl)
+2026-06-30T09:38:59.0124612Z       racc (~> 1.4)
+2026-06-30T09:38:59.0124810Z     os (1.1.4)
+2026-06-30T09:38:59.0125001Z     ostruct (0.6.3)
+2026-06-30T09:38:59.0125436Z     parallel (1.28.0)
+2026-06-30T09:38:59.0125655Z     parser (3.3.11.1)
+2026-06-30T09:38:59.0125871Z       ast (~> 2.4.1)
+2026-06-30T09:38:59.0126064Z       racc
+2026-06-30T09:38:59.0126275Z     pg (1.6.3)
+2026-06-30T09:38:59.0126480Z     pg (1.6.3-aarch64-linux)
+2026-06-30T09:38:59.0126725Z     pg (1.6.3-aarch64-linux-musl)
+2026-06-30T09:38:59.0126971Z     pg (1.6.3-x86_64-linux)
+2026-06-30T09:38:59.0127198Z     pg (1.6.3-x86_64-linux-musl)
+2026-06-30T09:38:59.0127428Z     pp (0.6.4)
+2026-06-30T09:38:59.0127620Z       prettyprint
+2026-06-30T09:38:59.0127824Z     prettyprint (0.2.0)
+2026-06-30T09:38:59.0128036Z     prism (1.9.0)
+2026-06-30T09:38:59.0128236Z     propshaft (1.3.2)
+2026-06-30T09:38:59.0128609Z       actionpack (>= 7.0.0)
+2026-06-30T09:38:59.0128849Z       activesupport (>= 7.0.0)
+2026-06-30T09:38:59.0129082Z       rack
+2026-06-30T09:38:59.0129268Z     pstore (0.2.1)
+2026-06-30T09:38:59.0129462Z     psych (5.4.0)
+2026-06-30T09:38:59.0129646Z       date
+2026-06-30T09:38:59.0129819Z       stringio
+2026-06-30T09:38:59.0130013Z     public_suffix (7.0.5)
+2026-06-30T09:38:59.0130231Z     puma (8.0.2)
+2026-06-30T09:38:59.0130432Z       nio4r (~> 2.0)
+2026-06-30T09:38:59.0130639Z     queue_classic (4.0.0)
+2026-06-30T09:38:59.0130861Z       pg (>= 1.1, < 2.0)
+2026-06-30T09:38:59.0131069Z     raabro (1.4.0)
+2026-06-30T09:38:59.0131263Z     racc (1.8.1)
+2026-06-30T09:38:59.0131451Z     rack (3.2.6)
+2026-06-30T09:38:59.0131647Z     rack-cache (1.17.0)
+2026-06-30T09:38:59.0131860Z       rack (>= 0.4)
+2026-06-30T09:38:59.0132066Z     rack-protection (4.2.1)
+2026-06-30T09:38:59.0132287Z       base64 (>= 0.1.0)
+2026-06-30T09:38:59.0132496Z       logger (>= 1.6.0)
+2026-06-30T09:38:59.0132714Z       rack (>= 3.0.0, < 4)
+2026-06-30T09:38:59.0132936Z     rack-session (2.1.2)
+2026-06-30T09:38:59.0133148Z       base64 (>= 0.1.0)
+2026-06-30T09:38:59.0133346Z       rack (>= 3.0.0)
+2026-06-30T09:38:59.0133551Z     rack-test (2.2.0)
+2026-06-30T09:38:59.0133751Z       rack (>= 1.3)
+2026-06-30T09:38:59.0133943Z     rackup (2.3.1)
+2026-06-30T09:38:59.0134133Z       rack (>= 3)
+2026-06-30T09:38:59.0134341Z     rails-dom-testing (2.3.0)
+2026-06-30T09:38:59.0134731Z       activesupport (>= 5.0.0)
+2026-06-30T09:38:59.0134956Z       minitest
+2026-06-30T09:38:59.0135424Z       nokogiri (>= 1.6)
+2026-06-30T09:38:59.0135734Z     rails-html-sanitizer (1.7.0)
+2026-06-30T09:38:59.0135988Z       loofah (~> 2.25)
+2026-06-30T09:38:59.0136406Z       nokogiri (>= 1.15.7, != 1.16.7, != 1.16.6, != 1.16.5, != 1.16.4, != 1.16.3, != 1.16.2, != 1.16.1, != 1.16.0.rc1, != 1.16.0)
+2026-06-30T09:38:59.0136852Z     rainbow (3.1.1)
+2026-06-30T09:38:59.0137054Z     rake (13.4.2)
+2026-06-30T09:38:59.0137297Z     rb-fsevent (0.11.2)
+2026-06-30T09:38:59.0137519Z     rb-inotify (0.11.1)
+2026-06-30T09:38:59.0137725Z       ffi (~> 1.0)
+2026-06-30T09:38:59.0137923Z     rbs (4.0.3)
+2026-06-30T09:38:59.0138114Z       logger
+2026-06-30T09:38:59.0138299Z       prism (>= 1.6.0)
+2026-06-30T09:38:59.0138504Z       tsort
+2026-06-30T09:38:59.0138685Z     rbtree (0.4.7)
+2026-06-30T09:38:59.0138880Z     rdoc (8.0.0)
+2026-06-30T09:38:59.0139067Z       erb
+2026-06-30T09:38:59.0139252Z       prism (>= 1.6.0)
+2026-06-30T09:38:59.0139450Z       rbs (>= 4.0.0)
+2026-06-30T09:38:59.0139641Z       tsort
+2026-06-30T09:38:59.0139820Z     redcarpet (3.6.1)
+2026-06-30T09:38:59.0140021Z     redis (5.4.1)
+2026-06-30T09:38:59.0140223Z       redis-client (>= 0.22.0)
+2026-06-30T09:38:59.0140454Z     redis-client (0.30.0)
+2026-06-30T09:38:59.0140675Z       connection_pool
+2026-06-30T09:38:59.0140891Z     redis-namespace (1.11.0)
+2026-06-30T09:38:59.0141118Z       redis (>= 4)
+2026-06-30T09:38:59.0141320Z     regexp_parser (2.12.0)
+2026-06-30T09:38:59.0141535Z     reline (0.6.3)
+2026-06-30T09:38:59.0141738Z       io-console (~> 0.5)
+2026-06-30T09:38:59.0141958Z     representable (3.2.0)
+2026-06-30T09:38:59.0142180Z       declarative (< 0.1.0)
+2026-06-30T09:38:59.0142425Z       trailblazer-option (>= 0.1.1, < 0.2.0)
+2026-06-30T09:38:59.0142704Z       uber (< 0.2.0)
+2026-06-30T09:38:59.0142903Z     resque (3.0.0)
+2026-06-30T09:38:59.0143096Z       base64 (~> 0.1)
+2026-06-30T09:38:59.0143301Z       logger
+2026-06-30T09:38:59.0143485Z       mono_logger (~> 1)
+2026-06-30T09:38:59.0143701Z       multi_json (~> 1.0)
+2026-06-30T09:38:59.0143910Z       redis (>= 4.0)
+2026-06-30T09:38:59.0144118Z       redis-namespace (~> 1.6)
+2026-06-30T09:38:59.0144350Z       sinatra (>= 2.0)
+2026-06-30T09:38:59.0144565Z     resque-scheduler (5.0.0)
+2026-06-30T09:38:59.0144794Z       base64 (~> 0.1)
+2026-06-30T09:38:59.0144988Z       logger
+2026-06-30T09:38:59.0145483Z       mono_logger (~> 1.0)
+2026-06-30T09:38:59.0145718Z       redis (>= 4.0)
+2026-06-30T09:38:59.0145925Z       resque (>= 3.0)
+2026-06-30T09:38:59.0146319Z       rufus-scheduler (~> 3.2, != 3.3)
+2026-06-30T09:38:59.0146590Z     retriable (4.2.0)
+2026-06-30T09:38:59.0146790Z     rexml (3.4.4)
+2026-06-30T09:38:59.0146981Z     rouge (5.0.0)
+2026-06-30T09:38:59.0147177Z       strscan (~> 3.1)
+2026-06-30T09:38:59.0147385Z     rubocop (1.79.2)
+2026-06-30T09:38:59.0147584Z       json (~> 2.3)
+2026-06-30T09:38:59.0147801Z       language_server-protocol (~> 3.17.0.2)
+2026-06-30T09:38:59.0148082Z       lint_roller (~> 1.1.0)
+2026-06-30T09:38:59.0148310Z       parallel (~> 1.10)
+2026-06-30T09:38:59.0148523Z       parser (>= 3.3.0.2)
+2026-06-30T09:38:59.0148737Z       rainbow (>= 2.2.2, < 4.0)
+2026-06-30T09:38:59.0148977Z       regexp_parser (>= 2.9.3, < 3.0)
+2026-06-30T09:38:59.0149237Z       rubocop-ast (>= 1.46.0, < 2.0)
+2026-06-30T09:38:59.0149491Z       ruby-progressbar (~> 1.7)
+2026-06-30T09:38:59.0149747Z       unicode-display_width (>= 2.4.0, < 4.0)
+2026-06-30T09:38:59.0150016Z     rubocop-ast (1.49.1)
+2026-06-30T09:38:59.0150231Z       parser (>= 3.3.7.2)
+2026-06-30T09:38:59.0150450Z       prism (~> 1.7)
+2026-06-30T09:38:59.0150650Z     rubocop-md (2.0.4)
+2026-06-30T09:38:59.0150858Z       lint_roller (~> 1.1)
+2026-06-30T09:38:59.0151079Z       rubocop (>= 1.72.1)
+2026-06-30T09:38:59.0151298Z     rubocop-minitest (0.39.1)
+2026-06-30T09:38:59.0151529Z       lint_roller (~> 1.1)
+2026-06-30T09:38:59.0151751Z       rubocop (>= 1.75.0, < 2.0)
+2026-06-30T09:38:59.0152124Z       rubocop-ast (>= 1.38.0, < 2.0)
+2026-06-30T09:38:59.0152382Z     rubocop-packaging (0.6.0)
+2026-06-30T09:38:59.0152619Z       lint_roller (~> 1.1.0)
+2026-06-30T09:38:59.0152844Z       rubocop (>= 1.72.1, < 2.0)
+2026-06-30T09:38:59.0153089Z     rubocop-performance (1.26.1)
+2026-06-30T09:38:59.0153329Z       lint_roller (~> 1.1)
+2026-06-30T09:38:59.0153552Z       rubocop (>= 1.75.0, < 2.0)
+2026-06-30T09:38:59.0153788Z       rubocop-ast (>= 1.47.1, < 2.0)
+2026-06-30T09:38:59.0154033Z     rubocop-rails (2.35.5)
+2026-06-30T09:38:59.0154264Z       activesupport (>= 4.2.0)
+2026-06-30T09:38:59.0154493Z       lint_roller (~> 1.1)
+2026-06-30T09:38:59.0154710Z       rack (>= 1.1)
+2026-06-30T09:38:59.0154909Z       rubocop (>= 1.75.0, < 2.0)
+2026-06-30T09:38:59.0155305Z       rubocop-ast (>= 1.44.0, < 2.0)
+2026-06-30T09:38:59.0155566Z     rubocop-rails-omakase (1.1.0)
+2026-06-30T09:38:59.0155817Z       rubocop (>= 1.72)
+2026-06-30T09:38:59.0156045Z       rubocop-performance (>= 1.24)
+2026-06-30T09:38:59.0156310Z       rubocop-rails (>= 2.30)
+2026-06-30T09:38:59.0156548Z     ruby-progressbar (1.13.0)
+2026-06-30T09:38:59.0156782Z     ruby-vips (2.3.0)
+2026-06-30T09:38:59.0156985Z       ffi (~> 1.12)
+2026-06-30T09:38:59.0157177Z       logger
+2026-06-30T09:38:59.0157361Z     rubyzip (2.4.1)
+2026-06-30T09:38:59.0157567Z     rufus-scheduler (3.9.2)
+2026-06-30T09:38:59.0157791Z       fugit (~> 1.1, >= 1.11.1)
+2026-06-30T09:38:59.0158052Z     sass-embedded (1.101.0-aarch64-linux-gnu)
+2026-06-30T09:38:59.0158341Z       google-protobuf (~> 4.31)
+2026-06-30T09:38:59.0158608Z     sass-embedded (1.101.0-aarch64-linux-musl)
+2026-06-30T09:38:59.0158901Z       google-protobuf (~> 4.31)
+2026-06-30T09:38:59.0159165Z     sass-embedded (1.101.0-arm-linux-gnueabihf)
+2026-06-30T09:38:59.0159460Z       google-protobuf (~> 4.31)
+2026-06-30T09:38:59.0159724Z     sass-embedded (1.101.0-arm-linux-musleabihf)
+2026-06-30T09:38:59.0160016Z       google-protobuf (~> 4.31)
+2026-06-30T09:38:59.0160271Z     sass-embedded (1.101.0-x86_64-linux-gnu)
+2026-06-30T09:38:59.0160547Z       google-protobuf (~> 4.31)
+2026-06-30T09:38:59.0160797Z     sass-embedded (1.101.0-x86_64-linux-musl)
+2026-06-30T09:38:59.0161075Z       google-protobuf (~> 4.31)
+2026-06-30T09:38:59.0161301Z     sdoc (2.6.5)
+2026-06-30T09:38:59.0161493Z       rdoc (>= 5.0)
+2026-06-30T09:38:59.0161694Z     securerandom (0.4.1)
+2026-06-30T09:38:59.0161924Z     selenium-webdriver (4.45.0)
+2026-06-30T09:38:59.0162150Z       base64 (~> 0.2)
+2026-06-30T09:38:59.0162353Z       logger (~> 1.4)
+2026-06-30T09:38:59.0162556Z       rexml (~> 3.2, >= 3.2.5)
+2026-06-30T09:38:59.0162783Z       rubyzip (>= 1.2.2, < 4.0)
+2026-06-30T09:38:59.0163166Z       websocket (~> 1.0)
+2026-06-30T09:38:59.0163398Z     serverengine (2.0.7)
+2026-06-30T09:38:59.0163620Z       sigdump (~> 0.2.2)
+2026-06-30T09:38:59.0163828Z     sigdump (0.2.5)
+2026-06-30T09:38:59.0164028Z     signet (0.22.0)
+2026-06-30T09:38:59.0164224Z       addressable (~> 2.8)
+2026-06-30T09:38:59.0164452Z       faraday (>= 0.17.5, < 3.a)
+2026-06-30T09:38:59.0164691Z       jwt (>= 1.5, < 4.0)
+2026-06-30T09:38:59.0164902Z     sinatra (4.2.1)
+2026-06-30T09:38:59.0165221Z       logger (>= 1.6.0)
+2026-06-30T09:38:59.0165573Z       mustermann (~> 3.0)
+2026-06-30T09:38:59.0165820Z       rack (>= 3.0.0, < 4)
+2026-06-30T09:38:59.0166047Z       rack-protection (= 4.2.1)
+2026-06-30T09:38:59.0166287Z       rack-session (>= 2.0.0, < 3)
+2026-06-30T09:38:59.0166528Z       tilt (~> 2.0)
+2026-06-30T09:38:59.0166720Z     sneakers (2.11.0)
+2026-06-30T09:38:59.0166927Z       bunny (~> 2.12)
+2026-06-30T09:38:59.0167135Z       concurrent-ruby (~> 1.0)
+2026-06-30T09:38:59.0167362Z       rake
+2026-06-30T09:38:59.0167561Z       serverengine (~> 2.0.5)
+2026-06-30T09:38:59.0167782Z       thor
+2026-06-30T09:38:59.0167963Z     solid_cable (4.0.0)
+2026-06-30T09:38:59.0168174Z       actioncable (>= 7.2)
+2026-06-30T09:38:59.0168391Z       activejob (>= 7.2)
+2026-06-30T09:38:59.0168603Z       activerecord (>= 7.2)
+2026-06-30T09:38:59.0168824Z       railties (>= 7.2)
+2026-06-30T09:38:59.0169186Z     solid_cache (1.0.10)
+2026-06-30T09:38:59.0169408Z       activejob (>= 7.2)
+2026-06-30T09:38:59.0169625Z       activerecord (>= 7.2)
+2026-06-30T09:38:59.0169842Z       railties (>= 7.2)
+2026-06-30T09:38:59.0170050Z     solid_queue (1.4.0)
+2026-06-30T09:38:59.0170256Z       activejob (>= 7.1)
+2026-06-30T09:38:59.0170475Z       activerecord (>= 7.1)
+2026-06-30T09:38:59.0170705Z       concurrent-ruby (>= 1.3.1)
+2026-06-30T09:38:59.0170941Z       fugit (~> 1.11)
+2026-06-30T09:38:59.0171142Z       railties (>= 7.1)
+2026-06-30T09:38:59.0171344Z       thor (>= 1.3.1)
+2026-06-30T09:38:59.0171545Z     sorted_set (1.1.0)
+2026-06-30T09:38:59.0171752Z       rbtree
+2026-06-30T09:38:59.0171944Z     sprockets (4.2.2)
+2026-06-30T09:38:59.0172156Z       concurrent-ruby (~> 1.0)
+2026-06-30T09:38:59.0172381Z       logger
+2026-06-30T09:38:59.0172566Z       rack (>= 2.2.4, < 4)
+2026-06-30T09:38:59.0172796Z     sprockets-rails (3.5.2)
+2026-06-30T09:38:59.0173023Z       actionpack (>= 6.1)
+2026-06-30T09:38:59.0173259Z       activesupport (>= 6.1)
+2026-06-30T09:38:59.0173494Z       sprockets (>= 3.0.0)
+2026-06-30T09:38:59.0173727Z     sqlite3 (2.9.5-aarch64-linux-gnu)
+2026-06-30T09:38:59.0173993Z     sqlite3 (2.9.5-aarch64-linux-musl)
+2026-06-30T09:38:59.0174257Z     sqlite3 (2.9.5-arm-linux-gnu)
+2026-06-30T09:38:59.0174509Z     sqlite3 (2.9.5-arm-linux-musl)
+2026-06-30T09:38:59.0174760Z     sqlite3 (2.9.5-x86_64-linux-gnu)
+2026-06-30T09:38:59.0175009Z     sqlite3 (2.9.5-x86_64-linux-musl)
+2026-06-30T09:38:59.0175526Z     sshkit (1.25.0)
+2026-06-30T09:38:59.0175725Z       base64
+2026-06-30T09:38:59.0175899Z       logger
+2026-06-30T09:38:59.0176091Z       net-scp (>= 1.1.2)
+2026-06-30T09:38:59.0176308Z       net-sftp (>= 2.1.2)
+2026-06-30T09:38:59.0176529Z       net-ssh (>= 2.8.0)
+2026-06-30T09:38:59.0176734Z       ostruct
+2026-06-30T09:38:59.0176931Z     stackprof (0.2.28)
+2026-06-30T09:38:59.0177145Z     stimulus-rails (1.3.4)
+2026-06-30T09:38:59.0177366Z       railties (>= 6.0.0)
+2026-06-30T09:38:59.0177577Z     stringio (3.2.0)
+2026-06-30T09:38:59.0177782Z     strscan (3.1.8)
+2026-06-30T09:38:59.0178019Z     tailwindcss-rails (4.6.0)
+2026-06-30T09:38:59.0178263Z       railties (>= 7.0.0)
+2026-06-30T09:38:59.0178486Z       tailwindcss-ruby (~> 4.0)
+2026-06-30T09:38:59.0178729Z     tailwindcss-ruby (4.3.1)
+2026-06-30T09:38:59.0178993Z     tailwindcss-ruby (4.3.1-aarch64-linux-gnu)
+2026-06-30T09:38:59.0179313Z     tailwindcss-ruby (4.3.1-aarch64-linux-musl)
+2026-06-30T09:38:59.0179635Z     tailwindcss-ruby (4.3.1-x86_64-linux-gnu)
+2026-06-30T09:38:59.0179930Z     tailwindcss-ruby (4.3.1-x86_64-linux-musl)
+2026-06-30T09:38:59.0180201Z     terser (1.2.7)
+2026-06-30T09:38:59.0180548Z       execjs (>= 0.3.0, < 3)
+2026-06-30T09:38:59.0180773Z     thor (1.5.0)
+2026-06-30T09:38:59.0180966Z     thruster (0.1.22)
+2026-06-30T09:38:59.0181187Z     thruster (0.1.22-aarch64-linux)
+2026-06-30T09:38:59.0181444Z     thruster (0.1.22-x86_64-linux)
+2026-06-30T09:38:59.0181690Z     tilt (2.7.0)
+2026-06-30T09:38:59.0181892Z     timeout (0.6.1)
+2026-06-30T09:38:59.0182098Z     tomlrb (2.0.4)
+2026-06-30T09:38:59.0182308Z     trailblazer-option (0.1.2)
+2026-06-30T09:38:59.0182546Z     trilogy (2.12.6)
+2026-06-30T09:38:59.0182748Z       bigdecimal
+2026-06-30T09:38:59.0182942Z     tsort (0.2.0)
+2026-06-30T09:38:59.0183141Z     turbo-rails (2.0.23)
+2026-06-30T09:38:59.0183365Z       actionpack (>= 7.1.0)
+2026-06-30T09:38:59.0183592Z       railties (>= 7.1.0)
+2026-06-30T09:38:59.0183815Z     tzinfo (2.0.6)
+2026-06-30T09:38:59.0184033Z       concurrent-ruby (~> 1.0)
+2026-06-30T09:38:59.0184262Z     uber (0.1.0)
+2026-06-30T09:38:59.0184475Z     unicode-display_width (3.2.0)
+2026-06-30T09:38:59.0184738Z       unicode-emoji (~> 4.1)
+2026-06-30T09:38:59.0184974Z     unicode-emoji (4.2.0)
+2026-06-30T09:38:59.0185490Z     uri (1.1.1)
+2026-06-30T09:38:59.0185785Z     useragent (0.16.11)
+2026-06-30T09:38:59.0186005Z     w3c_validators (1.3.7)
+2026-06-30T09:38:59.0186230Z       json (>= 1.8)
+2026-06-30T09:38:59.0186428Z       nokogiri (~> 1.6)
+2026-06-30T09:38:59.0186804Z       rexml (~> 3.2)
+2026-06-30T09:38:59.0187012Z     web-console (4.3.0)
+2026-06-30T09:38:59.0187224Z       actionview (>= 8.0.0)
+2026-06-30T09:38:59.0187447Z       bindex (>= 0.4.0)
+2026-06-30T09:38:59.0187652Z       railties (>= 8.0.0)
+2026-06-30T09:38:59.0187867Z     webmock (3.26.2)
+2026-06-30T09:38:59.0188079Z       addressable (>= 2.8.0)
+2026-06-30T09:38:59.0188312Z       crack (>= 0.3.2)
+2026-06-30T09:38:59.0188528Z       hashdiff (>= 0.4.0, < 2.0.0)
+2026-06-30T09:38:59.0188776Z     webrick (1.9.2)
+2026-06-30T09:38:59.0188979Z     websocket (1.2.11)
+2026-06-30T09:38:59.0189203Z     websocket-client-simple (0.9.0)
+2026-06-30T09:38:59.0189464Z       base64
+2026-06-30T09:38:59.0189652Z       event_emitter
+2026-06-30T09:38:59.0189849Z       mutex_m
+2026-06-30T09:38:59.0190035Z       websocket
+2026-06-30T09:38:59.0190240Z     websocket-driver (0.8.2)
+2026-06-30T09:38:59.0190463Z       base64
+2026-06-30T09:38:59.0190662Z       websocket-extensions (>= 0.1.0)
+2026-06-30T09:38:59.0190934Z     websocket-extensions (0.1.5)
+2026-06-30T09:38:59.0191175Z     xpath (3.2.0)
+2026-06-30T09:38:59.0191372Z       nokogiri (~> 1.8)
+2026-06-30T09:38:59.0191577Z     zeitwerk (2.8.2)
+2026-06-30T09:38:59.0191707Z 
+2026-06-30T09:38:59.0191798Z PLATFORMS
+2026-06-30T09:38:59.0191983Z   aarch64-linux
+2026-06-30T09:38:59.0192182Z   aarch64-linux-gnu
+2026-06-30T09:38:59.0192385Z   aarch64-linux-musl
+2026-06-30T09:38:59.0192589Z   arm-linux-gnu
+2026-06-30T09:38:59.0192785Z   arm-linux-gnueabihf
+2026-06-30T09:38:59.0192992Z   arm-linux-musl
+2026-06-30T09:38:59.0193188Z   arm-linux-musleabihf
+2026-06-30T09:38:59.0193395Z   x86_64-linux-gnu
+2026-06-30T09:38:59.0193596Z   x86_64-linux-musl
+2026-06-30T09:38:59.0193713Z 
+2026-06-30T09:38:59.0193803Z DEPENDENCIES
+2026-06-30T09:38:59.0193992Z   argon2 (~> 2.3.2)
+2026-06-30T09:38:59.0194185Z   aws-sdk-s3
+2026-06-30T09:38:59.0194367Z   aws-sdk-sns
+2026-06-30T09:38:59.0194553Z   backburner
+2026-06-30T09:38:59.0194738Z   bcrypt (~> 3.1.11)
+2026-06-30T09:38:59.0194946Z   bootsnap (>= 1.4.4)
+2026-06-30T09:38:59.0195480Z   brakeman
+2026-06-30T09:38:59.0195681Z   bundler-audit
+2026-06-30T09:38:59.0195878Z   capybara (>= 3.39)
+2026-06-30T09:38:59.0196083Z   connection_pool
+2026-06-30T09:38:59.0196291Z   cssbundling-rails
+2026-06-30T09:38:59.0196493Z   dalli
+2026-06-30T09:38:59.0196673Z   dartsass-rails
+2026-06-30T09:38:59.0196867Z   debug (>= 1.1.0)
+2026-06-30T09:38:59.0197088Z   google-cloud-storage (~> 1.11)
+2026-06-30T09:38:59.0197346Z   image_processing (~> 2.0)
+2026-06-30T09:38:59.0197586Z   importmap-rails (>= 1.2.3)
+2026-06-30T09:38:59.0197816Z   jbuilder
+2026-06-30T09:38:59.0198004Z   jsbundling-rails
+2026-06-30T09:38:59.0198357Z   json (>= 2.0.0, != 2.7.0)
+2026-06-30T09:38:59.0198579Z   kamal (>= 2.1.0)
+2026-06-30T09:38:59.0198770Z   launchy
+2026-06-30T09:38:59.0198950Z   libxml-ruby
+2026-06-30T09:38:59.0199141Z   listen (~> 3.3)
+2026-06-30T09:38:59.0199331Z   mdl (!= 0.13.0)
+2026-06-30T09:38:59.0199521Z   mini_magick (~> 5.0)
+2026-06-30T09:38:59.0199727Z   minitest (~> 6.0)
+2026-06-30T09:38:59.0199929Z   minitest-mock
+2026-06-30T09:38:59.0200123Z   minitest-retry
+2026-06-30T09:38:59.0200319Z   msgpack (>= 1.7.0)
+2026-06-30T09:38:59.0200526Z   mysql2 (~> 0.5, < 0.5.7)
+2026-06-30T09:38:59.0200746Z   nokogiri (>= 1.8.1, != 1.11.0)
+2026-06-30T09:38:59.0200975Z   pg (~> 1.3)
+2026-06-30T09:38:59.0201158Z   prism
+2026-06-30T09:38:59.0201344Z   propshaft (>= 0.1.7, != 1.0.1)
+2026-06-30T09:38:59.0201581Z   puma (>= 5.0.3)
+2026-06-30T09:38:59.0201777Z   queue_classic (>= 4.0.0)
+2026-06-30T09:38:59.0201993Z   rack (~> 3.0)
+2026-06-30T09:38:59.0202184Z   rack-cache (~> 1.2)
+2026-06-30T09:38:59.0202468Z   rails!
+2026-06-30T09:38:59.0202663Z   redcarpet (~> 3.6.1)
+2026-06-30T09:38:59.0202868Z   redis (>= 4.0.1)
+2026-06-30T09:38:59.0203071Z   redis-client (>= 0.28.0)
+2026-06-30T09:38:59.0203292Z   redis-namespace
+2026-06-30T09:38:59.0203487Z   releaser!
+2026-06-30T09:38:59.0203667Z   resque
+2026-06-30T09:38:59.0203844Z   resque-scheduler
+2026-06-30T09:38:59.0204035Z   rexml
+2026-06-30T09:38:59.0204206Z   rouge
+2026-06-30T09:38:59.0204515Z   rubocop (= 1.79.2)
+2026-06-30T09:38:59.0204723Z   rubocop-md
+2026-06-30T09:38:59.0204916Z   rubocop-minitest
+2026-06-30T09:38:59.0205261Z   rubocop-packaging
+2026-06-30T09:38:59.0205483Z   rubocop-performance
+2026-06-30T09:38:59.0205692Z   rubocop-rails
+2026-06-30T09:38:59.0205891Z   rubocop-rails-omakase
+2026-06-30T09:38:59.0206108Z   ruby-vips (~> 2.3)
+2026-06-30T09:38:59.0206313Z   rubyzip (~> 2.0)
+2026-06-30T09:38:59.0206505Z   sdoc (~> 2.6.4)
+2026-06-30T09:38:59.0206711Z   selenium-webdriver (>= 4.20.0)
+2026-06-30T09:38:59.0206946Z   sneakers
+2026-06-30T09:38:59.0207126Z   solid_cable
+2026-06-30T09:38:59.0207317Z   solid_cache
+2026-06-30T09:38:59.0207501Z   solid_queue
+2026-06-30T09:38:59.0207698Z   sprockets-rails (>= 2.0.0)
+2026-06-30T09:38:59.0207932Z   sqlite3 (>= 2.1)
+2026-06-30T09:38:59.0208129Z   stackprof
+2026-06-30T09:38:59.0208427Z   stimulus-rails
+2026-06-30T09:38:59.0208752Z   tailwindcss-rails
+2026-06-30T09:38:59.0208962Z   terser (>= 1.1.4)
+2026-06-30T09:38:59.0209155Z   thruster
+2026-06-30T09:38:59.0209334Z   trilogy (>= 2.7.0)
+2026-06-30T09:38:59.0209529Z   turbo-rails
+2026-06-30T09:38:59.0209709Z   tzinfo-data
+2026-06-30T09:38:59.0209891Z   uri (>= 0.13.1)
+2026-06-30T09:38:59.0210078Z   useragent
+2026-06-30T09:38:59.0210265Z   w3c_validators (~> 1.3.6)
+2026-06-30T09:38:59.0210482Z   wdm (>= 0.1.0)
+2026-06-30T09:38:59.0210666Z   web-console
+2026-06-30T09:38:59.0210845Z   webmock
+2026-06-30T09:38:59.0211020Z   webrick
+2026-06-30T09:38:59.0211210Z   websocket-client-simple
+2026-06-30T09:38:59.0211366Z 
+2026-06-30T09:38:59.0211447Z BUNDLED WITH
+2026-06-30T09:38:59.0211629Z    2.6.9
+2026-06-30T09:38:59.0212217Z ##[endgroup]
+2026-06-30T09:38:59.0213217Z Cache key: setup-ruby-bundler-cache-v6-ubuntu-24.04-x64-ruby-3.4.9-wd-/home/runner/work/rails/rails-with--without-db:job:cable:storage-only--Gemfile.lock-acb6ba1325c0a5e32548dc4dae26ad51cae1f15d6ceb0f1b9aa56fd9e91b50c6
+2026-06-30T09:38:59.0632555Z Cache hit for: setup-ruby-bundler-cache-v6-ubuntu-24.04-x64-ruby-3.4.9-wd-/home/runner/work/rails/rails-with--without-db:job:cable:storage-only--Gemfile.lock-acb6ba1325c0a5e32548dc4dae26ad51cae1f15d6ceb0f1b9aa56fd9e91b50c6
+2026-06-30T09:39:00.0233071Z Received 182445297 of 182445297 (100.0%), 194.4 MBs/sec
+2026-06-30T09:39:00.0233905Z Cache Size: ~174 MB (182445297 B)
+2026-06-30T09:39:00.0269398Z [command]/usr/bin/tar -xf /home/runner/work/_temp/f2d72b17-f97a-4518-bbdd-4515c7f9458e/cache.tzst -P -C /home/runner/work/rails/rails --use-compress-program unzstd
+2026-06-30T09:39:00.9322101Z Cache restored successfully
+2026-06-30T09:39:00.9411051Z Found cache for key: setup-ruby-bundler-cache-v6-ubuntu-24.04-x64-ruby-3.4.9-wd-/home/runner/work/rails/rails-with--without-db:job:cable:storage-only--Gemfile.lock-acb6ba1325c0a5e32548dc4dae26ad51cae1f15d6ceb0f1b9aa56fd9e91b50c6
+2026-06-30T09:39:00.9423908Z [command]/opt/hostedtoolcache/Ruby/3.4.9/x64/bin/bundle install --jobs 4
+2026-06-30T09:39:01.4129023Z Bundle complete! 82 Gemfile dependencies, 175 gems now installed.
+2026-06-30T09:39:01.4130147Z Gems in the groups 'db', 'job', 'cable' and 'storage' were not installed.
+2026-06-30T09:39:01.4130816Z Bundled gems are installed into `./vendor/bundle`
+2026-06-30T09:39:01.4133287Z 1 installed gem you directly depend on is looking for funding.
+2026-06-30T09:39:01.4133906Z   Run `bundle fund` for details
+2026-06-30T09:39:01.4287857Z Took   9.56 seconds
+2026-06-30T09:39:01.4428454Z ##[group]Run bundle exec railties/exe/rails new $APP_PATH --dev
+2026-06-30T09:39:01.4429005Z bundle exec railties/exe/rails new $APP_PATH --dev
+2026-06-30T09:39:01.4468293Z shell: /usr/bin/bash -e {0}
+2026-06-30T09:39:01.4468585Z env:
+2026-06-30T09:39:01.4468814Z   APP_NAME: devrails
+2026-06-30T09:39:01.4469045Z   APP_PATH: dev/devrails
+2026-06-30T09:39:01.4469305Z   BUNDLE_WITHOUT: db:job:cable:storage
+2026-06-30T09:39:01.4469587Z ##[endgroup]
+2026-06-30T09:39:01.9556529Z       create  
+2026-06-30T09:39:01.9559721Z       create  Gemfile
+2026-06-30T09:39:01.9560180Z          run  bundle install --quiet
+2026-06-30T09:39:42.4241464Z          run  bundle exec rails new /home/runner/work/rails/rails/dev/devrails --dev
+2026-06-30T09:39:42.8012663Z        exist  
+2026-06-30T09:39:42.8013192Z       remove  Gemfile
+2026-06-30T09:39:42.8015805Z       remove  Gemfile.lock
+2026-06-30T09:39:42.8020178Z       create  README.md
+2026-06-30T09:39:42.8024522Z       create  Rakefile
+2026-06-30T09:39:42.8028388Z       create  .ruby-version
+2026-06-30T09:39:42.8031761Z       create  config.ru
+2026-06-30T09:39:42.8037331Z       create  .gitignore
+2026-06-30T09:39:42.8041011Z       create  .gitattributes
+2026-06-30T09:39:42.8051550Z       create  Gemfile
+2026-06-30T09:39:42.8081792Z          run  git init -b main from "."
+2026-06-30T09:39:42.8109841Z Initialized empty Git repository in /home/runner/work/rails/rails/dev/devrails/.git/
+2026-06-30T09:39:42.8115844Z       create  app
+2026-06-30T09:39:42.8122214Z       create  app/assets/stylesheets/application.css
+2026-06-30T09:39:42.8127250Z       create  app/controllers/application_controller.rb
+2026-06-30T09:39:42.8130564Z       create  app/helpers/application_helper.rb
+2026-06-30T09:39:42.8134406Z       create  app/jobs/application_job.rb
+2026-06-30T09:39:42.8138280Z       create  app/mailers/application_mailer.rb
+2026-06-30T09:39:42.8141831Z       create  app/models/application_record.rb
+2026-06-30T09:39:42.8149221Z       create  app/views/layouts/application.html.erb
+2026-06-30T09:39:42.8152566Z       create  app/views/layouts/mailer.html.erb
+2026-06-30T09:39:42.8155827Z       create  app/views/layouts/mailer.text.erb
+2026-06-30T09:39:42.8161415Z       create  app/views/pwa/manifest.json.erb
+2026-06-30T09:39:42.8162938Z       create  app/views/pwa/offline.html.erb
+2026-06-30T09:39:42.8165043Z       create  app/views/pwa/service-worker.js
+2026-06-30T09:39:42.8166308Z       create  app/assets/images
+2026-06-30T09:39:42.8167611Z       create  app/assets/images/.keep
+2026-06-30T09:39:42.8169122Z       create  app/controllers/concerns/.keep
+2026-06-30T09:39:42.8170598Z       create  app/models/concerns/.keep
+2026-06-30T09:39:42.8174285Z       create  bin
+2026-06-30T09:39:42.8178603Z       create  bin/brakeman
+2026-06-30T09:39:42.8181963Z       create  bin/bundler-audit
+2026-06-30T09:39:42.8258266Z       create  bin/ci
+2026-06-30T09:39:42.8259011Z       create  bin/dev
+2026-06-30T09:39:42.8259480Z       create  bin/rails
+2026-06-30T09:39:42.8260124Z       create  bin/rake
+2026-06-30T09:39:42.8260601Z       create  bin/rubocop
+2026-06-30T09:39:42.8260919Z       create  bin/setup
+2026-06-30T09:39:42.8261214Z       create  bin/thrust
+2026-06-30T09:39:42.8261513Z       create  Dockerfile
+2026-06-30T09:39:42.8261813Z       create  .dockerignore
+2026-06-30T09:39:42.8262133Z       create  bin/docker-entrypoint
+2026-06-30T09:39:42.8262483Z       create  .rubocop.yml
+2026-06-30T09:39:42.8262785Z       create  .github/workflows
+2026-06-30T09:39:42.8296314Z       create  .github/workflows/ci.yml
+2026-06-30T09:39:42.8297290Z       create  .github/dependabot.yml
+2026-06-30T09:39:42.8298007Z       create  config
+2026-06-30T09:39:42.8298472Z       create  config/routes.rb
+2026-06-30T09:39:42.8302636Z       create  config/application.rb
+2026-06-30T09:39:42.8305991Z       create  config/environment.rb
+2026-06-30T09:39:42.8309234Z       create  config/bundler-audit.yml
+2026-06-30T09:39:42.8313119Z       create  config/cable.yml
+2026-06-30T09:39:42.8319739Z       create  config/ci.rb
+2026-06-30T09:39:42.8324309Z       create  config/puma.rb
+2026-06-30T09:39:42.8328208Z       create  config/storage.yml
+2026-06-30T09:39:42.8330043Z       create  config/environments
+2026-06-30T09:39:42.8337942Z       create  config/environments/development.rb
+2026-06-30T09:39:42.8345863Z       create  config/environments/production.rb
+2026-06-30T09:39:42.8351123Z       create  config/environments/test.rb
+2026-06-30T09:39:42.8352988Z       create  config/initializers
+2026-06-30T09:39:42.8357292Z       create  config/initializers/assets.rb
+2026-06-30T09:39:42.8361422Z       create  config/initializers/content_security_policy.rb
+2026-06-30T09:39:42.8365124Z       create  config/initializers/cors.rb
+2026-06-30T09:39:42.8369738Z       create  config/initializers/filter_parameter_logging.rb
+2026-06-30T09:39:42.8373729Z       create  config/initializers/inflections.rb
+2026-06-30T09:39:42.8382172Z       create  config/initializers/new_framework_defaults_8_2.rb
+2026-06-30T09:39:42.8383532Z       create  config/locales
+2026-06-30T09:39:42.8386408Z       create  config/locales/en.yml
+2026-06-30T09:39:43.0265534Z       create  config/master.key
+2026-06-30T09:39:43.0267347Z       append  .gitignore
+2026-06-30T09:39:43.0273337Z       create  .env
+2026-06-30T09:39:43.0528659Z       create  config/boot.rb
+2026-06-30T09:39:43.0535896Z       create  config/database.yml
+2026-06-30T09:39:43.0539030Z       create  db
+2026-06-30T09:39:43.0543160Z       create  db/seeds.rb
+2026-06-30T09:39:43.0545796Z       create  lib
+2026-06-30T09:39:43.0546864Z       create  lib/tasks
+2026-06-30T09:39:43.0548006Z       create  lib/tasks/.keep
+2026-06-30T09:39:43.0567128Z       create  log
+2026-06-30T09:39:43.0567553Z       create  log/.keep
+2026-06-30T09:39:43.0567817Z       create  public
+2026-06-30T09:39:43.0568052Z       create  public/400.html
+2026-06-30T09:39:43.0568307Z       create  public/404.html
+2026-06-30T09:39:43.0568588Z       create  public/406-unsupported-browser.html
+2026-06-30T09:39:43.0569030Z       create  public/422.html
+2026-06-30T09:39:43.0569458Z       create  public/500.html
+2026-06-30T09:39:43.0569901Z       create  public/icon.png
+2026-06-30T09:39:43.0570326Z       create  public/icon.svg
+2026-06-30T09:39:43.0570594Z       create  public/robots.txt
+2026-06-30T09:39:43.0570844Z       create  script
+2026-06-30T09:39:43.0571072Z       create  script/.keep
+2026-06-30T09:39:43.0572475Z       create  tmp
+2026-06-30T09:39:43.0573058Z       create  tmp/.keep
+2026-06-30T09:39:43.0574302Z       create  tmp/pids
+2026-06-30T09:39:43.0575404Z       create  tmp/pids/.keep
+2026-06-30T09:39:43.0578085Z       create  vendor
+2026-06-30T09:39:43.0578830Z       create  vendor/.keep
+2026-06-30T09:39:43.0581659Z       create  test/fixtures/files
+2026-06-30T09:39:43.0582402Z       create  test/fixtures/files/.keep
+2026-06-30T09:39:43.0584185Z       create  test/controllers
+2026-06-30T09:39:43.0584673Z       create  test/controllers/.keep
+2026-06-30T09:39:43.0586245Z       create  test/mailers
+2026-06-30T09:39:43.0587070Z       create  test/mailers/.keep
+2026-06-30T09:39:43.0588245Z       create  test/models
+2026-06-30T09:39:43.0589274Z       create  test/models/.keep
+2026-06-30T09:39:43.0590336Z       create  test/helpers
+2026-06-30T09:39:43.0591342Z       create  test/helpers/.keep
+2026-06-30T09:39:43.0592527Z       create  test/integration
+2026-06-30T09:39:43.0594296Z       create  test/integration/.keep
+2026-06-30T09:39:43.0599315Z       create  test/test_helper.rb
+2026-06-30T09:39:43.0602614Z       create  storage
+2026-06-30T09:39:43.0603502Z       create  storage/.keep
+2026-06-30T09:39:43.0604734Z       create  tmp/storage
+2026-06-30T09:39:43.0606278Z       create  tmp/storage/.keep
+2026-06-30T09:39:43.0613644Z       remove  config/initializers/cors.rb
+2026-06-30T09:39:43.0616440Z       remove  config/initializers/new_framework_defaults_8_2.rb
+2026-06-30T09:39:43.0619699Z          run  bundle install --quiet
+2026-06-30T09:39:52.5605715Z          run  bundle lock --add-platform=x86_64-linux
+2026-06-30T09:39:53.4759081Z Writing lockfile to /home/runner/work/rails/rails/dev/devrails/Gemfile.lock
+2026-06-30T09:39:54.6294050Z Fetching gem metadata from https://rubygems.org/.........
+2026-06-30T09:39:54.6882332Z Resolving dependencies...
+2026-06-30T09:39:54.9556501Z        rails  importmap:install
+2026-06-30T09:39:56.6737614Z        apply  /opt/hostedtoolcache/Ruby/3.4.9/x64/lib/ruby/gems/3.4.0/gems/importmap-rails-2.2.3/lib/install/install.rb
+2026-06-30T09:39:56.6738805Z   Add Importmap include tags in application layout
+2026-06-30T09:39:56.6743345Z       insert    app/views/layouts/application.html.erb
+2026-06-30T09:39:56.6744231Z   Create application.js module as entrypoint
+2026-06-30T09:39:56.6745927Z       create    app/javascript/application.js
+2026-06-30T09:39:56.6746722Z   Use vendor/javascript for downloaded pins
+2026-06-30T09:39:56.6747510Z       create    vendor/javascript
+2026-06-30T09:39:56.6748744Z       create    vendor/javascript/.keep
+2026-06-30T09:39:56.6749491Z   Configure importmap paths in config/importmap.rb
+2026-06-30T09:39:56.6751961Z       create    config/importmap.rb
+2026-06-30T09:39:56.6752526Z   Copying binstub
+2026-06-30T09:39:56.6754074Z       create    bin/importmap
+2026-06-30T09:39:56.6757754Z          run  bundle install --quiet
+2026-06-30T09:39:57.0945722Z        rails  turbo:install stimulus:install
+2026-06-30T09:39:59.7985031Z        apply  /opt/hostedtoolcache/Ruby/3.4.9/x64/lib/ruby/gems/3.4.0/gems/turbo-rails-2.0.23/lib/install/turbo_with_importmap.rb
+2026-06-30T09:39:59.7986188Z   Import Turbo
+2026-06-30T09:39:59.7986747Z       append    app/javascript/application.js
+2026-06-30T09:39:59.7987389Z   Pin Turbo
+2026-06-30T09:39:59.7988390Z       append    config/importmap.rb
+2026-06-30T09:39:59.7988784Z          run  bundle install --quiet
+2026-06-30T09:40:01.6597768Z        apply  /opt/hostedtoolcache/Ruby/3.4.9/x64/lib/ruby/gems/3.4.0/gems/stimulus-rails-1.3.4/lib/install/stimulus_with_importmap.rb
+2026-06-30T09:40:01.6599029Z   Create controllers directory
+2026-06-30T09:40:01.6599922Z       create    app/javascript/controllers
+2026-06-30T09:40:01.6601084Z       create    app/javascript/controllers/index.js
+2026-06-30T09:40:01.6602419Z       create    app/javascript/controllers/application.js
+2026-06-30T09:40:01.6603642Z       create    app/javascript/controllers/hello_controller.js
+2026-06-30T09:40:01.6604136Z   Import Stimulus controllers
+2026-06-30T09:40:01.6605895Z       append    app/javascript/application.js
+2026-06-30T09:40:01.6606792Z   Pin Stimulus
+2026-06-30T09:40:01.6607193Z   Appending: pin "@hotwired/stimulus", to: "stimulus.min.js"
+2026-06-30T09:40:01.6608345Z       append    config/importmap.rb
+2026-06-30T09:40:01.6609360Z   Appending: pin "@hotwired/stimulus-loading", to: "stimulus-loading.js"
+2026-06-30T09:40:01.6610592Z       append    config/importmap.rb
+2026-06-30T09:40:01.6611322Z   Pin all controllers
+2026-06-30T09:40:01.6614482Z   Appending: pin_all_from "app/javascript/controllers", under: "controllers"
+2026-06-30T09:40:01.6615439Z       append    config/importmap.rb
+2026-06-30T09:40:01.6615897Z          run  bundle install --quiet
+2026-06-30T09:40:02.0857167Z          run  bundle binstubs kamal
+2026-06-30T09:40:02.3274116Z          run  bundle exec kamal init
+2026-06-30T09:40:02.9523076Z Created configuration file in config/deploy.yml
+2026-06-30T09:40:02.9523654Z Created .kamal/secrets file
+2026-06-30T09:40:02.9524057Z Created sample hooks in .kamal/hooks
+2026-06-30T09:40:02.9580993Z        force  .kamal/secrets
+2026-06-30T09:40:02.9591098Z        force  config/deploy.yml
+2026-06-30T09:40:02.9594503Z        rails  solid_cache:install solid_queue:install solid_cable:install
+2026-06-30T09:40:04.4325056Z       create  config/cache.yml
+2026-06-30T09:40:04.4328656Z       create  db/cache_schema.rb
+2026-06-30T09:40:04.4330870Z         gsub  config/environments/production.rb
+2026-06-30T09:40:04.4368560Z       create  config/queue.yml
+2026-06-30T09:40:04.4371275Z       create  config/recurring.yml
+2026-06-30T09:40:04.4379322Z       create  db/queue_schema.rb
+2026-06-30T09:40:04.4382548Z       create  bin/jobs
+2026-06-30T09:40:04.4386783Z         gsub  config/environments/production.rb
+2026-06-30T09:40:04.4419720Z       create  db/cable_schema.rb
+2026-06-30T09:40:04.4422791Z        force  config/cable.yml
+2026-06-30T09:40:04.4773585Z ##[group]Run podman build -t $APP_NAME \
+2026-06-30T09:40:04.4773981Z podman build -t $APP_NAME \
+2026-06-30T09:40:04.4774290Z -v $(pwd):$(pwd) \
+2026-06-30T09:40:04.4774572Z -f ./$APP_PATH/Dockerfile \
+2026-06-30T09:40:04.4774861Z ./$APP_PATH
+2026-06-30T09:40:04.4808379Z shell: /usr/bin/bash -e {0}
+2026-06-30T09:40:04.4808670Z env:
+2026-06-30T09:40:04.4808891Z   APP_NAME: devrails
+2026-06-30T09:40:04.4809347Z   APP_PATH: dev/devrails
+2026-06-30T09:40:04.4809613Z   BUNDLE_WITHOUT: db:job:cable:storage
+2026-06-30T09:40:04.4809906Z ##[endgroup]
+2026-06-30T09:40:04.7520694Z [1/3] STEP 1/4: FROM docker.io/library/ruby:3.4.9-slim AS base
+2026-06-30T09:40:04.7750811Z Trying to pull docker.io/library/ruby:3.4.9-slim...
+2026-06-30T09:41:04.8280746Z time="2026-06-30T09:41:04Z" level=warning msg="Failed, retrying in 2s ... (1/3). Error: initializing source docker://ruby:3.4.9-slim: pinging container registry registry-1.docker.io: Get \"https://registry-1.docker.io/v2/\": dial tcp 98.85.216.201:443: i/o timeout"
+2026-06-30T09:42:06.8304042Z time="2026-06-30T09:42:06Z" level=warning msg="Failed, retrying in 2s ... (2/3). Error: initializing source docker://ruby:3.4.9-slim: pinging container registry registry-1.docker.io: Get \"https://registry-1.docker.io/v2/\": dial tcp 100.59.162.223:443: i/o timeout"
+2026-06-30T09:43:08.8322849Z time="2026-06-30T09:43:08Z" level=warning msg="Failed, retrying in 2s ... (3/3). Error: initializing source docker://ruby:3.4.9-slim: pinging container registry registry-1.docker.io: Get \"https://registry-1.docker.io/v2/\": dial tcp 100.59.162.223:443: i/o timeout"
+2026-06-30T09:44:10.8344498Z Error: creating build container: initializing source docker://ruby:3.4.9-slim: pinging container registry registry-1.docker.io: Get "https://registry-1.docker.io/v2/": dial tcp 3.208.234.10:443: i/o timeout
+2026-06-30T09:44:10.8507822Z ##[error]Process completed with exit code 125.
+2026-06-30T09:44:10.8668375Z Post job cleanup.
+2026-06-30T09:44:10.9537694Z [command]/usr/bin/git version
+2026-06-30T09:44:10.9577667Z git version 2.54.0
+2026-06-30T09:44:10.9647965Z Temporarily overriding HOME='/home/runner/work/_temp/381d78f9-f362-4460-abe7-3fe65e954758' before making global git config changes
+2026-06-30T09:44:10.9649736Z Adding repository directory to the temporary git global config as a safe directory
+2026-06-30T09:44:10.9661633Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/rails/rails
+2026-06-30T09:44:10.9697447Z Removing SSH command configuration
+2026-06-30T09:44:10.9704171Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-06-30T09:44:10.9741682Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-06-30T09:44:10.9987273Z Removing HTTP extra header
+2026-06-30T09:44:10.9993248Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-06-30T09:44:11.0032437Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-06-30T09:44:11.0279539Z Removing includeIf entries pointing to credentials config files
+2026-06-30T09:44:11.0289231Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-06-30T09:44:11.0325889Z includeif.gitdir:/home/runner/work/rails/rails/.git.path
+2026-06-30T09:44:11.0326850Z includeif.gitdir:/home/runner/work/rails/rails/.git/worktrees/*.path
+2026-06-30T09:44:11.0327837Z includeif.gitdir:/github/workspace/.git.path
+2026-06-30T09:44:11.0328591Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-06-30T09:44:11.0338275Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/rails/rails/.git.path
+2026-06-30T09:44:11.0365547Z /home/runner/work/_temp/git-credentials-9c0087e0-eb2c-4364-857d-f337cc9884da.config
+2026-06-30T09:44:11.0379294Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/rails/rails/.git.path /home/runner/work/_temp/git-credentials-9c0087e0-eb2c-4364-857d-f337cc9884da.config
+2026-06-30T09:44:11.0420768Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/rails/rails/.git/worktrees/*.path
+2026-06-30T09:44:11.0450375Z /home/runner/work/_temp/git-credentials-9c0087e0-eb2c-4364-857d-f337cc9884da.config
+2026-06-30T09:44:11.0462415Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/rails/rails/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-9c0087e0-eb2c-4364-857d-f337cc9884da.config
+2026-06-30T09:44:11.0512159Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-06-30T09:44:11.0543564Z /github/runner_temp/git-credentials-9c0087e0-eb2c-4364-857d-f337cc9884da.config
+2026-06-30T09:44:11.0556845Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-9c0087e0-eb2c-4364-857d-f337cc9884da.config
+2026-06-30T09:44:11.0594676Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-06-30T09:44:11.0624897Z /github/runner_temp/git-credentials-9c0087e0-eb2c-4364-857d-f337cc9884da.config
+2026-06-30T09:44:11.0635331Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-9c0087e0-eb2c-4364-857d-f337cc9884da.config
+2026-06-30T09:44:11.0678583Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-06-30T09:44:11.0939142Z Removing credentials config '/home/runner/work/_temp/git-credentials-9c0087e0-eb2c-4364-857d-f337cc9884da.config'
+2026-06-30T09:44:11.1124756Z Cleaning up orphan processes
+2026-06-30T09:44:11.1459781Z Terminate orphan process: pid (3699) (catatonit)

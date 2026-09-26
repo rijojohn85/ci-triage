@@ -9,8 +9,17 @@
 # Needs TYPESAFE_API_KEY (OpenRouter) in the environment; the pinned
 # typesafe/jev-1.13 is a decisions model served via the SDK's SystemOne
 # endpoint. Without a key every case errors — the eval is never faked.
+#
+# Story 3.2: the target pins the worker's Python (`.venv/bin/python`, so
+# `typesafe_sdk` is importable) and turns promptfoo's scheduler retry off
+# (`maxRetries: 0`) so one attempt is exactly one model call (AD-18). The
+# generated cases (labelled + unknown + trick) load from the committed file;
+# the six inline cases below stay.
 targets:
-  - file://agents/jev/eval_provider.py
+  - id: file://agents/jev/eval_provider.py
+    config:
+      pythonExecutable: ./.venv/bin/python
+      maxRetries: 0
 defaultTest:
   # The one output contract every case asserts (single source): a JevResult
   # JSON object — the five-class answer, its confidence, per-class
@@ -68,6 +77,9 @@ defaultTest:
                 cache_creation_input_tokens_1h:
                   type: [number, "null"]
 tests:
+  # The generated cases (story 3.2): 38 labelled + 8 unknown + 6 trick,
+  # built by scripts/build_jev_eval_cases.py from test-data/jev-eval/.
+  - file://test-data/jev-eval/cases.generated.yaml
   - description: 'flaky fixture — passes on retry with no product change'
     vars:
       log: |

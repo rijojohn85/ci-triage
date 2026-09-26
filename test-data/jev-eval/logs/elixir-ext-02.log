@@ -1,0 +1,382 @@
+﻿2026-08-28T11:06:44.9732746Z Current runner version: '2.336.0'
+2026-08-28T11:06:44.9757895Z ##[group]Runner Image Provisioner
+2026-08-28T11:06:44.9758824Z Hosted Compute Agent
+2026-08-28T11:06:44.9759530Z Version: 20260819.586
+2026-08-28T11:06:44.9760185Z Commit: 3cc4a88dfa507ef76119ad1bb3eccc6378bb2b76
+2026-08-28T11:06:44.9760919Z Build Date: 2026-08-18T23:20:18Z
+2026-08-28T11:06:44.9761667Z Worker ID: {be9803ac-b793-4904-a91b-345aca4a4604}
+2026-08-28T11:06:44.9762397Z Azure Region: westcentralus
+2026-08-28T11:06:44.9763479Z ##[endgroup]
+2026-08-28T11:06:44.9765009Z ##[group]Operating System
+2026-08-28T11:06:44.9765621Z Ubuntu
+2026-08-28T11:06:44.9766229Z 24.04.4
+2026-08-28T11:06:44.9766727Z LTS
+2026-08-28T11:06:44.9767300Z ##[endgroup]
+2026-08-28T11:06:44.9768161Z ##[group]Runner Image
+2026-08-28T11:06:44.9768762Z Image: ubuntu-24.04
+2026-08-28T11:06:44.9769415Z Version: 20260823.283.1
+2026-08-28T11:06:44.9770663Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260823.283/images/ubuntu/Ubuntu2404-Readme.md
+2026-08-28T11:06:44.9772279Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260823.283
+2026-08-28T11:06:44.9773292Z ##[endgroup]
+2026-08-28T11:06:44.9774454Z ##[group]GITHUB_TOKEN Permissions
+2026-08-28T11:06:44.9776402Z Contents: read
+2026-08-28T11:06:44.9777180Z Metadata: read
+2026-08-28T11:06:44.9778218Z ##[endgroup]
+2026-08-28T11:06:44.9780507Z Secret source: Actions
+2026-08-28T11:06:44.9781629Z Prepare workflow directory
+2026-08-28T11:06:45.0242789Z Prepare all required actions
+2026-08-28T11:06:45.0290248Z Getting action download info
+2026-08-28T11:06:45.3244158Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-08-28T11:06:45.4327401Z Download action repository 'erlef/setup-beam@v1' (SHA:54075bcc5e249e4758d363f27d099f55d843f124)
+2026-08-28T11:06:46.1279454Z Complete job name: Ubuntu 24.04, Erlang/OTP 27.1
+2026-08-28T11:06:46.2089445Z Node 20 is being deprecated. This workflow is running with Node 24 by default. If you need to temporarily use Node 20, you can set the ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true environment variable. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+2026-08-28T11:06:46.2098867Z ##[group]Run actions/checkout@v4
+2026-08-28T11:06:46.2099676Z with:
+2026-08-28T11:06:46.2100134Z   fetch-depth: 50
+2026-08-28T11:06:46.2100640Z   repository: elixir-lang/elixir
+2026-08-28T11:06:46.2104863Z   token: ***
+2026-08-28T11:06:46.2105341Z   ssh-strict: true
+2026-08-28T11:06:46.2105820Z   ssh-user: git
+2026-08-28T11:06:46.2106299Z   persist-credentials: true
+2026-08-28T11:06:46.2106824Z   clean: true
+2026-08-28T11:06:46.2107299Z   sparse-checkout-cone-mode: true
+2026-08-28T11:06:46.2108055Z   fetch-tags: false
+2026-08-28T11:06:46.2108551Z   show-progress: true
+2026-08-28T11:06:46.2109061Z   lfs: false
+2026-08-28T11:06:46.2109583Z   submodules: false
+2026-08-28T11:06:46.2110079Z   set-safe-directory: true
+2026-08-28T11:06:46.2110654Z   allow-unsafe-pr-checkout: false
+2026-08-28T11:06:46.2111496Z env:
+2026-08-28T11:06:46.2111962Z   ELIXIR_ASSERT_TIMEOUT: 2000
+2026-08-28T11:06:46.2112546Z   ELIXIRC_OPTS: --warnings-as-errors
+2026-08-28T11:06:46.2113114Z   LANG: C.UTF-8
+2026-08-28T11:06:46.2113569Z ##[endgroup]
+2026-08-28T11:06:46.3091826Z Syncing repository: elixir-lang/elixir
+2026-08-28T11:06:46.3094398Z ##[group]Getting Git version info
+2026-08-28T11:06:46.3095199Z Working directory is '/home/runner/work/elixir/elixir'
+2026-08-28T11:06:46.3096452Z [command]/usr/bin/git version
+2026-08-28T11:06:46.3155599Z git version 2.55.0
+2026-08-28T11:06:46.3209656Z ##[endgroup]
+2026-08-28T11:06:46.3225200Z Temporarily overriding HOME='/home/runner/work/_temp/2f01581f-4111-4413-98f0-2b8d8725bd16' before making global git config changes
+2026-08-28T11:06:46.3227425Z Adding repository directory to the temporary git global config as a safe directory
+2026-08-28T11:06:46.3231390Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/elixir/elixir
+2026-08-28T11:06:46.3281637Z Deleting the contents of '/home/runner/work/elixir/elixir'
+2026-08-28T11:06:46.3285209Z ##[group]Initializing the repository
+2026-08-28T11:06:46.3290530Z [command]/usr/bin/git init /home/runner/work/elixir/elixir
+2026-08-28T11:06:46.3386790Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-08-28T11:06:46.3388827Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-08-28T11:06:46.3391084Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-08-28T11:06:46.3392689Z hint: call:
+2026-08-28T11:06:46.3393383Z hint:
+2026-08-28T11:06:46.3394086Z hint: 	git config --global init.defaultBranch <name>
+2026-08-28T11:06:46.3394922Z hint:
+2026-08-28T11:06:46.3396047Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-08-28T11:06:46.3397394Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-08-28T11:06:46.3398735Z hint:
+2026-08-28T11:06:46.3399231Z hint: 	git branch -m <name>
+2026-08-28T11:06:46.3399999Z hint:
+2026-08-28T11:06:46.3401032Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-08-28T11:06:46.3402416Z Initialized empty Git repository in /home/runner/work/elixir/elixir/.git/
+2026-08-28T11:06:46.3404198Z [command]/usr/bin/git remote add origin https://github.com/elixir-lang/elixir
+2026-08-28T11:06:46.3446200Z ##[endgroup]
+2026-08-28T11:06:46.3447127Z ##[group]Disabling automatic garbage collection
+2026-08-28T11:06:46.3450224Z [command]/usr/bin/git config --local gc.auto 0
+2026-08-28T11:06:46.3479434Z ##[endgroup]
+2026-08-28T11:06:46.3480253Z ##[group]Setting up auth
+2026-08-28T11:06:46.3486911Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-08-28T11:06:46.3519009Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-08-28T11:06:46.3916240Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-08-28T11:06:46.3947872Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-08-28T11:06:46.4171022Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-08-28T11:06:46.4204745Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-08-28T11:06:46.4427460Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-08-28T11:06:46.4462681Z ##[endgroup]
+2026-08-28T11:06:46.4464070Z ##[group]Fetching the repository
+2026-08-28T11:06:46.4471926Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=50 origin +dfe6612e546cec6557900e67651f7d21805472ef:refs/remotes/origin/v1.18
+2026-08-28T11:06:47.7226984Z From https://github.com/elixir-lang/elixir
+2026-08-28T11:06:47.7230129Z  * [new ref]         dfe6612e546cec6557900e67651f7d21805472ef -> origin/v1.18
+2026-08-28T11:06:47.7236195Z ##[endgroup]
+2026-08-28T11:06:47.7238924Z ##[group]Determining the checkout info
+2026-08-28T11:06:47.7241739Z ##[endgroup]
+2026-08-28T11:06:47.7243662Z [command]/usr/bin/git sparse-checkout disable
+2026-08-28T11:06:47.7293496Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-08-28T11:06:47.7321133Z ##[group]Checking out the ref
+2026-08-28T11:06:47.7324388Z [command]/usr/bin/git checkout --progress --force -B v1.18 refs/remotes/origin/v1.18
+2026-08-28T11:06:47.8126755Z Switched to a new branch 'v1.18'
+2026-08-28T11:06:47.8131743Z branch 'v1.18' set up to track 'origin/v1.18'.
+2026-08-28T11:06:47.8140752Z ##[endgroup]
+2026-08-28T11:06:47.8183530Z [command]/usr/bin/git log -1 --format=%H
+2026-08-28T11:06:47.8208255Z dfe6612e546cec6557900e67651f7d21805472ef
+2026-08-28T11:06:47.8564564Z ##[group]Run erlef/setup-beam@v1
+2026-08-28T11:06:47.8565769Z with:
+2026-08-28T11:06:47.8566639Z   otp-version: 27.1
+2026-08-28T11:06:47.8578180Z   github-token: ***
+2026-08-28T11:06:47.8579212Z   otp-architecture: 64
+2026-08-28T11:06:47.8580243Z   install-hex: true
+2026-08-28T11:06:47.8581223Z   install-rebar: true
+2026-08-28T11:06:47.8582231Z   version-type: loose
+2026-08-28T11:06:47.8583292Z   disable_problem_matchers: false
+2026-08-28T11:06:47.8584569Z   hexpm-mirrors: https://builds.hex.pm
+
+2026-08-28T11:06:47.8585819Z env:
+2026-08-28T11:06:47.8586718Z   ELIXIR_ASSERT_TIMEOUT: 2000
+2026-08-28T11:06:47.8588160Z   ELIXIRC_OPTS: --warnings-as-errors
+2026-08-28T11:06:47.8589365Z   LANG: C.UTF-8
+2026-08-28T11:06:47.8590258Z ##[endgroup]
+2026-08-28T11:06:48.1285171Z ##[group]Installing Erlang/OTP OTP-27.1.3 - built on amd64/ubuntu-24.04
+2026-08-28T11:06:48.6589663Z [command]/usr/bin/tar zx --strip-components=1 --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/b4ce63b6-ce65-45b6-82a2-72e49f2967ce -f /home/runner/work/_temp/deb20113-d49f-4324-a6bf-8186cca12dd2
+2026-08-28T11:06:51.2936348Z [command]/home/runner/work/_temp/.setup-beam/otp/Install -minimal /home/runner/work/_temp/.setup-beam/otp
+2026-08-28T11:06:51.3239800Z Installed Erlang/OTP version
+2026-08-28T11:06:51.3256834Z [command]/home/runner/work/_temp/.setup-beam/otp/bin/erl -version
+2026-08-28T11:06:51.3370437Z Erlang (SMP,ASYNC_THREADS) (BEAM) emulator version 15.1.3
+2026-08-28T11:06:51.3405589Z ##[endgroup]
+2026-08-28T11:06:51.3572247Z ##[group]Run make compile
+2026-08-28T11:06:51.3572648Z make compile
+2026-08-28T11:06:51.3572961Z echo "$PWD/bin" >> $GITHUB_PATH
+2026-08-28T11:06:51.3616131Z shell: /usr/bin/bash -e {0}
+2026-08-28T11:06:51.3616451Z env:
+2026-08-28T11:06:51.3616699Z   ELIXIR_ASSERT_TIMEOUT: 2000
+2026-08-28T11:06:51.3617025Z   ELIXIRC_OPTS: --warnings-as-errors
+2026-08-28T11:06:51.3617346Z   LANG: C.UTF-8
+2026-08-28T11:06:51.3618002Z   INSTALL_DIR_FOR_OTP: /home/runner/work/_temp/.setup-beam/otp
+2026-08-28T11:06:51.3618444Z ##[endgroup]
+2026-08-28T11:06:53.2697155Z Recompile: src/iex
+2026-08-28T11:06:53.3749905Z Recompile: src/elixir_utils
+2026-08-28T11:06:53.4524089Z Recompile: src/elixir_tokenizer
+2026-08-28T11:06:54.1035645Z Recompile: src/elixir_sup
+2026-08-28T11:06:54.1059040Z Recompile: src/elixir_rewrite
+2026-08-28T11:06:54.2645202Z Recompile: src/elixir_quote
+2026-08-28T11:06:54.4243361Z Recompile: src/elixir_parser
+2026-08-28T11:06:57.6413585Z Recompile: src/elixir_overridable
+2026-08-28T11:06:57.6728361Z Recompile: src/elixir_module
+2026-08-28T11:06:57.8171527Z Recompile: src/elixir_map
+2026-08-28T11:06:57.8922841Z Recompile: src/elixir_lexical
+2026-08-28T11:06:57.9240380Z Recompile: src/elixir_json
+2026-08-28T11:06:59.6060484Z Recompile: src/elixir_interpolation
+2026-08-28T11:06:59.7716075Z Recompile: src/elixir_import
+2026-08-28T11:06:59.8402070Z Recompile: src/elixir_fn
+2026-08-28T11:06:59.8914980Z Recompile: src/elixir_expand
+2026-08-28T11:07:00.2358554Z Recompile: src/elixir_errors
+2026-08-28T11:07:00.3236058Z Recompile: src/elixir_erl_var
+2026-08-28T11:07:00.3498769Z Recompile: src/elixir_erl_try
+2026-08-28T11:07:00.4102198Z Recompile: src/elixir_erl_pass
+2026-08-28T11:07:00.6719306Z Recompile: src/elixir_erl_for
+2026-08-28T11:07:00.7813430Z Recompile: src/elixir_erl_compiler
+2026-08-28T11:07:00.8128687Z Recompile: src/elixir_erl_clauses
+2026-08-28T11:07:00.8302888Z Recompile: src/elixir_erl
+2026-08-28T11:07:01.0099745Z Recompile: src/elixir_env
+2026-08-28T11:07:01.0384518Z Recompile: src/elixir_dispatch
+2026-08-28T11:07:01.1159296Z Recompile: src/elixir_def
+2026-08-28T11:07:01.2513055Z Recompile: src/elixir_config
+2026-08-28T11:07:01.2631801Z Recompile: src/elixir_compiler
+2026-08-28T11:07:01.3076357Z Recompile: src/elixir_code_server
+2026-08-28T11:07:01.3363631Z Recompile: src/elixir_clauses
+2026-08-28T11:07:01.4653573Z Recompile: src/elixir_bootstrap
+2026-08-28T11:07:01.4750389Z Recompile: src/elixir_bitstring
+2026-08-28T11:07:01.5634836Z Recompile: src/elixir_aliases
+2026-08-28T11:07:01.6035801Z Recompile: src/elixir
+2026-08-28T11:07:01.9669733Z Generated elixir app
+2026-08-28T11:07:01.9936926Z ==> bootstrap (compile)
+2026-08-28T11:07:02.8794279Z Compiled kernel.ex
+2026-08-28T11:07:02.9678822Z Compiled kernel/utils.ex
+2026-08-28T11:07:03.0468258Z Compiled macro/env.ex
+2026-08-28T11:07:03.2036230Z Compiled keyword.ex
+2026-08-28T11:07:03.4813684Z Compiled module.ex
+2026-08-28T11:07:03.6091011Z Compiled list.ex
+2026-08-28T11:07:04.1057077Z Compiled macro.ex
+2026-08-28T11:07:04.5179544Z Compiled kernel/typespec.ex
+2026-08-28T11:07:04.6742964Z Compiled code.ex
+2026-08-28T11:07:04.7509732Z Compiled code/identifier.ex
+2026-08-28T11:07:04.9317121Z Compiled protocol.ex
+2026-08-28T11:07:05.0205525Z Compiled stream/reducers.ex
+2026-08-28T11:07:05.8854609Z Compiled enum.ex
+2026-08-28T11:07:06.0149785Z Compiled regex.ex
+2026-08-28T11:07:06.2662018Z Compiled inspect/algebra.ex
+2026-08-28T11:07:06.5606727Z Compiled inspect.ex
+2026-08-28T11:07:06.9577919Z Compiled string.ex
+2026-08-28T11:07:07.0303331Z Compiled string/chars.ex
+2026-08-28T11:07:07.6225895Z Compiled kernel.ex
+2026-08-28T11:07:07.6952640Z Compiled list/chars.ex
+2026-08-28T11:07:07.7130893Z Compiled bitwise.ex
+2026-08-28T11:07:07.8437224Z Compiled module/parallel_checker.ex
+2026-08-28T11:07:07.9395219Z Compiled module/behaviour.ex
+2026-08-28T11:07:08.0025954Z Compiled module/types/helpers.ex
+2026-08-28T11:07:08.6165804Z Compiled module/types/descr.ex
+2026-08-28T11:07:08.7391647Z Compiled module/types/of.ex
+2026-08-28T11:07:08.9530496Z Compiled module/types/pattern.ex
+2026-08-28T11:07:09.3308181Z Compiled module/types/apply.ex
+2026-08-28T11:07:09.6485230Z Compiled module/types/expr.ex
+2026-08-28T11:07:09.7652220Z Compiled module/types.ex
+2026-08-28T11:07:10.5715008Z Compiled exception.ex
+2026-08-28T11:07:10.6929194Z Compiled path.ex
+2026-08-28T11:07:10.8796060Z Compiled file.ex
+2026-08-28T11:07:10.9842460Z Compiled map.ex
+2026-08-28T11:07:10.9958678Z Compiled function.ex
+2026-08-28T11:07:11.0965589Z Compiled range.ex
+2026-08-28T11:07:11.2739016Z Compiled access.ex
+2026-08-28T11:07:11.3655110Z Compiled io.ex
+2026-08-28T11:07:11.5434842Z Compiled system.ex
+2026-08-28T11:07:12.1807878Z Compiled code/formatter.ex
+2026-08-28T11:07:12.3706275Z Compiled code/normalizer.ex
+2026-08-28T11:07:12.5659464Z Compiled kernel/cli.ex
+2026-08-28T11:07:12.5809493Z Compiled kernel/error_handler.ex
+2026-08-28T11:07:12.8238497Z Compiled kernel/parallel_compiler.ex
+2026-08-28T11:07:12.8834566Z Compiled kernel/lexical_tracker.ex
+2026-08-28T11:07:12.8921587Z make[1]: Entering directory '/home/runner/work/elixir/elixir'
+2026-08-28T11:07:12.8972620Z ==> unicode (compile)
+2026-08-28T11:07:14.1770444Z [Unicode] Break on 25 whitespace codepoints
+2026-08-28T11:07:14.7209870Z [Unicode] Tokenizing 112700 non-ascii codepoints
+2026-08-28T11:07:14.8221571Z [Unicode] Tokenizing 65 scriptsets
+2026-08-28T11:07:17.8953056Z make[1]: Leaving directory '/home/runner/work/elixir/elixir'
+2026-08-28T11:07:17.8962997Z ==> elixir (compile)
+2026-08-28T11:07:25.5951883Z Generated elixir app
+2026-08-28T11:07:25.6014556Z ==> eex (compile)
+2026-08-28T11:07:26.2336368Z ==> mix (compile)
+2026-08-28T11:07:28.9310559Z Generated mix app
+2026-08-28T11:07:28.9437164Z ==> ex_unit (compile)
+2026-08-28T11:07:30.5999406Z Generated ex_unit app
+2026-08-28T11:07:30.6086717Z ==> logger (compile)
+2026-08-28T11:07:31.7171646Z Generated logger app
+2026-08-28T11:07:32.1061877Z Generated eex app
+2026-08-28T11:07:32.1155132Z ==> iex (compile)
+2026-08-28T11:07:33.5840681Z Generated iex app
+2026-08-28T11:07:33.5934283Z ##[group]Run bin/elixir --version
+2026-08-28T11:07:33.5934606Z bin/elixir --version
+2026-08-28T11:07:33.5971016Z shell: /usr/bin/bash -e {0}
+2026-08-28T11:07:33.5971284Z env:
+2026-08-28T11:07:33.5971488Z   ELIXIR_ASSERT_TIMEOUT: 2000
+2026-08-28T11:07:33.5971764Z   ELIXIRC_OPTS: --warnings-as-errors
+2026-08-28T11:07:33.5972041Z   LANG: C.UTF-8
+2026-08-28T11:07:33.5972329Z   INSTALL_DIR_FOR_OTP: /home/runner/work/_temp/.setup-beam/otp
+2026-08-28T11:07:33.5972855Z ##[endgroup]
+2026-08-28T11:07:33.7894943Z Erlang/OTP 27 [erts-15.1.3] [source] [64-bit] [smp:4:4] [ds:4:4:10] [async-threads:1] [jit:ns]
+2026-08-28T11:07:33.7896141Z 
+2026-08-28T11:07:33.7951473Z Elixir 1.18.5 (compiled with Erlang/OTP 27)
+2026-08-28T11:07:33.8022778Z ##[group]Run make test_formatted && echo "All Elixir source code files are properly formatted."
+2026-08-28T11:07:33.8023463Z make test_formatted && echo "All Elixir source code files are properly formatted."
+2026-08-28T11:07:33.8059842Z shell: /usr/bin/bash -e {0}
+2026-08-28T11:07:33.8060093Z env:
+2026-08-28T11:07:33.8060295Z   ELIXIR_ASSERT_TIMEOUT: 2000
+2026-08-28T11:07:33.8060571Z   ELIXIRC_OPTS: --warnings-as-errors
+2026-08-28T11:07:33.8060842Z   LANG: C.UTF-8
+2026-08-28T11:07:33.8061125Z   INSTALL_DIR_FOR_OTP: /home/runner/work/_temp/.setup-beam/otp
+2026-08-28T11:07:33.8061461Z ##[endgroup]
+2026-08-28T11:07:35.5711710Z All Elixir source code files are properly formatted.
+2026-08-28T11:07:35.5752679Z ##[group]Run make test_erlang
+2026-08-28T11:07:35.5753020Z make test_erlang
+2026-08-28T11:07:35.5789848Z shell: /usr/bin/bash -e {0}
+2026-08-28T11:07:35.5790108Z env:
+2026-08-28T11:07:35.5790311Z   ELIXIR_ASSERT_TIMEOUT: 2000
+2026-08-28T11:07:35.5790583Z   ELIXIRC_OPTS: --warnings-as-errors
+2026-08-28T11:07:35.5790855Z   LANG: C.UTF-8
+2026-08-28T11:07:35.5791144Z   INSTALL_DIR_FOR_OTP: /home/runner/work/_temp/.setup-beam/otp
+2026-08-28T11:07:35.5791496Z ##[endgroup]
+2026-08-28T11:07:37.5441899Z ==> elixir (eunit)
+2026-08-28T11:07:38.1745908Z   All 126 tests passed.
+2026-08-28T11:07:38.1805873Z 
+2026-08-28T11:07:38.1857114Z ##[group]Run make test_elixir
+2026-08-28T11:07:38.1857939Z make test_elixir
+2026-08-28T11:07:38.1910467Z shell: /usr/bin/bash -e {0}
+2026-08-28T11:07:38.1910879Z env:
+2026-08-28T11:07:38.1911235Z   ELIXIR_ASSERT_TIMEOUT: 2000
+2026-08-28T11:07:38.1911701Z   ELIXIRC_OPTS: --warnings-as-errors
+2026-08-28T11:07:38.1912168Z   LANG: C.UTF-8
+2026-08-28T11:07:38.1912661Z   INSTALL_DIR_FOR_OTP: /home/runner/work/_temp/.setup-beam/otp
+2026-08-28T11:07:38.1913357Z ##[endgroup]
+2026-08-28T11:07:38.2641754Z ==> elixir (ex_unit)
+2026-08-28T11:07:54.8290956Z Running ExUnit with seed: 770782, max_cases: 8
+2026-08-28T11:07:54.8313399Z Excluding tags: [windows: true]
+2026-08-28T11:07:54.8313719Z 
+2026-08-28T11:08:13.9591925Z ..........................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
+2026-08-28T11:08:13.9733668Z Finished in 34.9 seconds (15.9s on load, 12.0s async, 7.0s sync)
+2026-08-28T11:08:13.9734364Z 2040 doctests, 4559 tests, 0 failures, 13 excluded
+2026-08-28T11:08:15.5321024Z ==> ex_unit (ex_unit)
+2026-08-28T11:08:17.6786857Z Running ExUnit with seed: 630247, max_cases: 8
+2026-08-28T11:08:17.6788579Z 
+2026-08-28T11:08:19.4138008Z ........................................................................................................................................................................................................................................................................................................................................................................................................................................................
+2026-08-28T11:08:19.4140918Z Finished in 3.4 seconds (1.7s on load, 0.3s async, 1.3s sync)
+2026-08-28T11:08:19.4168509Z 48 doctests, 392 tests, 0 failures
+2026-08-28T11:08:19.4241684Z ==> logger (ex_unit)
+2026-08-28T11:08:20.9728057Z Running ExUnit with seed: 958411, max_cases: 8
+2026-08-28T11:08:20.9729166Z 
+2026-08-28T11:08:21.5070329Z ................................................................................................................................................................
+2026-08-28T11:08:21.5085664Z Finished in 1.7 seconds (1.1s on load, 0.01s async, 0.5s sync)
+2026-08-28T11:08:21.5087459Z 3 doctests, 157 tests, 0 failures
+2026-08-28T11:08:21.5178544Z ==> eex (ex_unit)
+2026-08-28T11:08:22.1441890Z Running ExUnit with seed: 133731, max_cases: 8
+2026-08-28T11:08:22.1442352Z 
+2026-08-28T11:08:22.1770452Z .................................................................................................................
+2026-08-28T11:08:22.1792305Z Finished in 0.2 seconds (0.2s on load, 0.03s async, 0.00s sync)
+2026-08-28T11:08:22.1793036Z 7 doctests, 106 tests, 0 failures
+2026-08-28T11:08:22.1880776Z ==> iex (ex_unit)
+2026-08-28T11:08:23.3450337Z Running ExUnit with seed: 330481, max_cases: 8
+2026-08-28T11:08:23.3451577Z 
+2026-08-28T11:08:29.8052232Z ...........................................................................................................................................................................................................................................................................
+2026-08-28T11:08:29.8053973Z Finished in 7.2 seconds (0.7s on load, 0.2s async, 6.2s sync)
+2026-08-28T11:08:29.8054798Z 267 tests, 0 failures
+2026-08-28T11:08:29.8177398Z ==> mix (ex_unit)
+2026-08-28T11:08:33.9612793Z Running ExUnit with seed: 884598, max_cases: 8
+2026-08-28T11:08:33.9763289Z Excluding tags: [windows: true]
+2026-08-28T11:08:33.9763625Z 
+2026-08-28T11:08:53.4792830Z     warning: redefining module Mix.Tasks.Local.Sample (current version defined in memory)
+2026-08-28T11:08:53.4801199Z     │
+2026-08-28T11:08:53.4802044Z   1 │ defmodule Mix.Tasks.Local.Sample do
+2026-08-28T11:08:53.4803103Z     │ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+2026-08-28T11:08:53.4803758Z     │
+2026-08-28T11:08:53.4804316Z     └─ lib/local.sample.ex:1: Mix.Tasks.Local.Sample (module)
+2026-08-28T11:08:53.4804682Z 
+2026-08-28T11:08:57.1413759Z ......................................................................................................................................................................................................................................................................................................................................
+2026-08-28T11:08:57.1415527Z 11:08:57.140 [notice] Application parsetools exited: :stopped
+2026-08-28T11:08:57.1620932Z .
+2026-08-28T11:08:57.1621433Z 11:08:57.161 [notice] Application parsetools exited: :stopped
+2026-08-28T11:08:57.1745642Z .
+2026-08-28T11:08:57.1746361Z 11:08:57.174 [notice] Application parsetools exited: :stopped
+2026-08-28T11:08:59.7108807Z ..............
+2026-08-28T11:08:59.7109889Z 11:08:59.709 [notice] Application parsetools exited: :stopped
+2026-08-28T11:08:59.7348158Z .
+2026-08-28T11:08:59.7348828Z 11:08:59.734 [notice] Application parsetools exited: :stopped
+2026-08-28T11:08:59.7576524Z .
+2026-08-28T11:08:59.7577786Z 11:08:59.757 [notice] Application parsetools exited: :stopped
+2026-08-28T11:08:59.7727842Z .
+2026-08-28T11:08:59.7728406Z 11:08:59.772 [notice] Application parsetools exited: :stopped
+2026-08-28T11:11:21.4996263Z ....................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
+2026-08-28T11:11:21.5060417Z Finished in 171.1 seconds (3.6s on load, 0.1s async, 167.3s sync)
+2026-08-28T11:11:21.5061697Z 6 doctests, 855 tests, 0 failures
+2026-08-28T11:11:26.5230484Z ##[group]Run cd ..
+2026-08-28T11:11:26.5230759Z cd ..
+2026-08-28T11:11:26.5231092Z git clone https://github.com/elixir-lang/ex_doc.git --depth 1
+2026-08-28T11:11:26.5231476Z cd ex_doc
+2026-08-28T11:11:26.5231852Z ../elixir/bin/mix do local.rebar --force + local.hex --force + deps.get + compile
+2026-08-28T11:11:26.5232291Z cd ../elixir/
+2026-08-28T11:11:26.5232681Z make docs
+2026-08-28T11:11:26.5268044Z shell: /usr/bin/bash -e {0}
+2026-08-28T11:11:26.5268289Z env:
+2026-08-28T11:11:26.5268485Z   ELIXIR_ASSERT_TIMEOUT: 2000
+2026-08-28T11:11:26.5268746Z   ELIXIRC_OPTS: --warnings-as-errors
+2026-08-28T11:11:26.5269007Z   LANG: C.UTF-8
+2026-08-28T11:11:26.5269282Z   INSTALL_DIR_FOR_OTP: /home/runner/work/_temp/.setup-beam/otp
+2026-08-28T11:11:26.5269618Z ##[endgroup]
+2026-08-28T11:11:26.5338420Z Cloning into 'ex_doc'...
+2026-08-28T11:11:28.1115029Z ** (Mix) httpc request failed with: {:failed_connect, [{:to_address, {~c"builds.hex.pm", 443}}, {:inet, [:inet], {:tls_alert, {:unsupported_certificate, ~c"TLS client: In state wait_cert_cr at ssl_handshake.erl:2199 generated CLIENT ALERT: Fatal - Unsupported Certificate\n {key_usage_mismatch,{{'Extension',{2,5,29,15},true,[keyCertSign,cRLSign]},\n                      {'Extension',{2,5,29,37},false,[{1,3,6,1,5,5,7,3,1}]}}}"}}}]}
+2026-08-28T11:11:28.1116738Z 
+2026-08-28T11:11:28.1118350Z Could not install Rebar because Mix could not download metadata at https://builds.hex.pm/installs/rebar.csv.
+2026-08-28T11:11:28.1119015Z 
+2026-08-28T11:11:28.1213881Z ##[error]Process completed with exit code 1.
+2026-08-28T11:11:28.1355145Z Node 20 is being deprecated. This workflow is running with Node 24 by default. If you need to temporarily use Node 20, you can set the ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true environment variable. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+2026-08-28T11:11:28.1356382Z Post job cleanup.
+2026-08-28T11:11:28.2225264Z [command]/usr/bin/git version
+2026-08-28T11:11:28.2237435Z git version 2.55.0
+2026-08-28T11:11:28.2274866Z Temporarily overriding HOME='/home/runner/work/_temp/fae9c959-a2b8-45ef-8a26-0ff07c1a1b40' before making global git config changes
+2026-08-28T11:11:28.2276137Z Adding repository directory to the temporary git global config as a safe directory
+2026-08-28T11:11:28.2280354Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/elixir/elixir
+2026-08-28T11:11:28.2316114Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-08-28T11:11:28.2349239Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-08-28T11:11:28.2581401Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-08-28T11:11:28.2593871Z http.https://github.com/.extraheader
+2026-08-28T11:11:28.2604007Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-08-28T11:11:28.2636449Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-08-28T11:11:28.2855222Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-08-28T11:11:28.2889025Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-08-28T11:11:28.3233379Z Cleaning up orphan processes
+2026-08-28T11:11:28.3507817Z Terminate orphan process: pid (3352) (epmd)
+2026-08-28T11:11:28.3515891Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

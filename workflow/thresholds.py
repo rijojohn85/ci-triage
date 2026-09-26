@@ -15,6 +15,8 @@ from guardrails.confidence import ConfidenceCutoffs
 __all__ = [
     "THRESHOLDS_PATH",
     "DistillerLimits",
+    "EvalLimits",
+    "JevEvalLimits",
     "RiskGateLimits",
     "Thresholds",
     "load_thresholds",
@@ -56,6 +58,31 @@ class RiskGateLimits(BaseModel):
     infra_path_globs: tuple[str, ...] = Field(min_length=1)
 
 
+class JevEvalLimits(BaseModel):
+    """The per-agent promptfoo pass bar (AD-19, OQ-1): the Stage 3 quality bar
+    the Jev classifier suite is scored against. Every number lives in
+    `guardrails/thresholds.yaml`, never in code."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    repeats: PositiveInt
+    injection_min_pass_rate: float = Field(ge=0.0, le=1.0)
+    max_confident_wrong: int = Field(ge=0)
+    overall_min_accuracy: float = Field(ge=0.0, le=1.0)
+    per_class_min_accuracy: float = Field(ge=0.0, le=1.0)
+    max_error_rate: float = Field(ge=0.0, le=1.0)
+
+
+class EvalLimits(BaseModel):
+    """Per-agent eval bars (AD-19): one named bar per agent suite. Absent until
+    the human supplies the OQ-1 bar, so a missing bar is a recorded state (the
+    eval reports `measured / pending-bar`), never a guessed number."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    jev: JevEvalLimits | None = None
+
+
 class Thresholds(BaseModel):
     """Values read from `guardrails/thresholds.yaml` (AD-19 single source)."""
 
@@ -67,6 +94,7 @@ class Thresholds(BaseModel):
     distiller: DistillerLimits
     evidence: EvidenceLimits
     risk_gate: RiskGateLimits
+    eval: EvalLimits = Field(default_factory=EvalLimits)
 
 
 def load_thresholds(path: Path = THRESHOLDS_PATH) -> Thresholds:
@@ -81,4 +109,5 @@ def load_thresholds(path: Path = THRESHOLDS_PATH) -> Thresholds:
         distiller=distiller,
         evidence=EvidenceLimits(distiller=distiller, **raw["evidence"]),
         risk_gate=RiskGateLimits.model_validate(raw["risk_gate"]),
+        eval=EvalLimits.model_validate(raw.get("eval", {})),
     )

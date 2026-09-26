@@ -1,0 +1,410 @@
+﻿2026-09-25T21:16:33.9375535Z Current runner version: '2.337.0'
+2026-09-25T21:16:33.9404440Z ##[group]Runner Image Provisioner
+2026-09-25T21:16:33.9405347Z Hosted Compute Agent
+2026-09-25T21:16:33.9406211Z Version: 20260828.587
+2026-09-25T21:16:33.9406884Z Commit: abac92662cab4cc7352de4f9f9d2e2419aad9c29
+2026-09-25T21:16:33.9407673Z Build Date: 2026-08-28T16:44:25Z
+2026-09-25T21:16:33.9408389Z Worker ID: {3d7ebfe5-73da-4614-94d1-763ff23800b3}
+2026-09-25T21:16:33.9409182Z Azure Region: northcentralus
+2026-09-25T21:16:33.9410346Z ##[endgroup]
+2026-09-25T21:16:33.9412232Z ##[group]Operating System
+2026-09-25T21:16:33.9413083Z Ubuntu
+2026-09-25T21:16:33.9413654Z 26.04.1
+2026-09-25T21:16:33.9414179Z LTS
+2026-09-25T21:16:33.9414842Z ##[endgroup]
+2026-09-25T21:16:33.9415456Z ##[group]Runner Image
+2026-09-25T21:16:33.9416074Z Image: ubuntu-26.04-arm
+2026-09-25T21:16:33.9416898Z Version: 20260920.129.1
+2026-09-25T21:16:33.9418280Z Included Software: https://github.com/actions/runner-images/blob/ubuntu26-arm64/20260920.129/images/ubuntu/Ubuntu2604-Arm64-Readme.md
+2026-09-25T21:16:33.9420468Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu26-arm64%2F20260920.129
+2026-09-25T21:16:33.9421482Z ##[endgroup]
+2026-09-25T21:16:33.9422718Z ##[group]GITHUB_TOKEN Permissions
+2026-09-25T21:16:33.9425270Z Metadata: read
+2026-09-25T21:16:33.9426110Z ##[endgroup]
+2026-09-25T21:16:33.9428654Z Secret source: Actions
+2026-09-25T21:16:33.9430170Z Cache mode: none
+2026-09-25T21:16:33.9430963Z Prepare workflow directory
+2026-09-25T21:16:33.9878392Z Prepare all required actions
+2026-09-25T21:16:33.9931453Z Getting action download info
+2026-09-25T21:16:34.2325163Z Download action repository 'curl/curl@b2b228076c0565f54592240f9fe4c4b45d8073b1' (SHA:b2b228076c0565f54592240f9fe4c4b45d8073b1)
+2026-09-25T21:16:35.1100713Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-09-25T21:16:35.2482067Z Complete job name: misc checks
+2026-09-25T21:16:35.3477336Z ##[group]Run curl/curl/.github/actions/pkg-install@b2b228076c0565f54592240f9fe4c4b45d8073b1
+2026-09-25T21:16:35.3479035Z with:
+2026-09-25T21:16:35.3479592Z   brew: actionlint shellcheck zizmor
+2026-09-25T21:16:35.3480850Z env:
+2026-09-25T21:16:35.3481334Z   DO_NOT_TRACK: 1
+2026-09-25T21:16:35.3481838Z ##[endgroup]
+2026-09-25T21:16:35.3570473Z ##[start-action display=install (apt);id=__self.__run]
+2026-09-25T21:16:35.3590287Z ##[end-action id=__self.__run;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-09-25T21:16:35.3595645Z ##[start-action display=install (brew);id=__self.__run_2]
+2026-09-25T21:16:35.3661031Z ##[group]Run if [[ "$(uname)" != *'Darwin'* ]]; then
+2026-09-25T21:16:35.3661882Z if [[ "$(uname)" != *'Darwin'* ]]; then
+2026-09-25T21:16:35.3662619Z   brewroot='/home/linuxbrew/.linuxbrew/bin/'
+2026-09-25T21:16:35.3663304Z fi
+2026-09-25T21:16:35.3664203Z # Run this command with retries because of spurious failures seen while running the tests.
+2026-09-25T21:16:35.3665175Z # shellcheck disable=SC2181
+2026-09-25T21:16:35.3665781Z while [[ $? == 0 ]]; do
+2026-09-25T21:16:35.3666357Z   for i in 1 2 3; do
+2026-09-25T21:16:35.3666996Z     if ${brewroot}brew install ${PACKAGES}; then
+2026-09-25T21:16:35.3667673Z       break 2
+2026-09-25T21:16:35.3668189Z     else
+2026-09-25T21:16:35.3668737Z       echo "Error: wait to try again: $i"
+2026-09-25T21:16:35.3669390Z       sleep 10
+2026-09-25T21:16:35.3670285Z     fi
+2026-09-25T21:16:35.3670814Z   done
+2026-09-25T21:16:35.3671318Z   false Too many retries
+2026-09-25T21:16:35.3671905Z done
+2026-09-25T21:16:35.3796186Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-09-25T21:16:35.3796982Z env:
+2026-09-25T21:16:35.3797480Z   DO_NOT_TRACK: 1
+2026-09-25T21:16:35.3797999Z   HOMEBREW_NO_INSTALL_CLEANUP: 1
+2026-09-25T21:16:35.3798642Z   PACKAGES: actionlint shellcheck zizmor
+2026-09-25T21:16:35.3799738Z ##[endgroup]
+2026-09-25T21:16:40.5778760Z ==> Downloading Homebrew API data
+2026-09-25T21:16:41.7751894Z ✔︎ JSON API packages.arm64_linux.jws.json
+2026-09-25T21:16:42.3783705Z ==> Downloading bottle manifests
+2026-09-25T21:16:42.5017921Z ✔︎ Bottle Manifest zizmor (1.30.1)
+2026-09-25T21:16:42.5021484Z ✔︎ Bottle Manifest shellcheck (0.11.0)
+2026-09-25T21:16:42.5147803Z ✔︎ Bottle Manifest actionlint (1.7.12)
+2026-09-25T21:16:42.5151045Z ==> Would install 3 formulae:
+2026-09-25T21:16:42.5151418Z actionlint  1.7.12
+2026-09-25T21:16:42.5151674Z shellcheck  0.11.0
+2026-09-25T21:16:42.5151939Z zizmor      1.30.1
+2026-09-25T21:16:42.9161947Z ==> Would install 3 dependencies for actionlint:
+2026-09-25T21:16:42.9162459Z gmp
+2026-09-25T21:16:42.9162635Z libffi
+2026-09-25T21:16:42.9162803Z shellcheck
+2026-09-25T21:16:42.9342013Z ==> Would install 2 dependencies for shellcheck:
+2026-09-25T21:16:42.9342587Z gmp
+2026-09-25T21:16:42.9342764Z libffi
+2026-09-25T21:16:43.0034360Z ==> Fetching downloads for: actionlint, shellcheck and zizmor
+2026-09-25T21:16:43.2033573Z ✔︎ Bottle Manifest libffi (3.8.0)
+2026-09-25T21:16:43.2425218Z ✔︎ Bottle Manifest gmp (6.3.0)
+2026-09-25T21:16:43.2993545Z ✔︎ Bottle libffi (3.8.0)
+2026-09-25T21:16:43.3197986Z ✔︎ Bottle gmp (6.3.0)
+2026-09-25T21:16:43.3287529Z ✔︎ Bottle actionlint (1.7.12)
+2026-09-25T21:16:43.3656067Z ✔︎ Bottle shellcheck (0.11.0)
+2026-09-25T21:16:43.3954137Z ✔︎ Bottle zizmor (1.30.1)
+2026-09-25T21:16:43.4983454Z ==> Installing dependencies for actionlint: gmp, libffi and shellcheck
+2026-09-25T21:16:43.4984226Z ==> Installing actionlint dependency: gmp
+2026-09-25T21:16:43.5073478Z ==> Pouring gmp--6.3.0.arm64_linux.bottle.1.tar.gz
+2026-09-25T21:16:43.9224125Z 🍺  /home/linuxbrew/.linuxbrew/Cellar/gmp/6.3.0: 24 files, 4.4MB
+2026-09-25T21:16:43.9225558Z ==> Installing actionlint dependency: libffi
+2026-09-25T21:16:43.9263129Z ==> Pouring libffi--3.8.0.arm64_linux.bottle.tar.gz
+2026-09-25T21:16:43.9662954Z 🍺  /home/linuxbrew/.linuxbrew/Cellar/libffi/3.8.0: 19 files, 1.1MB
+2026-09-25T21:16:43.9664844Z ==> Installing actionlint dependency: shellcheck
+2026-09-25T21:16:44.0236030Z ==> Pouring shellcheck--0.11.0.arm64_linux.bottle.1.tar.gz
+2026-09-25T21:16:44.9504854Z 🍺  /home/linuxbrew/.linuxbrew/Cellar/shellcheck/0.11.0: 8 files, 49.1MB
+2026-09-25T21:16:44.9506107Z ==> Installing actionlint
+2026-09-25T21:16:44.9515502Z ==> Pouring actionlint--1.7.12.arm64_linux.bottle.1.tar.gz
+2026-09-25T21:16:44.9721934Z 🍺  /home/linuxbrew/.linuxbrew/Cellar/actionlint/1.7.12: 8 files, 6MB
+2026-09-25T21:16:44.9981405Z ==> Pouring zizmor--1.30.1.arm64_linux.bottle.tar.gz
+2026-09-25T21:16:45.2619959Z 🍺  /home/linuxbrew/.linuxbrew/Cellar/zizmor/1.30.1: 11 files, 25MB
+2026-09-25T21:16:45.2624909Z ==> Caveats
+2026-09-25T21:16:45.2625299Z Bash completion has been installed to:
+2026-09-25T21:16:45.2625581Z   /home/linuxbrew/.linuxbrew/etc/bash_completion.d
+2026-09-25T21:16:45.3066204Z ##[end-action id=__self.__run_2;outcome=success;conclusion=success;duration_ms=9946]
+2026-09-25T21:16:45.3072704Z ##[start-action display=install (pip);id=__self.__run_3]
+2026-09-25T21:16:45.3076761Z ##[end-action id=__self.__run_3;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-09-25T21:16:45.3217117Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+2026-09-25T21:16:45.3217562Z with:
+2026-09-25T21:16:45.3217750Z   persist-credentials: false
+2026-09-25T21:16:45.3217980Z   repository: curl/curl
+2026-09-25T21:16:45.3220939Z   token: ***
+2026-09-25T21:16:45.3221121Z   ssh-strict: true
+2026-09-25T21:16:45.3221301Z   ssh-user: git
+2026-09-25T21:16:45.3221479Z   clean: true
+2026-09-25T21:16:45.3221668Z   sparse-checkout-cone-mode: true
+2026-09-25T21:16:45.3222238Z   fetch-depth: 1
+2026-09-25T21:16:45.3222415Z   fetch-tags: false
+2026-09-25T21:16:45.3222595Z   show-progress: true
+2026-09-25T21:16:45.3222782Z   lfs: false
+2026-09-25T21:16:45.3222946Z   submodules: false
+2026-09-25T21:16:45.3223134Z   set-safe-directory: true
+2026-09-25T21:16:45.3223361Z   allow-unsafe-pr-checkout: false
+2026-09-25T21:16:45.3223581Z env:
+2026-09-25T21:16:45.3223732Z   DO_NOT_TRACK: 1
+2026-09-25T21:16:45.3223897Z ##[endgroup]
+2026-09-25T21:16:45.4035393Z Syncing repository: curl/curl
+2026-09-25T21:16:45.4036709Z ##[group]Getting Git version info
+2026-09-25T21:16:45.4037015Z Working directory is '/home/runner/work/curl/curl'
+2026-09-25T21:16:45.4037492Z [command]/usr/bin/git version
+2026-09-25T21:16:45.4037736Z git version 2.55.0
+2026-09-25T21:16:45.4038556Z ##[endgroup]
+2026-09-25T21:16:45.4043732Z Temporarily overriding HOME='/home/runner/work/_temp/9f2285f3-3e67-47b3-b373-74e3e330d934' before making global git config changes
+2026-09-25T21:16:45.4044479Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-25T21:16:45.4048168Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/curl/curl
+2026-09-25T21:16:45.4076154Z Deleting the contents of '/home/runner/work/curl/curl'
+2026-09-25T21:16:45.4079414Z ##[group]Determining repository object format
+2026-09-25T21:16:45.4080939Z ##[endgroup]
+2026-09-25T21:16:45.4081284Z ##[group]Initializing the repository
+2026-09-25T21:16:45.4085334Z [command]/usr/bin/git init /home/runner/work/curl/curl
+2026-09-25T21:16:45.4208132Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-09-25T21:16:45.4209374Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-09-25T21:16:45.4209946Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-09-25T21:16:45.4210476Z hint: call:
+2026-09-25T21:16:45.4210638Z hint:
+2026-09-25T21:16:45.4210925Z hint: 	git config --global init.defaultBranch <name>
+2026-09-25T21:16:45.4211385Z hint:
+2026-09-25T21:16:45.4211717Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-09-25T21:16:45.4213017Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-09-25T21:16:45.4213539Z hint:
+2026-09-25T21:16:45.4213717Z hint: 	git branch -m <name>
+2026-09-25T21:16:45.4214115Z hint:
+2026-09-25T21:16:45.4214611Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-09-25T21:16:45.4215275Z Initialized empty Git repository in /home/runner/work/curl/curl/.git/
+2026-09-25T21:16:45.4217813Z [command]/usr/bin/git remote add origin https://github.com/curl/curl
+2026-09-25T21:16:45.4255047Z ##[endgroup]
+2026-09-25T21:16:45.4255401Z ##[group]Disabling automatic garbage collection
+2026-09-25T21:16:45.4258529Z [command]/usr/bin/git config --local gc.auto 0
+2026-09-25T21:16:45.4285948Z ##[endgroup]
+2026-09-25T21:16:45.4286279Z ##[group]Setting up auth
+2026-09-25T21:16:45.4286545Z Removing SSH command configuration
+2026-09-25T21:16:45.4292871Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-25T21:16:45.4320453Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-25T21:16:45.4666478Z Removing HTTP extra header
+2026-09-25T21:16:45.4671453Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-25T21:16:45.4706630Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-25T21:16:45.4928891Z Removing includeIf entries pointing to credentials config files
+2026-09-25T21:16:45.4934156Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-25T21:16:45.4961891Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-25T21:16:45.5191362Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-3b1e89be-ad7e-4bb2-bcc6-6b3db973ce21.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-09-25T21:16:45.5225310Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/curl/curl/.git.path /home/runner/work/_temp/git-credentials-3b1e89be-ad7e-4bb2-bcc6-6b3db973ce21.config
+2026-09-25T21:16:45.5253872Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/curl/curl/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-3b1e89be-ad7e-4bb2-bcc6-6b3db973ce21.config
+2026-09-25T21:16:45.5282178Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-3b1e89be-ad7e-4bb2-bcc6-6b3db973ce21.config
+2026-09-25T21:16:45.5309360Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-3b1e89be-ad7e-4bb2-bcc6-6b3db973ce21.config
+2026-09-25T21:16:45.5335077Z ##[endgroup]
+2026-09-25T21:16:45.5335462Z ##[group]Fetching the repository
+2026-09-25T21:16:45.5341538Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +b2b228076c0565f54592240f9fe4c4b45d8073b1:refs/remotes/pull/23110/merge
+2026-09-25T21:16:46.0562494Z From https://github.com/curl/curl
+2026-09-25T21:16:46.0563063Z  * [new ref]         b2b228076c0565f54592240f9fe4c4b45d8073b1 -> pull/23110/merge
+2026-09-25T21:16:46.0566765Z ##[endgroup]
+2026-09-25T21:16:46.0567175Z ##[group]Determining the checkout info
+2026-09-25T21:16:46.0567559Z ##[endgroup]
+2026-09-25T21:16:46.0572183Z [command]/usr/bin/git sparse-checkout disable
+2026-09-25T21:16:46.0615025Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-09-25T21:16:46.0642940Z ##[group]Checking out the ref
+2026-09-25T21:16:46.0646381Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/23110/merge
+2026-09-25T21:16:46.2006972Z Note: switching to 'refs/remotes/pull/23110/merge'.
+2026-09-25T21:16:46.2007929Z 
+2026-09-25T21:16:46.2008126Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-09-25T21:16:46.2008643Z changes and commit them, and you can discard any commits you make in this
+2026-09-25T21:16:46.2009083Z state without impacting any branches by switching back to a branch.
+2026-09-25T21:16:46.2009344Z 
+2026-09-25T21:16:46.2009542Z If you want to create a new branch to retain commits you create, you may
+2026-09-25T21:16:46.2010093Z do so (now or later) by using -c with the switch command. Example:
+2026-09-25T21:16:46.2010335Z 
+2026-09-25T21:16:46.2010426Z   git switch -c <new-branch-name>
+2026-09-25T21:16:46.2010583Z 
+2026-09-25T21:16:46.2010670Z Or undo this operation with:
+2026-09-25T21:16:46.2010813Z 
+2026-09-25T21:16:46.2010883Z   git switch -
+2026-09-25T21:16:46.2011003Z 
+2026-09-25T21:16:46.2011190Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-09-25T21:16:46.2011480Z 
+2026-09-25T21:16:46.2011799Z HEAD is now at b2b2280 Merge a5d6d2c0bc4a2f38b77b61b162c957d2ec47da9c into e2625409e25fb8e71b40a298259202f3c9a61fb7
+2026-09-25T21:16:46.2013534Z ##[endgroup]
+2026-09-25T21:16:46.2054453Z [command]/usr/bin/git log -1 --format=%H
+2026-09-25T21:16:46.2077725Z b2b228076c0565f54592240f9fe4c4b45d8073b1
+2026-09-25T21:16:46.2086818Z ##[group]Removing auth
+2026-09-25T21:16:46.2087416Z Removing SSH command configuration
+2026-09-25T21:16:46.2090163Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-25T21:16:46.2117727Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-25T21:16:46.2344410Z Removing HTTP extra header
+2026-09-25T21:16:46.2347669Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-25T21:16:46.2376420Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-25T21:16:46.2600293Z Removing includeIf entries pointing to credentials config files
+2026-09-25T21:16:46.2603370Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-25T21:16:46.2624656Z includeif.gitdir:/home/runner/work/curl/curl/.git.path
+2026-09-25T21:16:46.2625460Z includeif.gitdir:/home/runner/work/curl/curl/.git/worktrees/*.path
+2026-09-25T21:16:46.2625904Z includeif.gitdir:/github/workspace/.git.path
+2026-09-25T21:16:46.2626321Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-09-25T21:16:46.2632194Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/curl/curl/.git.path
+2026-09-25T21:16:46.2652419Z /home/runner/work/_temp/git-credentials-3b1e89be-ad7e-4bb2-bcc6-6b3db973ce21.config
+2026-09-25T21:16:46.2661931Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/curl/curl/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-3b1e89be\-ad7e\-4bb2\-bcc6\-6b3db973ce21\.config
+2026-09-25T21:16:46.2694498Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/curl/curl/.git/worktrees/*.path
+2026-09-25T21:16:46.2717757Z /home/runner/work/_temp/git-credentials-3b1e89be-ad7e-4bb2-bcc6-6b3db973ce21.config
+2026-09-25T21:16:46.2724913Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/curl/curl/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-3b1e89be\-ad7e\-4bb2\-bcc6\-6b3db973ce21\.config
+2026-09-25T21:16:46.2755242Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-09-25T21:16:46.2774198Z /github/runner_temp/git-credentials-3b1e89be-ad7e-4bb2-bcc6-6b3db973ce21.config
+2026-09-25T21:16:46.2781051Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-3b1e89be\-ad7e\-4bb2\-bcc6\-6b3db973ce21\.config
+2026-09-25T21:16:46.2811080Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-09-25T21:16:46.2851372Z /github/runner_temp/git-credentials-3b1e89be-ad7e-4bb2-bcc6-6b3db973ce21.config
+2026-09-25T21:16:46.2868531Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-3b1e89be\-ad7e\-4bb2\-bcc6\-6b3db973ce21\.config
+2026-09-25T21:16:46.2874812Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-25T21:16:46.3102723Z Removing credentials config '/home/runner/work/_temp/git-credentials-3b1e89be-ad7e-4bb2-bcc6-6b3db973ce21.config'
+2026-09-25T21:16:46.3111539Z ##[endgroup]
+2026-09-25T21:16:46.3225731Z ##[group]Run sed -i.bak -E 's/shell\x3a .+ zizmor\x3a ignore.+$/shell\x3a bash/g' .github/workflows/*.yml
+2026-09-25T21:16:46.3226680Z sed -i.bak -E 's/shell\x3a .+ zizmor\x3a ignore.+$/shell\x3a bash/g' .github/workflows/*.yml
+2026-09-25T21:16:46.3270245Z shell: /usr/bin/bash -e {0}
+2026-09-25T21:16:46.3270567Z env:
+2026-09-25T21:16:46.3270779Z   DO_NOT_TRACK: 1
+2026-09-25T21:16:46.3271122Z ##[endgroup]
+2026-09-25T21:16:46.3415874Z ##[group]Run eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+2026-09-25T21:16:46.3416862Z eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+2026-09-25T21:16:46.3417597Z git ls-files '.github/actions/**/*.yml' '.github/dependabot.yml' '.github/workflows/*.yml' -z | xargs -0 -r zizmor --persona pedantic --
+2026-09-25T21:16:46.3457432Z shell: /usr/bin/bash -e {0}
+2026-09-25T21:16:46.3457855Z env:
+2026-09-25T21:16:46.3458133Z   DO_NOT_TRACK: 1
+2026-09-25T21:16:46.3461363Z   GH_TOKEN: ***
+2026-09-25T21:16:46.3461887Z ##[endgroup]
+2026-09-25T21:16:46.3552605Z ##[group]Run eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+2026-09-25T21:16:46.3553217Z eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+2026-09-25T21:16:46.3554013Z git ls-files '.github/actions/**/*.yml' '.github/dependabot.yml' '.github/workflows/*.yml' -z | xargs -0 -r zizmor --persona auditor -- || true
+2026-09-25T21:16:46.3590935Z shell: /usr/bin/bash -e {0}
+2026-09-25T21:16:46.3591254Z env:
+2026-09-25T21:16:46.3591516Z   DO_NOT_TRACK: 1
+2026-09-25T21:16:46.3594355Z   GH_TOKEN: ***
+2026-09-25T21:16:46.3594619Z ##[endgroup]
+2026-09-25T21:16:46.3675423Z ##[group]Run eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+2026-09-25T21:16:46.3676126Z eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+2026-09-25T21:16:46.3676889Z export SHELLCHECK_OPTS='--exclude=1090,1091,2086,2153 --enable=avoid-nullary-conditions,deprecate-which'
+2026-09-25T21:16:46.3677461Z actionlint --version
+2026-09-25T21:16:46.3677759Z actionlint \
+2026-09-25T21:16:46.3678099Z   --ignore matrix \
+2026-09-25T21:16:46.3678372Z   --ignore ubuntu-26.04 \
+2026-09-25T21:16:46.3678705Z   --ignore ubuntu-24.04-firewall \
+2026-09-25T21:16:46.3679033Z   --ignore xcode-27 \
+2026-09-25T21:16:46.3679345Z   --ignore 'unexpected key "background"' \
+2026-09-25T21:16:46.3680267Z   --ignore 'unexpected key "cache-mode"' \
+2026-09-25T21:16:46.3680663Z   --ignore 'unexpected key "wait"' \
+2026-09-25T21:16:46.3681156Z   --ignore 'unexpected key "wait-all"' \
+2026-09-25T21:16:46.3681546Z   --ignore 'must run script with "run" section' \
+2026-09-25T21:16:46.3682000Z   --ignore 'invalid format because ref is missing' \
+2026-09-25T21:16:46.3682408Z   .github/workflows/*.yml
+2026-09-25T21:16:46.3720765Z shell: /usr/bin/bash -e {0}
+2026-09-25T21:16:46.3721079Z env:
+2026-09-25T21:16:46.3721353Z   DO_NOT_TRACK: 1
+2026-09-25T21:16:46.3721654Z ##[endgroup]
+2026-09-25T21:16:46.3802374Z ##[group]Run eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+2026-09-25T21:16:46.3802988Z eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+2026-09-25T21:16:46.3803356Z shellcheck --version
+2026-09-25T21:16:46.3803761Z .github/scripts/shellcheck-ci.sh
+2026-09-25T21:16:46.3844134Z shell: /usr/bin/bash -e {0}
+2026-09-25T21:16:46.3844472Z env:
+2026-09-25T21:16:46.3844750Z   DO_NOT_TRACK: 1
+2026-09-25T21:16:46.3844995Z ##[endgroup]
+2026-09-25T21:16:46.3964249Z ##[group]Run eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+2026-09-25T21:16:46.3964846Z eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+2026-09-25T21:16:46.3965216Z shellcheck --version
+2026-09-25T21:16:46.3965596Z .github/scripts/shellcheck.sh
+2026-09-25T21:16:46.4016063Z shell: /usr/bin/bash -e {0}
+2026-09-25T21:16:46.4016364Z env:
+2026-09-25T21:16:46.4016645Z   DO_NOT_TRACK: 1
+2026-09-25T21:16:46.4016913Z ##[endgroup]
+2026-09-25T21:16:46.4022383Z 1.7.12
+2026-09-25T21:16:46.4067592Z  INFO zizmor: 🌈 zizmor v1.30.1
+2026-09-25T21:16:46.4070385Z installed from Homebrew
+2026-09-25T21:16:46.4077277Z built with go1.26.3 compiler for linux/arm64
+2026-09-25T21:16:46.4141927Z  INFO zizmor: 🌈 zizmor v1.30.1
+2026-09-25T21:16:46.4176692Z ##[group]Run scripts/spacecheck.pl
+2026-09-25T21:16:46.4177440Z scripts/spacecheck.pl
+2026-09-25T21:16:46.4238993Z shell: /usr/bin/bash -e {0}
+2026-09-25T21:16:46.4239298Z env:
+2026-09-25T21:16:46.4239573Z   DO_NOT_TRACK: 1
+2026-09-25T21:16:46.4240252Z ##[endgroup]
+2026-09-25T21:16:46.4304775Z ShellCheck - shell script analysis tool
+2026-09-25T21:16:46.4323867Z version: 0.11.0
+2026-09-25T21:16:46.4370933Z license: GNU General Public License, version 3
+2026-09-25T21:16:46.4393497Z ##[group]Run .github/scripts/yamlcheck.sh
+2026-09-25T21:16:46.4394053Z .github/scripts/yamlcheck.sh
+2026-09-25T21:16:46.4421228Z website: https://www.shellcheck.net
+2026-09-25T21:16:46.4422197Z Verifying .github/actions/pkg-install/action.yml...
+2026-09-25T21:16:46.4481232Z shell: /usr/bin/bash -e {0}
+2026-09-25T21:16:46.4481703Z env:
+2026-09-25T21:16:46.4500485Z   DO_NOT_TRACK: 1
+2026-09-25T21:16:46.4500750Z ##[endgroup]
+2026-09-25T21:16:46.4665069Z ##[group]Run scripts/badwords-all
+2026-09-25T21:16:46.4665548Z scripts/badwords-all
+2026-09-25T21:16:46.4739397Z shell: /usr/bin/bash -e {0}
+2026-09-25T21:16:46.4739695Z env:
+2026-09-25T21:16:46.4740191Z   DO_NOT_TRACK: 1
+2026-09-25T21:16:46.4740488Z ##[endgroup]
+2026-09-25T21:16:46.4976933Z ShellCheck - shell script analysis tool
+2026-09-25T21:16:46.5049286Z version: 0.11.0
+2026-09-25T21:16:46.5090737Z license: GNU General Public License, version 3
+2026-09-25T21:16:46.5091721Z  INFO audit: zizmor: 🌈 completed .github/actions/pkg-install/action.yml
+2026-09-25T21:16:46.5110257Z  INFO audit: zizmor: 🌈 completed .github/dependabot.yml
+2026-09-25T21:16:46.5123741Z website: https://www.shellcheck.net
+2026-09-25T21:16:46.5150886Z  INFO audit: zizmor: 🌈 completed .github/workflows/appveyor-status.yml
+2026-09-25T21:16:46.5688671Z  INFO audit: zizmor: 🌈 completed .github/actions/pkg-install/action.yml
+2026-09-25T21:16:46.5690564Z  INFO audit: zizmor: 🌈 completed .github/dependabot.yml
+2026-09-25T21:16:46.5712922Z  INFO audit: zizmor: 🌈 completed .github/workflows/appveyor-status.yml
+2026-09-25T21:16:47.1126520Z  INFO audit: zizmor: 🌈 completed .github/workflows/checkdocs.yml
+2026-09-25T21:16:47.1169261Z  INFO audit: zizmor: 🌈 completed .github/workflows/checksrc.yml
+2026-09-25T21:16:47.1217459Z  INFO audit: zizmor: 🌈 completed .github/workflows/checkurls.yml
+2026-09-25T21:16:47.1731362Z  INFO audit: zizmor: 🌈 completed .github/workflows/checkdocs.yml
+2026-09-25T21:16:47.1840980Z  INFO audit: zizmor: 🌈 completed .github/workflows/checksrc.yml
+2026-09-25T21:16:47.1900857Z  INFO audit: zizmor: 🌈 completed .github/workflows/checkurls.yml
+2026-09-25T21:16:48.6255730Z Waiting for all background step(s) to complete: zizmor GHA, zizmor GHA (auditor, warning-only), actionlint, shellcheck CI, shellcheck, spacecheck, yamlcheck
+2026-09-25T21:16:48.6318449Z  INFO audit: zizmor: 🌈 completed .github/workflows/codeql.yml
+2026-09-25T21:16:49.5265442Z  INFO audit: zizmor: 🌈 completed .github/workflows/codeql.yml
+2026-09-25T21:16:49.5266244Z Verifying .github/workflows/appveyor-status.yml...
+2026-09-25T21:16:49.5277726Z  INFO audit: zizmor: 🌈 completed .github/workflows/configure-vs-cmake.yml
+2026-09-25T21:16:49.5278862Z No findings to report. Good job!
+2026-09-25T21:16:49.5298641Z  INFO audit: zizmor: 🌈 completed .github/workflows/configure-vs-cmake.yml
+2026-09-25T21:16:49.5299385Z Verifying .github/workflows/checkdocs.yml...
+2026-09-25T21:16:49.5300495Z  INFO audit: zizmor: 🌈 completed .github/workflows/curl-for-win.yml
+2026-09-25T21:16:49.5301431Z  INFO audit: zizmor: 🌈 completed .github/workflows/curl-for-win.yml
+2026-09-25T21:16:49.5302228Z Verifying .github/workflows/checksrc.yml...
+2026-09-25T21:16:49.5303326Z  INFO audit: zizmor: 🌈 completed .github/workflows/distcheck.yml
+2026-09-25T21:16:49.5304233Z  INFO audit: zizmor: 🌈 completed .github/workflows/distcheck.yml
+2026-09-25T21:16:49.5305528Z Verifying .github/workflows/checkurls.yml...
+2026-09-25T21:16:49.5307015Z  INFO audit: zizmor: 🌈 completed .github/workflows/http3-linux.yml
+2026-09-25T21:16:49.5308125Z  INFO audit: zizmor: 🌈 completed .github/workflows/http3-linux.yml
+2026-09-25T21:16:49.5308818Z Verifying .github/workflows/codeql.yml...
+2026-09-25T21:16:49.5309596Z  INFO audit: zizmor: 🌈 completed .github/workflows/label.yml
+2026-09-25T21:16:49.5310742Z  INFO audit: zizmor: 🌈 completed .github/workflows/label.yml
+2026-09-25T21:16:49.5311379Z Verifying .github/workflows/configure-vs-cmake.yml...
+2026-09-25T21:16:49.5312240Z  INFO audit: zizmor: 🌈 completed .github/workflows/linux-old.yml
+2026-09-25T21:16:49.5313147Z  INFO audit: zizmor: 🌈 completed .github/workflows/linux-old.yml
+2026-09-25T21:16:49.5313837Z Verifying .github/workflows/curl-for-win.yml...
+2026-09-25T21:16:49.5314551Z  INFO audit: zizmor: 🌈 completed .github/workflows/linux.yml
+2026-09-25T21:16:49.5315063Z  INFO audit: zizmor: 🌈 completed .github/workflows/linux.yml
+2026-09-25T21:16:49.5315372Z Verifying .github/workflows/distcheck.yml...
+2026-09-25T21:16:49.5316163Z  INFO audit: zizmor: 🌈 completed .github/workflows/macos.yml
+2026-09-25T21:16:49.5316847Z Verifying .github/workflows/http3-linux.yml...
+2026-09-25T21:16:49.5317588Z  INFO audit: zizmor: 🌈 completed .github/workflows/non-native.yml
+2026-09-25T21:16:49.5318263Z Verifying .github/workflows/label.yml...
+2026-09-25T21:16:49.5362812Z  INFO audit: zizmor: 🌈 completed .github/workflows/macos.yml
+2026-09-25T21:16:49.5363627Z  INFO audit: zizmor: 🌈 completed .github/workflows/non-native.yml
+2026-09-25T21:16:49.5364874Z  INFO audit: zizmor: 🌈 completed .github/workflows/windows.yml
+2026-09-25T21:16:49.5365519Z Verifying .github/workflows/linux-old.yml...
+2026-09-25T21:16:49.5366167Z Verifying .github/workflows/linux.yml...
+2026-09-25T21:16:49.5366688Z Verifying .github/workflows/macos.yml...
+2026-09-25T21:16:49.5367173Z Verifying .github/workflows/non-native.yml...
+2026-09-25T21:16:49.5367671Z Verifying .github/workflows/windows.yml...
+2026-09-25T21:16:49.5368205Z Verifying .circleci/config.yml...
+2026-09-25T21:17:18.6515731Z fatal: no audit was performed
+2026-09-25T21:17:18.6516616Z 'known-vulnerable-actions' audit failed on file://.github/workflows/windows.yml
+2026-09-25T21:17:18.6517797Z 
+2026-09-25T21:17:18.6518170Z Caused by:
+2026-09-25T21:17:18.6518519Z     0: error in 'known-vulnerable-actions' audit
+2026-09-25T21:17:18.6519011Z     1: request error while accessing GitHub API
+2026-09-25T21:17:18.6522207Z     2: Cache error: Cache error: error sending request for url (https://api.github.com/advisories?ecosystem=actions&affects=cygwin%2Fcygwin-install-action%40v6.0.2)
+2026-09-25T21:17:18.6547211Z ##[error]Process completed with exit code 123.
+2026-09-25T21:17:18.6602632Z Finished waiting for all background step(s).
+2026-09-25T21:17:18.6603182Z   zizmor GHA: Failed
+2026-09-25T21:17:18.6603656Z   zizmor GHA (auditor, warning-only): Succeeded
+2026-09-25T21:17:18.6604035Z   actionlint: Succeeded
+2026-09-25T21:17:18.6604806Z   shellcheck CI: Succeeded
+2026-09-25T21:17:18.6605233Z   shellcheck: Succeeded
+2026-09-25T21:17:18.6605532Z   spacecheck: Succeeded
+2026-09-25T21:17:18.6605841Z   yamlcheck: Succeeded
+2026-09-25T21:17:18.6750757Z Post job cleanup.
+2026-09-25T21:17:18.7448809Z [command]/usr/bin/git version
+2026-09-25T21:17:18.7482606Z git version 2.55.0
+2026-09-25T21:17:18.7513393Z Temporarily overriding HOME='/home/runner/work/_temp/0bdfbc26-ca72-410b-8309-b9cf32f3899a' before making global git config changes
+2026-09-25T21:17:18.7514782Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-25T21:17:18.7517492Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/curl/curl
+2026-09-25T21:17:18.7544434Z Removing SSH command configuration
+2026-09-25T21:17:18.7550005Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-25T21:17:18.7578740Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-25T21:17:18.7816261Z Removing HTTP extra header
+2026-09-25T21:17:18.7821009Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-25T21:17:18.7849725Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-25T21:17:18.8083350Z Removing includeIf entries pointing to credentials config files
+2026-09-25T21:17:18.8091055Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-25T21:17:18.8118295Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-25T21:17:18.8493548Z Cleaning up orphan processes
