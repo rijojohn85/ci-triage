@@ -34,6 +34,7 @@ Every message between orchestrator and agent is an A2A message whose data part i
 | 2.5 | Deterministic CI-log distiller (AD-20): strips ANSI/control characters, keeps only error blocks, stack traces and JUnit failures, numbers the survivors, and clips them to the `distiller.max_bytes` bound — with no model, network or clock, so the same input always gives the same output | `workflow/distiller.py`, `workflow/thresholds.py`, `guardrails/thresholds.yaml`, `tests/security/test_distiller.py`, `tests/workflow/test_thresholds.py`, `tests/fixtures/thresholds.py` |
 | 2.6 | Structured tenant-scoped `history` (AD-15): sha256 fingerprint of normalized test_id + error_type + top stack frames, `write_terminal` accepts only terminal `RunState`s and is idempotent per `run_id`, every read/write binds `repo_id`, seed rows enter only via `history_import`, a separate `pr_feedback` table keeps human PR text out of `history` forever | `workflow/history.py`, `workflow/history_store.py`, `workflow/pr_feedback.py`, `workflow/pr_feedback_store.py`, `deploy/migrations/0005_history.sql`, `deploy/migrations/0006_pr_feedback.sql`, `scripts/history_import.py`, `tests/workflow/test_history.py`, `tests/workflow/test_history_integration.py`, `tests/scripts/test_history_import.py` |
 | 4.1 | The pure guardrails validator (AD-6/7/8/9/24/27): agent payloads are checked against the committed generated `TriageVerdict` schema, every citation resolves against the evidence served this run, suspects come only from the served candidates, `confidence_jev` must be this run's Jev number, and blame-free output carries no author key — all as collected structured issues, never raised; the A2A task view now serves each run's real confidence (unknown → blame-free) | `guardrails/validator.py`, `guardrails/citation_check.py`, `guardrails/attribution.py`, `workflow/task_store.py`, `workflow/a2a_server.py`, `workflow/evidence_collection.py`, `pyproject.toml` (pinned `jsonschema`), `tests/guardrails/`, `tests/workflow/test_task_store.py`, `tests/workflow/test_task_server.py` |
+| 6.1 | Central model-call audit (AD-18): every model/Jev invocation becomes its own attempt-level `run_step` row with the model, its token counters (NULL when the provider did not report them, never 0), status and a closed outcome; usage returned by a failed call is still saved, a crash saves nothing (nothing is invented), attempt rows never move run state, and every invocation logs one structured, secret-free JSON line | `contracts/usage.py`, `workflow/usage_audit.py`, `workflow/service_log.py`, `deploy/migrations/0007_run_step_audit.sql`, `tests/contracts/test_usage.py`, `tests/workflow/test_usage_audit.py`, `tests/workflow/test_service_log.py`, `tests/workflow/test_usage_audit_integration.py`; see [Model-call audit](#model-call-audit-story-61) |
 
 ## Where things live
 
@@ -47,7 +48,7 @@ Every message between orchestrator and agent is an A2A message whose data part i
 | `guardrails/validator.py` | built (4.1) | the pure verdict validator (AD-6/7/8/9/27): `validate_verdict(payload, served, blame_free=…)` → `ValidationResult{verdict, issues}`; two layers (committed JSON schema + pydantic parse) plus the suspect/confidence/attribution checks; see [The guardrails validator](#the-guardrails-validator-story-41) |
 | `guardrails/attribution.py` | built (4.1) | the deep `author_login` walk (AD-27), moved from `workflow/task_store.py` (DRY): `strip_author_attribution`, `contains_author_attribution`, `attribution_location` |
 | `deploy/compose.yaml` | built (0.3, 1.1) | postgres:18 + one-shot `migrate` job + the real gateway (story 1.1) + orchestrator/agent placeholders, with AD-16 secret placement; see [deploy/README.md](../deploy/README.md) and [Compose and migrations](#compose-and-migrations-story-03) |
-| `deploy/migrations/` | built (0.3, 2.1, 1.1, 1.2, 2.3, 2.6) | forward-only `.sql` files + naming rules; runner is `workflow/migrate.py`; `0001_triage_run.sql` owns run state, `0002_webhook_delivery.sql` records seen delivery ids for replay dedupe, `0003_triage_run_lease.sql` adds the AD-23 lease columns + claim index, `0004_run_step.sql` adds the AD-2 step record, `0005_history.sql` adds the AD-15 structured-only history table, `0006_pr_feedback.sql` adds the separate post-terminal PR feedback table |
+| `deploy/migrations/` | built (0.3, 2.1, 1.1, 1.2, 2.3, 2.6, 6.1) | forward-only `.sql` files + naming rules; runner is `workflow/migrate.py`; `0001_triage_run.sql` owns run state, `0002_webhook_delivery.sql` records seen delivery ids for replay dedupe, `0003_triage_run_lease.sql` adds the AD-23 lease columns + claim index, `0004_run_step.sql` adds the AD-2 step record, `0005_history.sql` adds the AD-15 structured-only history table, `0006_pr_feedback.sql` adds the separate post-terminal PR feedback table, `0007_run_step_audit.sql` adds the AD-18 model-call audit columns to `run_step` |
 | `scripts/` | built (0.1, 0.2, 0.4, 1.1, 2.1, 2.6) | `bootstrap.sh`, `check_layer_contract.py`, `generate_schemas.py`, `verify_demo_repo.py`, `generate_state_diagram.py`, `history_import.py`; `ruleset-seed.json` payload for the demo-repo ruleset |
 | `tests/scripts/` | built (0.4) | unit tests of the demo-repo read-back comparison logic against recorded API fixtures; live `gh` path is `@pytest.mark.integration` |
 | `test-data/` | built (0.4) | demo-repo evidence: `demo-repo-expected.json` (AD-16 set, one source for script + docs), `demo-repo.md` (live facts + scenario slots), `demo-repo-seed/` (pushed verbatim to the demo repo) |
@@ -60,6 +61,9 @@ Every message between orchestrator and agent is an A2A message whose data part i
 | `workflow/orchestrator_config.py` | built (1.2) | loader plus sanity checks for the one orchestrator settings file (AD-19); the worker loop that will read it arrives with stories 2.3/2.8 |
 | `workflow/steps.py` | built (2.3) | the pure step domain (AD-2, no SQL): `StepStatus`, `StepRecord`, `StepCommit`, `ResumeView` and the small `StepRecorder` protocol |
 | `workflow/step_store.py` | built (2.3) | the one Postgres adapter for steps: `PostgresStepRecorder` composes 1.2's lease guard, inserts the step and moves the state in that one transaction (SOLID-S) |
+| `contracts/usage.py` | built (6.1) | the pure usage contract (AD-18): `ModelUsage` (model + token counters, NULL = "provider did not report", never 0) and the closed `CallOutcome` set |
+| `workflow/usage_audit.py` | built (6.1) | the central model-call audit recorder: `audit_model_call` (the one wrapper around every model call), `ModelCallAttempt`/`ModelCallError`/`ModelCallResult`, the `UsageAuditStore` protocol and `PostgresUsageAuditStore` (insert-only, repo-bound, `call:` step namespace); see [Model-call audit](#model-call-audit-story-61) |
+| `workflow/service_log.py` | built (6.1) | the structured invocation-log helper (AD-25): one allowlisted JSON line per invocation, run_id/task_id/step on every line, no channel for tokens, secrets or raw logs |
 | `workflow/task_store.py` | built (2.4, 4.1) | the read-only A2A task view: `RunRecord`, the small `TaskReader` protocol (now including `get_confidence`), `build_task` (2.1's `project` + 2.2's `attribution_allowed`; an unknown confidence is served blame-free) and `ReadOnlyTaskStore`, whose `save`/`delete` refuse (AD-4, SOLID-S/I) |
 | `workflow/a2a_server.py` | built (2.4, 4.1) | the A2A transport wiring: `RefusingExecutor` plus `create_app`, which serves `get_task`/`list_tasks` through a2a-sdk 1.1.5's JSON-RPC routes (AD-4, AD-5); each run's serving confidence comes from the reader |
 | `workflow/distiller.py` | built (2.5) | the pure AD-20 log distiller: `distill(ci_log, junit_xml, limits) -> list[DistilledLogLine]`, the ordered `ERROR_MARKERS` registry, ANSI/control stripping, JUnit evidence and the UTF-8-safe byte clip; no I/O, model, network or clock (SOLID-S) |
@@ -713,3 +717,58 @@ The same marked test file includes a real GitHub read. To enable it, set
 failed attempt with available logs and a token authorized for that repository.
 Keep the token outside the repository. Without all five values, the GitHub
 check explicitly skips; a skip is not a successful live read.
+
+## Model-call audit (story 6.1)
+
+Every time the system asks a model to do work — a routing call, a spoke
+agent call, a retry after a validation problem, a retry after a hiccup —
+one row is written that says which model was used and what it cost in
+tokens. Nothing records these calls by itself yet (the agents arrive with
+Epic 3); this story builds the recorder they will all share, and proves it
+with stand-in calls. The rules are linked in the
+[architecture spine](../_bmad-output/planning-artifacts/architecture/architecture-stage4-2026-09-25/ARCHITECTURE-SPINE.md)
+(AD-2, AD-5, AD-15, AD-18, AD-19, AD-22, AD-23, AD-25).
+
+- `contracts/usage.py::ModelUsage` is the shape of what one call consumed:
+  the model name plus its token counters. A counter the provider did not
+  report is stored as empty (NULL), never as zero — zero would pretend the
+  tokens were free. `CallOutcome` is the closed set of per-call outcomes
+  (`verdict`, `error`, `timeout`); it is never free text.
+- `workflow/usage_audit.py::audit_model_call` is the one wrapper every
+  model call goes through. It runs the call, writes the attempt row with
+  the returned usage on success **and** on failure, and emits one log line.
+  If the process dies mid-call, no row is written — the missing row *is*
+  the honest record that usage was lost; nothing is invented. Agents never
+  touch the database: the wrapper lives in the orchestrator/eval-harness
+  layer, and the callers (story 2.8's step runner, the evaluation harness,
+  the A2A client) wire it in when they exist.
+- Attempt rows are stored in the existing `run_step` table, in their own
+  `call:<skill>` name namespace. The `(run_id, step, attempt)` identity can
+  never collide with a step's own completion row; the resume view's
+  completed-step list does include `call:` rows, but consumers query exact
+  step names, so no false skip is possible. They are plain bookkeeping: they
+  never move the run's state and never touch the lease-guarded commit path
+  (AD-23). A second row for the same call attempt is refused by the
+  database's uniqueness rule (AD-2).
+- `workflow/service_log.py::log_invocation` writes each invocation as one
+  JSON log line. Every line carries the run id, task id and step name, and
+  the line is built from a fixed field list — there is simply no way to
+  attach token counts, secrets or raw model output to it.
+- `deploy/migrations/0007_run_step_audit.sql` adds only the audit columns
+  to `run_step` (model, the five token counters, outcome — all nullable).
+  There are no cost columns: story 6.2 owns pricing and will read these
+  rows to compute costs centrally.
+
+Run the focused checks:
+
+```bash
+.venv/bin/pytest tests/contracts/test_usage.py tests/workflow/test_usage_audit.py tests/workflow/test_service_log.py -q
+.venv/bin/pytest -m integration tests/workflow/test_usage_audit_integration.py -q
+make check
+```
+
+The marked checks use real Postgres 18 through disposable Docker containers.
+They prove migration 0007 applies and adds only the audit columns, a full
+usage fixture lands as a row with every counter, unreported counters stay
+NULL, a failed call keeps the usage it did return, a duplicate attempt is
+refused, and an audit row never moves the run's state.

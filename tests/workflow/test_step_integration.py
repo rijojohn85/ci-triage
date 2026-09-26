@@ -23,6 +23,7 @@ import psycopg
 import pytest
 
 from contracts.enums import EscalationReason, FailureClass
+from tests.workflow.column_sets import EXPECTED_RUN_STEP_COLUMNS
 from workflow import migrate
 from workflow.ids import new_run_id
 from workflow.lease_store import PostgresRunLeaseStore
@@ -40,19 +41,6 @@ LEASE_SECONDS = 300
 REPO_ID = 42
 OTHER_REPO_ID = 99
 _WORKFLOW_RUN_IDS = count(5001)
-
-EXPECTED_STEP_COLUMNS: Final[frozenset[str]] = frozenset(
-    {
-        "step_id",
-        "run_id",
-        "repo_id",
-        "step",
-        "attempt",
-        "status",
-        "output",
-        "created_at",
-    }
-)
 
 
 def migrated(dsn: str) -> int:
@@ -337,9 +325,11 @@ def test_ac2_migration_adds_only_needed_fields(pg_dsn: str) -> None:
         "WHERE table_name = 'run_step'",
     )
     names = {str(row[0]) for row in columns}
-    assert names == EXPECTED_STEP_COLUMNS, "no model/token/cost or evidence fields"
-    for forbidden in ("model", "token", "cost", "evidence", "price"):
-        assert not any(forbidden in name for name in names), forbidden
+    assert names == EXPECTED_RUN_STEP_COLUMNS, "only the audit fields 6.1 needs"
+    for forbidden in ("cost", "evidence", "price"):
+        assert not any(forbidden in name for name in names), (
+            f"{forbidden}: 6.2 owns costing; evidence fields arrive with 2.7"
+        )
 
     definitions = [
         str(row[0])
