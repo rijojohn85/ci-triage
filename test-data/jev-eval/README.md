@@ -36,6 +36,8 @@ proved, the run is skipped.
   - a different run of the same workflow on the exact same commit SHA (PR run
     failed / push run passed, or a manual re-dispatch) —
     `evidence_kind: same_sha_other_run_passed`. Both run URLs are recorded.
+    `same_sha_other_run_passed` only counts when both logs' checkout line
+    (`HEAD is now at …`) shows the SAME tested commit.
 - **`code`** — either a later commit on the same PR/branch changed source or
   test files and the same job then passed (`fixed_by_commit`), or a
   lint/typecheck/compile job failed on lines that PR changed
@@ -62,7 +64,7 @@ The `key_line` in each entry shows exactly which line was used.
 | --- | --- | --- | --- | --- | --- |
 | apache/kafka | 1 | 0 | 1 | 0 | 2 |
 | curl/curl | 0 | 0 | 2 | 0 | 2 |
-| elixir-lang/elixir | 1 | 1 | 1 | 2 | 5 |
+| elixir-lang/elixir | 1 | 0 | 1 | 2 | 4 |
 | fission/fission | 0 | 3 | 2 | 0 | 5 |
 | flutter/flutter | 2 | 0 | 0 | 0 | 2 |
 | home-assistant/core | 3 | 0 | 1 | 2 | 6 |
@@ -70,8 +72,8 @@ The `key_line` in each entry shows exactly which line was used.
 | microsoft/playwright | 1 | 0 | 1 | 0 | 2 |
 | nodejs/node | 1 | 3 | 2 | 0 | 6 |
 | rails/rails | 1 | 0 | 2 | 2 | 5 |
-| tokio-rs/tokio | 0 | 2 | 0 | 1 | 3 |
-| **total** | **10** | **9** | **12** | **9** | **40** |
+| tokio-rs/tokio | 0 | 1 | 0 | 1 | 2 |
+| **total** | **10** | **7** | **12** | **9** | **38** |
 
 Balance: no repo gives more than 3 cases to one class; every source repo appears
 at least twice. See the shortfalls below.
@@ -82,7 +84,7 @@ Case mix by evidence kind:
 - `code` — fixed_by_commit × 3
 - `external` — third_party_request_failed × 9
 - `flaky` — rerun_passed_same_sha × 6
-- `flaky` — same_sha_other_run_passed × 3
+- `flaky` — same_sha_other_run_passed × 1
 - `infra` — runner_or_setup_failure × 12
 
 ## Skipped / could not prove
@@ -99,7 +101,7 @@ remote servers.
   across all 11 repos' recent PR runs (job failed, later commit changed
   non-test source, same job passed); laravel, curl, tokio, elixir, kafka,
   rails, nodejs and fission yielded no qualifying test-runtime cases.
-- **`flaky` shortfall (9 of 10).** Only 4 source repos yield provable flaky cases. GitHub
+- **`flaky` shortfall (7 of 10).** Only 3 source repos yield provable flaky cases. GitHub
   keeps the previous attempt's job records only for some repositories (kafka,
   playwright, home-assistant, rails, laravel return an empty list or 404 for
   `…/attempts/1/jobs`), and the same-SHA-different-run pattern only exists where

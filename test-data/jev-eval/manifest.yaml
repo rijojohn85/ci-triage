@@ -93,25 +93,6 @@
   log_bytes: 34445
   truncated: false
   key_line: "Could not install Rebar because Mix could not download metadata at https://builds.hex.pm/installs/rebar.csv."
-- id: elixir-flaky-01
-  repo: elixir-lang/elixir
-  stack: Elixir
-  label: flaky
-  evidence_kind: same_sha_other_run_passed
-  evidence: "job 'Ubuntu 24.04, OTP 27.0' of the 'CI' workflow failed at runtime on a project test (Assertion with == failed, test/elixir/kernel/expansion_test.exs:2546); a different run of the same workflow on the exact same commit passed the same job (run 34283160052)."
-  evidence_url: https://github.com/elixir-lang/elixir/actions/runs/34283160052
-  run_url: https://github.com/elixir-lang/elixir/actions/runs/34283162627
-  run_id: 34283162627
-  run_attempt: 1
-  job_id: 102252473709
-  job_name: "Ubuntu 24.04, OTP 27.0"
-  failing_step: "Elixir test suite"
-  commit_sha: fc5d35f780d27a066f9aad044a5f53106b3eb0dc
-  created_at: 2026-09-08T21:54:52Z
-  log_file: logs/elixir-flaky-01.log
-  log_bytes: 37308
-  truncated: false
-  key_line: "1) test bitstrings expands binary/bitstring specifiers (Kernel.ExpansionTest)"
 - id: elixir-infra-01
   repo: elixir-lang/elixir
   stack: Elixir
@@ -739,22 +720,3 @@
   log_bytes: 79653
   truncated: false
   key_line: "test conn::http2_connect_detect_close ... FAILED"
-- id: tokio-flaky-02
-  repo: tokio-rs/tokio
-  stack: Rust
-  label: flaky
-  evidence_kind: same_sha_other_run_passed
-  evidence: "job 'FreeBSD x86_64' of the 'CI' workflow failed at runtime on tokio's own tracing test (thread 'test_oneshot_creates_span' panicked, test result: FAILED in -p tokio --test tracing_sync) on commit 41e2e5c6; a different run of the same workflow on the exact same commit passed the same job (run 35222822622)."
-  evidence_url: https://github.com/tokio-rs/tokio/actions/runs/35222822622
-  run_url: https://github.com/tokio-rs/tokio/actions/runs/35221829195
-  run_id: 35221829195
-  run_attempt: 1
-  job_id: 105204305567
-  job_name: "FreeBSD x86_64"
-  failing_step: "Test in FreeBSD"
-  commit_sha: 41e2e5c62ee9af894ce591edf2d912578fa0bf5c
-  created_at: 2026-09-17T12:33:56Z
-  log_file: logs/tokio-flaky-02.log
-  log_bytes: 608042
-  truncated: false
-  key_line: "[test_oneshot_creates_span] expected event an event with target `runtime::resource::state_update`"
