@@ -1,7 +1,7 @@
 # Quality gates — single entry: `make check` (AGENTS.md § Quality gates).
 # Tool targets are thin wrappers over .venv tools; pins live in pyproject.toml
 # + requirements/dev-constraints.txt (installed by bootstrap).
-.PHONY: check bootstrap print-versions schema-drift state-diagram-drift ruff mypy pylint-dup pytest-cov test-integration pre-commit
+.PHONY: check bootstrap print-versions schema-drift state-diagram-drift ruff mypy pylint-dup pytest-cov test-integration pre-commit jev-eval-cases eval-jev
 
 VENV := .venv
 PY := $(VENV)/bin/python
@@ -70,3 +70,13 @@ pre-commit: bootstrap-check
 # from `check` by the pytest addopts marker default.
 test-integration:
 	@$(PYTEST) -m integration -q
+
+# Jev eval tooling (story 3.2) — deliberately NOT part of `check`: it makes
+# real model calls and its committed cases file is a drift gate of its own.
+# `jev-eval-cases` regenerates test-data/jev-eval/cases.generated.yaml;
+# `eval-jev` runs the root suite once and writes results/jev-eval/<date>-<model>/.
+jev-eval-cases:
+	@$(PY) scripts/build_jev_eval_cases.py
+
+eval-jev:
+	@$(PY) scripts/run_jev_eval.py

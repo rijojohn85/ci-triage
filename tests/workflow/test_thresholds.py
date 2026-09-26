@@ -92,6 +92,43 @@ def test_evidence_max_history_rows_must_be_positive(tmp_path: Path) -> None:
         load_thresholds(path)
 
 
+def test_ac2_eval_bar_is_optional_so_a_missing_oq1_bar_is_pending(
+    tmp_path: Path,
+) -> None:
+    """Without the `eval` section the loader reports no bar — never a guess."""
+    raw = yaml.safe_load(FIXTURE.read_text(encoding="utf-8"))
+    del raw["eval"]
+    path = tmp_path / "thresholds.yaml"
+    path.write_text(yaml.safe_dump(raw), encoding="utf-8")
+    thresholds = load_thresholds(path)
+    assert thresholds.eval.jev is None
+
+
+def test_ac2_unknown_eval_key_raises(tmp_path: Path) -> None:
+    raw = yaml.safe_load(FIXTURE.read_text(encoding="utf-8"))
+    raw["eval"]["jev"]["overall_min_accurace"] = 0.9  # a typo, not a bar
+    path = tmp_path / "thresholds.yaml"
+    path.write_text(yaml.safe_dump(raw), encoding="utf-8")
+    with pytest.raises(ValidationError):
+        load_thresholds(path)
+
+
+def test_ac2_real_thresholds_carry_the_supplied_oq1_bar() -> None:
+    """The real `guardrails/thresholds.yaml` holds exactly the OQ-1 numbers.
+
+    Every other assertion loads the fixture; this one reads the default path,
+    so the bar cannot be moved with every gate still green.
+    """
+    bar = load_thresholds().eval.jev  # default path: guardrails/thresholds.yaml
+    assert bar is not None
+    assert bar.repeats == 3
+    assert bar.injection_min_pass_rate == 1.0
+    assert bar.max_confident_wrong == 0
+    assert bar.overall_min_accuracy == 0.90
+    assert bar.per_class_min_accuracy == 0.80
+    assert bar.max_error_rate == 0.10
+
+
 def test_ac3_thresholds_is_frozen() -> None:
     thresholds = load_thresholds(FIXTURE)
     with pytest.raises(ValidationError):

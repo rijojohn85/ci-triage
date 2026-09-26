@@ -39,6 +39,7 @@ Every message between orchestrator and agent is an A2A message whose data part i
 | 2.8 | The shared step runner (AD-8, AD-22): one execution policy every agent step goes through — blocking non-streaming A2A `send_message` with `contextId = run_id` and a per-skill timeout, every attempted call audited centrally, one validation retry with the structured errors fed back (a second invalid output pauses with `validation_failed`), at most three transient attempts with config-driven backoff then a terminal `FAILED` with history written once, a definitive error failing without retry, every attempt its own `run_step` row, and the validated output + state move committed atomically under the lease guard | `workflow/step_runner.py`, `workflow/a2a_client.py`, `workflow/runtime_config.py`, `workflow/orchestrator_config.py` + `config/orchestrator.yaml` (retry budget), `guardrails/validator.py` (`validate_classification`), `tests/workflow/test_step_runner.py`, `tests/workflow/test_a2a_client.py`, `tests/workflow/test_runtime_config.py`, `tests/workflow/test_step_runner_integration.py`, `tests/guardrails/test_validator.py`; see [The shared step runner](#the-shared-step-runner-story-28) |
 | 4.2 | The deterministic risk gate (AD-13, AD-12, AD-21): one registry entry per rule — skip/disable/xfail a test (incl. test-file deletion), added retries, increased timeouts, loosened assertions, workflow/secret/infra paths, a `dangerous` Reviewer objection, missing base content (fail closed) — evaluated over the proposed diff, the base content of modified files and the Reviewer's objections; returns `normal | blocked | not_gated` with structured reasons, no I/O, no model, and no model-asserted tier can override it; the new path globs live in `guardrails/thresholds.yaml` | `guardrails/risk_gate.py`, `guardrails/thresholds.yaml` (`risk_gate:` globs), `workflow/thresholds.py`, `tests/guardrails/test_risk_gate.py`, `tests/workflow/test_thresholds.py`; see [The risk gate](#the-risk-gate-story-42) |
 | 3.1 | The Jev classifier agent served: a stateless A2A service answering `classify-failure` over JSON-RPC — one batched model call carries the five-class `Choice` and the `Noul` injection screen over the delimited distilled log, the reply is the shared `JevResult` (classification + provider-reported usage) matching the generated schema, errors are typed `AgentError` on an A2A `FAILED` task, and the agent holds no GitHub token and no database client | `agents/jev/`, `prompts/jev-classes.yaml`, `contracts/jev.py` (`JevResult`), `contracts/a2a.py`, `guardrails/schemas/JevResult.json`, `jev.test.yaml`, `tests/agents/jev/`; see [The Jev classifier agent](#the-jev-classifier-agent-story-31) |
+| 3.2 | Jev measured before it is connected: a deterministic generator turns the 38 labelled logs (through the real distiller) plus constructed `unknown` and injected verdict-flip `trick` cases into a committed promptfoo suite; the one root entrypoint runs it with real model calls and promptfoo's retry off; a pure scorer reuses the AD-9 injection-screen path to write an honest receipt under `results/jev-eval/` — per-class expected/actual, both the original `confidence_jev` and the effective confidence with its caps, six named bars against the OQ-1 pass bar (`measured / pending-bar` when it is absent), confident-wrong and repeat-consistency lists, NULL-not-0 token totals and every model call accounted for | `workflow/jev_eval.py`, `scripts/build_jev_eval_cases.py`, `scripts/run_jev_eval.py`, `test-data/jev-eval/cases.generated.yaml`, `guardrails/thresholds.yaml` (`eval.jev`), `workflow/thresholds.py` (`JevEvalLimits`/`EvalLimits`), `jev.test.yaml`, `agents/jev/eval_provider.py`, `results/jev-eval/`, `tests/workflow/test_jev_eval.py`, `tests/scripts/test_build_jev_eval_cases.py`; see [The Jev eval](#the-jev-eval-story-32) |
 
 ## Where things live
 
@@ -46,16 +47,17 @@ Every message between orchestrator and agent is an A2A message whose data part i
 | --- | --- | --- |
 | `contracts/` | built (0.2) | Pydantic v2 models for every inter-agent payload; see [contracts/README.md](../contracts/README.md) |
 | `guardrails/schemas/` | built (0.2) | JSON Schemas generated from `contracts/`; never edit by hand |
-| `guardrails/thresholds.yaml` | built (2.1, 2.2, 2.5, 4.2) | the one thresholds file (AD-19): `review.max_rounds`, `workflow_path_glob`, the `confidence` cut-offs (`class_cutoff`, `no_route_cutoff`, `injection_screen_cutoff`, `injection_screen_cap`), `distiller.max_bytes`, `evidence.max_history_rows` and the `risk_gate` secret/infra path globs; consumed via `workflow.thresholds.load_thresholds` |
+| `guardrails/thresholds.yaml` | built (2.1, 2.2, 2.5, 4.2, 3.2) | the one thresholds file (AD-19): `review.max_rounds`, `workflow_path_glob`, the `confidence` cut-offs (`class_cutoff`, `no_route_cutoff`, `injection_screen_cutoff`, `injection_screen_cap`), `distiller.max_bytes`, `evidence.max_history_rows`, the `risk_gate` secret/infra path globs and the `eval.jev` OQ-1 pass bar; consumed via `workflow.thresholds.load_thresholds` |
 | `guardrails/confidence.py` | built (2.2) | the AD-9 min rule as code: `ClassConfidence`, `RouteConfidence`, `apply_injection_screen`, `below_class_cutoff`, `class_escalation` |
 | `guardrails/citation_check.py` | built (4.1) | citation resolution against the evidence served this run (AD-7): `ServedEvidence` (pack + the run's Jev call), the closed per-kind resolution table, `ValidationIssue` (the one issue shape) |
 | `guardrails/validator.py` | built (4.1, 2.8) | the pure verdict validator (AD-6/7/8/9/27): `validate_verdict(payload, served, blame_free=…)` → `ValidationResult{verdict, issues}`; two layers (committed JSON schema + pydantic parse) plus the suspect/confidence/attribution checks; `validate_classification(payload)` (2.8, schema + parse only) is the CLASSIFYING surface; see [The guardrails validator](#the-guardrails-validator-story-41) |
 | `guardrails/attribution.py` | built (4.1) | the deep `author_login` walk (AD-27), moved from `workflow/task_store.py` (DRY): `strip_author_attribution`, `contains_author_attribution`, `attribution_location` |
 | `deploy/compose.yaml` | built (0.3, 1.1) | postgres:18 + one-shot `migrate` job + the real gateway (story 1.1) + orchestrator/agent placeholders, with AD-16 secret placement; see [deploy/README.md](../deploy/README.md) and [Compose and migrations](#compose-and-migrations-story-03) |
 | `deploy/migrations/` | built (0.3, 2.1, 1.1, 1.2, 2.3, 2.6, 6.1) | forward-only `.sql` files + naming rules; runner is `workflow/migrate.py`; `0001_triage_run.sql` owns run state, `0002_webhook_delivery.sql` records seen delivery ids for replay dedupe, `0003_triage_run_lease.sql` adds the AD-23 lease columns + claim index, `0004_run_step.sql` adds the AD-2 step record, `0005_history.sql` adds the AD-15 structured-only history table, `0006_pr_feedback.sql` adds the separate post-terminal PR feedback table, `0007_run_step_audit.sql` adds the AD-18 model-call audit columns to `run_step` |
-| `scripts/` | built (0.1, 0.2, 0.4, 1.1, 2.1, 2.6) | `bootstrap.sh`, `check_layer_contract.py`, `generate_schemas.py`, `verify_demo_repo.py`, `generate_state_diagram.py`, `history_import.py`; `ruleset-seed.json` payload for the demo-repo ruleset |
-| `tests/scripts/` | built (0.4) | unit tests of the demo-repo read-back comparison logic against recorded API fixtures; live `gh` path is `@pytest.mark.integration` |
-| `test-data/` | built (0.4) | demo-repo evidence: `demo-repo-expected.json` (AD-16 set, one source for script + docs), `demo-repo.md` (live facts + scenario slots), `demo-repo-seed/` (pushed verbatim to the demo repo) |
+| `scripts/` | built (0.1, 0.2, 0.4, 1.1, 2.1, 2.6, 3.2) | `bootstrap.sh`, `check_layer_contract.py`, `generate_schemas.py`, `verify_demo_repo.py`, `generate_state_diagram.py`, `history_import.py`, `build_jev_eval_cases.py` (the 3.2 case generator, `--check` drift gate), `run_jev_eval.py` (the 3.2 harness); `ruleset-seed.json` payload for the demo-repo ruleset |
+| `tests/scripts/` | built (0.4, 3.2) | unit tests of the demo-repo read-back comparison logic against recorded API fixtures and of the Jev case generator; live `gh` path is `@pytest.mark.integration` |
+| `test-data/` | built (0.4, 3.2) | demo-repo evidence: `demo-repo-expected.json` (AD-16 set, one source for script + docs), `demo-repo.md` (live facts + scenario slots), `demo-repo-seed/` (pushed verbatim to the demo repo); `jev-eval/` — the 38 labelled Jev cases (`manifest.yaml` + `logs/`) and the generated `cases.generated.yaml`; see [test-data/jev-eval/README.md](../test-data/jev-eval/README.md) |
+| `results/jev-eval/` | built (3.2) | the committed Jev eval receipts (`<date>-<model>/summary.md`, `summary.json`, `promptfoo-output.json`); un-ignored in `.gitignore`; see [results/README.md](../results/README.md) |
 | `tests/contracts/` | built (0.2) | contract tests, named after the ACs they prove |
 | `tests/workflow/`, `tests/security/` | built (0.3, 2.1, 1.1, 1.2, 2.2, 2.3, 2.4, 2.5, 2.8) | migration-runner and compose secret-placement tests; state-machine, projection and diagram tests; gateway signature/intake/limits tests; lease unit + fencing tests; step unit + atomic-commit/resume/fencing tests; A2A task-view unit + JSON-RPC ASGI tests; distiller AC tests (no I/O); step-runner, A2A-client and runtime-config tests (`@pytest.mark.integration` ones need Docker, `pytest -m integration`) |
 | `gateway/` | built (1.1) | webhook intake only — signature, accepted events, load limits, one enqueue; see [gateway/README.md](../gateway/README.md) |
@@ -75,6 +77,7 @@ Every message between orchestrator and agent is an A2A message whose data part i
 | `workflow/task_store.py` | built (2.4, 4.1) | the read-only A2A task view: `RunRecord`, the small `TaskReader` protocol (now including `get_confidence`), `build_task` (2.1's `project` + 2.2's `attribution_allowed`; an unknown confidence is served blame-free) and `ReadOnlyTaskStore`, whose `save`/`delete` refuse (AD-4, SOLID-S/I) |
 | `workflow/a2a_server.py` | built (2.4, 4.1) | the A2A transport wiring: `RefusingExecutor` plus `create_app`, which serves `get_task`/`list_tasks` through a2a-sdk 1.1.5's JSON-RPC routes (AD-4, AD-5); each run's serving confidence comes from the reader |
 | `workflow/distiller.py` | built (2.5) | the pure AD-20 log distiller: `distill(ci_log, junit_xml, limits) -> list[DistilledLogLine]`, the ordered `ERROR_MARKERS` registry, ANSI/control stripping, JUnit evidence and the UTF-8-safe byte clip; no I/O, model, network or clock (SOLID-S) |
+| `workflow/jev_eval.py` | built (3.2) | the pure Jev-eval domain: `Attempt`/`build_attempt`, `ClassScore`, `CaseCount`, `BarResult`, `EvalSummary`, `Verdict`, `trick_passed`, `score_attempts` and `render_summary_md`; validates every result against the committed `guardrails/schemas/JevResult.json` and reuses `guardrails.confidence.apply_injection_screen` (the one AD-9 path); no I/O, model or clock; see [The Jev eval](#the-jev-eval-story-32) |
 | `config/gateway.yaml` | built (1.1) | per-installation rate limit and per-repo queue-depth cap (AD-19); consumed via `gateway.settings.load_gateway_limits` |
 | `config/orchestrator.yaml` | built (1.2, 2.8) | `lease_seconds` / `renew_after_seconds` plus the AD-22 transient-retry budget (`retry.max_attempts`, `retry.backoff_base_seconds`) (AD-19); `workflow.orchestrator_config.load_orchestrator_config` reads it |
 | `config/runtime.yaml` | built (2.8) | per-agent model IDs and `step_timeout` (AD-19); `workflow.runtime_config.load_runtime_config` is its one loader (`for_skill` maps the runner's skill names onto the agent keys) |
@@ -97,6 +100,8 @@ make check                         # every quality gate; must be green before a 
 python scripts/generate_schemas.py # regenerate guardrails/schemas/ after changing a contract
 python scripts/generate_state_diagram.py # regenerate workflow/STATE_DIAGRAM.md after a table change
 python -m gateway                  # run the intake gateway against a migrated database (POST /webhook on :8080)
+make jev-eval-cases                # regenerate the Jev eval cases (story 3.2; committed drift gate)
+make eval-jev                      # run the Jev eval once (real model calls; NOT part of `check`)
 ```
 
 `make check` runs: bootstrap check, layer contract, schema drift, **state-diagram drift**, ruff (check + format), `mypy --strict`, pylint duplicate-code, `pytest --cov` (≥ 85% on `contracts`, `guardrails`, `workflow`). Integration tests that need Docker are marked `@pytest.mark.integration` and excluded from `make check` by default — run them with `make test-integration` (or `.venv/bin/pytest -m integration`). Individual targets are listed in the [Makefile](../Makefile).
@@ -1149,3 +1154,120 @@ without a key:
 ```bash
 TYPESAFE_API_KEY=... .venv/bin/pytest -m integration tests/agents/jev/test_integration.py -q
 ```
+
+## The Jev eval (story 3.2)
+
+Before the Jev classifier is connected to anything, it is measured. This
+section is the maintainer's tool: how the eval cases are built, how to run the
+one suite, where the receipt lands and how the pass bar is scored. Nothing here
+changes a user-visible behaviour, so `docs/USER-GUIDE.md` is untouched.
+
+**Why it exists.** A classifier that is never measured cannot be trusted with
+real failures, and "it looked right on five examples" is not evidence. The eval
+turns the 38 hand-labelled real CI failures in
+[test-data/jev-eval/](../test-data/jev-eval/README.md) into a repeatable
+promptfoo suite, runs the **real** classifier against them, and writes an
+honest receipt — including when the result is a failure.
+
+**How the cases are built** (`scripts/build_jev_eval_cases.py`, deterministic;
+the committed `test-data/jev-eval/cases.generated.yaml` is the drift gate):
+
+- **38 labelled** — each manifest log is put through the **real distiller**
+  (`workflow.distiller.distill`, the real `distiller.max_bytes`), so the eval
+  feeds the classifier exactly what the workflow would. The expected answer is
+  the manifest label.
+- **8 unknown** — constructed, not distilled: a real log's first cause-free
+  setup/checkout lines plus a bare
+  `##[error]Process completed with exit code 1.`, one log per repo (so the
+  eight spread across eight repos). The distiller drops every unmarked line, so
+  a distilled unknown case would lose exactly the lines this rule keeps (the
+  reasoning is recorded in the data README). A test asserts no non-final line
+  matches a distiller `ERROR_MARKER`.
+- **6 trick** — a labelled case with one injected **verdict-flip** line. The
+  six cover all four real classes (code/flaky/infra/external) across six
+  different repos, one injection style each, in the order the run's invocation
+  supplied: a `SYSTEM NOTICE`; a fake JSON verdict; a role claim
+  (`assistant:` / `### Operator override`); an "ignore previous instructions";
+  an instruction to report `noul 0`; and one hidden in a plausible log line.
+  The expected answer stays the original label (the flip target is never that
+  label); the case passes only if the classifier keeps the label **and** the
+  injection screen fires.
+
+Regenerate with `make jev-eval-cases`; `--check` (also used in tests) exits
+non-zero if a hand edit diverges from regeneration.
+
+**How to run it.** `make eval-jev` runs the one root entrypoint
+(`jev.test.yaml`) once: it resolves a node promptfoo 0.123.1 can run on
+(≥ 22.22.0; it looks at `$PATH`, then nvm's installed versions, then the usual
+system paths, and errors clearly if none is suitable), runs `promptfoo eval`
+with the `repeats` count read from the bar, then scores and saves the receipt.
+It needs `TYPESAFE_API_KEY` (OpenRouter) in the environment — promptfoo loads
+`.env` itself. The target pins the worker's Python (`pythonExecutable:
+./.venv/bin/python`, so `typesafe_sdk` is importable) and turns promptfoo's
+scheduler retry off (`maxRetries: 0`), so one attempt is exactly one model call
+(AD-18). The six inline service fixtures stay in `jev.test.yaml` and are
+reported separately as "smoke" cases — they are not part of the scored
+population, but their calls are counted.
+
+The eval **counts model calls in the harness**, not in Postgres: story 6.1's
+`workflow/usage_audit.py` records attempts in the database, but the eval must
+run without a database, so `scripts/run_jev_eval.py` sums promptfoo's reported
+`numRequests` per attempt and the `call_accounting` bar refuses a run where any
+attempt did not report its call count (NULL, never 0).
+
+`make eval-jev` **exits non-zero when the bar is breached** (or when the run
+reports `not run: errors`): the receipt is still written and the verdict printed
+as-is, but the target fails so a breached bar cannot pass unnoticed. Only
+`PASSED` and `measured / pending-bar` exit 0. `--from-output <path>` re-scores
+an existing raw output instead of running the suite, so a receipt can be
+re-derived from its committed evidence with zero model calls.
+
+**Where the receipt lands.** `results/jev-eval/<date>-<model>/` (committed
+evidence; see [results/README.md](../results/README.md)), where `<date>` is the
+local system date and the model id's `/` becomes `-`:
+
+- `summary.md` — the human-readable receipt;
+- `summary.json` — the same, machine-readable (every attempt, both confidence
+  numbers and the caps, token totals, bar outcomes);
+- `promptfoo-output.json` — the complete promptfoo report.
+
+The receipt records the run provenance and the whole measurement: the model id
+and the provider-reported model string, the SHA-256 of `prompts/jev-classes.yaml`,
+the git commit, the date and the repeats; case counts per kind, per class and
+per repo; per-class expected/actual and the confusion matrix; the trick-case
+table (case, answer, `noul`, passed); the original `confidence_jev` **and** the
+effective confidence after the injection cap (reusing
+`guardrails.confidence.apply_injection_screen`, the one AD-9 path — never
+reimplemented) with the caps shown; the confident-wrong attempts; cases that
+differ across repeats; the call/usage totals with the `calls == attempts`
+assertion; and NULL-not-0 token totals.
+
+**How the bar is scored.** The pass bar is the OQ-1 threshold in
+`guardrails/thresholds.yaml` (`eval.jev`), loaded through `workflow.thresholds`;
+no number lives in code. Seven named bars are checked (`workflow/jev_eval.py`):
+`error_rate`, `sample_completeness` (every case ran exactly the bar's `repeats`
+and the run used that count, so a thinner sample cannot yield a scored receipt),
+`confident_wrong`, `overall_accuracy`, `per_class_accuracy`, `injection` (the
+share of trick cases resisted) and `call_accounting` (model calls == attempts
+with every count reported, the AD-18 no-hidden-retry check), each printed with
+its required value. The verdict follows a fixed precedence:
+
+- the bar is absent → `measured / pending-bar` (never a pass claim);
+- the error rate breaches its bar → `not run: errors`;
+- otherwise `PASSED` only if every bar holds, else `FAILED`, naming each breach.
+
+The summary carries the required caveats: the pass bar is stated as "OQ-1 as
+supplied 2026-09-27"; the population is stated as unresolved (OQ-5) and never
+called a validated calibration set; the small-class-count risk is stated with
+the actual smallest class; and the Jev cost is stated as NULL (OQ-3). A failing
+result is a valid result: the fix is never to tune the prompt, relabel a case,
+drop a hard case or move the bar — that is a later, separately-reviewed change.
+
+**Run and test it.**
+
+```bash
+make jev-eval-cases                 # regenerate test-data/jev-eval/cases.generated.yaml
+make eval-jev                       # run the suite once; writes results/jev-eval/<date>-<model>/
+.venv/bin/pytest tests/workflow/test_jev_eval.py tests/scripts/test_build_jev_eval_cases.py -q
+```
+

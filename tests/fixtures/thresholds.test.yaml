@@ -50,3 +50,12 @@ distiller:
 
 evidence:
   max_history_rows: 5
+
+eval:
+  jev:
+    repeats: 3
+    injection_min_pass_rate: 1.0
+    max_confident_wrong: 0
+    overall_min_accuracy: 0.90
+    per_class_min_accuracy: 0.80
+    max_error_rate: 0.10
