@@ -1,0 +1,2465 @@
+﻿2026-09-21T21:01:07.5331315Z Current runner version: '2.337.0'
+2026-09-21T21:01:07.5356494Z ##[group]Runner Image Provisioner
+2026-09-21T21:01:07.5357367Z Hosted Compute Agent
+2026-09-21T21:01:07.5358062Z Version: 20260828.587
+2026-09-21T21:01:07.5358772Z Commit: abac92662cab4cc7352de4f9f9d2e2419aad9c29
+2026-09-21T21:01:07.5359677Z Build Date: 2026-08-28T16:44:25Z
+2026-09-21T21:01:07.5360469Z Worker ID: {110e3a6f-7a6d-48a9-ae60-1d4e82ac009b}
+2026-09-21T21:01:07.5361239Z Azure Region: northcentralus
+2026-09-21T21:01:07.5361942Z ##[endgroup]
+2026-09-21T21:01:07.5364322Z ##[group]Operating System
+2026-09-21T21:01:07.5364982Z Ubuntu
+2026-09-21T21:01:07.5365699Z 24.04.5
+2026-09-21T21:01:07.5366275Z LTS
+2026-09-21T21:01:07.5366865Z ##[endgroup]
+2026-09-21T21:01:07.5367475Z ##[group]Runner Image
+2026-09-21T21:01:07.5368193Z Image: ubuntu-24.04
+2026-09-21T21:01:07.5368852Z Version: 20260907.300.1
+2026-09-21T21:01:07.5370209Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260907.300/images/ubuntu/Ubuntu2404-Readme.md
+2026-09-21T21:01:07.5371872Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260907.300
+2026-09-21T21:01:07.5373548Z ##[endgroup]
+2026-09-21T21:01:07.5374727Z ##[group]GITHUB_TOKEN Permissions
+2026-09-21T21:01:07.5377074Z Contents: read
+2026-09-21T21:01:07.5377734Z Metadata: read
+2026-09-21T21:01:07.5378339Z ##[endgroup]
+2026-09-21T21:01:07.5380511Z Secret source: None
+2026-09-21T21:01:07.5381686Z Cache mode: write
+2026-09-21T21:01:07.5382723Z Prepare workflow directory
+2026-09-21T21:01:07.5777975Z Prepare all required actions
+2026-09-21T21:01:07.5831138Z Getting action download info
+2026-09-21T21:01:07.9007671Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-09-21T21:01:07.9935605Z Download action repository 'home-assistant/core@842c4a4e0d4d8f799796f00ee5c9fe33049c12de' (SHA:842c4a4e0d4d8f799796f00ee5c9fe33049c12de)
+2026-09-21T21:01:13.1271068Z Download action repository 'actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c' (SHA:3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c)
+2026-09-21T21:01:13.5343905Z Download action repository 'actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a' (SHA:043fb46d1a93c77aae656e7c1c64a875d1fc6a0a)
+2026-09-21T21:01:13.6990819Z Getting action download info
+2026-09-21T21:01:13.8063312Z Download action repository 'awalsh128/cache-apt-pkgs-action@553a35bb8ebd9fcabcb1c9451aa4c98e1b4ca8a9' (SHA:553a35bb8ebd9fcabcb1c9451aa4c98e1b4ca8a9)
+2026-09-21T21:01:14.3151754Z Getting action download info
+2026-09-21T21:01:14.4221893Z Download action repository 'actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9' (SHA:55cc8345863c7cc4c66a329aec7e433d2d1c52a9)
+2026-09-21T21:01:14.5369794Z Download action repository 'actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f' (SHA:bbbca2ddaa5d8feaa63e36b76fdaad77386f024f)
+2026-09-21T21:01:14.7043638Z Getting action download info
+2026-09-21T21:01:14.8417174Z Getting action download info
+2026-09-21T21:01:14.9436426Z Download action repository 'astral-sh/setup-uv@11f9893b081a58869d3b5fccaea48c9e9e46f990' (SHA:11f9893b081a58869d3b5fccaea48c9e9e46f990)
+2026-09-21T21:01:15.3463687Z Getting action download info
+2026-09-21T21:01:15.4770927Z Getting action download info
+2026-09-21T21:01:15.6708840Z Complete job name: Run tests Python 3.14.5 (5)
+2026-09-21T21:01:15.7344283Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+2026-09-21T21:01:15.7344938Z with:
+2026-09-21T21:01:15.7345281Z   persist-credentials: false
+2026-09-21T21:01:15.7345696Z   repository: home-assistant/core
+2026-09-21T21:01:15.7348086Z   token: ***
+2026-09-21T21:01:15.7348312Z   ssh-strict: true
+2026-09-21T21:01:15.7348534Z   ssh-user: git
+2026-09-21T21:01:15.7348745Z   clean: true
+2026-09-21T21:01:15.7348994Z   sparse-checkout-cone-mode: true
+2026-09-21T21:01:15.7349261Z   fetch-depth: 1
+2026-09-21T21:01:15.7349483Z   fetch-tags: false
+2026-09-21T21:01:15.7349706Z   show-progress: true
+2026-09-21T21:01:15.7349940Z   lfs: false
+2026-09-21T21:01:15.7350430Z   submodules: false
+2026-09-21T21:01:15.7350664Z   set-safe-directory: true
+2026-09-21T21:01:15.7350930Z   allow-unsafe-pr-checkout: false
+2026-09-21T21:01:15.7351473Z env:
+2026-09-21T21:01:15.7351702Z   CACHE_VERSION: 4
+2026-09-21T21:01:15.7351920Z   MYPY_CACHE_VERSION: 1
+2026-09-21T21:01:15.7352350Z   HA_SHORT_VERSION: 2026.10
+2026-09-21T21:01:15.7352607Z   ADDITIONAL_PYTHON_VERSIONS: []
+2026-09-21T21:01:15.7353100Z   MARIADB_VERSIONS: ['mariadb:10.3.32','mariadb:10.6.10','mariadb:10.10.3','mariadb:10.11.2','mariadb:11.4.9','mysql:8.0.32']
+2026-09-21T21:01:15.7353700Z   POSTGRESQL_VERSIONS: ['postgres:12.22','postgres:15.19', 'postgres:18.6']
+2026-09-21T21:01:15.7354218Z   SQLITE_VERSIONS: [{"version": "3.40.1", "year": "2022"}, {"version": "3.53.4", "year": "2026"}]
+2026-09-21T21:01:15.7354895Z   RECORDER_TEST_DIRS: tests/components/history tests/components/logbook tests/components/recorder tests/components/sensor
+2026-09-21T21:01:15.7355452Z   UV_CACHE_DIR: /tmp/uv-cache
+2026-09-21T21:01:15.7355708Z   APT_CACHE_VERSION: 1
+2026-09-21T21:01:15.7355934Z   SQLALCHEMY_WARN_20: 1
+2026-09-21T21:01:15.7356255Z   PYTHONASYNCIODEBUG: 1
+2026-09-21T21:01:15.7356580Z   HASS_CI: 1
+2026-09-21T21:01:15.7356831Z ##[endgroup]
+2026-09-21T21:01:15.8314860Z Syncing repository: home-assistant/core
+2026-09-21T21:01:15.8316408Z ##[group]Getting Git version info
+2026-09-21T21:01:15.8316766Z Working directory is '/home/runner/work/core/core'
+2026-09-21T21:01:15.8317338Z [command]/usr/bin/git version
+2026-09-21T21:01:15.8372889Z git version 2.55.0
+2026-09-21T21:01:15.8423355Z ##[endgroup]
+2026-09-21T21:01:15.8433585Z Temporarily overriding HOME='/home/runner/work/_temp/585739d1-32aa-461b-ba5c-25f1cb6a380f' before making global git config changes
+2026-09-21T21:01:15.8434781Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-21T21:01:15.8439512Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/core/core
+2026-09-21T21:01:15.8486228Z Deleting the contents of '/home/runner/work/core/core'
+2026-09-21T21:01:15.8489430Z ##[group]Determining repository object format
+2026-09-21T21:01:15.8490804Z ##[endgroup]
+2026-09-21T21:01:15.8491364Z ##[group]Initializing the repository
+2026-09-21T21:01:15.8495569Z [command]/usr/bin/git init /home/runner/work/core/core
+2026-09-21T21:01:15.8597238Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-09-21T21:01:15.8598106Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-09-21T21:01:15.8598618Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-09-21T21:01:15.8599037Z hint: call:
+2026-09-21T21:01:15.8599244Z hint:
+2026-09-21T21:01:15.8599544Z hint: 	git config --global init.defaultBranch <name>
+2026-09-21T21:01:15.8600005Z hint:
+2026-09-21T21:01:15.8600482Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-09-21T21:01:15.8601222Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-09-21T21:01:15.8601667Z hint:
+2026-09-21T21:01:15.8602013Z hint: 	git branch -m <name>
+2026-09-21T21:01:15.8602533Z hint:
+2026-09-21T21:01:15.8603069Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-09-21T21:01:15.8604671Z Initialized empty Git repository in /home/runner/work/core/core/.git/
+2026-09-21T21:01:15.8613009Z [command]/usr/bin/git remote add origin https://github.com/home-assistant/core
+2026-09-21T21:01:15.8658512Z ##[endgroup]
+2026-09-21T21:01:15.8659133Z ##[group]Disabling automatic garbage collection
+2026-09-21T21:01:15.8663029Z [command]/usr/bin/git config --local gc.auto 0
+2026-09-21T21:01:15.8691755Z ##[endgroup]
+2026-09-21T21:01:15.8692837Z ##[group]Setting up auth
+2026-09-21T21:01:15.8693293Z Removing SSH command configuration
+2026-09-21T21:01:15.8698616Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-21T21:01:15.8729575Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-21T21:01:15.9062756Z Removing HTTP extra header
+2026-09-21T21:01:15.9067872Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-21T21:01:15.9099005Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-21T21:01:15.9331407Z Removing includeIf entries pointing to credentials config files
+2026-09-21T21:01:15.9337640Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-21T21:01:15.9368489Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-21T21:01:15.9600250Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-5acfc392-9bb7-4a54-a9b4-84bde496f6cd.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-09-21T21:01:15.9635559Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/core/core/.git.path /home/runner/work/_temp/git-credentials-5acfc392-9bb7-4a54-a9b4-84bde496f6cd.config
+2026-09-21T21:01:15.9666161Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/core/core/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-5acfc392-9bb7-4a54-a9b4-84bde496f6cd.config
+2026-09-21T21:01:15.9699108Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-5acfc392-9bb7-4a54-a9b4-84bde496f6cd.config
+2026-09-21T21:01:15.9729720Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-5acfc392-9bb7-4a54-a9b4-84bde496f6cd.config
+2026-09-21T21:01:15.9756283Z ##[endgroup]
+2026-09-21T21:01:15.9756798Z ##[group]Fetching the repository
+2026-09-21T21:01:15.9763423Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +842c4a4e0d4d8f799796f00ee5c9fe33049c12de:refs/remotes/pull/182870/merge
+2026-09-21T21:01:23.0297751Z From https://github.com/home-assistant/core
+2026-09-21T21:01:23.0298830Z  * [new ref]           842c4a4e0d4d8f799796f00ee5c9fe33049c12de -> pull/182870/merge
+2026-09-21T21:01:23.0305690Z ##[endgroup]
+2026-09-21T21:01:23.0306453Z ##[group]Determining the checkout info
+2026-09-21T21:01:23.0329496Z ##[endgroup]
+2026-09-21T21:01:23.0330117Z [command]/usr/bin/git sparse-checkout disable
+2026-09-21T21:01:23.0361859Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-09-21T21:01:23.0390506Z ##[group]Checking out the ref
+2026-09-21T21:01:23.0394800Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/182870/merge
+2026-09-21T21:01:24.0700374Z Updating files:  66% (18822/28176)
+2026-09-21T21:01:24.0886359Z Updating files:  67% (18878/28176)
+2026-09-21T21:01:24.1042505Z Updating files:  68% (19160/28176)
+2026-09-21T21:01:24.1205039Z Updating files:  69% (19442/28176)
+2026-09-21T21:01:24.1369020Z Updating files:  70% (19724/28176)
+2026-09-21T21:01:24.1508624Z Updating files:  71% (20005/28176)
+2026-09-21T21:01:24.1669388Z Updating files:  72% (20287/28176)
+2026-09-21T21:01:24.1853319Z Updating files:  73% (20569/28176)
+2026-09-21T21:01:24.2026220Z Updating files:  74% (20851/28176)
+2026-09-21T21:01:24.2219619Z Updating files:  75% (21132/28176)
+2026-09-21T21:01:24.2385617Z Updating files:  76% (21414/28176)
+2026-09-21T21:01:24.2546394Z Updating files:  77% (21696/28176)
+2026-09-21T21:01:24.2703142Z Updating files:  78% (21978/28176)
+2026-09-21T21:01:24.2883679Z Updating files:  79% (22260/28176)
+2026-09-21T21:01:24.3031301Z Updating files:  80% (22541/28176)
+2026-09-21T21:01:24.3177759Z Updating files:  81% (22823/28176)
+2026-09-21T21:01:24.3345702Z Updating files:  82% (23105/28176)
+2026-09-21T21:01:24.3501103Z Updating files:  83% (23387/28176)
+2026-09-21T21:01:24.3661900Z Updating files:  84% (23668/28176)
+2026-09-21T21:01:24.3814752Z Updating files:  85% (23950/28176)
+2026-09-21T21:01:24.3973731Z Updating files:  86% (24232/28176)
+2026-09-21T21:01:24.4132489Z Updating files:  87% (24514/28176)
+2026-09-21T21:01:24.4305317Z Updating files:  88% (24795/28176)
+2026-09-21T21:01:24.4482808Z Updating files:  89% (25077/28176)
+2026-09-21T21:01:24.4652671Z Updating files:  90% (25359/28176)
+2026-09-21T21:01:24.4789999Z Updating files:  91% (25641/28176)
+2026-09-21T21:01:24.4935267Z Updating files:  92% (25922/28176)
+2026-09-21T21:01:24.5100451Z Updating files:  93% (26204/28176)
+2026-09-21T21:01:24.5282653Z Updating files:  94% (26486/28176)
+2026-09-21T21:01:24.5472251Z Updating files:  95% (26768/28176)
+2026-09-21T21:01:24.5629127Z Updating files:  96% (27049/28176)
+2026-09-21T21:01:24.5819825Z Updating files:  97% (27331/28176)
+2026-09-21T21:01:24.6062888Z Updating files:  98% (27613/28176)
+2026-09-21T21:01:24.6244064Z Updating files:  99% (27895/28176)
+2026-09-21T21:01:24.6244579Z Updating files: 100% (28176/28176)
+2026-09-21T21:01:24.6263368Z Updating files: 100% (28176/28176), done.
+2026-09-21T21:01:24.6545071Z Note: switching to 'refs/remotes/pull/182870/merge'.
+2026-09-21T21:01:24.6545481Z 
+2026-09-21T21:01:24.6545847Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-09-21T21:01:24.6546532Z changes and commit them, and you can discard any commits you make in this
+2026-09-21T21:01:24.6547012Z state without impacting any branches by switching back to a branch.
+2026-09-21T21:01:24.6547294Z 
+2026-09-21T21:01:24.6547500Z If you want to create a new branch to retain commits you create, you may
+2026-09-21T21:01:24.6547985Z do so (now or later) by using -c with the switch command. Example:
+2026-09-21T21:01:24.6548284Z 
+2026-09-21T21:01:24.6548398Z   git switch -c <new-branch-name>
+2026-09-21T21:01:24.6548576Z 
+2026-09-21T21:01:24.6548679Z Or undo this operation with:
+2026-09-21T21:01:24.6548845Z 
+2026-09-21T21:01:24.6548939Z   git switch -
+2026-09-21T21:01:24.6549072Z 
+2026-09-21T21:01:24.6549291Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-09-21T21:01:24.6549589Z 
+2026-09-21T21:01:24.6549958Z HEAD is now at 842c4a4e Merge bdf12324a087320e8245b18fa5a3e6c829797baa into 90233bf798181ca5dad08e638ba19feb2f3f38e7
+2026-09-21T21:01:24.6620465Z ##[endgroup]
+2026-09-21T21:01:24.6668925Z [command]/usr/bin/git log -1 --format=%H
+2026-09-21T21:01:24.6696406Z 842c4a4e0d4d8f799796f00ee5c9fe33049c12de
+2026-09-21T21:01:24.6706971Z ##[group]Removing auth
+2026-09-21T21:01:24.6707404Z Removing SSH command configuration
+2026-09-21T21:01:24.6712514Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-21T21:01:24.6754640Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-21T21:01:24.7006028Z Removing HTTP extra header
+2026-09-21T21:01:24.7009666Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-21T21:01:24.7041410Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-21T21:01:24.7290535Z Removing includeIf entries pointing to credentials config files
+2026-09-21T21:01:24.7294358Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-21T21:01:24.7322313Z includeif.gitdir:/home/runner/work/core/core/.git.path
+2026-09-21T21:01:24.7323031Z includeif.gitdir:/home/runner/work/core/core/.git/worktrees/*.path
+2026-09-21T21:01:24.7323522Z includeif.gitdir:/github/workspace/.git.path
+2026-09-21T21:01:24.7323888Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-09-21T21:01:24.7331007Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/core/core/.git.path
+2026-09-21T21:01:24.7353484Z /home/runner/work/_temp/git-credentials-5acfc392-9bb7-4a54-a9b4-84bde496f6cd.config
+2026-09-21T21:01:24.7369698Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/core/core/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-5acfc392\-9bb7\-4a54\-a9b4\-84bde496f6cd\.config
+2026-09-21T21:01:24.7401680Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/core/core/.git/worktrees/*.path
+2026-09-21T21:01:24.7426432Z /home/runner/work/_temp/git-credentials-5acfc392-9bb7-4a54-a9b4-84bde496f6cd.config
+2026-09-21T21:01:24.7434942Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/core/core/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-5acfc392\-9bb7\-4a54\-a9b4\-84bde496f6cd\.config
+2026-09-21T21:01:24.7466080Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-09-21T21:01:24.7516955Z /github/runner_temp/git-credentials-5acfc392-9bb7-4a54-a9b4-84bde496f6cd.config
+2026-09-21T21:01:24.7545126Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-5acfc392\-9bb7\-4a54\-a9b4\-84bde496f6cd\.config
+2026-09-21T21:01:24.7562085Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-09-21T21:01:24.7585547Z /github/runner_temp/git-credentials-5acfc392-9bb7-4a54-a9b4-84bde496f6cd.config
+2026-09-21T21:01:24.7594029Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-5acfc392\-9bb7\-4a54\-a9b4\-84bde496f6cd\.config
+2026-09-21T21:01:24.7626834Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-21T21:01:24.7878100Z Removing credentials config '/home/runner/work/_temp/git-credentials-5acfc392-9bb7-4a54-a9b4-84bde496f6cd.config'
+2026-09-21T21:01:24.7887489Z ##[endgroup]
+2026-09-21T21:01:24.8111787Z ##[group]Run home-assistant/core/.github/actions/cache-apt-packages@842c4a4e0d4d8f799796f00ee5c9fe33049c12de
+2026-09-21T21:01:24.8112515Z with:
+2026-09-21T21:01:24.8112779Z   packages: bluez ffmpeg libturbojpeg libxml2-utils
+2026-09-21T21:01:24.8113099Z   version: 1
+2026-09-21T21:01:24.8113318Z   execute_install_scripts: true
+2026-09-21T21:01:24.8113562Z env:
+2026-09-21T21:01:24.8113760Z   CACHE_VERSION: 4
+2026-09-21T21:01:24.8113975Z   MYPY_CACHE_VERSION: 1
+2026-09-21T21:01:24.8114202Z   HA_SHORT_VERSION: 2026.10
+2026-09-21T21:01:24.8114457Z   ADDITIONAL_PYTHON_VERSIONS: []
+2026-09-21T21:01:24.8114939Z   MARIADB_VERSIONS: ['mariadb:10.3.32','mariadb:10.6.10','mariadb:10.10.3','mariadb:10.11.2','mariadb:11.4.9','mysql:8.0.32']
+2026-09-21T21:01:24.8115533Z   POSTGRESQL_VERSIONS: ['postgres:12.22','postgres:15.19', 'postgres:18.6']
+2026-09-21T21:01:24.8116056Z   SQLITE_VERSIONS: [{"version": "3.40.1", "year": "2022"}, {"version": "3.53.4", "year": "2026"}]
+2026-09-21T21:01:24.8116772Z   RECORDER_TEST_DIRS: tests/components/history tests/components/logbook tests/components/recorder tests/components/sensor
+2026-09-21T21:01:24.8117314Z   UV_CACHE_DIR: /tmp/uv-cache
+2026-09-21T21:01:24.8117567Z   APT_CACHE_VERSION: 1
+2026-09-21T21:01:24.8117791Z   SQLALCHEMY_WARN_20: 1
+2026-09-21T21:01:24.8118016Z   PYTHONASYNCIODEBUG: 1
+2026-09-21T21:01:24.8118227Z   HASS_CI: 1
+2026-09-21T21:01:24.8118423Z ##[endgroup]
+2026-09-21T21:01:24.8173006Z ##[start-action display=Remove conflicting Microsoft apt source;id=__self.__run]
+2026-09-21T21:01:24.8207873Z ##[group]Run sudo rm -f /etc/apt/sources.list.d/microsoft-prod.list
+2026-09-21T21:01:24.8208440Z sudo rm -f /etc/apt/sources.list.d/microsoft-prod.list
+2026-09-21T21:01:24.8250129Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-09-21T21:01:24.8250489Z env:
+2026-09-21T21:01:24.8250694Z   CACHE_VERSION: 4
+2026-09-21T21:01:24.8250917Z   MYPY_CACHE_VERSION: 1
+2026-09-21T21:01:24.8251153Z   HA_SHORT_VERSION: 2026.10
+2026-09-21T21:01:24.8251646Z   ADDITIONAL_PYTHON_VERSIONS: []
+2026-09-21T21:01:24.8252305Z   MARIADB_VERSIONS: ['mariadb:10.3.32','mariadb:10.6.10','mariadb:10.10.3','mariadb:10.11.2','mariadb:11.4.9','mysql:8.0.32']
+2026-09-21T21:01:24.8252921Z   POSTGRESQL_VERSIONS: ['postgres:12.22','postgres:15.19', 'postgres:18.6']
+2026-09-21T21:01:24.8253444Z   SQLITE_VERSIONS: [{"version": "3.40.1", "year": "2022"}, {"version": "3.53.4", "year": "2026"}]
+2026-09-21T21:01:24.8254121Z   RECORDER_TEST_DIRS: tests/components/history tests/components/logbook tests/components/recorder tests/components/sensor
+2026-09-21T21:01:24.8254662Z   UV_CACHE_DIR: /tmp/uv-cache
+2026-09-21T21:01:24.8254907Z   APT_CACHE_VERSION: 1
+2026-09-21T21:01:24.8255130Z   SQLALCHEMY_WARN_20: 1
+2026-09-21T21:01:24.8255361Z   PYTHONASYNCIODEBUG: 1
+2026-09-21T21:01:24.8255574Z   HASS_CI: 1
+2026-09-21T21:01:24.8255768Z ##[endgroup]
+2026-09-21T21:01:24.8424438Z ##[end-action id=__self.__run;outcome=success;conclusion=success;duration_ms=25]
+2026-09-21T21:01:24.8426945Z ##[start-action display=Install apt packages via cache;id=__self.__awalsh128_cache-apt-pkgs-action]
+2026-09-21T21:01:24.8523499Z ##[group]Run awalsh128/cache-apt-pkgs-action@553a35bb8ebd9fcabcb1c9451aa4c98e1b4ca8a9
+2026-09-21T21:01:24.8523925Z with:
+2026-09-21T21:01:24.8524175Z   packages: bluez ffmpeg libturbojpeg libxml2-utils
+2026-09-21T21:01:24.8524489Z   version: 1
+2026-09-21T21:01:24.8524706Z   execute_install_scripts: true
+2026-09-21T21:01:24.8524985Z   empty_packages_behavior: error
+2026-09-21T21:01:24.8525234Z   debug: false
+2026-09-21T21:01:24.8525433Z env:
+2026-09-21T21:01:24.8525628Z   CACHE_VERSION: 4
+2026-09-21T21:01:24.8525846Z   MYPY_CACHE_VERSION: 1
+2026-09-21T21:01:24.8526081Z   HA_SHORT_VERSION: 2026.10
+2026-09-21T21:01:24.8526329Z   ADDITIONAL_PYTHON_VERSIONS: []
+2026-09-21T21:01:24.8526805Z   MARIADB_VERSIONS: ['mariadb:10.3.32','mariadb:10.6.10','mariadb:10.10.3','mariadb:10.11.2','mariadb:11.4.9','mysql:8.0.32']
+2026-09-21T21:01:24.8527602Z   POSTGRESQL_VERSIONS: ['postgres:12.22','postgres:15.19', 'postgres:18.6']
+2026-09-21T21:01:24.8528144Z   SQLITE_VERSIONS: [{"version": "3.40.1", "year": "2022"}, {"version": "3.53.4", "year": "2026"}]
+2026-09-21T21:01:24.8528817Z   RECORDER_TEST_DIRS: tests/components/history tests/components/logbook tests/components/recorder tests/components/sensor
+2026-09-21T21:01:24.8529361Z   UV_CACHE_DIR: /tmp/uv-cache
+2026-09-21T21:01:24.8529614Z   APT_CACHE_VERSION: 1
+2026-09-21T21:01:24.8529844Z   SQLALCHEMY_WARN_20: 1
+2026-09-21T21:01:24.8530075Z   PYTHONASYNCIODEBUG: 1
+2026-09-21T21:01:24.8530291Z   HASS_CI: 1
+2026-09-21T21:01:24.8530495Z ##[endgroup]
+2026-09-21T21:01:24.8538089Z ##[start-action display=Run ${GITHUB_ACTION_PATH}/pre_cache_action.sh \;id=__self.__awalsh128_cache-apt-pkgs-action.pre-cache]
+2026-09-21T21:01:24.8554753Z ##[group]Run ${GITHUB_ACTION_PATH}/pre_cache_action.sh \
+2026-09-21T21:01:24.8555158Z ${GITHUB_ACTION_PATH}/pre_cache_action.sh \
+2026-09-21T21:01:24.8555487Z   ~/cache-apt-pkgs \
+2026-09-21T21:01:24.8555759Z   "$VERSION" \
+2026-09-21T21:01:24.8556015Z   "$EXEC_INSTALL_SCRIPTS" \
+2026-09-21T21:01:24.8556286Z   "$DEBUG" \
+2026-09-21T21:01:24.8556520Z   "$ADD_REPOSITORY" \
+2026-09-21T21:01:24.8556773Z   "$PACKAGES"
+2026-09-21T21:01:24.8557051Z if [ -f ~/cache-apt-pkgs/cache_key.md5 ]; then
+2026-09-21T21:01:24.8557477Z   echo "CACHE_KEY=$(cat ~/cache-apt-pkgs/cache_key.md5)" >> $GITHUB_ENV
+2026-09-21T21:01:24.8557862Z else
+2026-09-21T21:01:24.8558099Z   echo "CACHE_KEY=" >> $GITHUB_ENV
+2026-09-21T21:01:24.8558372Z fi
+2026-09-21T21:01:24.8594183Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-09-21T21:01:24.8594525Z env:
+2026-09-21T21:01:24.8594724Z   CACHE_VERSION: 4
+2026-09-21T21:01:24.8594942Z   MYPY_CACHE_VERSION: 1
+2026-09-21T21:01:24.8595171Z   HA_SHORT_VERSION: 2026.10
+2026-09-21T21:01:24.8595420Z   ADDITIONAL_PYTHON_VERSIONS: []
+2026-09-21T21:01:24.8596081Z   MARIADB_VERSIONS: ['mariadb:10.3.32','mariadb:10.6.10','mariadb:10.10.3','mariadb:10.11.2','mariadb:11.4.9','mysql:8.0.32']
+2026-09-21T21:01:24.8596676Z   POSTGRESQL_VERSIONS: ['postgres:12.22','postgres:15.19', 'postgres:18.6']
+2026-09-21T21:01:24.8597184Z   SQLITE_VERSIONS: [{"version": "3.40.1", "year": "2022"}, {"version": "3.53.4", "year": "2026"}]
+2026-09-21T21:01:24.8597846Z   RECORDER_TEST_DIRS: tests/components/history tests/components/logbook tests/components/recorder tests/components/sensor
+2026-09-21T21:01:24.8598379Z   UV_CACHE_DIR: /tmp/uv-cache
+2026-09-21T21:01:24.8598633Z   APT_CACHE_VERSION: 1
+2026-09-21T21:01:24.8598872Z   SQLALCHEMY_WARN_20: 1
+2026-09-21T21:01:24.8599101Z   PYTHONASYNCIODEBUG: 1
+2026-09-21T21:01:24.8599321Z   HASS_CI: 1
+2026-09-21T21:01:24.8599517Z   VERSION: 1
+2026-09-21T21:01:24.8599717Z   EXEC_INSTALL_SCRIPTS: true
+2026-09-21T21:01:24.8599968Z   EMPTY_PACKAGES_BEHAVIOR: error
+2026-09-21T21:01:24.8600211Z   DEBUG: false
+2026-09-21T21:01:24.8600412Z   ADD_REPOSITORY: 
+2026-09-21T21:01:24.8600679Z   PACKAGES: bluez ffmpeg libturbojpeg libxml2-utils
+2026-09-21T21:01:24.8600989Z ##[endgroup]
+2026-09-21T21:01:24.8704691Z Normalizing package list...
+2026-09-21T21:01:25.7575242Z done
+2026-09-21T21:01:25.7592067Z Validating action arguments (version='1', packages='bluez=5.72-0ubuntu5.5 ffmpeg=7:6.1.1-3ubuntu5 libturbojpeg=1:2.1.5-2ubuntu2 libxml2-utils=2.9.14+dfsg-1.3ubuntu3.8')...
+2026-09-21T21:01:25.7607389Z done
+2026-09-21T21:01:25.7607549Z 
+2026-09-21T21:01:25.7607696Z Creating cache key...
+2026-09-21T21:01:25.7625441Z - CPU architecture is 'x86_64'.
+2026-09-21T21:01:25.7626493Z - Value to hash is 'bluez=5.72-0ubuntu5.5 ffmpeg=7:6.1.1-3ubuntu5 libturbojpeg=1:2.1.5-2ubuntu2 libxml2-utils=2.9.14+dfsg-1.3ubuntu3.8 @ 1 3'.
+2026-09-21T21:01:25.7710926Z - Value hashed as '22a3147dd785dad2d35c5a5e68b7c7d9'.
+2026-09-21T21:01:25.7711430Z done
+2026-09-21T21:01:25.7711856Z Hash value written to /home/runner/cache-apt-pkgs/cache_key.md5
+2026-09-21T21:01:25.7741026Z ##[end-action id=__self.__awalsh128_cache-apt-pkgs-action.pre-cache;outcome=success;conclusion=success;duration_ms=920]
+2026-09-21T21:01:25.7747299Z ##[start-action display=Run actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9;id=__self.__awalsh128_cache-apt-pkgs-action.load-cache]
+2026-09-21T21:01:25.7791129Z ##[group]Run actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+2026-09-21T21:01:25.7791523Z with:
+2026-09-21T21:01:25.7791739Z   path: ~/cache-apt-pkgs
+2026-09-21T21:01:25.7792029Z   key: cache-apt-pkgs_22a3147dd785dad2d35c5a5e68b7c7d9
+2026-09-21T21:01:25.7792665Z   enableCrossOsArchive: false
+2026-09-21T21:01:25.7792926Z   fail-on-cache-miss: false
+2026-09-21T21:01:25.7793170Z   lookup-only: false
+2026-09-21T21:01:25.7793387Z env:
+2026-09-21T21:01:25.7793596Z   CACHE_VERSION: 4
+2026-09-21T21:01:25.7793814Z   MYPY_CACHE_VERSION: 1
+2026-09-21T21:01:25.7794044Z   HA_SHORT_VERSION: 2026.10
+2026-09-21T21:01:25.7794288Z   ADDITIONAL_PYTHON_VERSIONS: []
+2026-09-21T21:01:25.7794781Z   MARIADB_VERSIONS: ['mariadb:10.3.32','mariadb:10.6.10','mariadb:10.10.3','mariadb:10.11.2','mariadb:11.4.9','mysql:8.0.32']
+2026-09-21T21:01:25.7795384Z   POSTGRESQL_VERSIONS: ['postgres:12.22','postgres:15.19', 'postgres:18.6']
+2026-09-21T21:01:25.7795899Z   SQLITE_VERSIONS: [{"version": "3.40.1", "year": "2022"}, {"version": "3.53.4", "year": "2026"}]
+2026-09-21T21:01:25.7796582Z   RECORDER_TEST_DIRS: tests/components/history tests/components/logbook tests/components/recorder tests/components/sensor
+2026-09-21T21:01:25.7797122Z   UV_CACHE_DIR: /tmp/uv-cache
+2026-09-21T21:01:25.7797380Z   APT_CACHE_VERSION: 1
+2026-09-21T21:01:25.7797605Z   SQLALCHEMY_WARN_20: 1
+2026-09-21T21:01:25.7797838Z   PYTHONASYNCIODEBUG: 1
+2026-09-21T21:01:25.7798061Z   HASS_CI: 1
+2026-09-21T21:01:25.7798287Z   CACHE_KEY: 22a3147dd785dad2d35c5a5e68b7c7d9
+2026-09-21T21:01:25.7798571Z ##[endgroup]
+2026-09-21T21:01:26.0223817Z Cache hit for: cache-apt-pkgs_22a3147dd785dad2d35c5a5e68b7c7d9
+2026-09-21T21:01:27.1261740Z Received 133987396 of 133987396 (100.0%), 129.3 MBs/sec
+2026-09-21T21:01:27.1263733Z Cache Size: ~128 MB (133987396 B)
+2026-09-21T21:01:27.1327090Z [command]/usr/bin/tar -xf /home/runner/work/_temp/7fa60ec1-db5a-4297-a529-49b2bb2b3a1f/cache.tzst -P -C /home/runner/work/core/core --use-compress-program unzstd
+2026-09-21T21:01:27.6014228Z Cache restored successfully
+2026-09-21T21:01:27.6157194Z Cache restored from key: cache-apt-pkgs_22a3147dd785dad2d35c5a5e68b7c7d9
+2026-09-21T21:01:27.6289536Z ##[end-action id=__self.__awalsh128_cache-apt-pkgs-action.load-cache;outcome=success;conclusion=success;duration_ms=1854]
+2026-09-21T21:01:27.6295462Z ##[start-action display=Run ${GITHUB_ACTION_PATH}/post_cache_action.sh \;id=__self.__awalsh128_cache-apt-pkgs-action.post-cache]
+2026-09-21T21:01:27.6315541Z ##[group]Run ${GITHUB_ACTION_PATH}/post_cache_action.sh \
+2026-09-21T21:01:27.6315976Z ${GITHUB_ACTION_PATH}/post_cache_action.sh \
+2026-09-21T21:01:27.6316309Z   ~/cache-apt-pkgs \
+2026-09-21T21:01:27.6316574Z   / \
+2026-09-21T21:01:27.6316838Z   "$CACHE_HIT" \
+2026-09-21T21:01:27.6317097Z   "$EXEC_INSTALL_SCRIPTS" \
+2026-09-21T21:01:27.6317367Z   "$DEBUG" \
+2026-09-21T21:01:27.6317613Z   "$ADD_REPOSITORY" \
+2026-09-21T21:01:27.6317869Z   "$PACKAGES"
+2026-09-21T21:01:27.6318378Z function create_list { local list=$(cat ~/cache-apt-pkgs/manifest_${1}.log | tr '\n' ','); echo ${list:0:-1}; };
+2026-09-21T21:01:27.6319038Z echo "package-version-list=$(create_list main)" >> $GITHUB_OUTPUT
+2026-09-21T21:01:27.6319553Z echo "all-package-version-list=$(create_list all)" >> $GITHUB_OUTPUT
+2026-09-21T21:01:27.6358167Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-09-21T21:01:27.6358515Z env:
+2026-09-21T21:01:27.6358729Z   CACHE_VERSION: 4
+2026-09-21T21:01:27.6358952Z   MYPY_CACHE_VERSION: 1
+2026-09-21T21:01:27.6359190Z   HA_SHORT_VERSION: 2026.10
+2026-09-21T21:01:27.6359447Z   ADDITIONAL_PYTHON_VERSIONS: []
+2026-09-21T21:01:27.6360117Z   MARIADB_VERSIONS: ['mariadb:10.3.32','mariadb:10.6.10','mariadb:10.10.3','mariadb:10.11.2','mariadb:11.4.9','mysql:8.0.32']
+2026-09-21T21:01:27.6360728Z   POSTGRESQL_VERSIONS: ['postgres:12.22','postgres:15.19', 'postgres:18.6']
+2026-09-21T21:01:27.6361296Z   SQLITE_VERSIONS: [{"version": "3.40.1", "year": "2022"}, {"version": "3.53.4", "year": "2026"}]
+2026-09-21T21:01:27.6361973Z   RECORDER_TEST_DIRS: tests/components/history tests/components/logbook tests/components/recorder tests/components/sensor
+2026-09-21T21:01:27.6362670Z   UV_CACHE_DIR: /tmp/uv-cache
+2026-09-21T21:01:27.6362933Z   APT_CACHE_VERSION: 1
+2026-09-21T21:01:27.6363177Z   SQLALCHEMY_WARN_20: 1
+2026-09-21T21:01:27.6363419Z   PYTHONASYNCIODEBUG: 1
+2026-09-21T21:01:27.6363652Z   HASS_CI: 1
+2026-09-21T21:01:27.6363888Z   CACHE_KEY: 22a3147dd785dad2d35c5a5e68b7c7d9
+2026-09-21T21:01:27.6364177Z   CACHE_HIT: true
+2026-09-21T21:01:27.6364399Z   EXEC_INSTALL_SCRIPTS: true
+2026-09-21T21:01:27.6364645Z   DEBUG: false
+2026-09-21T21:01:27.6364860Z   ADD_REPOSITORY: 
+2026-09-21T21:01:27.6365131Z   PACKAGES: bluez ffmpeg libturbojpeg libxml2-utils
+2026-09-21T21:01:27.6365449Z ##[endgroup]
+2026-09-21T21:01:27.6556237Z Found 106 files in the cache.
+2026-09-21T21:01:27.6569759Z - bluez=5.72-0ubuntu5.5.tar
+2026-09-21T21:01:27.6582574Z - cache_key.md5
+2026-09-21T21:01:27.6595040Z - ffmpeg=7:6.1.1-3ubuntu5.tar
+2026-09-21T21:01:27.6607632Z - i965-va-driver=2.4.1+dfsg1-1ubuntu0.2.tar
+2026-09-21T21:01:27.6620529Z - install.log
+2026-09-21T21:01:27.6634252Z - intel-media-va-driver=24.1.0+dfsg1-1ubuntu0.2.tar
+2026-09-21T21:01:27.6648514Z - libaacs0=0.11.1-2build1.tar
+2026-09-21T21:01:27.6661982Z - libass9=1:0.17.1-2build1.tar
+2026-09-21T21:01:27.6675360Z - libasyncns0=0.8-6build4.tar
+2026-09-21T21:01:27.6687888Z - libavc1394-0=0.5.4-5build3.tar
+2026-09-21T21:01:27.6700582Z - libavcodec60=7:6.1.1-3ubuntu5.tar
+2026-09-21T21:01:27.6713176Z - libavdevice60=7:6.1.1-3ubuntu5.tar
+2026-09-21T21:01:27.6725658Z - libavfilter9=7:6.1.1-3ubuntu5.tar
+2026-09-21T21:01:27.6738696Z - libavformat60=7:6.1.1-3ubuntu5.tar
+2026-09-21T21:01:27.6751559Z - libavutil58=7:6.1.1-3ubuntu5.tar
+2026-09-21T21:01:27.6764441Z - libbdplus0=0.2.0-3build1.tar
+2026-09-21T21:01:27.6776851Z - libblas3=3.12.0-3build1.1.tar
+2026-09-21T21:01:27.6789329Z - libbluray2=1:1.3.4-1build1.tar
+2026-09-21T21:01:27.6801841Z - libbs2b0=3.1.0+dfsg-7build1.tar
+2026-09-21T21:01:27.6814312Z - libcaca0=0.99.beta20-4ubuntu0.2.tar
+2026-09-21T21:01:27.6826878Z - libcdio-cdda2t64=10.2+2.0.1-1.1build2.tar
+2026-09-21T21:01:27.6839110Z - libcdio-paranoia2t64=10.2+2.0.1-1.1build2.tar
+2026-09-21T21:01:27.6851224Z - libcdio19t64=2.1.0-4.1ubuntu1.2.tar
+2026-09-21T21:01:27.6864322Z - libchromaprint1=1.5.1-5.tar
+2026-09-21T21:01:27.6876555Z - libcjson1=1.7.17-1.tar
+2026-09-21T21:01:27.6888730Z - libcodec2-1.2=1.2.0-2build1.tar
+2026-09-21T21:01:27.6901119Z - libdav1d7=1.4.1-1build1.tar
+2026-09-21T21:01:27.6914188Z - libdc1394-25=2.2.6-4build1.tar
+2026-09-21T21:01:27.6926512Z - libdecor-0-0=0.2.2-1build2.tar
+2026-09-21T21:01:27.6939099Z - libdecor-0-plugin-1-gtk=0.2.2-1build2.tar
+2026-09-21T21:01:27.6951830Z - libflac12t64=1.4.3+ds-2.1ubuntu2.tar
+2026-09-21T21:01:27.6965727Z - libflite1=2.2-6build3.tar
+2026-09-21T21:01:27.6978030Z - libgme0=0.6.3-7build1.tar
+2026-09-21T21:01:27.6990244Z - libgsm1=1.0.22-1build1.tar
+2026-09-21T21:01:27.7002527Z - libhwy1t64=1.0.7-8.1build1.tar
+2026-09-21T21:01:27.7015063Z - libiec61883-0=1.2.0-6build1.tar
+2026-09-21T21:01:27.7027344Z - libigdgmm12=22.3.17+ds1-1ubuntu1.tar
+2026-09-21T21:01:27.7040131Z - libjack-jackd2-0=1.9.21~dfsg-3ubuntu3.tar
+2026-09-21T21:01:27.7052629Z - libjxl0.7=0.7.0-10.2ubuntu6.1.tar
+2026-09-21T21:01:27.7064867Z - liblapack3=3.12.0-3build1.1.tar
+2026-09-21T21:01:27.7077293Z - liblilv-0-0=0.24.22-1build1.tar
+2026-09-21T21:01:27.7089636Z - libmbedcrypto7t64=2.28.8-1.tar
+2026-09-21T21:01:27.7101821Z - libmp3lame0=3.100-6build1.tar
+2026-09-21T21:01:27.7114937Z - libmpg123-0t64=1.32.5-1ubuntu1.1.tar
+2026-09-21T21:01:27.7127032Z - libmysofa1=1.3.2+dfsg-2ubuntu2.tar
+2026-09-21T21:01:27.7139514Z - libopenal-data=1:1.23.1-4build1.tar
+2026-09-21T21:01:27.7151268Z - libopenal1=1:1.23.1-4build1.tar
+2026-09-21T21:01:27.7163744Z - libopenmpt0t64=0.7.3-1.1build3.tar
+2026-09-21T21:01:27.7175975Z - libopus0=1.4-1build1.tar
+2026-09-21T21:01:27.7188092Z - libplacebo338=6.338.2-2build1.tar
+2026-09-21T21:01:27.7200404Z - libpocketsphinx3=0.8.0+real5prealpha+1-15ubuntu5.tar
+2026-09-21T21:01:27.7213870Z - libpostproc57=7:6.1.1-3ubuntu5.tar
+2026-09-21T21:01:27.7226040Z - libpulse0=1:16.1+dfsg1-2ubuntu10.1.tar
+2026-09-21T21:01:27.7238566Z - librav1e0=0.7.1-2.tar
+2026-09-21T21:01:27.7251070Z - libraw1394-11=2.1.2-2build3.tar
+2026-09-21T21:01:27.7263387Z - librist4=0.2.10+dfsg-2.tar
+2026-09-21T21:01:27.7275854Z - librsvg2-2=2.58.0+dfsg-1build1.tar
+2026-09-21T21:01:27.7289270Z - librsvg2-common=2.58.0+dfsg-1build1.tar
+2026-09-21T21:01:27.7301489Z - librubberband2=3.3.0+dfsg-2build1.tar
+2026-09-21T21:01:27.7313799Z - libsamplerate0=0.2.2-4build1.tar
+2026-09-21T21:01:27.7326854Z - libsdl2-2.0-0=2.30.0+dfsg-1ubuntu3.1.tar
+2026-09-21T21:01:27.7339011Z - libserd-0-0=0.32.2-1.tar
+2026-09-21T21:01:27.7351214Z - libshine3=3.1.1-2build1.tar
+2026-09-21T21:01:27.7363624Z - libsndfile1=1.2.2-1ubuntu5.24.04.1.tar
+2026-09-21T21:01:27.7375785Z - libsndio7.0=1.9.0-0.3build3.tar
+2026-09-21T21:01:27.7387889Z - libsord-0-0=0.16.16-2build1.tar
+2026-09-21T21:01:27.7400476Z - libsoxr0=0.1.3-4build3.tar
+2026-09-21T21:01:27.7413371Z - libspeex1=1.2.1-2ubuntu2.24.04.1.tar
+2026-09-21T21:01:27.7425718Z - libsphinxbase3t64=0.8+5prealpha+1-17build2.tar
+2026-09-21T21:01:27.7437992Z - libsratom-0-0=0.6.16-1build1.tar
+2026-09-21T21:01:27.7450987Z - libsrt1.5-gnutls=1.5.3-1build2.tar
+2026-09-21T21:01:27.7463109Z - libssh-gcrypt-4=0.10.6-2ubuntu0.4.tar
+2026-09-21T21:01:27.7475445Z - libsvtav1enc1d1=1.7.0+dfsg-2build1.tar
+2026-09-21T21:01:27.7488870Z - libswresample4=7:6.1.1-3ubuntu5.tar
+2026-09-21T21:01:27.7501143Z - libswscale7=7:6.1.1-3ubuntu5.tar
+2026-09-21T21:01:27.7513434Z - libtheora0=1.1.1+dfsg.1-16.1build3.tar
+2026-09-21T21:01:27.7526235Z - libturbojpeg=1:2.1.5-2ubuntu2.tar
+2026-09-21T21:01:27.7538458Z - libtwolame0=0.4.0-2build3.tar
+2026-09-21T21:01:27.7550837Z - libudfread0=1.1.2-1build1.tar
+2026-09-21T21:01:27.7563110Z - libunibreak5=5.1-2build1.tar
+2026-09-21T21:01:27.7576091Z - libva-drm2=2.20.0-2ubuntu0.2.tar
+2026-09-21T21:01:27.7588242Z - libva-x11-2=2.20.0-2ubuntu0.2.tar
+2026-09-21T21:01:27.7600345Z - libva2=2.20.0-2ubuntu0.2.tar
+2026-09-21T21:01:27.7612727Z - libvdpau1=1.5-2build1.tar
+2026-09-21T21:01:27.7624903Z - libvidstab1.1=1.1.0-2build1.tar
+2026-09-21T21:01:27.7637059Z - libvorbisenc2=1.3.7-1build3.tar
+2026-09-21T21:01:27.7649366Z - libvpl2=2023.3.0-1build1.tar
+2026-09-21T21:01:27.7662285Z - libvpx9=1.14.0-1ubuntu2.3.tar
+2026-09-21T21:01:27.7675106Z - libx264-164=2:0.164.3108+git31e19f9-1.tar
+2026-09-21T21:01:27.7687433Z - libx265-199=3.5-2build1.tar
+2026-09-21T21:01:27.7700575Z - libxcb-shape0=1.15-1ubuntu2.tar
+2026-09-21T21:01:27.7713021Z - libxml2-utils=2.9.14+dfsg-1.3ubuntu3.8.tar
+2026-09-21T21:01:27.7725586Z - libxv1=2:1.0.11-1.1build1.tar
+2026-09-21T21:01:27.7739017Z - libxvidcore4=2:1.3.7-1build1.tar
+2026-09-21T21:01:27.7751367Z - libzimg2=3.0.5+ds1-1build1.tar
+2026-09-21T21:01:27.7763736Z - libzix-0-0=0.4.2-2build1.tar
+2026-09-21T21:01:27.7776629Z - libzvbi-common=0.2.42-2.tar
+2026-09-21T21:01:27.7788654Z - libzvbi0t64=0.2.42-2.tar
+2026-09-21T21:01:27.7800850Z - manifest_all.log
+2026-09-21T21:01:27.7813271Z - manifest_main.log
+2026-09-21T21:01:27.7826191Z - mesa-va-drivers=25.2.8-0ubuntu0.24.04.2.tar
+2026-09-21T21:01:27.7838348Z - mesa-vdpau-drivers=25.2.8-0ubuntu0.24.04.2.tar
+2026-09-21T21:01:27.7850520Z - ocl-icd-libopencl1=2.3.2-1build1.tar
+2026-09-21T21:01:27.7862977Z - pocketsphinx-en-us=0.8.0+real5prealpha+1-15ubuntu5.tar
+2026-09-21T21:01:27.7875150Z - va-driver-all=2.20.0-2ubuntu0.2.tar
+2026-09-21T21:01:27.7887418Z - vdpau-driver-all=1.5-2build1.tar
+2026-09-21T21:01:27.7887747Z 
+2026-09-21T21:01:27.7888024Z Reading from main requested packages manifest...
+2026-09-21T21:01:27.7924004Z - bluez=5.72-0ubuntu5.5
+2026-09-21T21:01:27.7941016Z - ffmpeg=7 6.1.1-3ubuntu5
+2026-09-21T21:01:27.7958100Z - libturbojpeg=1 2.1.5-2ubuntu2
+2026-09-21T21:01:27.7975831Z - libxml2-utils=2.9.14+dfsg-1.3ubuntu3.8
+2026-09-21T21:01:27.7976277Z done
+2026-09-21T21:01:27.7976448Z 
+2026-09-21T21:01:27.8020918Z Restoring 102 packages from cache...
+2026-09-21T21:01:27.8036121Z - bluez=5.72-0ubuntu5.5.tar restoring...
+2026-09-21T21:01:27.8281820Z   done
+2026-09-21T21:01:27.8565175Z - ffmpeg=7:6.1.1-3ubuntu5.tar restoring...
+2026-09-21T21:01:27.8701123Z   done
+2026-09-21T21:01:27.8883213Z - i965-va-driver=2.4.1+dfsg1-1ubuntu0.2.tar restoring...
+2026-09-21T21:01:27.8985732Z   done
+2026-09-21T21:01:27.9161126Z - intel-media-va-driver=24.1.0+dfsg1-1ubuntu0.2.tar restoring...
+2026-09-21T21:01:27.9360887Z   done
+2026-09-21T21:01:27.9537367Z - libaacs0=0.11.1-2build1.tar restoring...
+2026-09-21T21:01:27.9623390Z   done
+2026-09-21T21:01:27.9796362Z - libass9=1:0.17.1-2build1.tar restoring...
+2026-09-21T21:01:27.9878500Z   done
+2026-09-21T21:01:28.0053817Z - libasyncns0=0.8-6build4.tar restoring...
+2026-09-21T21:01:28.0136737Z   done
+2026-09-21T21:01:28.0312420Z - libavc1394-0=0.5.4-5build3.tar restoring...
+2026-09-21T21:01:28.0394408Z   done
+2026-09-21T21:01:28.0574742Z - libavcodec60=7:6.1.1-3ubuntu5.tar restoring...
+2026-09-21T21:01:28.0805154Z   done
+2026-09-21T21:01:28.0982724Z - libavdevice60=7:6.1.1-3ubuntu5.tar restoring...
+2026-09-21T21:01:28.1069567Z   done
+2026-09-21T21:01:28.1244783Z - libavfilter9=7:6.1.1-3ubuntu5.tar restoring...
+2026-09-21T21:01:28.1451131Z   done
+2026-09-21T21:01:28.1627943Z - libavformat60=7:6.1.1-3ubuntu5.tar restoring...
+2026-09-21T21:01:28.1739375Z   done
+2026-09-21T21:01:28.1915764Z - libavutil58=7:6.1.1-3ubuntu5.tar restoring...
+2026-09-21T21:01:28.2007816Z   done
+2026-09-21T21:01:28.2183555Z - libbdplus0=0.2.0-3build1.tar restoring...
+2026-09-21T21:01:28.2265844Z   done
+2026-09-21T21:01:28.2442251Z - libblas3=3.12.0-3build1.1.tar restoring...
+2026-09-21T21:01:28.2533341Z   done
+2026-09-21T21:01:28.2708647Z - libbluray2=1:1.3.4-1build1.tar restoring...
+2026-09-21T21:01:28.2794941Z   done
+2026-09-21T21:01:28.2972258Z - libbs2b0=3.1.0+dfsg-7build1.tar restoring...
+2026-09-21T21:01:28.3056124Z   done
+2026-09-21T21:01:28.3230679Z - libcaca0=0.99.beta20-4ubuntu0.2.tar restoring...
+2026-09-21T21:01:28.3323278Z   done
+2026-09-21T21:01:28.3498753Z - libcdio-cdda2t64=10.2+2.0.1-1.1build2.tar restoring...
+2026-09-21T21:01:28.3580334Z   done
+2026-09-21T21:01:28.3756018Z - libcdio-paranoia2t64=10.2+2.0.1-1.1build2.tar restoring...
+2026-09-21T21:01:28.3841256Z   done
+2026-09-21T21:01:28.4016824Z - libcdio19t64=2.1.0-4.1ubuntu1.2.tar restoring...
+2026-09-21T21:01:28.4099391Z   done
+2026-09-21T21:01:28.4274901Z - libchromaprint1=1.5.1-5.tar restoring...
+2026-09-21T21:01:28.4356010Z   done
+2026-09-21T21:01:28.4530855Z - libcjson1=1.7.17-1.tar restoring...
+2026-09-21T21:01:28.4613413Z   done
+2026-09-21T21:01:28.4786832Z - libcodec2-1.2=1.2.0-2build1.tar restoring...
+2026-09-21T21:01:28.5014720Z   done
+2026-09-21T21:01:28.5192909Z - libdav1d7=1.4.1-1build1.tar restoring...
+2026-09-21T21:01:28.5290967Z   done
+2026-09-21T21:01:28.5466094Z - libdc1394-25=2.2.6-4build1.tar restoring...
+2026-09-21T21:01:28.5549069Z   done
+2026-09-21T21:01:28.5723634Z - libdecor-0-0=0.2.2-1build2.tar restoring...
+2026-09-21T21:01:28.5803461Z   done
+2026-09-21T21:01:28.5979225Z - libdecor-0-plugin-1-gtk=0.2.2-1build2.tar restoring...
+2026-09-21T21:01:28.6063962Z   done
+2026-09-21T21:01:28.6241459Z - libflac12t64=1.4.3+ds-2.1ubuntu2.tar restoring...
+2026-09-21T21:01:28.6325180Z   done
+2026-09-21T21:01:28.6499836Z - libflite1=2.2-6build3.tar restoring...
+2026-09-21T21:01:28.6823053Z   done
+2026-09-21T21:01:28.7001068Z - libgme0=0.6.3-7build1.tar restoring...
+2026-09-21T21:01:28.7089568Z   done
+2026-09-21T21:01:28.7263151Z - libgsm1=1.0.22-1build1.tar restoring...
+2026-09-21T21:01:28.7343293Z   done
+2026-09-21T21:01:28.7518042Z - libhwy1t64=1.0.7-8.1build1.tar restoring...
+2026-09-21T21:01:28.7631422Z   done
+2026-09-21T21:01:28.7806616Z - libiec61883-0=1.2.0-6build1.tar restoring...
+2026-09-21T21:01:28.7887997Z   done
+2026-09-21T21:01:28.8064480Z - libigdgmm12=22.3.17+ds1-1ubuntu1.tar restoring...
+2026-09-21T21:01:28.8148493Z   done
+2026-09-21T21:01:28.8323600Z - libjack-jackd2-0=1.9.21~dfsg-3ubuntu3.tar restoring...
+2026-09-21T21:01:28.8414974Z   done
+2026-09-21T21:01:28.8597078Z - libjxl0.7=0.7.0-10.2ubuntu6.1.tar restoring...
+2026-09-21T21:01:28.8708332Z   done
+2026-09-21T21:01:28.8883467Z - liblapack3=3.12.0-3build1.1.tar restoring...
+2026-09-21T21:01:28.9025557Z   done
+2026-09-21T21:01:28.9200897Z - liblilv-0-0=0.24.22-1build1.tar restoring...
+2026-09-21T21:01:28.9283052Z   done
+2026-09-21T21:01:28.9458245Z - libmbedcrypto7t64=2.28.8-1.tar restoring...
+2026-09-21T21:01:28.9542724Z   done
+2026-09-21T21:01:28.9717909Z - libmp3lame0=3.100-6build1.tar restoring...
+2026-09-21T21:01:28.9799245Z   done
+2026-09-21T21:01:28.9973708Z - libmpg123-0t64=1.32.5-1ubuntu1.1.tar restoring...
+2026-09-21T21:01:29.0058793Z   done
+2026-09-21T21:01:29.0234110Z - libmysofa1=1.3.2+dfsg-2ubuntu2.tar restoring...
+2026-09-21T21:01:29.0325733Z   done
+2026-09-21T21:01:29.0511689Z - libopenal-data=1:1.23.1-4build1.tar restoring...
+2026-09-21T21:01:29.0597676Z   done
+2026-09-21T21:01:29.0772780Z - libopenal1=1:1.23.1-4build1.tar restoring...
+2026-09-21T21:01:29.0863382Z   done
+2026-09-21T21:01:29.1038900Z - libopenmpt0t64=0.7.3-1.1build3.tar restoring...
+2026-09-21T21:01:29.1131525Z   done
+2026-09-21T21:01:29.1307904Z - libopus0=1.4-1build1.tar restoring...
+2026-09-21T21:01:29.1391803Z   done
+2026-09-21T21:01:29.1565626Z - libplacebo338=6.338.2-2build1.tar restoring...
+2026-09-21T21:01:29.1720092Z   done
+2026-09-21T21:01:29.1897404Z - libpocketsphinx3=0.8.0+real5prealpha+1-15ubuntu5.tar restoring...
+2026-09-21T21:01:29.1981856Z   done
+2026-09-21T21:01:29.2158406Z - libpostproc57=7:6.1.1-3ubuntu5.tar restoring...
+2026-09-21T21:01:29.2240888Z   done
+2026-09-21T21:01:29.2416224Z - libpulse0=1:16.1+dfsg1-2ubuntu10.1.tar restoring...
+2026-09-21T21:01:29.2505948Z   done
+2026-09-21T21:01:29.2680711Z - librav1e0=0.7.1-2.tar restoring...
+2026-09-21T21:01:29.2788253Z   done
+2026-09-21T21:01:29.2962745Z - libraw1394-11=2.1.2-2build3.tar restoring...
+2026-09-21T21:01:29.3044662Z   done
+2026-09-21T21:01:29.3218888Z - librist4=0.2.10+dfsg-2.tar restoring...
+2026-09-21T21:01:29.3299346Z   done
+2026-09-21T21:01:29.3474532Z - librsvg2-2=2.58.0+dfsg-1build1.tar restoring...
+2026-09-21T21:01:29.3614031Z   done
+2026-09-21T21:01:29.3790060Z - librsvg2-common=2.58.0+dfsg-1build1.tar restoring...
+2026-09-21T21:01:29.3885232Z   done
+2026-09-21T21:01:29.4059838Z - librubberband2=3.3.0+dfsg-2build1.tar restoring...
+2026-09-21T21:01:29.4142557Z   done
+2026-09-21T21:01:29.4319031Z - libsamplerate0=0.2.2-4build1.tar restoring...
+2026-09-21T21:01:29.4411736Z   done
+2026-09-21T21:01:29.4587140Z - libsdl2-2.0-0=2.30.0+dfsg-1ubuntu3.1.tar restoring...
+2026-09-21T21:01:29.4684859Z   done
+2026-09-21T21:01:29.4859267Z - libserd-0-0=0.32.2-1.tar restoring...
+2026-09-21T21:01:29.4939705Z   done
+2026-09-21T21:01:29.5115316Z - libshine3=3.1.1-2build1.tar restoring...
+2026-09-21T21:01:29.5195732Z   done
+2026-09-21T21:01:29.5370056Z - libsndfile1=1.2.2-1ubuntu5.24.04.1.tar restoring...
+2026-09-21T21:01:29.5458745Z   done
+2026-09-21T21:01:29.5634741Z - libsndio7.0=1.9.0-0.3build3.tar restoring...
+2026-09-21T21:01:29.5715011Z   done
+2026-09-21T21:01:29.5889914Z - libsord-0-0=0.16.16-2build1.tar restoring...
+2026-09-21T21:01:29.5970137Z   done
+2026-09-21T21:01:29.6144745Z - libsoxr0=0.1.3-4build3.tar restoring...
+2026-09-21T21:01:29.6225444Z   done
+2026-09-21T21:01:29.6399801Z - libspeex1=1.2.1-2ubuntu2.24.04.1.tar restoring...
+2026-09-21T21:01:29.6479647Z   done
+2026-09-21T21:01:29.6655363Z - libsphinxbase3t64=0.8+5prealpha+1-17build2.tar restoring...
+2026-09-21T21:01:29.6741164Z   done
+2026-09-21T21:01:29.6919995Z - libsratom-0-0=0.6.16-1build1.tar restoring...
+2026-09-21T21:01:29.7001978Z   done
+2026-09-21T21:01:29.7178800Z - libsrt1.5-gnutls=1.5.3-1build2.tar restoring...
+2026-09-21T21:01:29.7265911Z   done
+2026-09-21T21:01:29.7442256Z - libssh-gcrypt-4=0.10.6-2ubuntu0.4.tar restoring...
+2026-09-21T21:01:29.7536035Z   done
+2026-09-21T21:01:29.7711772Z - libsvtav1enc1d1=1.7.0+dfsg-2build1.tar restoring...
+2026-09-21T21:01:29.7855045Z   done
+2026-09-21T21:01:29.8034894Z - libswresample4=7:6.1.1-3ubuntu5.tar restoring...
+2026-09-21T21:01:29.8118255Z   done
+2026-09-21T21:01:29.8293647Z - libswscale7=7:6.1.1-3ubuntu5.tar restoring...
+2026-09-21T21:01:29.8381918Z   done
+2026-09-21T21:01:29.8558436Z - libtheora0=1.1.1+dfsg.1-16.1build3.tar restoring...
+2026-09-21T21:01:29.8644619Z   done
+2026-09-21T21:01:29.8819780Z - libturbojpeg=1:2.1.5-2ubuntu2.tar restoring...
+2026-09-21T21:01:29.8906924Z   done
+2026-09-21T21:01:29.9081776Z - libtwolame0=0.4.0-2build3.tar restoring...
+2026-09-21T21:01:29.9163791Z   done
+2026-09-21T21:01:29.9339893Z - libudfread0=1.1.2-1build1.tar restoring...
+2026-09-21T21:01:29.9419881Z   done
+2026-09-21T21:01:29.9595593Z - libunibreak5=5.1-2build1.tar restoring...
+2026-09-21T21:01:29.9677803Z   done
+2026-09-21T21:01:29.9851979Z - libva-drm2=2.20.0-2ubuntu0.2.tar restoring...
+2026-09-21T21:01:29.9933634Z   done
+2026-09-21T21:01:30.0109232Z - libva-x11-2=2.20.0-2ubuntu0.2.tar restoring...
+2026-09-21T21:01:30.0190181Z   done
+2026-09-21T21:01:30.0365399Z - libva2=2.20.0-2ubuntu0.2.tar restoring...
+2026-09-21T21:01:30.0447343Z   done
+2026-09-21T21:01:30.0622405Z - libvdpau1=1.5-2build1.tar restoring...
+2026-09-21T21:01:30.0709446Z   done
+2026-09-21T21:01:30.0885479Z - libvidstab1.1=1.1.0-2build1.tar restoring...
+2026-09-21T21:01:30.0966631Z   done
+2026-09-21T21:01:30.1143894Z - libvorbisenc2=1.3.7-1build3.tar restoring...
+2026-09-21T21:01:30.1237520Z   done
+2026-09-21T21:01:30.1414500Z - libvpl2=2023.3.0-1build1.tar restoring...
+2026-09-21T21:01:30.1497334Z   done
+2026-09-21T21:01:30.1671289Z - libvpx9=1.14.0-1ubuntu2.3.tar restoring...
+2026-09-21T21:01:30.1780250Z   done
+2026-09-21T21:01:30.1955871Z - libx264-164=2:0.164.3108+git31e19f9-1.tar restoring...
+2026-09-21T21:01:30.2053523Z   done
+2026-09-21T21:01:30.2229652Z - libx265-199=3.5-2build1.tar restoring...
+2026-09-21T21:01:30.2446063Z   done
+2026-09-21T21:01:30.2622423Z - libxcb-shape0=1.15-1ubuntu2.tar restoring...
+2026-09-21T21:01:30.2708716Z   done
+2026-09-21T21:01:30.2885836Z - libxml2-utils=2.9.14+dfsg-1.3ubuntu3.8.tar restoring...
+2026-09-21T21:01:30.2974574Z   done
+2026-09-21T21:01:30.3150183Z - libxv1=2:1.0.11-1.1build1.tar restoring...
+2026-09-21T21:01:30.3229131Z   done
+2026-09-21T21:01:30.3400725Z - libxvidcore4=2:1.3.7-1build1.tar restoring...
+2026-09-21T21:01:30.3486258Z   done
+2026-09-21T21:01:30.3661491Z - libzimg2=3.0.5+ds1-1build1.tar restoring...
+2026-09-21T21:01:30.3749130Z   done
+2026-09-21T21:01:30.3924475Z - libzix-0-0=0.4.2-2build1.tar restoring...
+2026-09-21T21:01:30.4005800Z   done
+2026-09-21T21:01:30.4179952Z - libzvbi-common=0.2.42-2.tar restoring...
+2026-09-21T21:01:30.4858659Z   done
+2026-09-21T21:01:30.5037254Z - libzvbi0t64=0.2.42-2.tar restoring...
+2026-09-21T21:01:30.5129107Z   done
+2026-09-21T21:01:30.5306885Z - mesa-va-drivers=25.2.8-0ubuntu0.24.04.2.tar restoring...
+2026-09-21T21:01:30.5764058Z   done
+2026-09-21T21:01:30.5943743Z - mesa-vdpau-drivers=25.2.8-0ubuntu0.24.04.2.tar restoring...
+2026-09-21T21:01:30.6490408Z   done
+2026-09-21T21:01:30.6670212Z - ocl-icd-libopencl1=2.3.2-1build1.tar restoring...
+2026-09-21T21:01:30.6763672Z   done
+2026-09-21T21:01:30.6944099Z - pocketsphinx-en-us=0.8.0+real5prealpha+1-15ubuntu5.tar restoring...
+2026-09-21T21:01:30.7337296Z   done
+2026-09-21T21:01:30.7518438Z - va-driver-all=2.20.0-2ubuntu0.2.tar restoring...
+2026-09-21T21:01:30.7599939Z   done
+2026-09-21T21:01:30.7777631Z - vdpau-driver-all=1.5-2build1.tar restoring...
+2026-09-21T21:01:30.7856929Z   done
+2026-09-21T21:01:30.8021793Z done
+2026-09-21T21:01:30.8024684Z 
+2026-09-21T21:01:30.8081734Z ##[end-action id=__self.__awalsh128_cache-apt-pkgs-action.post-cache;outcome=success;conclusion=success;duration_ms=3178]
+2026-09-21T21:01:30.8086681Z ##[start-action display=Run actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f;id=__self.__awalsh128_cache-apt-pkgs-action.upload-logs]
+2026-09-21T21:01:30.8100722Z ##[end-action id=__self.__awalsh128_cache-apt-pkgs-action.upload-logs;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-09-21T21:01:30.8103578Z ##[start-action display=Run actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9;id=__self.__awalsh128_cache-apt-pkgs-action.save-cache]
+2026-09-21T21:01:30.8111487Z ##[end-action id=__self.__awalsh128_cache-apt-pkgs-action.save-cache;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-09-21T21:01:30.8114023Z ##[start-action display=Run rm -rf ~/cache-apt-pkgs;id=__self.__awalsh128_cache-apt-pkgs-action.clean-cache]
+2026-09-21T21:01:30.8130421Z ##[group]Run rm -rf ~/cache-apt-pkgs
+2026-09-21T21:01:30.8130748Z rm -rf ~/cache-apt-pkgs
+2026-09-21T21:01:30.8169475Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-09-21T21:01:30.8169820Z env:
+2026-09-21T21:01:30.8170028Z   CACHE_VERSION: 4
+2026-09-21T21:01:30.8170252Z   MYPY_CACHE_VERSION: 1
+2026-09-21T21:01:30.8170498Z   HA_SHORT_VERSION: 2026.10
+2026-09-21T21:01:30.8170777Z   ADDITIONAL_PYTHON_VERSIONS: []
+2026-09-21T21:01:30.8171269Z   MARIADB_VERSIONS: ['mariadb:10.3.32','mariadb:10.6.10','mariadb:10.10.3','mariadb:10.11.2','mariadb:11.4.9','mysql:8.0.32']
+2026-09-21T21:01:30.8171873Z   POSTGRESQL_VERSIONS: ['postgres:12.22','postgres:15.19', 'postgres:18.6']
+2026-09-21T21:01:30.8172614Z   SQLITE_VERSIONS: [{"version": "3.40.1", "year": "2022"}, {"version": "3.53.4", "year": "2026"}]
+2026-09-21T21:01:30.8173295Z   RECORDER_TEST_DIRS: tests/components/history tests/components/logbook tests/components/recorder tests/components/sensor
+2026-09-21T21:01:30.8173844Z   UV_CACHE_DIR: /tmp/uv-cache
+2026-09-21T21:01:30.8174119Z   APT_CACHE_VERSION: 1
+2026-09-21T21:01:30.8174349Z   SQLALCHEMY_WARN_20: 1
+2026-09-21T21:01:30.8174590Z   PYTHONASYNCIODEBUG: 1
+2026-09-21T21:01:30.8174813Z   HASS_CI: 1
+2026-09-21T21:01:30.8175045Z   CACHE_KEY: 22a3147dd785dad2d35c5a5e68b7c7d9
+2026-09-21T21:01:30.8175345Z ##[endgroup]
+2026-09-21T21:01:30.8830006Z ##[end-action id=__self.__awalsh128_cache-apt-pkgs-action.clean-cache;outcome=success;conclusion=success;duration_ms=71]
+2026-09-21T21:01:30.8904373Z ##[end-action id=__self.__awalsh128_cache-apt-pkgs-action;outcome=success;conclusion=success;duration_ms=6047]
+2026-09-21T21:01:30.8906536Z ##[start-action display=Refresh dynamic linker cache;id=__self.__run_2]
+2026-09-21T21:01:30.8923537Z ##[group]Run # awalsh128/cache-apt-pkgs-action does not run postinst scripts on
+2026-09-21T21:01:30.8924127Z # awalsh128/cache-apt-pkgs-action does not run postinst scripts on
+2026-09-21T21:01:30.8924630Z # cache restore, so update-alternatives symlinks (eg the one libblas
+2026-09-21T21:01:30.8925116Z # creates at /usr/lib/<multiarch>/libblas.so.3) are never produced.
+2026-09-21T21:01:30.8925573Z # Add every /usr/lib/<multiarch> subdirectory that holds shared
+2026-09-21T21:01:30.8926027Z # libraries to the ldconfig search path so the dynamic linker still
+2026-09-21T21:01:30.8926500Z # finds them.  Use dpkg-architecture to derive the host's multiarch
+2026-09-21T21:01:30.8926933Z # tuple so this works on non-x86_64 runners too.
+2026-09-21T21:01:30.8927332Z multiarch="$(dpkg-architecture -qDEB_HOST_MULTIARCH)"
+2026-09-21T21:01:30.8927758Z find "/usr/lib/${multiarch}" -mindepth 2 -maxdepth 2 \
+2026-09-21T21:01:30.8928143Z   -name '*.so.*' -printf '%h\n' \
+2026-09-21T21:01:30.8928433Z   | sort -u \
+2026-09-21T21:01:30.8928781Z   | sudo tee /etc/ld.so.conf.d/zzz-cache-apt-extras.conf > /dev/null
+2026-09-21T21:01:30.8929155Z sudo ldconfig
+2026-09-21T21:01:30.8966806Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-09-21T21:01:30.8967150Z env:
+2026-09-21T21:01:30.8967357Z   CACHE_VERSION: 4
+2026-09-21T21:01:30.8967580Z   MYPY_CACHE_VERSION: 1
+2026-09-21T21:01:30.8967820Z   HA_SHORT_VERSION: 2026.10
+2026-09-21T21:01:30.8968086Z   ADDITIONAL_PYTHON_VERSIONS: []
+2026-09-21T21:01:30.8968729Z   MARIADB_VERSIONS: ['mariadb:10.3.32','mariadb:10.6.10','mariadb:10.10.3','mariadb:10.11.2','mariadb:11.4.9','mysql:8.0.32']
+2026-09-21T21:01:30.8969344Z   POSTGRESQL_VERSIONS: ['postgres:12.22','postgres:15.19', 'postgres:18.6']
+2026-09-21T21:01:30.8969875Z   SQLITE_VERSIONS: [{"version": "3.40.1", "year": "2022"}, {"version": "3.53.4", "year": "2026"}]
+2026-09-21T21:01:30.8970553Z   RECORDER_TEST_DIRS: tests/components/history tests/components/logbook tests/components/recorder tests/components/sensor
+2026-09-21T21:01:30.8971091Z   UV_CACHE_DIR: /tmp/uv-cache
+2026-09-21T21:01:30.8971346Z   APT_CACHE_VERSION: 1
+2026-09-21T21:01:30.8971582Z   SQLALCHEMY_WARN_20: 1
+2026-09-21T21:01:30.8971815Z   PYTHONASYNCIODEBUG: 1
+2026-09-21T21:01:30.8972033Z   HASS_CI: 1
+2026-09-21T21:01:30.8972428Z   CACHE_KEY: 22a3147dd785dad2d35c5a5e68b7c7d9
+2026-09-21T21:01:30.8972722Z ##[endgroup]
+2026-09-21T21:01:31.1278142Z ##[end-action id=__self.__run_2;outcome=success;conclusion=success;duration_ms=237]
+2026-09-21T21:01:31.1415633Z ##[group]Run home-assistant/core/.github/actions/restore-or-build-venv@842c4a4e0d4d8f799796f00ee5c9fe33049c12de
+2026-09-21T21:01:31.1416491Z with:
+2026-09-21T21:01:31.1416794Z   uv-version: 0.12.13
+2026-09-21T21:01:31.1417147Z   python-version: 3.14.5
+2026-09-21T21:01:31.1419964Z   python-cache-key: venv-4-2026.10-c1b9a8b3f4444e68a2624dc72c1c393372a8d4e120967743c6dd01514a035e28-ce7158ef3ed6d31563a9d2b18730de41d680bb56d2d1c4dacc067dd8a180fc4f-57880d87bf95b2ade12f44656bdf8574b64c18350a6a2219e91cf40334192134-4358f662fcf5f9bb9635e073a0f29a592888159bd92e1bdfa1bc7a9dfb0d4b97-f542e4e7245cd70d52627d05f7452d1ec3bb89954b4268a590bbb3df8ec8532e
+2026-09-21T21:01:31.1422930Z   uv-cache-dir: /tmp/uv-cache
+2026-09-21T21:01:31.1423201Z   apt-cache-version: 1
+2026-09-21T21:01:31.1423428Z   save: false
+2026-09-21T21:01:31.1423638Z env:
+2026-09-21T21:01:31.1423837Z   CACHE_VERSION: 4
+2026-09-21T21:01:31.1424058Z   MYPY_CACHE_VERSION: 1
+2026-09-21T21:01:31.1424294Z   HA_SHORT_VERSION: 2026.10
+2026-09-21T21:01:31.1424605Z   ADDITIONAL_PYTHON_VERSIONS: []
+2026-09-21T21:01:31.1425488Z   MARIADB_VERSIONS: ['mariadb:10.3.32','mariadb:10.6.10','mariadb:10.10.3','mariadb:10.11.2','mariadb:11.4.9','mysql:8.0.32']
+2026-09-21T21:01:31.1426445Z   POSTGRESQL_VERSIONS: ['postgres:12.22','postgres:15.19', 'postgres:18.6']
+2026-09-21T21:01:31.1427267Z   SQLITE_VERSIONS: [{"version": "3.40.1", "year": "2022"}, {"version": "3.53.4", "year": "2026"}]
+2026-09-21T21:01:31.1428353Z   RECORDER_TEST_DIRS: tests/components/history tests/components/logbook tests/components/recorder tests/components/sensor
+2026-09-21T21:01:31.1429061Z   UV_CACHE_DIR: /tmp/uv-cache
+2026-09-21T21:01:31.1429322Z   APT_CACHE_VERSION: 1
+2026-09-21T21:01:31.1429566Z   SQLALCHEMY_WARN_20: 1
+2026-09-21T21:01:31.1429806Z   PYTHONASYNCIODEBUG: 1
+2026-09-21T21:01:31.1430030Z   HASS_CI: 1
+2026-09-21T21:01:31.1430268Z   CACHE_KEY: 22a3147dd785dad2d35c5a5e68b7c7d9
+2026-09-21T21:01:31.1430565Z ##[endgroup]
+2026-09-21T21:01:31.1437776Z ##[start-action display=Set up uv and managed Python;id=python.python]
+2026-09-21T21:01:31.1490752Z ##[group]Run home-assistant/core/.github/actions/setup-uv-python@842c4a4e0d4d8f799796f00ee5c9fe33049c12de
+2026-09-21T21:01:31.1491530Z with:
+2026-09-21T21:01:31.1491824Z   uv-version: 0.12.13
+2026-09-21T21:01:31.1492419Z   python-version: 3.14.5
+2026-09-21T21:01:31.1492663Z env:
+2026-09-21T21:01:31.1492862Z   CACHE_VERSION: 4
+2026-09-21T21:01:31.1493083Z   MYPY_CACHE_VERSION: 1
+2026-09-21T21:01:31.1493327Z   HA_SHORT_VERSION: 2026.10
+2026-09-21T21:01:31.1493594Z   ADDITIONAL_PYTHON_VERSIONS: []
+2026-09-21T21:01:31.1494088Z   MARIADB_VERSIONS: ['mariadb:10.3.32','mariadb:10.6.10','mariadb:10.10.3','mariadb:10.11.2','mariadb:11.4.9','mysql:8.0.32']
+2026-09-21T21:01:31.1494702Z   POSTGRESQL_VERSIONS: ['postgres:12.22','postgres:15.19', 'postgres:18.6']
+2026-09-21T21:01:31.1495235Z   SQLITE_VERSIONS: [{"version": "3.40.1", "year": "2022"}, {"version": "3.53.4", "year": "2026"}]
+2026-09-21T21:01:31.1495915Z   RECORDER_TEST_DIRS: tests/components/history tests/components/logbook tests/components/recorder tests/components/sensor
+2026-09-21T21:01:31.1496462Z   UV_CACHE_DIR: /tmp/uv-cache
+2026-09-21T21:01:31.1496722Z   APT_CACHE_VERSION: 1
+2026-09-21T21:01:31.1496964Z   SQLALCHEMY_WARN_20: 1
+2026-09-21T21:01:31.1497197Z   PYTHONASYNCIODEBUG: 1
+2026-09-21T21:01:31.1497415Z   HASS_CI: 1
+2026-09-21T21:01:31.1497646Z   CACHE_KEY: 22a3147dd785dad2d35c5a5e68b7c7d9
+2026-09-21T21:01:31.1497939Z ##[endgroup]
+2026-09-21T21:01:31.1501204Z ##[start-action display=Set up uv;id=python.python.uv]
+2026-09-21T21:01:31.1572716Z ##[group]Run astral-sh/setup-uv@11f9893b081a58869d3b5fccaea48c9e9e46f990
+2026-09-21T21:01:31.1573223Z with:
+2026-09-21T21:01:31.1573530Z   version: 0.12.13
+2026-09-21T21:01:31.1573863Z   python-version: 3.14.5
+2026-09-21T21:01:31.1574222Z   cache-python: true
+2026-09-21T21:01:31.1574579Z   ignore-nothing-to-cache: true
+2026-09-21T21:01:31.1574996Z   activate-environment: false
+2026-09-21T21:01:31.1575371Z   no-project: false
+2026-09-21T21:01:31.1575976Z   working-directory: /home/runner/work/core/core
+2026-09-21T21:01:31.1579477Z   github-token: ***
+2026-09-21T21:01:31.1579724Z   enable-cache: auto
+2026-09-21T21:01:31.1580303Z   cache-dependency-glob: **/*requirements*.txt
+**/*requirements*.in
+**/*constraints*.txt
+**/*constraints*.in
+**/pyproject.toml
+**/uv.lock
+**/*.py.lock
+
+2026-09-21T21:01:31.1580920Z   restore-cache: true
+2026-09-21T21:01:31.1581146Z   save-cache: true
+2026-09-21T21:01:31.1581365Z   prune-cache: true
+2026-09-21T21:01:31.1581596Z   ignore-empty-workdir: false
+2026-09-21T21:01:31.1581885Z   download-from-astral-mirror: true
+2026-09-21T21:01:31.1582343Z   add-problem-matchers: true
+2026-09-21T21:01:31.1582598Z   quiet: false
+2026-09-21T21:01:31.1582822Z   resolution-strategy: highest
+2026-09-21T21:01:31.1583072Z env:
+2026-09-21T21:01:31.1583275Z   CACHE_VERSION: 4
+2026-09-21T21:01:31.1583507Z   MYPY_CACHE_VERSION: 1
+2026-09-21T21:01:31.1583746Z   HA_SHORT_VERSION: 2026.10
+2026-09-21T21:01:31.1584019Z   ADDITIONAL_PYTHON_VERSIONS: []
+2026-09-21T21:01:31.1584522Z   MARIADB_VERSIONS: ['mariadb:10.3.32','mariadb:10.6.10','mariadb:10.10.3','mariadb:10.11.2','mariadb:11.4.9','mysql:8.0.32']
+2026-09-21T21:01:31.1585294Z   POSTGRESQL_VERSIONS: ['postgres:12.22','postgres:15.19', 'postgres:18.6']
+2026-09-21T21:01:31.1585820Z   SQLITE_VERSIONS: [{"version": "3.40.1", "year": "2022"}, {"version": "3.53.4", "year": "2026"}]
+2026-09-21T21:01:31.1586511Z   RECORDER_TEST_DIRS: tests/components/history tests/components/logbook tests/components/recorder tests/components/sensor
+2026-09-21T21:01:31.1587070Z   UV_CACHE_DIR: /tmp/uv-cache
+2026-09-21T21:01:31.1587329Z   APT_CACHE_VERSION: 1
+2026-09-21T21:01:31.1587566Z   SQLALCHEMY_WARN_20: 1
+2026-09-21T21:01:31.1587816Z   PYTHONASYNCIODEBUG: 1
+2026-09-21T21:01:31.1588040Z   HASS_CI: 1
+2026-09-21T21:01:31.1588276Z   CACHE_KEY: 22a3147dd785dad2d35c5a5e68b7c7d9
+2026-09-21T21:01:31.1588567Z ##[endgroup]
+2026-09-21T21:01:31.3226736Z UV_CACHE_DIR is already set to /tmp/uv-cache
+2026-09-21T21:01:31.3356210Z Fetching manifest data from https://raw.githubusercontent.com/astral-sh/versions/main/v1/uv.ndjson ...
+2026-09-21T21:01:31.3979897Z Downloading uv from "https://releases.astral.sh/github/uv/releases/download/0.12.13/uv-x86_64-unknown-linux-gnu.tar.gz" ...
+2026-09-21T21:01:31.5468262Z [command]/usr/bin/tar xz --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/796fe975-3ff1-47c7-99b9-bac5699d6f22 -f /home/runner/work/_temp/19b7ab44-c80d-427f-b85e-0002247004a5
+2026-09-21T21:01:31.9676846Z Added /home/runner/.local/bin to the path
+2026-09-21T21:01:31.9680679Z Added /opt/hostedtoolcache/uv/0.12.13/x86_64 to the path
+2026-09-21T21:01:31.9682489Z Set UV_PYTHON_INSTALL_DIR to /home/runner/work/_temp/uv-python-dir
+2026-09-21T21:01:31.9683182Z Added /home/runner/work/_temp/uv-python-dir to the path
+2026-09-21T21:01:31.9683724Z Set UV_PYTHON to 3.14.5
+2026-09-21T21:01:31.9703649Z Set UV_CACHE_DIR to /tmp/uv-cache
+2026-09-21T21:01:31.9704022Z Successfully installed uv version 0.12.13
+2026-09-21T21:01:31.9705385Z Searching files using cache dependency glob: /home/runner/work/core/core/**/*requirements*.txt,/home/runner/work/core/core/**/*requirements*.in,/home/runner/work/core/core/**/*constraints*.txt,/home/runner/work/core/core/**/*constraints*.in,/home/runner/work/core/core/**/pyproject.toml,/home/runner/work/core/core/**/uv.lock,/home/runner/work/core/core/**/*.py.lock
+2026-09-21T21:01:33.2970179Z /home/runner/work/core/core/homeassistant/package_constraints.txt
+2026-09-21T21:01:33.3140513Z /home/runner/work/core/core/pylint/plugins/pyproject.toml
+2026-09-21T21:01:33.3148264Z /home/runner/work/core/core/pyproject.toml
+2026-09-21T21:01:33.3154814Z /home/runner/work/core/core/requirements.txt
+2026-09-21T21:01:33.3160628Z /home/runner/work/core/core/requirements_all.txt
+2026-09-21T21:01:33.3167648Z /home/runner/work/core/core/requirements_test.txt
+2026-09-21T21:01:33.3173156Z /home/runner/work/core/core/requirements_test_pre_commit.txt
+2026-09-21T21:01:33.3201668Z /home/runner/work/core/core/script/check_requirements/requirements.txt
+2026-09-21T21:01:33.3354912Z /home/runner/work/core/core/script/sqlite3_vendor/pyproject.toml
+2026-09-21T21:01:34.7060419Z Found 9 files to hash.
+2026-09-21T21:01:34.7136446Z Trying to restore cache from GitHub Actions cache with key: setup-uv-2-x86_64-unknown-linux-gnu-ubuntu-24.04-3.14.5-pruned-py-45b7097b206d0352c43d3dfe80fc92e483821dba7aa04818ded7f3a959173208
+2026-09-21T21:01:34.8031527Z Cache hit for: setup-uv-2-x86_64-unknown-linux-gnu-ubuntu-24.04-3.14.5-pruned-py-45b7097b206d0352c43d3dfe80fc92e483821dba7aa04818ded7f3a959173208
+2026-09-21T21:01:35.0254403Z Received 1069 of 1069 (100.0%), 0.0 MBs/sec
+2026-09-21T21:01:35.0254797Z Cache Size: ~0 MB (1069 B)
+2026-09-21T21:01:35.0278163Z [command]/usr/bin/tar -xf /home/runner/work/_temp/ade0464d-5e29-4ee3-a539-f4fe89802cc5/cache.tzst -P -C /home/runner/work/core/core --use-compress-program unzstd
+2026-09-21T21:01:35.0339580Z Cache restored successfully
+2026-09-21T21:01:35.0343627Z cache restored from GitHub Actions cache with key: setup-uv-2-x86_64-unknown-linux-gnu-ubuntu-24.04-3.14.5-pruned-py-45b7097b206d0352c43d3dfe80fc92e483821dba7aa04818ded7f3a959173208
+2026-09-21T21:01:35.0346001Z Trying to restore cache from GitHub Actions cache with key: setup-uv-2-x86_64-unknown-linux-gnu-ubuntu-24.04-3.14.5-pruned-py-45b7097b206d0352c43d3dfe80fc92e483821dba7aa04818ded7f3a959173208-python
+2026-09-21T21:01:35.1367425Z Cache hit for: setup-uv-2-x86_64-unknown-linux-gnu-ubuntu-24.04-3.14.5-pruned-py-45b7097b206d0352c43d3dfe80fc92e483821dba7aa04818ded7f3a959173208-python
+2026-09-21T21:01:35.8631272Z Received 35123762 of 35123762 (100.0%), 53.5 MBs/sec
+2026-09-21T21:01:35.8631940Z Cache Size: ~33 MB (35123762 B)
+2026-09-21T21:01:35.8659702Z [command]/usr/bin/tar -xf /home/runner/work/_temp/c80eb068-7f0e-4a2d-953b-db21a58b9893/cache.tzst -P -C /home/runner/work/core/core --use-compress-program unzstd
+2026-09-21T21:01:36.1960996Z Cache restored successfully
+2026-09-21T21:01:36.1987859Z cache restored from GitHub Actions cache with key: setup-uv-2-x86_64-unknown-linux-gnu-ubuntu-24.04-3.14.5-pruned-py-45b7097b206d0352c43d3dfe80fc92e483821dba7aa04818ded7f3a959173208-python
+2026-09-21T21:01:36.3184648Z ##[end-action id=python.python.uv;outcome=success;conclusion=success;duration_ms=5168]
+2026-09-21T21:01:36.3190393Z ##[start-action display=Install Python interpreter;id=python.python.__run]
+2026-09-21T21:01:36.3214590Z ##[group]Run uv python install "${PYTHON_VERSION}"
+2026-09-21T21:01:36.3215188Z uv python install "${PYTHON_VERSION}"
+2026-09-21T21:01:36.3269400Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-09-21T21:01:36.3269984Z env:
+2026-09-21T21:01:36.3270301Z   CACHE_VERSION: 4
+2026-09-21T21:01:36.3270671Z   MYPY_CACHE_VERSION: 1
+2026-09-21T21:01:36.3271059Z   HA_SHORT_VERSION: 2026.10
+2026-09-21T21:01:36.3271488Z   ADDITIONAL_PYTHON_VERSIONS: []
+2026-09-21T21:01:36.3272480Z   MARIADB_VERSIONS: ['mariadb:10.3.32','mariadb:10.6.10','mariadb:10.10.3','mariadb:10.11.2','mariadb:11.4.9','mysql:8.0.32']
+2026-09-21T21:01:36.3273531Z   POSTGRESQL_VERSIONS: ['postgres:12.22','postgres:15.19', 'postgres:18.6']
+2026-09-21T21:01:36.3274420Z   SQLITE_VERSIONS: [{"version": "3.40.1", "year": "2022"}, {"version": "3.53.4", "year": "2026"}]
+2026-09-21T21:01:36.3275596Z   RECORDER_TEST_DIRS: tests/components/history tests/components/logbook tests/components/recorder tests/components/sensor
+2026-09-21T21:01:36.3276544Z   UV_CACHE_DIR: /tmp/uv-cache
+2026-09-21T21:01:36.3276955Z   APT_CACHE_VERSION: 1
+2026-09-21T21:01:36.3277330Z   SQLALCHEMY_WARN_20: 1
+2026-09-21T21:01:36.3277707Z   PYTHONASYNCIODEBUG: 1
+2026-09-21T21:01:36.3278076Z   HASS_CI: 1
+2026-09-21T21:01:36.3278443Z   CACHE_KEY: 22a3147dd785dad2d35c5a5e68b7c7d9
+2026-09-21T21:01:36.3279052Z   UV_PYTHON_INSTALL_DIR: /home/runner/work/_temp/uv-python-dir
+2026-09-21T21:01:36.3279610Z   UV_PYTHON: 3.14.5
+2026-09-21T21:01:36.3279969Z   PYTHON_VERSION: 3.14.5
+2026-09-21T21:01:36.3280340Z ##[endgroup]
+2026-09-21T21:01:36.3897122Z Installed Python 3.14.5 in 47ms
+2026-09-21T21:01:36.3897993Z  + cpython-3.14.5-linux-x86_64-gnu (python3.14)
+2026-09-21T21:01:36.3923035Z ##[end-action id=python.python.__run;outcome=success;conclusion=success;duration_ms=73]
+2026-09-21T21:01:36.3929081Z ##[end-action id=python.python;outcome=success;conclusion=success;duration_ms=5249]
+2026-09-21T21:01:36.3931369Z ##[start-action display=Restore full Python virtual environment;id=python.cache-venv]
+2026-09-21T21:01:36.3964869Z ##[group]Run actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+2026-09-21T21:01:36.3965274Z with:
+2026-09-21T21:01:36.3965497Z   path: venv
+2026-09-21T21:01:36.3967187Z   key: Linux-X64-3.14.5-venv-4-2026.10-c1b9a8b3f4444e68a2624dc72c1c393372a8d4e120967743c6dd01514a035e28-ce7158ef3ed6d31563a9d2b18730de41d680bb56d2d1c4dacc067dd8a180fc4f-57880d87bf95b2ade12f44656bdf8574b64c18350a6a2219e91cf40334192134-4358f662fcf5f9bb9635e073a0f29a592888159bd92e1bdfa1bc7a9dfb0d4b97-f542e4e7245cd70d52627d05f7452d1ec3bb89954b4268a590bbb3df8ec8532e
+2026-09-21T21:01:36.3968945Z   enableCrossOsArchive: false
+2026-09-21T21:01:36.3969244Z   fail-on-cache-miss: false
+2026-09-21T21:01:36.3969652Z   lookup-only: false
+2026-09-21T21:01:36.3969887Z env:
+2026-09-21T21:01:36.3970090Z   CACHE_VERSION: 4
+2026-09-21T21:01:36.3970338Z   MYPY_CACHE_VERSION: 1
+2026-09-21T21:01:36.3970596Z   HA_SHORT_VERSION: 2026.10
+2026-09-21T21:01:36.3970895Z   ADDITIONAL_PYTHON_VERSIONS: []
+2026-09-21T21:01:36.3971407Z   MARIADB_VERSIONS: ['mariadb:10.3.32','mariadb:10.6.10','mariadb:10.10.3','mariadb:10.11.2','mariadb:11.4.9','mysql:8.0.32']
+2026-09-21T21:01:36.3972040Z   POSTGRESQL_VERSIONS: ['postgres:12.22','postgres:15.19', 'postgres:18.6']
+2026-09-21T21:01:36.3972954Z   SQLITE_VERSIONS: [{"version": "3.40.1", "year": "2022"}, {"version": "3.53.4", "year": "2026"}]
+2026-09-21T21:01:36.3973661Z   RECORDER_TEST_DIRS: tests/components/history tests/components/logbook tests/components/recorder tests/components/sensor
+2026-09-21T21:01:36.3974232Z   UV_CACHE_DIR: /tmp/uv-cache
+2026-09-21T21:01:36.3974502Z   APT_CACHE_VERSION: 1
+2026-09-21T21:01:36.3974762Z   SQLALCHEMY_WARN_20: 1
+2026-09-21T21:01:36.3975021Z   PYTHONASYNCIODEBUG: 1
+2026-09-21T21:01:36.3975266Z   HASS_CI: 1
+2026-09-21T21:01:36.3975511Z   CACHE_KEY: 22a3147dd785dad2d35c5a5e68b7c7d9
+2026-09-21T21:01:36.3975901Z   UV_PYTHON_INSTALL_DIR: /home/runner/work/_temp/uv-python-dir
+2026-09-21T21:01:36.3976252Z   UV_PYTHON: 3.14.5
+2026-09-21T21:01:36.3976498Z ##[endgroup]
+2026-09-21T21:01:36.6316287Z Cache hit for: Linux-X64-3.14.5-venv-4-2026.10-c1b9a8b3f4444e68a2624dc72c1c393372a8d4e120967743c6dd01514a035e28-ce7158ef3ed6d31563a9d2b18730de41d680bb56d2d1c4dacc067dd8a180fc4f-57880d87bf95b2ade12f44656bdf8574b64c18350a6a2219e91cf40334192134-4358f662fcf5f9bb9635e073a0f29a592888159bd92e1bdfa1bc7a9dfb0d4b97-f542e4e7245cd70d52627d05f7452d1ec3bb89954b4268a590bbb3df8ec8532e
+2026-09-21T21:01:37.7526208Z Received 134217728 of 558462104 (24.0%), 127.7 MBs/sec
+2026-09-21T21:01:38.7536058Z Received 398458880 of 558462104 (71.3%), 189.7 MBs/sec
+2026-09-21T21:01:39.5143820Z Received 558462104 of 558462104 (100.0%), 192.9 MBs/sec
+2026-09-21T21:01:39.5164719Z Cache Size: ~533 MB (558462104 B)
+2026-09-21T21:01:39.5208693Z [command]/usr/bin/tar -xf /home/runner/work/_temp/4027ebac-63e8-40c4-bbfb-3e8d57a4d068/cache.tzst -P -C /home/runner/work/core/core --use-compress-program unzstd
+2026-09-21T21:01:44.9449728Z Cache restored successfully
+2026-09-21T21:01:44.9821604Z Cache restored from key: Linux-X64-3.14.5-venv-4-2026.10-c1b9a8b3f4444e68a2624dc72c1c393372a8d4e120967743c6dd01514a035e28-ce7158ef3ed6d31563a9d2b18730de41d680bb56d2d1c4dacc067dd8a180fc4f-57880d87bf95b2ade12f44656bdf8574b64c18350a6a2219e91cf40334192134-4358f662fcf5f9bb9635e073a0f29a592888159bd92e1bdfa1bc7a9dfb0d4b97-f542e4e7245cd70d52627d05f7452d1ec3bb89954b4268a590bbb3df8ec8532e
+2026-09-21T21:01:44.9966442Z ##[end-action id=python.cache-venv;outcome=success;conclusion=success;duration_ms=8603]
+2026-09-21T21:01:45.0575920Z ##[start-action display=Generate partial uv restore key;id=python.generate-uv-key]
+2026-09-21T21:01:45.0585623Z ##[end-action id=python.generate-uv-key;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-09-21T21:01:45.0587722Z ##[start-action display=Restore uv wheel cache;id=python.__actions_cache]
+2026-09-21T21:01:45.0593655Z ##[end-action id=python.__actions_cache;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-09-21T21:01:45.0595697Z ##[start-action display=Install additional OS dependencies;id=python.__selfRepository]
+2026-09-21T21:01:45.0600102Z ##[end-action id=python.__selfRepository;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-09-21T21:01:45.0602777Z ##[start-action display=Create Python virtual environment;id=python.create-venv]
+2026-09-21T21:01:45.0607248Z ##[end-action id=python.create-venv;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-09-21T21:01:45.0609038Z ##[start-action display=Prune uv cache;id=python.__run]
+2026-09-21T21:01:45.0613614Z ##[end-action id=python.__run;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-09-21T21:01:45.0615550Z ##[start-action display=Save uv wheel cache;id=python.__actions_cache_2]
+2026-09-21T21:01:45.0619567Z ##[end-action id=python.__actions_cache_2;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-09-21T21:01:45.0621439Z ##[start-action display=Save full Python virtual environment;id=python.__actions_cache_3]
+2026-09-21T21:01:45.0626903Z ##[end-action id=python.__actions_cache_3;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-09-21T21:01:45.0655203Z ##[group]Run echo "::add-matcher::.github/workflows/matchers/python.json"
+2026-09-21T21:01:45.0655766Z echo "::add-matcher::.github/workflows/matchers/python.json"
+2026-09-21T21:01:45.0696351Z shell: /usr/bin/bash -e {0}
+2026-09-21T21:01:45.0696641Z env:
+2026-09-21T21:01:45.0696864Z   CACHE_VERSION: 4
+2026-09-21T21:01:45.0697106Z   MYPY_CACHE_VERSION: 1
+2026-09-21T21:01:45.0697372Z   HA_SHORT_VERSION: 2026.10
+2026-09-21T21:01:45.0697652Z   ADDITIONAL_PYTHON_VERSIONS: []
+2026-09-21T21:01:45.0698165Z   MARIADB_VERSIONS: ['mariadb:10.3.32','mariadb:10.6.10','mariadb:10.10.3','mariadb:10.11.2','mariadb:11.4.9','mysql:8.0.32']
+2026-09-21T21:01:45.0698816Z   POSTGRESQL_VERSIONS: ['postgres:12.22','postgres:15.19', 'postgres:18.6']
+2026-09-21T21:01:45.0699365Z   SQLITE_VERSIONS: [{"version": "3.40.1", "year": "2022"}, {"version": "3.53.4", "year": "2026"}]
+2026-09-21T21:01:45.0700112Z   RECORDER_TEST_DIRS: tests/components/history tests/components/logbook tests/components/recorder tests/components/sensor
+2026-09-21T21:01:45.0700691Z   UV_CACHE_DIR: /tmp/uv-cache
+2026-09-21T21:01:45.0700966Z   APT_CACHE_VERSION: 1
+2026-09-21T21:01:45.0701218Z   SQLALCHEMY_WARN_20: 1
+2026-09-21T21:01:45.0701475Z   PYTHONASYNCIODEBUG: 1
+2026-09-21T21:01:45.0701719Z   HASS_CI: 1
+2026-09-21T21:01:45.0701973Z   CACHE_KEY: 22a3147dd785dad2d35c5a5e68b7c7d9
+2026-09-21T21:01:45.0702591Z   UV_PYTHON_INSTALL_DIR: /home/runner/work/_temp/uv-python-dir
+2026-09-21T21:01:45.0702947Z   UV_PYTHON: 3.14.5
+2026-09-21T21:01:45.0703181Z ##[endgroup]
+2026-09-21T21:01:45.0813149Z ##[group]Run actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+2026-09-21T21:01:45.0813596Z with:
+2026-09-21T21:01:45.0813822Z   name: pytest_buckets
+2026-09-21T21:01:45.0824909Z   merge-multiple: false
+2026-09-21T21:01:45.0825253Z   repository: home-assistant/core
+2026-09-21T21:01:45.0825553Z   run-id: 35654333127
+2026-09-21T21:01:45.0825815Z   skip-decompress: false
+2026-09-21T21:01:45.0826080Z   digest-mismatch: error
+2026-09-21T21:01:45.0826313Z env:
+2026-09-21T21:01:45.0826531Z   CACHE_VERSION: 4
+2026-09-21T21:01:45.0826774Z   MYPY_CACHE_VERSION: 1
+2026-09-21T21:01:45.0827018Z   HA_SHORT_VERSION: 2026.10
+2026-09-21T21:01:45.0827293Z   ADDITIONAL_PYTHON_VERSIONS: []
+2026-09-21T21:01:45.0827814Z   MARIADB_VERSIONS: ['mariadb:10.3.32','mariadb:10.6.10','mariadb:10.10.3','mariadb:10.11.2','mariadb:11.4.9','mysql:8.0.32']
+2026-09-21T21:01:45.0828452Z   POSTGRESQL_VERSIONS: ['postgres:12.22','postgres:15.19', 'postgres:18.6']
+2026-09-21T21:01:45.0829051Z   SQLITE_VERSIONS: [{"version": "3.40.1", "year": "2022"}, {"version": "3.53.4", "year": "2026"}]
+2026-09-21T21:01:45.0829753Z   RECORDER_TEST_DIRS: tests/components/history tests/components/logbook tests/components/recorder tests/components/sensor
+2026-09-21T21:01:45.0830327Z   UV_CACHE_DIR: /tmp/uv-cache
+2026-09-21T21:01:45.0830604Z   APT_CACHE_VERSION: 1
+2026-09-21T21:01:45.0830852Z   SQLALCHEMY_WARN_20: 1
+2026-09-21T21:01:45.0831104Z   PYTHONASYNCIODEBUG: 1
+2026-09-21T21:01:45.0831342Z   HASS_CI: 1
+2026-09-21T21:01:45.0831589Z   CACHE_KEY: 22a3147dd785dad2d35c5a5e68b7c7d9
+2026-09-21T21:01:45.0831986Z   UV_PYTHON_INSTALL_DIR: /home/runner/work/_temp/uv-python-dir
+2026-09-21T21:01:45.0832565Z   UV_PYTHON: 3.14.5
+2026-09-21T21:01:45.0832794Z ##[endgroup]
+2026-09-21T21:01:45.2165583Z Downloading single artifact
+2026-09-21T21:01:45.3452634Z Preparing to download the following artifacts:
+2026-09-21T21:01:45.3453473Z - pytest_buckets (ID: 10662724566, Size: 7413, Expected Digest: sha256:7de1707518404d42a9f672840de5f8838dea1ed2249c3c9ba27ad3eee2e2c48f)
+2026-09-21T21:01:45.5784699Z Redirecting to blob download url: https://productionresultssa19.blob.core.windows.net/actions-results/840fcce2-6559-4044-b151-77b1a3507215/workflow-job-run-f23b6ead-38a8-57ce-b4c3-1bc80bdacc45/artifacts/9de358625a6dc80fd61ca0958fd74ca163eee6b5c7306b8b41d9f50319bb436b.zip
+2026-09-21T21:01:45.5787065Z Starting download of artifact to: /home/runner/work/core/core
+2026-09-21T21:01:45.6840544Z (node:4574) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.
+2026-09-21T21:01:45.6842567Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-09-21T21:01:45.6878676Z SHA256 digest of downloaded artifact is 7de1707518404d42a9f672840de5f8838dea1ed2249c3c9ba27ad3eee2e2c48f
+2026-09-21T21:01:45.6879630Z Artifact download completed successfully.
+2026-09-21T21:01:45.6880169Z Total of 1 artifact(s) downloaded
+2026-09-21T21:01:45.6884289Z Download artifact has finished successfully
+2026-09-21T21:01:45.6988733Z ##[group]Run . venv/bin/activate
+2026-09-21T21:01:45.6989095Z . venv/bin/activate
+2026-09-21T21:01:45.6989456Z python3 -m script.translations develop --all
+2026-09-21T21:01:45.7031074Z shell: /usr/bin/bash -e {0}
+2026-09-21T21:01:45.7031371Z env:
+2026-09-21T21:01:45.7031600Z   CACHE_VERSION: 4
+2026-09-21T21:01:45.7031850Z   MYPY_CACHE_VERSION: 1
+2026-09-21T21:01:45.7032329Z   HA_SHORT_VERSION: 2026.10
+2026-09-21T21:01:45.7032627Z   ADDITIONAL_PYTHON_VERSIONS: []
+2026-09-21T21:01:45.7033160Z   MARIADB_VERSIONS: ['mariadb:10.3.32','mariadb:10.6.10','mariadb:10.10.3','mariadb:10.11.2','mariadb:11.4.9','mysql:8.0.32']
+2026-09-21T21:01:45.7033809Z   POSTGRESQL_VERSIONS: ['postgres:12.22','postgres:15.19', 'postgres:18.6']
+2026-09-21T21:01:45.7034372Z   SQLITE_VERSIONS: [{"version": "3.40.1", "year": "2022"}, {"version": "3.53.4", "year": "2026"}]
+2026-09-21T21:01:45.7035123Z   RECORDER_TEST_DIRS: tests/components/history tests/components/logbook tests/components/recorder tests/components/sensor
+2026-09-21T21:01:45.7035713Z   UV_CACHE_DIR: /tmp/uv-cache
+2026-09-21T21:01:45.7036018Z   APT_CACHE_VERSION: 1
+2026-09-21T21:01:45.7036281Z   SQLALCHEMY_WARN_20: 1
+2026-09-21T21:01:45.7036543Z   PYTHONASYNCIODEBUG: 1
+2026-09-21T21:01:45.7036780Z   HASS_CI: 1
+2026-09-21T21:01:45.7037042Z   CACHE_KEY: 22a3147dd785dad2d35c5a5e68b7c7d9
+2026-09-21T21:01:45.7037440Z   UV_PYTHON_INSTALL_DIR: /home/runner/work/_temp/uv-python-dir
+2026-09-21T21:01:45.7037807Z   UV_PYTHON: 3.14.5
+2026-09-21T21:01:45.7038044Z ##[endgroup]
+2026-09-21T21:01:46.6629726Z Generating translations for sensoterra
+2026-09-21T21:01:46.6630782Z Generating translations for fujitsu_fglair
+2026-09-21T21:01:46.6631468Z Generating translations for fing
+2026-09-21T21:01:46.6631852Z Generating translations for daikin
+2026-09-21T21:01:46.6632492Z Generating translations for xiaomi_aqara
+2026-09-21T21:01:46.6632853Z Generating translations for greencell
+2026-09-21T21:01:46.6633182Z Generating translations for touchline
+2026-09-21T21:01:46.6633532Z Generating translations for madvr
+2026-09-21T21:01:46.6633857Z Generating translations for igloohome
+2026-09-21T21:01:46.6634166Z Generating translations for touchline_sl
+2026-09-21T21:01:46.6634492Z Generating translations for sleepiq
+2026-09-21T21:01:46.6634801Z Generating translations for rainbird
+2026-09-21T21:01:46.6635107Z Generating translations for hypontech
+2026-09-21T21:01:46.6635404Z Generating translations for neopool
+2026-09-21T21:01:46.6635690Z Generating translations for oralb
+2026-09-21T21:01:46.6635991Z Generating translations for ld2410_ble
+2026-09-21T21:01:46.6636295Z Generating translations for mystrom
+2026-09-21T21:01:46.6636580Z Generating translations for nx584
+2026-09-21T21:01:46.6636887Z Generating translations for fressnapf_tracker
+2026-09-21T21:01:46.6637220Z Generating translations for worldclock
+2026-09-21T21:01:46.6637540Z Generating translations for hanna
+2026-09-21T21:01:46.6637845Z Generating translations for wyoming
+2026-09-21T21:01:46.6638156Z Generating translations for victron_ble
+2026-09-21T21:01:46.6638476Z Generating translations for mysensors
+2026-09-21T21:01:46.6639173Z Generating translations for casper_glow
+2026-09-21T21:01:46.6639505Z Generating translations for thermobeacon
+2026-09-21T21:01:46.6639825Z Generating translations for energy
+2026-09-21T21:01:46.6640167Z Generating translations for homeassistant_hardware
+2026-09-21T21:01:46.6640522Z Generating translations for iss
+2026-09-21T21:01:46.6640957Z Generating translations for github
+2026-09-21T21:01:46.6641263Z Generating translations for airthings_ble
+2026-09-21T21:01:46.6641590Z Generating translations for insteon
+2026-09-21T21:01:46.6641909Z Generating translations for drop_connect
+2026-09-21T21:01:46.6642427Z Generating translations for whirlpool
+2026-09-21T21:01:46.6642767Z Generating translations for islamic_prayer_times
+2026-09-21T21:01:46.6643129Z Generating translations for klik_aan_klik_uit
+2026-09-21T21:01:46.6643463Z Generating translations for solarlog
+2026-09-21T21:01:46.6643997Z Generating translations for tami4
+2026-09-21T21:01:46.6644306Z Generating translations for ps4
+2026-09-21T21:01:46.6644613Z Generating translations for verisure
+2026-09-21T21:01:46.6644913Z Generating translations for sensorpro
+2026-09-21T21:01:46.6645218Z Generating translations for mealie
+2026-09-21T21:01:46.6645521Z Generating translations for kulersky
+2026-09-21T21:01:46.6645817Z Generating translations for fitbit
+2026-09-21T21:01:46.6646102Z Generating translations for rachio
+2026-09-21T21:01:46.6646392Z Generating translations for buienradar
+2026-09-21T21:01:46.6646700Z Generating translations for image
+2026-09-21T21:01:46.6647006Z Generating translations for onboarding
+2026-09-21T21:01:46.6647316Z Generating translations for control4
+2026-09-21T21:01:46.6647618Z Generating translations for rfxtrx
+2026-09-21T21:01:46.6647916Z Generating translations for ping
+2026-09-21T21:01:46.6648221Z Generating translations for uptime_kuma
+2026-09-21T21:01:46.6648539Z Generating translations for lifx
+2026-09-21T21:01:46.6648845Z Generating translations for lacrosse_view
+2026-09-21T21:01:46.6649173Z Generating translations for solax
+2026-09-21T21:01:46.6649465Z Generating translations for wilight
+2026-09-21T21:01:46.6649778Z Generating translations for tod
+2026-09-21T21:01:46.6650073Z Generating translations for airobot
+2026-09-21T21:01:46.6650395Z Generating translations for watergate
+2026-09-21T21:01:46.6650715Z Generating translations for dormakaba_dkey
+2026-09-21T21:01:46.6651038Z Generating translations for nice_go
+2026-09-21T21:01:46.6651325Z Generating translations for motioneye
+2026-09-21T21:01:46.6651625Z Generating translations for switchbot
+2026-09-21T21:01:46.6651919Z Generating translations for volumio
+2026-09-21T21:01:46.6652394Z Generating translations for deako
+2026-09-21T21:01:46.6652706Z Generating translations for binary_sensor
+2026-09-21T21:01:46.6653019Z Generating translations for yolink
+2026-09-21T21:01:46.6653323Z Generating translations for hotspring
+2026-09-21T21:01:46.6653631Z Generating translations for livisi
+2026-09-21T21:01:46.6653927Z Generating translations for proximity
+2026-09-21T21:01:46.6654249Z Generating translations for hlk_sw16
+2026-09-21T21:01:46.6654548Z Generating translations for rehlko
+2026-09-21T21:01:46.6654842Z Generating translations for nuheat
+2026-09-21T21:01:46.6655147Z Generating translations for lannouncer
+2026-09-21T21:01:46.6655458Z Generating translations for ibeacon
+2026-09-21T21:01:46.6655750Z Generating translations for tasmota
+2026-09-21T21:01:46.6656035Z Generating translations for netgear
+2026-09-21T21:01:46.6656336Z Generating translations for tailscale
+2026-09-21T21:01:46.6656642Z Generating translations for nam
+2026-09-21T21:01:46.6656951Z Generating translations for speedtestdotnet
+2026-09-21T21:01:46.6657285Z Generating translations for rabbitair
+2026-09-21T21:01:46.6657582Z Generating translations for aidot
+2026-09-21T21:01:46.6657875Z Generating translations for songpal
+2026-09-21T21:01:46.6658180Z Generating translations for fuelprices_dk
+2026-09-21T21:01:46.6658502Z Generating translations for decora_wifi
+2026-09-21T21:01:46.6658969Z Generating translations for mobile_app
+2026-09-21T21:01:46.6659281Z Generating translations for unifi_direct
+2026-09-21T21:01:46.6659600Z Generating translations for velbus
+2026-09-21T21:01:46.6659890Z Generating translations for spotify
+2026-09-21T21:01:46.6660185Z Generating translations for solarman
+2026-09-21T21:01:46.6660481Z Generating translations for sentry
+2026-09-21T21:01:46.6660766Z Generating translations for lifx_cloud
+2026-09-21T21:01:46.6661072Z Generating translations for tilt_pi
+2026-09-21T21:01:46.6661372Z Generating translations for solaredge
+2026-09-21T21:01:46.6661667Z Generating translations for uhoo
+2026-09-21T21:01:46.6661966Z Generating translations for stookwijzer
+2026-09-21T21:01:46.6662482Z Generating translations for swiss_public_transport
+2026-09-21T21:01:46.6662833Z Generating translations for hyperion
+2026-09-21T21:01:46.6663162Z Generating translations for iqvia
+2026-09-21T21:01:46.6663622Z Generating translations for nmap_tracker
+2026-09-21T21:01:46.6663940Z Generating translations for pterodactyl
+2026-09-21T21:01:46.6664255Z Generating translations for update
+2026-09-21T21:01:46.6664561Z Generating translations for dsmr
+2026-09-21T21:01:46.6664854Z Generating translations for nfandroidtv
+2026-09-21T21:01:46.6665156Z Generating translations for lichess
+2026-09-21T21:01:46.6665447Z Generating translations for heos
+2026-09-21T21:01:46.6665737Z Generating translations for unifi_discovery
+2026-09-21T21:01:46.6666074Z Generating translations for fireservicerota
+2026-09-21T21:01:46.6666393Z Generating translations for pi_hole
+2026-09-21T21:01:46.6666694Z Generating translations for probe_plus
+2026-09-21T21:01:46.6667055Z Generating translations for geosphere_austria_warnings
+2026-09-21T21:01:46.6667423Z Generating translations for nibe_heatpump
+2026-09-21T21:01:46.6667757Z Generating translations for edifier_infrared
+2026-09-21T21:01:46.6668083Z Generating translations for edl21
+2026-09-21T21:01:46.6668384Z Generating translations for isy994
+2026-09-21T21:01:46.6668682Z Generating translations for ffmpeg
+2026-09-21T21:01:46.6668984Z Generating translations for motionblinds_ble
+2026-09-21T21:01:46.6669307Z Generating translations for directv
+2026-09-21T21:01:46.6669612Z Generating translations for easyenergy
+2026-09-21T21:01:46.6669917Z Generating translations for doorbird
+2026-09-21T21:01:46.6670221Z Generating translations for feedreader
+2026-09-21T21:01:46.6670513Z Generating translations for loqed
+2026-09-21T21:01:46.6670808Z Generating translations for telegram_bot
+2026-09-21T21:01:46.6671118Z Generating translations for slack
+2026-09-21T21:01:46.6671403Z Generating translations for karakeep
+2026-09-21T21:01:46.6671698Z Generating translations for sun
+2026-09-21T21:01:46.6671996Z Generating translations for sensorpush_cloud
+2026-09-21T21:01:46.6672521Z Generating translations for random
+2026-09-21T21:01:46.6672820Z Generating translations for sky_remote
+2026-09-21T21:01:46.6673127Z Generating translations for manual
+2026-09-21T21:01:46.6673423Z Generating translations for mcp_server
+2026-09-21T21:01:46.6673761Z Generating translations for alarm_control_panel
+2026-09-21T21:01:46.6674105Z Generating translations for wake_on_lan
+2026-09-21T21:01:46.6674420Z Generating translations for system_bridge
+2026-09-21T21:01:46.6674734Z Generating translations for ekeybionyx
+2026-09-21T21:01:46.6675040Z Generating translations for google_sheets
+2026-09-21T21:01:46.6675356Z Generating translations for lektrico
+2026-09-21T21:01:46.6675652Z Generating translations for webostv
+2026-09-21T21:01:46.6675949Z Generating translations for foscam
+2026-09-21T21:01:46.6676249Z Generating translations for aftership
+2026-09-21T21:01:46.6676572Z Generating translations for ecoforest
+2026-09-21T21:01:46.6676879Z Generating translations for trane
+2026-09-21T21:01:46.6677177Z Generating translations for syncthru
+2026-09-21T21:01:46.6677485Z Generating translations for glances
+2026-09-21T21:01:46.6677827Z Generating translations for google_assistant_sdk
+2026-09-21T21:01:46.6678190Z Generating translations for input_text
+2026-09-21T21:01:46.6678657Z Generating translations for demo
+2026-09-21T21:01:46.6678960Z Generating translations for ovo_energy
+2026-09-21T21:01:46.6679308Z Generating translations for trafikverket_camera
+2026-09-21T21:01:46.6679661Z Generating translations for vistapool
+2026-09-21T21:01:46.6679973Z Generating translations for aprilaire
+2026-09-21T21:01:46.6680276Z Generating translations for fish_audio
+2026-09-21T21:01:46.6680578Z Generating translations for fyta
+2026-09-21T21:01:46.6680878Z Generating translations for weather
+2026-09-21T21:01:46.6681183Z Generating translations for picotts
+2026-09-21T21:01:46.6681481Z Generating translations for voip
+2026-09-21T21:01:46.6681768Z Generating translations for flux_led
+2026-09-21T21:01:46.6682072Z Generating translations for netgear_lte
+2026-09-21T21:01:46.6682637Z Generating translations for mjpeg
+2026-09-21T21:01:46.6682939Z Generating translations for zoneminder
+2026-09-21T21:01:46.6683379Z Generating translations for zhong_hong
+2026-09-21T21:01:46.6683687Z Generating translations for litejet
+2026-09-21T21:01:46.6683980Z Generating translations for kaco_modbus
+2026-09-21T21:01:46.6684291Z Generating translations for ihc
+2026-09-21T21:01:46.6684589Z Generating translations for philips_js
+2026-09-21T21:01:46.6684896Z Generating translations for intellifire
+2026-09-21T21:01:46.6685199Z Generating translations for date
+2026-09-21T21:01:46.6685484Z Generating translations for obihai
+2026-09-21T21:01:46.6685790Z Generating translations for homewizard
+2026-09-21T21:01:46.6686103Z Generating translations for switcher_kis
+2026-09-21T21:01:46.6686426Z Generating translations for twentemilieu
+2026-09-21T21:01:46.6686737Z Generating translations for chef_iq
+2026-09-21T21:01:46.6687025Z Generating translations for sunsynk
+2026-09-21T21:01:46.6687318Z Generating translations for nextbus
+2026-09-21T21:01:46.6687613Z Generating translations for progettihwsw
+2026-09-21T21:01:46.6687926Z Generating translations for vizio
+2026-09-21T21:01:46.6688236Z Generating translations for modem_callerid
+2026-09-21T21:01:46.6688575Z Generating translations for persang_infrared
+2026-09-21T21:01:46.6688918Z Generating translations for vodafone_station
+2026-09-21T21:01:46.6689239Z Generating translations for starlink
+2026-09-21T21:01:46.6689543Z Generating translations for sanix
+2026-09-21T21:01:46.6689831Z Generating translations for network
+2026-09-21T21:01:46.6690127Z Generating translations for russound_rio
+2026-09-21T21:01:46.6690441Z Generating translations for bosch_shc
+2026-09-21T21:01:46.6690752Z Generating translations for media_player
+2026-09-21T21:01:46.6691057Z Generating translations for file
+2026-09-21T21:01:46.6691340Z Generating translations for technove
+2026-09-21T21:01:46.6691627Z Generating translations for imgw_pib
+2026-09-21T21:01:46.6691930Z Generating translations for ai_task
+2026-09-21T21:01:46.6692428Z Generating translations for prana
+2026-09-21T21:01:46.6692733Z Generating translations for paj_gps
+2026-09-21T21:01:46.6693030Z Generating translations for baf
+2026-09-21T21:01:46.6693359Z Generating translations for rituals_perfume_genie
+2026-09-21T21:01:46.6693710Z Generating translations for mpd
+2026-09-21T21:01:46.6693998Z Generating translations for mopeka
+2026-09-21T21:01:46.6694298Z Generating translations for incomfort
+2026-09-21T21:01:46.6694609Z Generating translations for lamarzocco
+2026-09-21T21:01:46.6694908Z Generating translations for nzbget
+2026-09-21T21:01:46.6695202Z Generating translations for nws
+2026-09-21T21:01:46.6695491Z Generating translations for lutron_caseta
+2026-09-21T21:01:46.6695802Z Generating translations for dlna_dms
+2026-09-21T21:01:46.6696104Z Generating translations for silla_prism
+2026-09-21T21:01:46.6696404Z Generating translations for duco
+2026-09-21T21:01:46.6696693Z Generating translations for epson
+2026-09-21T21:01:46.6696992Z Generating translations for profiler
+2026-09-21T21:01:46.6697321Z Generating translations for energyid
+2026-09-21T21:01:46.6697622Z Generating translations for laundrify
+2026-09-21T21:01:46.6698065Z Generating translations for energieleser
+2026-09-21T21:01:46.6698378Z Generating translations for http
+2026-09-21T21:01:46.6698660Z Generating translations for ialarm
+2026-09-21T21:01:46.6698981Z Generating translations for devolo_home_control
+2026-09-21T21:01:46.6699335Z Generating translations for androidtv_remote
+2026-09-21T21:01:46.6699651Z Generating translations for iaqualink
+2026-09-21T21:01:46.6699971Z Generating translations for evil_genius_labs
+2026-09-21T21:01:46.6700290Z Generating translations for fronius
+2026-09-21T21:01:46.6700583Z Generating translations for zone
+2026-09-21T21:01:46.6700893Z Generating translations for homeassistant_green
+2026-09-21T21:01:46.6701258Z Generating translations for energenie_power_sockets
+2026-09-21T21:01:46.6701608Z Generating translations for pglab
+2026-09-21T21:01:46.6701900Z Generating translations for imou
+2026-09-21T21:01:46.6702358Z Generating translations for influxdb
+2026-09-21T21:01:46.6702799Z Generating translations for youless
+2026-09-21T21:01:46.6703099Z Generating translations for time_date
+2026-09-21T21:01:46.6703401Z Generating translations for sensirion_ble
+2026-09-21T21:01:46.6703712Z Generating translations for roborock
+2026-09-21T21:01:46.6704012Z Generating translations for eheimdigital
+2026-09-21T21:01:46.6704334Z Generating translations for ambient_network
+2026-09-21T21:01:46.6704665Z Generating translations for weheat
+2026-09-21T21:01:46.6704964Z Generating translations for opensensemap
+2026-09-21T21:01:46.6705268Z Generating translations for met
+2026-09-21T21:01:46.6705557Z Generating translations for satel_integra
+2026-09-21T21:01:46.6705876Z Generating translations for huum
+2026-09-21T21:01:46.6706167Z Generating translations for met_eireann
+2026-09-21T21:01:46.6706470Z Generating translations for skybell
+2026-09-21T21:01:46.6706765Z Generating translations for qnap_qsw
+2026-09-21T21:01:46.6707089Z Generating translations for homekit_controller
+2026-09-21T21:01:46.6707432Z Generating translations for vibration
+2026-09-21T21:01:46.6707737Z Generating translations for zeroconf
+2026-09-21T21:01:46.6708029Z Generating translations for tibber
+2026-09-21T21:01:46.6708322Z Generating translations for nest
+2026-09-21T21:01:46.6708609Z Generating translations for bosch_alarm
+2026-09-21T21:01:46.6708925Z Generating translations for google_photos
+2026-09-21T21:01:46.6709234Z Generating translations for radarr
+2026-09-21T21:01:46.6709521Z Generating translations for fully_kiosk
+2026-09-21T21:01:46.6709821Z Generating translations for yale
+2026-09-21T21:01:46.6710102Z Generating translations for peco
+2026-09-21T21:01:46.6710388Z Generating translations for smarty
+2026-09-21T21:01:46.6710681Z Generating translations for input_boolean
+2026-09-21T21:01:46.6710994Z Generating translations for stiebel_eltron
+2026-09-21T21:01:46.6711333Z Generating translations for london_underground
+2026-09-21T21:01:46.6711660Z Generating translations for dynalite
+2026-09-21T21:01:46.6711974Z Generating translations for plum_lightpad
+2026-09-21T21:01:46.6712390Z Generating translations for tts
+2026-09-21T21:01:46.6712670Z Generating translations for librenms
+2026-09-21T21:01:46.6712987Z Generating translations for google_translate
+2026-09-21T21:01:46.6713325Z Generating translations for qnap
+2026-09-21T21:01:46.6713615Z Generating translations for goalzero
+2026-09-21T21:01:46.6713975Z Generating translations for nederlandse_spoorwegen
+2026-09-21T21:01:46.6714328Z Generating translations for zinvolt
+2026-09-21T21:01:46.6714634Z Generating translations for google_tasks
+2026-09-21T21:01:46.6714959Z Generating translations for collection_image
+2026-09-21T21:01:46.6715286Z Generating translations for automation
+2026-09-21T21:01:46.6715599Z Generating translations for simplefin
+2026-09-21T21:01:46.6715899Z Generating translations for alarmdecoder
+2026-09-21T21:01:46.6716207Z Generating translations for kraken
+2026-09-21T21:01:46.6716507Z Generating translations for tplink_lte
+2026-09-21T21:01:46.6716821Z Generating translations for romy
+2026-09-21T21:01:46.6717109Z Generating translations for elmax
+2026-09-21T21:01:46.6717541Z Generating translations for chacon_dio
+2026-09-21T21:01:46.6717850Z Generating translations for gree_infrared
+2026-09-21T21:01:46.6718158Z Generating translations for cookidoo
+2026-09-21T21:01:46.6718452Z Generating translations for waqi
+2026-09-21T21:01:46.6718739Z Generating translations for pushover
+2026-09-21T21:01:46.6719038Z Generating translations for gdacs
+2026-09-21T21:01:46.6719338Z Generating translations for tellduslive
+2026-09-21T21:01:46.6719645Z Generating translations for msteams
+2026-09-21T21:01:46.6719939Z Generating translations for enocean
+2026-09-21T21:01:46.6720260Z Generating translations for azure_data_explorer
+2026-09-21T21:01:46.6720593Z Generating translations for spider
+2026-09-21T21:01:46.6720884Z Generating translations for filter
+2026-09-21T21:01:46.6721175Z Generating translations for knocki
+2026-09-21T21:01:46.6721468Z Generating translations for modbus
+2026-09-21T21:01:46.6721878Z Generating translations for local_ip
+2026-09-21T21:01:46.6722445Z Generating translations for libre_hardware_monitor
+2026-09-21T21:01:46.6722786Z Generating translations for otbr
+2026-09-21T21:01:46.6723085Z Generating translations for radio_frequency
+2026-09-21T21:01:46.6723408Z Generating translations for denonavr
+2026-09-21T21:01:46.6723708Z Generating translations for zeversolar
+2026-09-21T21:01:46.6724014Z Generating translations for dsmr_reader
+2026-09-21T21:01:46.6724312Z Generating translations for nobo_hub
+2026-09-21T21:01:46.6724611Z Generating translations for eq3btsmart
+2026-09-21T21:01:46.6724917Z Generating translations for google_health
+2026-09-21T21:01:46.6725228Z Generating translations for duotecno
+2026-09-21T21:01:46.6725592Z Generating translations for google_generative_ai_conversation
+2026-09-21T21:01:46.6726005Z Generating translations for kostal_plenticore
+2026-09-21T21:01:46.6726353Z Generating translations for rejseplanen
+2026-09-21T21:01:46.6726681Z Generating translations for template
+2026-09-21T21:01:46.6726990Z Generating translations for picnic
+2026-09-21T21:01:46.6727301Z Generating translations for monzo
+2026-09-21T21:01:46.6727610Z Generating translations for opentherm_gw
+2026-09-21T21:01:46.6727932Z Generating translations for bsblan
+2026-09-21T21:01:46.6728226Z Generating translations for iron_os
+2026-09-21T21:01:46.6728529Z Generating translations for threema
+2026-09-21T21:01:46.6728819Z Generating translations for sofar
+2026-09-21T21:01:46.6729103Z Generating translations for onkyo
+2026-09-21T21:01:46.6729392Z Generating translations for zimi
+2026-09-21T21:01:46.6729684Z Generating translations for lcn
+2026-09-21T21:01:46.6729976Z Generating translations for lametric
+2026-09-21T21:01:46.6730296Z Generating translations for assist_pipeline
+2026-09-21T21:01:46.6730623Z Generating translations for keymitt_ble
+2026-09-21T21:01:46.6730936Z Generating translations for letpot
+2026-09-21T21:01:46.6731232Z Generating translations for neato
+2026-09-21T21:01:46.6731528Z Generating translations for airnow
+2026-09-21T21:01:46.6731851Z Generating translations for husqvarna_automower
+2026-09-21T21:01:46.6732364Z Generating translations for airtouch5
+2026-09-21T21:01:46.6732689Z Generating translations for liebherr
+2026-09-21T21:01:46.6733008Z Generating translations for dlink
+2026-09-21T21:01:46.6733305Z Generating translations for kef
+2026-09-21T21:01:46.6733613Z Generating translations for ukraine_alarm
+2026-09-21T21:01:46.6733944Z Generating translations for samsung_exlink
+2026-09-21T21:01:46.6734268Z Generating translations for wallbox
+2026-09-21T21:01:46.6734591Z Generating translations for assist_satellite
+2026-09-21T21:01:46.6734916Z Generating translations for orvibo
+2026-09-21T21:01:46.6735216Z Generating translations for min_max
+2026-09-21T21:01:46.6735501Z Generating translations for harbor
+2026-09-21T21:01:46.6735794Z Generating translations for homee
+2026-09-21T21:01:46.6747574Z Generating translations for totalconnect
+2026-09-21T21:01:46.6748004Z Generating translations for justnimbus
+2026-09-21T21:01:46.6748480Z Generating translations for local_calendar
+2026-09-21T21:01:46.6749158Z Generating translations for hko
+2026-09-21T21:01:46.6749601Z Generating translations for camera
+2026-09-21T21:01:46.6750069Z Generating translations for idasen_desk
+2026-09-21T21:01:46.6750569Z Generating translations for steamist
+2026-09-21T21:01:46.6751066Z Generating translations for hvv_departures
+2026-09-21T21:01:46.6751574Z Generating translations for aqvify
+2026-09-21T21:01:46.6752046Z Generating translations for weatherflow
+2026-09-21T21:01:46.6752738Z Generating translations for ios
+2026-09-21T21:01:46.6753196Z Generating translations for kodi
+2026-09-21T21:01:46.6753664Z Generating translations for smlight
+2026-09-21T21:01:46.6754118Z Generating translations for redgtech
+2026-09-21T21:01:46.6754610Z Generating translations for tado
+2026-09-21T21:01:46.6755064Z Generating translations for myq
+2026-09-21T21:01:46.6755516Z Generating translations for altruist
+2026-09-21T21:01:46.6756231Z Generating translations for litterrobot
+2026-09-21T21:01:46.6756724Z Generating translations for websocket_api
+2026-09-21T21:01:46.6757242Z Generating translations for intent_script
+2026-09-21T21:01:46.6757725Z Generating translations for plaato
+2026-09-21T21:01:46.6758198Z Generating translations for asuswrt
+2026-09-21T21:01:46.6758679Z Generating translations for tedee
+2026-09-21T21:01:46.6759157Z Generating translations for aurora
+2026-09-21T21:01:46.6759641Z Generating translations for dnsip
+2026-09-21T21:01:46.6760125Z Generating translations for azure_openai
+2026-09-21T21:01:46.6760663Z Generating translations for shell_command
+2026-09-21T21:01:46.6761190Z Generating translations for watttime
+2026-09-21T21:01:46.6761681Z Generating translations for senz
+2026-09-21T21:01:46.6762378Z Generating translations for hive
+2026-09-21T21:01:46.6762850Z Generating translations for vera
+2026-09-21T21:01:46.6763372Z Generating translations for atag
+2026-09-21T21:01:46.6763835Z Generating translations for vicare
+2026-09-21T21:01:46.6764143Z Generating translations for droplet
+2026-09-21T21:01:46.6764477Z Generating translations for airvisual
+2026-09-21T21:01:46.6764803Z Generating translations for shelly
+2026-09-21T21:01:46.6765117Z Generating translations for saunum
+2026-09-21T21:01:46.6765420Z Generating translations for system_log
+2026-09-21T21:01:46.6765725Z Generating translations for workday
+2026-09-21T21:01:46.6766031Z Generating translations for thermopro
+2026-09-21T21:01:46.6766336Z Generating translations for sonos
+2026-09-21T21:01:46.6766642Z Generating translations for ecowitt
+2026-09-21T21:01:46.6766936Z Generating translations for valve
+2026-09-21T21:01:46.6767218Z Generating translations for comelit
+2026-09-21T21:01:46.6767519Z Generating translations for openhome
+2026-09-21T21:01:46.6767832Z Generating translations for snoo
+2026-09-21T21:01:46.6768145Z Generating translations for radio_browser
+2026-09-21T21:01:46.6768478Z Generating translations for fjaraskupan
+2026-09-21T21:01:46.6768810Z Generating translations for cambridge_audio
+2026-09-21T21:01:46.6769180Z Generating translations for playstation_network
+2026-09-21T21:01:46.6769548Z Generating translations for frontier_silicon
+2026-09-21T21:01:46.6769885Z Generating translations for axle_energy
+2026-09-21T21:01:46.6770196Z Generating translations for text
+2026-09-21T21:01:46.6770493Z Generating translations for backup
+2026-09-21T21:01:46.6770834Z Generating translations for openexchangerates
+2026-09-21T21:01:46.6771173Z Generating translations for unifi
+2026-09-21T21:01:46.6771472Z Generating translations for iskra
+2026-09-21T21:01:46.6771777Z Generating translations for motion_blinds
+2026-09-21T21:01:46.6772387Z Generating translations for persistent_notification
+2026-09-21T21:01:46.6772785Z Generating translations for blebox
+2026-09-21T21:01:46.6773089Z Generating translations for volvo
+2026-09-21T21:01:46.6773385Z Generating translations for select
+2026-09-21T21:01:46.6773690Z Generating translations for tomorrowio
+2026-09-21T21:01:46.6774012Z Generating translations for indi_allsky
+2026-09-21T21:01:46.6774338Z Generating translations for doorbell
+2026-09-21T21:01:46.6774874Z Generating translations for lg_soundbar
+2026-09-21T21:01:46.6775213Z Generating translations for dremel_3d_printer
+2026-09-21T21:01:46.6775553Z Generating translations for rdw
+2026-09-21T21:01:46.6775858Z Generating translations for media_source
+2026-09-21T21:01:46.6776184Z Generating translations for apple_tv
+2026-09-21T21:01:46.6776484Z Generating translations for emoncms
+2026-09-21T21:01:46.6776798Z Generating translations for israel_rail
+2026-09-21T21:01:46.6777104Z Generating translations for wolflink
+2026-09-21T21:01:46.6777401Z Generating translations for rova
+2026-09-21T21:01:46.6777706Z Generating translations for configurator
+2026-09-21T21:01:46.6778033Z Generating translations for keenetic_ndms2
+2026-09-21T21:01:46.6778347Z Generating translations for juicenet
+2026-09-21T21:01:46.6778640Z Generating translations for duckdns
+2026-09-21T21:01:46.6779076Z Generating translations for notify
+2026-09-21T21:01:46.6779402Z Generating translations for bryant_evolution
+2026-09-21T21:01:46.6779741Z Generating translations for airzone
+2026-09-21T21:01:46.6780038Z Generating translations for youtube
+2026-09-21T21:01:46.6780331Z Generating translations for arve
+2026-09-21T21:01:46.6780619Z Generating translations for home_connect
+2026-09-21T21:01:46.6780930Z Generating translations for event
+2026-09-21T21:01:46.6781226Z Generating translations for ifttt
+2026-09-21T21:01:46.6781527Z Generating translations for theben_conexa
+2026-09-21T21:01:46.6781898Z Generating translations for victron_remote_monitoring
+2026-09-21T21:01:46.6782520Z Generating translations for geo_json_events
+2026-09-21T21:01:46.6782858Z Generating translations for meater
+2026-09-21T21:01:46.6783156Z Generating translations for route53
+2026-09-21T21:01:46.6783455Z Generating translations for lyric
+2026-09-21T21:01:46.6783750Z Generating translations for switchbee
+2026-09-21T21:01:46.6784071Z Generating translations for roku
+2026-09-21T21:01:46.6784384Z Generating translations for deconz
+2026-09-21T21:01:46.6784702Z Generating translations for power
+2026-09-21T21:01:46.6785010Z Generating translations for idrive_e2
+2026-09-21T21:01:46.6785328Z Generating translations for bayesian
+2026-09-21T21:01:46.6785636Z Generating translations for envisalink
+2026-09-21T21:01:46.6785950Z Generating translations for moat
+2026-09-21T21:01:46.6786256Z Generating translations for blue_current
+2026-09-21T21:01:46.6786585Z Generating translations for eight_sleep
+2026-09-21T21:01:46.6786910Z Generating translations for geofency
+2026-09-21T21:01:46.6787244Z Generating translations for dwd_weather_warnings
+2026-09-21T21:01:46.6787595Z Generating translations for crownstone
+2026-09-21T21:01:46.6787906Z Generating translations for window
+2026-09-21T21:01:46.6788211Z Generating translations for slide_local
+2026-09-21T21:01:46.6788527Z Generating translations for airtouch4
+2026-09-21T21:01:46.6788823Z Generating translations for tuya
+2026-09-21T21:01:46.6789121Z Generating translations for bring
+2026-09-21T21:01:46.6789418Z Generating translations for moon
+2026-09-21T21:01:46.6789715Z Generating translations for esphome
+2026-09-21T21:01:46.6790029Z Generating translations for pushbullet
+2026-09-21T21:01:46.6790327Z Generating translations for myuplink
+2026-09-21T21:01:46.6790644Z Generating translations for cpuspeed
+2026-09-21T21:01:46.6790945Z Generating translations for freshr
+2026-09-21T21:01:46.6791247Z Generating translations for ptdevices
+2026-09-21T21:01:46.6791546Z Generating translations for lyngdorf
+2026-09-21T21:01:46.6791863Z Generating translations for samsung_infrared
+2026-09-21T21:01:46.6792309Z Generating translations for yalexs_ble
+2026-09-21T21:01:46.6792622Z Generating translations for vilfo
+2026-09-21T21:01:46.6792937Z Generating translations for remember_the_milk
+2026-09-21T21:01:46.6793268Z Generating translations for egauge
+2026-09-21T21:01:46.6793564Z Generating translations for counter
+2026-09-21T21:01:46.6793870Z Generating translations for mcp
+2026-09-21T21:01:46.6794181Z Generating translations for traccar_server
+2026-09-21T21:01:46.6794662Z Generating translations for gpsd
+2026-09-21T21:01:46.6794972Z Generating translations for rapt_ble
+2026-09-21T21:01:46.6795283Z Generating translations for frontend
+2026-09-21T21:01:46.6795586Z Generating translations for wiz
+2026-09-21T21:01:46.6795889Z Generating translations for nmbs
+2026-09-21T21:01:46.6796182Z Generating translations for rest
+2026-09-21T21:01:46.6796468Z Generating translations for calendar
+2026-09-21T21:01:46.6796771Z Generating translations for zengge
+2026-09-21T21:01:46.6797078Z Generating translations for broadlink
+2026-09-21T21:01:46.6797388Z Generating translations for cync
+2026-09-21T21:01:46.6797675Z Generating translations for script
+2026-09-21T21:01:46.6797970Z Generating translations for melcloud
+2026-09-21T21:01:46.6798263Z Generating translations for bthome
+2026-09-21T21:01:46.6798554Z Generating translations for besen
+2026-09-21T21:01:46.6799076Z Generating translations for azure_event_hub
+2026-09-21T21:01:46.6799418Z Generating translations for meteo_lt
+2026-09-21T21:01:46.6799728Z Generating translations for androidtv
+2026-09-21T21:01:46.6800040Z Generating translations for ness_alarm
+2026-09-21T21:01:46.6800343Z Generating translations for tolo
+2026-09-21T21:01:46.6800632Z Generating translations for nina
+2026-09-21T21:01:46.6800928Z Generating translations for improv_ble
+2026-09-21T21:01:46.6801237Z Generating translations for leaone
+2026-09-21T21:01:46.6801555Z Generating translations for generic_hygrostat
+2026-09-21T21:01:46.6801885Z Generating translations for upb
+2026-09-21T21:01:46.6802286Z Generating translations for zodiac
+2026-09-21T21:01:46.6802585Z Generating translations for wiffi
+2026-09-21T21:01:46.6802885Z Generating translations for apsystems
+2026-09-21T21:01:46.6803197Z Generating translations for utility_meter
+2026-09-21T21:01:46.6803521Z Generating translations for unifi_access
+2026-09-21T21:01:46.6803848Z Generating translations for integration
+2026-09-21T21:01:46.6804159Z Generating translations for avea
+2026-09-21T21:01:46.6804457Z Generating translations for cert_expiry
+2026-09-21T21:01:46.6804763Z Generating translations for homeworks
+2026-09-21T21:01:46.6805073Z Generating translations for paperless_ngx
+2026-09-21T21:01:46.6805387Z Generating translations for lidarr
+2026-09-21T21:01:46.6805684Z Generating translations for openrgb
+2026-09-21T21:01:46.6805990Z Generating translations for powerwall
+2026-09-21T21:01:46.6806297Z Generating translations for ruuvitag_ble
+2026-09-21T21:01:46.6806603Z Generating translations for upnp
+2026-09-21T21:01:46.6806895Z Generating translations for aquacell
+2026-09-21T21:01:46.6807195Z Generating translations for victron_gx
+2026-09-21T21:01:46.6807501Z Generating translations for yardian
+2026-09-21T21:01:46.6807796Z Generating translations for coolmaster
+2026-09-21T21:01:46.6808090Z Generating translations for rhasspy
+2026-09-21T21:01:46.6808415Z Generating translations for switchbot_cloud
+2026-09-21T21:01:46.6808771Z Generating translations for recollect_waste
+2026-09-21T21:01:46.6809104Z Generating translations for sensibo
+2026-09-21T21:01:46.6809416Z Generating translations for iammeter
+2026-09-21T21:01:46.6809719Z Generating translations for schedule
+2026-09-21T21:01:46.6810014Z Generating translations for firmata
+2026-09-21T21:01:46.6810310Z Generating translations for motion
+2026-09-21T21:01:46.6810624Z Generating translations for raspberry_pi
+2026-09-21T21:01:46.6810949Z Generating translations for elvia
+2026-09-21T21:01:46.6811259Z Generating translations for illuminance
+2026-09-21T21:01:46.6811570Z Generating translations for tailwind
+2026-09-21T21:01:46.6811866Z Generating translations for lunatone
+2026-09-21T21:01:46.6812372Z Generating translations for webdav
+2026-09-21T21:01:46.6812683Z Generating translations for openevse
+2026-09-21T21:01:46.6812993Z Generating translations for imeon_inverter
+2026-09-21T21:01:46.6813308Z Generating translations for keba
+2026-09-21T21:01:46.6813636Z Generating translations for thethingsnetwork
+2026-09-21T21:01:46.6813971Z Generating translations for nasweb
+2026-09-21T21:01:46.6814413Z Generating translations for intelliclima
+2026-09-21T21:01:46.6814736Z Generating translations for xthings_cloud
+2026-09-21T21:01:46.6815052Z Generating translations for kegtron
+2026-09-21T21:01:46.6815352Z Generating translations for vegehub
+2026-09-21T21:01:46.6815655Z Generating translations for jvc_projector
+2026-09-21T21:01:46.6815963Z Generating translations for ipma
+2026-09-21T21:01:46.6816246Z Generating translations for august
+2026-09-21T21:01:46.6816539Z Generating translations for energyzero
+2026-09-21T21:01:46.6816843Z Generating translations for efergy
+2026-09-21T21:01:46.6817140Z Generating translations for forecast_solar
+2026-09-21T21:01:46.6817454Z Generating translations for octoprint
+2026-09-21T21:01:46.6817749Z Generating translations for tplink
+2026-09-21T21:01:46.6818039Z Generating translations for powerfox_local
+2026-09-21T21:01:46.6818487Z Generating translations for govee_light_local
+2026-09-21T21:01:46.6818824Z Generating translations for zonneplan
+2026-09-21T21:01:46.6819129Z Generating translations for plugwise
+2026-09-21T21:01:46.6819420Z Generating translations for watts
+2026-09-21T21:01:46.6819734Z Generating translations for yale_smart_alarm
+2026-09-21T21:01:46.6820055Z Generating translations for upcloud
+2026-09-21T21:01:46.6820373Z Generating translations for brottsplatskartan
+2026-09-21T21:01:46.6820708Z Generating translations for nissan_leaf
+2026-09-21T21:01:46.6821016Z Generating translations for hdmi_cec
+2026-09-21T21:01:46.6821314Z Generating translations for twinkly
+2026-09-21T21:01:46.6821621Z Generating translations for panasonic_viera
+2026-09-21T21:01:46.6821967Z Generating translations for environment_canada
+2026-09-21T21:01:46.6822502Z Generating translations for gentex_homelink
+2026-09-21T21:01:46.6822821Z Generating translations for fastdotcom
+2026-09-21T21:01:46.6823130Z Generating translations for cloudflare_r2
+2026-09-21T21:01:46.6823451Z Generating translations for google_drive
+2026-09-21T21:01:46.6823769Z Generating translations for scrape
+2026-09-21T21:01:46.6824077Z Generating translations for adguard
+2026-09-21T21:01:46.6824374Z Generating translations for smartthings
+2026-09-21T21:01:46.6824678Z Generating translations for tradfri
+2026-09-21T21:01:46.6824966Z Generating translations for ohme
+2026-09-21T21:01:46.6825261Z Generating translations for flo
+2026-09-21T21:01:46.6825551Z Generating translations for toon
+2026-09-21T21:01:46.6825844Z Generating translations for person
+2026-09-21T21:01:46.6826133Z Generating translations for jellyfin
+2026-09-21T21:01:46.6826427Z Generating translations for systemnexa2
+2026-09-21T21:01:46.6826735Z Generating translations for enphase_envoy
+2026-09-21T21:01:46.6827037Z Generating translations for ntfy
+2026-09-21T21:01:46.6827322Z Generating translations for triggercmd
+2026-09-21T21:01:46.6827620Z Generating translations for lookin
+2026-09-21T21:01:46.6827907Z Generating translations for xiaomi_ble
+2026-09-21T21:01:46.6828219Z Generating translations for volkszaehler
+2026-09-21T21:01:46.6828530Z Generating translations for refoss
+2026-09-21T21:01:46.6828816Z Generating translations for climate
+2026-09-21T21:01:46.6829112Z Generating translations for tesla_fleet
+2026-09-21T21:01:46.6829412Z Generating translations for lg_tv_rs232
+2026-09-21T21:01:46.6829714Z Generating translations for hortimax
+2026-09-21T21:01:46.6830011Z Generating translations for hegel
+2026-09-21T21:01:46.6830302Z Generating translations for helty
+2026-09-21T21:01:46.6830590Z Generating translations for faa_delays
+2026-09-21T21:01:46.6830883Z Generating translations for withings
+2026-09-21T21:01:46.6831182Z Generating translations for bond
+2026-09-21T21:01:46.6831470Z Generating translations for ouman_eh_800
+2026-09-21T21:01:46.6831779Z Generating translations for konnected
+2026-09-21T21:01:46.6832204Z Generating translations for specialized_turbo
+2026-09-21T21:01:46.6832528Z Generating translations for onedrive
+2026-09-21T21:01:46.6832846Z Generating translations for python_script
+2026-09-21T21:01:46.6833302Z Generating translations for synology_dsm
+2026-09-21T21:01:46.6833612Z Generating translations for cielo_home
+2026-09-21T21:01:46.6833912Z Generating translations for tonewinner
+2026-09-21T21:01:46.6834207Z Generating translations for owntracks
+2026-09-21T21:01:46.6834508Z Generating translations for coinbase
+2026-09-21T21:01:46.6834806Z Generating translations for permobil
+2026-09-21T21:01:46.6835103Z Generating translations for my_pv
+2026-09-21T21:01:46.6835393Z Generating translations for flume
+2026-09-21T21:01:46.6835684Z Generating translations for pure_energie
+2026-09-21T21:01:46.6836000Z Generating translations for canary
+2026-09-21T21:01:46.6836293Z Generating translations for velux
+2026-09-21T21:01:46.6836584Z Generating translations for govee_ble
+2026-09-21T21:01:46.6836881Z Generating translations for traccar
+2026-09-21T21:01:46.6837176Z Generating translations for snapcast
+2026-09-21T21:01:46.6837629Z Generating translations for homematicip_cloud
+2026-09-21T21:01:46.6837971Z Generating translations for telegram
+2026-09-21T21:01:46.6838274Z Generating translations for nexia
+2026-09-21T21:01:46.6838557Z Generating translations for nanoleaf
+2026-09-21T21:01:46.6838875Z Generating translations for android_ip_webcam
+2026-09-21T21:01:46.6839196Z Generating translations for mazda
+2026-09-21T21:01:46.6839481Z Generating translations for vivotek
+2026-09-21T21:01:46.6839778Z Generating translations for ourgroceries
+2026-09-21T21:01:46.6840082Z Generating translations for lastfm
+2026-09-21T21:01:46.6840379Z Generating translations for wmspro
+2026-09-21T21:01:46.6840669Z Generating translations for tplink_omada
+2026-09-21T21:01:46.6840995Z Generating translations for novy_cooker_hood
+2026-09-21T21:01:46.6841320Z Generating translations for electric_kiwi
+2026-09-21T21:01:46.6841622Z Generating translations for nextdns
+2026-09-21T21:01:46.6841912Z Generating translations for fan
+2026-09-21T21:01:46.6842298Z Generating translations for peblar
+2026-09-21T21:01:46.6842608Z Generating translations for medcom_ble
+2026-09-21T21:01:46.6842942Z Generating translations for music_assistant
+2026-09-21T21:01:46.6843259Z Generating translations for rflink
+2026-09-21T21:01:46.6843574Z Generating translations for analytics_insights
+2026-09-21T21:01:46.6843898Z Generating translations for ituran
+2026-09-21T21:01:46.6844194Z Generating translations for sense
+2026-09-21T21:01:46.6844479Z Generating translations for cloud
+2026-09-21T21:01:46.6844767Z Generating translations for debugpy
+2026-09-21T21:01:46.6845071Z Generating translations for yamaha_musiccast
+2026-09-21T21:01:46.6845391Z Generating translations for systemmonitor
+2026-09-21T21:01:46.6845695Z Generating translations for timer
+2026-09-21T21:01:46.6845976Z Generating translations for inels
+2026-09-21T21:01:46.6846261Z Generating translations for nrgkick
+2026-09-21T21:01:46.6846550Z Generating translations for zha
+2026-09-21T21:01:46.6846821Z Generating translations for oncue
+2026-09-21T21:01:46.6847121Z Generating translations for open_meteo
+2026-09-21T21:01:46.6847423Z Generating translations for devialet
+2026-09-21T21:01:46.6847726Z Generating translations for powerfox
+2026-09-21T21:01:46.6848037Z Generating translations for airthings
+2026-09-21T21:01:46.6848338Z Generating translations for universal
+2026-09-21T21:01:46.6848643Z Generating translations for ecobee
+2026-09-21T21:01:46.6848935Z Generating translations for icloud
+2026-09-21T21:01:46.6849226Z Generating translations for axis
+2026-09-21T21:01:46.6849515Z Generating translations for deluge
+2026-09-21T21:01:46.6849803Z Generating translations for uptimerobot
+2026-09-21T21:01:46.6850133Z Generating translations for weatherflow_cloud
+2026-09-21T21:01:46.6850460Z Generating translations for habitica
+2026-09-21T21:01:46.6850761Z Generating translations for weatherkit
+2026-09-21T21:01:46.6851062Z Generating translations for group
+2026-09-21T21:01:46.6851380Z Generating translations for onedrive_for_business
+2026-09-21T21:01:46.6851733Z Generating translations for enigma2
+2026-09-21T21:01:46.6852031Z Generating translations for hikvision
+2026-09-21T21:01:46.6852698Z Generating translations for envertech_evt800
+2026-09-21T21:01:46.6853018Z Generating translations for renault
+2026-09-21T21:01:46.6853308Z Generating translations for myneomitis
+2026-09-21T21:01:46.6853611Z Generating translations for litellm
+2026-09-21T21:01:46.6853901Z Generating translations for labs
+2026-09-21T21:01:46.6854191Z Generating translations for anova
+2026-09-21T21:01:46.6854491Z Generating translations for vesync
+2026-09-21T21:01:46.6854943Z Generating translations for locative
+2026-09-21T21:01:46.6855360Z Generating translations for garage_door
+2026-09-21T21:01:46.6855809Z Generating translations for cover
+2026-09-21T21:01:46.6856236Z Generating translations for html5
+2026-09-21T21:01:46.6856701Z Generating translations for history_stats
+2026-09-21T21:01:46.6857172Z Generating translations for simplisafe
+2026-09-21T21:01:46.6857635Z Generating translations for zerproc
+2026-09-21T21:01:46.6858280Z Generating translations for freedompro
+2026-09-21T21:01:46.6859107Z Generating translations for wled
+2026-09-21T21:01:46.6859561Z Generating translations for dropbox
+2026-09-21T21:01:46.6859906Z Generating translations for qingping
+2026-09-21T21:01:46.6860208Z Generating translations for mastodon
+2026-09-21T21:01:46.6860524Z Generating translations for fivem
+2026-09-21T21:01:46.6860820Z Generating translations for netatmo
+2026-09-21T21:01:46.6861113Z Generating translations for remote
+2026-09-21T21:01:46.6861409Z Generating translations for twitch
+2026-09-21T21:01:46.6861690Z Generating translations for iotty
+2026-09-21T21:01:46.6861997Z Generating translations for media_extractor
+2026-09-21T21:01:46.6862551Z Generating translations for hdfury
+2026-09-21T21:01:46.6862854Z Generating translations for flexit_bacnet
+2026-09-21T21:01:46.6863204Z Generating translations for adax
+2026-09-21T21:01:46.6863502Z Generating translations for occupancy
+2026-09-21T21:01:46.6863825Z Generating translations for input_select
+2026-09-21T21:01:46.6864137Z Generating translations for mta
+2026-09-21T21:01:46.6864435Z Generating translations for indevolt
+2026-09-21T21:01:46.6864729Z Generating translations for prowl
+2026-09-21T21:01:46.6865012Z Generating translations for escea
+2026-09-21T21:01:46.6865296Z Generating translations for time
+2026-09-21T21:01:46.6865588Z Generating translations for pjlink
+2026-09-21T21:01:46.6865881Z Generating translations for roomba
+2026-09-21T21:01:46.6866166Z Generating translations for fumis
+2026-09-21T21:01:46.6866464Z Generating translations for ista_ecotrend
+2026-09-21T21:01:46.6866770Z Generating translations for flexit
+2026-09-21T21:01:46.6867079Z Generating translations for smart_meter_texas
+2026-09-21T21:01:46.6867422Z Generating translations for aseko_pool_live
+2026-09-21T21:01:46.6867737Z Generating translations for yoto
+2026-09-21T21:01:46.6868022Z Generating translations for amberelectric
+2026-09-21T21:01:46.6868328Z Generating translations for generic
+2026-09-21T21:01:46.6868626Z Generating translations for opower
+2026-09-21T21:01:46.6868924Z Generating translations for google
+2026-09-21T21:01:46.6869219Z Generating translations for autoskope
+2026-09-21T21:01:46.6869515Z Generating translations for gios
+2026-09-21T21:01:46.6869797Z Generating translations for smhi
+2026-09-21T21:01:46.6870113Z Generating translations for fritzbox_callmonitor
+2026-09-21T21:01:46.6870475Z Generating translations for private_ble_device
+2026-09-21T21:01:46.6870810Z Generating translations for channels
+2026-09-21T21:01:46.6871127Z Generating translations for here_travel_time
+2026-09-21T21:01:46.6871446Z Generating translations for airly
+2026-09-21T21:01:46.6871737Z Generating translations for anthropic
+2026-09-21T21:01:46.6872033Z Generating translations for aemet
+2026-09-21T21:01:46.6872544Z Generating translations for nintendo_parental_controls
+2026-09-21T21:01:46.6872909Z Generating translations for downloader
+2026-09-21T21:01:46.6873241Z Generating translations for aurora_abb_powerone
+2026-09-21T21:01:46.6873589Z Generating translations for gpslogger
+2026-09-21T21:01:46.6874061Z Generating translations for advantage_air
+2026-09-21T21:01:46.6874370Z Generating translations for zamg
+2026-09-21T21:01:46.6874663Z Generating translations for growatt_server
+2026-09-21T21:01:46.6874977Z Generating translations for scorpiontrack
+2026-09-21T21:01:46.6875298Z Generating translations for google_assistant
+2026-09-21T21:01:46.6875623Z Generating translations for geocaching
+2026-09-21T21:01:46.6875927Z Generating translations for balboa
+2026-09-21T21:01:46.6876221Z Generating translations for vacuum
+2026-09-21T21:01:46.6876505Z Generating translations for goodwe
+2026-09-21T21:01:46.6876799Z Generating translations for snooz
+2026-09-21T21:01:46.6877092Z Generating translations for srp_energy
+2026-09-21T21:01:46.6877393Z Generating translations for sharkiq
+2026-09-21T21:01:46.6877723Z Generating translations for ovhcloud_ai_endpoints
+2026-09-21T21:01:46.6878069Z Generating translations for water_heater
+2026-09-21T21:01:46.6878513Z Generating translations for eufylife_ble
+2026-09-21T21:01:46.6878831Z Generating translations for omnilogic
+2026-09-21T21:01:46.6879130Z Generating translations for awair
+2026-09-21T21:01:46.6879436Z Generating translations for unifiprotect
+2026-09-21T21:01:46.6879775Z Generating translations for openai_conversation
+2026-09-21T21:01:46.6880113Z Generating translations for fritz
+2026-09-21T21:01:46.6880424Z Generating translations for image_processing
+2026-09-21T21:01:46.6880745Z Generating translations for sonarr
+2026-09-21T21:01:46.6881051Z Generating translations for usage_prediction
+2026-09-21T21:01:46.6881363Z Generating translations for sabnzbd
+2026-09-21T21:01:46.6881671Z Generating translations for steam_online
+2026-09-21T21:01:46.6881987Z Generating translations for dialogflow
+2026-09-21T21:01:46.6882475Z Generating translations for homematic
+2026-09-21T21:01:46.6882775Z Generating translations for mqtt
+2026-09-21T21:01:46.6883064Z Generating translations for diagnostics
+2026-09-21T21:01:46.6883387Z Generating translations for accuweather
+2026-09-21T21:01:46.6883699Z Generating translations for switch_as_x
+2026-09-21T21:01:46.6883998Z Generating translations for aws_s3
+2026-09-21T21:01:46.6884335Z Generating translations for homeassistant_sky_connect
+2026-09-21T21:01:46.6884686Z Generating translations for hydrawise
+2026-09-21T21:01:46.6884989Z Generating translations for dunehd
+2026-09-21T21:01:46.6885289Z Generating translations for lg_netcast
+2026-09-21T21:01:46.6885597Z Generating translations for lock
+2026-09-21T21:01:46.6885885Z Generating translations for pooldose
+2026-09-21T21:01:46.6886180Z Generating translations for samsungtv
+2026-09-21T21:01:46.6886483Z Generating translations for local_file
+2026-09-21T21:01:46.6886811Z Generating translations for homeassistant_yellow
+2026-09-21T21:01:46.6887147Z Generating translations for renson
+2026-09-21T21:01:46.6887435Z Generating translations for yeelight
+2026-09-21T21:01:46.6887726Z Generating translations for humidity
+2026-09-21T21:01:46.6888032Z Generating translations for thread
+2026-09-21T21:01:46.6888329Z Generating translations for qbus
+2026-09-21T21:01:46.6888620Z Generating translations for microbees
+2026-09-21T21:01:46.6888917Z Generating translations for onvif
+2026-09-21T21:01:46.6889199Z Generating translations for acmeda
+2026-09-21T21:01:46.6889489Z Generating translations for season
+2026-09-21T21:01:46.6889775Z Generating translations for subaru
+2026-09-21T21:01:46.6890070Z Generating translations for backblaze_b2
+2026-09-21T21:01:46.6890407Z Generating translations for moehlenhoff_alpha2
+2026-09-21T21:01:46.6890757Z Generating translations for gardena_bluetooth
+2026-09-21T21:01:46.6891082Z Generating translations for simplepush
+2026-09-21T21:01:46.6891381Z Generating translations for auth
+2026-09-21T21:01:46.6891667Z Generating translations for knx
+2026-09-21T21:01:46.6891962Z Generating translations for bluemaestro
+2026-09-21T21:01:46.6892481Z Generating translations for alert
+2026-09-21T21:01:46.6892781Z Generating translations for cloudflare
+2026-09-21T21:01:46.6893079Z Generating translations for ombi
+2026-09-21T21:01:46.6893511Z Generating translations for de_dietrich
+2026-09-21T21:01:46.6893811Z Generating translations for webmin
+2026-09-21T21:01:46.6894101Z Generating translations for gree
+2026-09-21T21:01:46.6894398Z Generating translations for aussie_broadband
+2026-09-21T21:01:46.6894715Z Generating translations for todoist
+2026-09-21T21:01:46.6895021Z Generating translations for electrasmart
+2026-09-21T21:01:46.6895327Z Generating translations for luci
+2026-09-21T21:01:46.6895612Z Generating translations for threshold
+2026-09-21T21:01:46.6895904Z Generating translations for eafm
+2026-09-21T21:01:46.6896192Z Generating translations for homekit
+2026-09-21T21:01:46.6896511Z Generating translations for landisgyr_heat_meter
+2026-09-21T21:01:46.6896878Z Generating translations for v2c
+2026-09-21T21:01:46.6897174Z Generating translations for input_button
+2026-09-21T21:01:46.6897481Z Generating translations for xiaomi_miio
+2026-09-21T21:01:46.6897912Z Generating translations for infrared
+2026-09-21T21:01:46.6898227Z Generating translations for google_weather
+2026-09-21T21:01:46.6898542Z Generating translations for plant
+2026-09-21T21:01:46.6898864Z Generating translations for pvpc_hourly_pricing
+2026-09-21T21:01:46.6899191Z Generating translations for scene
+2026-09-21T21:01:46.6899476Z Generating translations for tile
+2026-09-21T21:01:46.6899770Z Generating translations for kitchen_sink
+2026-09-21T21:01:46.6900088Z Generating translations for color_extractor
+2026-09-21T21:01:46.6900453Z Generating translations for husqvarna_automower_ble
+2026-09-21T21:01:46.6900796Z Generating translations for anthemav
+2026-09-21T21:01:46.6901097Z Generating translations for epion
+2026-09-21T21:01:46.6901389Z Generating translations for conversation
+2026-09-21T21:01:46.6901692Z Generating translations for wsdot
+2026-09-21T21:01:46.6901981Z Generating translations for nyt_games
+2026-09-21T21:01:46.6902498Z Generating translations for notion
+2026-09-21T21:01:46.6902808Z Generating translations for huisbaasje
+2026-09-21T21:01:46.6903174Z Generating translations for trafikverket_weatherstation
+2026-09-21T21:01:46.6903535Z Generating translations for sensor
+2026-09-21T21:01:46.6903824Z Generating translations for yamaha
+2026-09-21T21:01:46.6904108Z Generating translations for geniushub
+2026-09-21T21:01:46.6904417Z Generating translations for azure_devops
+2026-09-21T21:01:46.6904735Z Generating translations for alexa_devices
+2026-09-21T21:01:46.6905052Z Generating translations for derivative
+2026-09-21T21:01:46.6905351Z Generating translations for browser
+2026-09-21T21:01:46.6905641Z Generating translations for mutesync
+2026-09-21T21:01:46.6905943Z Generating translations for rpi_power
+2026-09-21T21:01:46.6906243Z Generating translations for airpatrol
+2026-09-21T21:01:46.6906549Z Generating translations for homeassistant
+2026-09-21T21:01:46.6906858Z Generating translations for roon
+2026-09-21T21:01:46.6907140Z Generating translations for radiotherm
+2026-09-21T21:01:46.6907445Z Generating translations for ghost
+2026-09-21T21:01:46.6907744Z Generating translations for ads
+2026-09-21T21:01:46.6908035Z Generating translations for surepetcare
+2026-09-21T21:01:46.6908373Z Generating translations for google_air_quality
+2026-09-21T21:01:46.6908720Z Generating translations for aladdin_connect
+2026-09-21T21:01:46.6909038Z Generating translations for rympro
+2026-09-21T21:01:46.6909330Z Generating translations for ccm15
+2026-09-21T21:01:46.6909623Z Generating translations for kmtronic
+2026-09-21T21:01:46.6909920Z Generating translations for iperf3
+2026-09-21T21:01:46.6910210Z Generating translations for gatus
+2026-09-21T21:01:46.6910494Z Generating translations for opnsense
+2026-09-21T21:01:46.6910802Z Generating translations for geonetnz_quakes
+2026-09-21T21:01:46.6911115Z Generating translations for discord
+2026-09-21T21:01:46.6911411Z Generating translations for qbittorrent
+2026-09-21T21:01:46.6911713Z Generating translations for caldav
+2026-09-21T21:01:46.6912022Z Generating translations for rainforest_raven
+2026-09-21T21:01:46.6912666Z Generating translations for shopping_list
+2026-09-21T21:01:46.6912985Z Generating translations for linkplay
+2026-09-21T21:01:46.6913284Z Generating translations for bitvis
+2026-09-21T21:01:46.6913580Z Generating translations for proxmoxve
+2026-09-21T21:01:46.6913876Z Generating translations for tilt_ble
+2026-09-21T21:01:46.6914173Z Generating translations for point
+2026-09-21T21:01:46.6914461Z Generating translations for wemo
+2026-09-21T21:01:46.6914746Z Generating translations for togrill
+2026-09-21T21:01:46.6915039Z Generating translations for holiday
+2026-09-21T21:01:46.6915338Z Generating translations for iseo_argo_ble
+2026-09-21T21:01:46.6915687Z Generating translations for application_credentials
+2026-09-21T21:01:46.6916053Z Generating translations for waze_travel_time
+2026-09-21T21:01:46.6916378Z Generating translations for melcloud_home
+2026-09-21T21:01:46.6916689Z Generating translations for metoffice
+2026-09-21T21:01:46.6917106Z Generating translations for mikrotik
+2026-09-21T21:01:46.6917410Z Generating translations for life360
+2026-09-21T21:01:46.6917742Z Generating translations for hunterdouglas_powerview
+2026-09-21T21:01:46.6918078Z Generating translations for vallox
+2026-09-21T21:01:46.6918369Z Generating translations for mochad
+2026-09-21T21:01:46.6918655Z Generating translations for trend
+2026-09-21T21:01:46.6918961Z Generating translations for meteo_france
+2026-09-21T21:01:46.6919272Z Generating translations for cast
+2026-09-21T21:01:46.6919561Z Generating translations for luftdaten
+2026-09-21T21:01:46.6919857Z Generating translations for smtp
+2026-09-21T21:01:46.6920158Z Generating translations for trafikverket_train
+2026-09-21T21:01:46.6920504Z Generating translations for data_grand_lyon
+2026-09-21T21:01:46.6920819Z Generating translations for inkbird
+2026-09-21T21:01:46.6921117Z Generating translations for sftp_storage
+2026-09-21T21:01:46.6921424Z Generating translations for guardian
+2026-09-21T21:01:46.6921724Z Generating translations for filesize
+2026-09-21T21:01:46.6922017Z Generating translations for fibaro
+2026-09-21T21:01:46.6922491Z Generating translations for soma
+2026-09-21T21:01:46.6922783Z Generating translations for statistics
+2026-09-21T21:01:46.6923091Z Generating translations for namecheapdns
+2026-09-21T21:01:46.6923391Z Generating translations for saj
+2026-09-21T21:01:46.6923679Z Generating translations for izone
+2026-09-21T21:01:46.6923969Z Generating translations for fritzbox
+2026-09-21T21:01:46.6924272Z Generating translations for geo_location
+2026-09-21T21:01:46.6924584Z Generating translations for lawn_mower
+2026-09-21T21:01:46.6924874Z Generating translations for tag
+2026-09-21T21:01:46.6925158Z Generating translations for arcam_fmj
+2026-09-21T21:01:46.6925458Z Generating translations for freebox
+2026-09-21T21:01:46.6934209Z Generating translations for tautulli
+2026-09-21T21:01:46.6934568Z Generating translations for prosegur
+2026-09-21T21:01:46.6934903Z Generating translations for minio
+2026-09-21T21:01:46.6935227Z Generating translations for system_health
+2026-09-21T21:01:46.6935565Z Generating translations for datetime
+2026-09-21T21:01:46.6935873Z Generating translations for qvr_pro
+2026-09-21T21:01:46.6936242Z Generating translations for homeassistant_connect_zbt2
+2026-09-21T21:01:46.6936617Z Generating translations for uptime
+2026-09-21T21:01:46.6936931Z Generating translations for rest_command
+2026-09-21T21:01:46.6937246Z Generating translations for logbook
+2026-09-21T21:01:46.6937549Z Generating translations for temperature
+2026-09-21T21:01:46.6937859Z Generating translations for moisture
+2026-09-21T21:01:46.6938159Z Generating translations for ecovacs
+2026-09-21T21:01:46.6938459Z Generating translations for slimproto
+2026-09-21T21:01:46.6938763Z Generating translations for ridwell
+2026-09-21T21:01:46.6939059Z Generating translations for plex
+2026-09-21T21:01:46.6939383Z Generating translations for mitsubishi_comfort
+2026-09-21T21:01:46.6939721Z Generating translations for lutron
+2026-09-21T21:01:46.6940019Z Generating translations for nuki
+2026-09-21T21:01:46.6940318Z Generating translations for anglian_water
+2026-09-21T21:01:46.6940865Z Generating translations for input_number
+2026-09-21T21:01:46.6941172Z Generating translations for onewire
+2026-09-21T21:01:46.6941471Z Generating translations for compit
+2026-09-21T21:01:46.6941805Z Generating translations for honeywell_string_lights
+2026-09-21T21:01:46.6942415Z Generating translations for wattwaechter
+2026-09-21T21:01:46.6942774Z Generating translations for sleep_as_android
+2026-09-21T21:01:46.6943107Z Generating translations for discovergy
+2026-09-21T21:01:46.6943424Z Generating translations for analytics
+2026-09-21T21:01:46.6943743Z Generating translations for hr_energy_qube
+2026-09-21T21:01:46.6944062Z Generating translations for switch
+2026-09-21T21:01:46.6944357Z Generating translations for recorder
+2026-09-21T21:01:46.6944669Z Generating translations for mold_indicator
+2026-09-21T21:01:46.6944986Z Generating translations for aqualogic
+2026-09-21T21:01:46.6945436Z Generating translations for pvoutput
+2026-09-21T21:01:46.6945751Z Generating translations for immich
+2026-09-21T21:01:46.6946051Z Generating translations for splunk
+2026-09-21T21:01:46.6946356Z Generating translations for squeezebox
+2026-09-21T21:01:46.6946664Z Generating translations for lupusec
+2026-09-21T21:01:46.6946974Z Generating translations for schlage
+2026-09-21T21:01:46.6947271Z Generating translations for lovelace
+2026-09-21T21:01:46.6947578Z Generating translations for kaleidescape
+2026-09-21T21:01:46.6947906Z Generating translations for hisense_aehw4a1
+2026-09-21T21:01:46.6948232Z Generating translations for nordpool
+2026-09-21T21:01:46.6948533Z Generating translations for poolsense
+2026-09-21T21:01:46.6948840Z Generating translations for emulated_roku
+2026-09-21T21:01:46.6949152Z Generating translations for autarco
+2026-09-21T21:01:46.6949452Z Generating translations for dyson_infrared
+2026-09-21T21:01:46.6949761Z Generating translations for overseerr
+2026-09-21T21:01:46.6950069Z Generating translations for xbox
+2026-09-21T21:01:46.6950369Z Generating translations for led_infrared
+2026-09-21T21:01:46.6950683Z Generating translations for risco
+2026-09-21T21:01:46.6950983Z Generating translations for datadog
+2026-09-21T21:01:46.6951270Z Generating translations for ezviz
+2026-09-21T21:01:46.6951554Z Generating translations for econet
+2026-09-21T21:01:46.6951853Z Generating translations for ruuvi_gateway
+2026-09-21T21:01:46.6952362Z Generating translations for bmw_connected_drive
+2026-09-21T21:01:46.6952710Z Generating translations for door
+2026-09-21T21:01:46.6952998Z Generating translations for bang_olufsen
+2026-09-21T21:01:46.6953318Z Generating translations for blackbird
+2026-09-21T21:01:46.6953628Z Generating translations for opendisplay
+2026-09-21T21:01:46.6953938Z Generating translations for trmnl
+2026-09-21T21:01:46.6954230Z Generating translations for sunweg
+2026-09-21T21:01:46.6954520Z Generating translations for omie
+2026-09-21T21:01:46.6954818Z Generating translations for imap
+2026-09-21T21:01:46.6955101Z Generating translations for aranet
+2026-09-21T21:01:46.6955402Z Generating translations for gogogate2
+2026-09-21T21:01:46.6955713Z Generating translations for openweathermap
+2026-09-21T21:01:46.6956033Z Generating translations for waterfurnace
+2026-09-21T21:01:46.6956338Z Generating translations for mill
+2026-09-21T21:01:46.6956619Z Generating translations for twilio
+2026-09-21T21:01:46.6956915Z Generating translations for rainmachine
+2026-09-21T21:01:46.6957218Z Generating translations for mailgun
+2026-09-21T21:01:46.6957510Z Generating translations for google_mail
+2026-09-21T21:01:46.6957815Z Generating translations for nexblue
+2026-09-21T21:01:46.6958110Z Generating translations for bluetooth
+2026-09-21T21:01:46.6958405Z Generating translations for earn_e_p1
+2026-09-21T21:01:46.6958709Z Generating translations for pegel_online
+2026-09-21T21:01:46.6959043Z Generating translations for generic_thermostat
+2026-09-21T21:01:46.6959389Z Generating translations for firefly_iii
+2026-09-21T21:01:46.6959715Z Generating translations for trafikverket_ferry
+2026-09-21T21:01:46.6960241Z Generating translations for jewish_calendar
+2026-09-21T21:01:46.6960559Z Generating translations for otp
+2026-09-21T21:01:46.6960848Z Generating translations for overkiz
+2026-09-21T21:01:46.6961146Z Generating translations for logger
+2026-09-21T21:01:46.6961436Z Generating translations for willow
+2026-09-21T21:01:46.6961733Z Generating translations for elevenlabs
+2026-09-21T21:01:46.6962039Z Generating translations for number
+2026-09-21T21:01:46.6962552Z Generating translations for opengarage
+2026-09-21T21:01:46.6962954Z Generating translations for device_tracker
+2026-09-21T21:01:46.6963358Z Generating translations for suez_water
+2026-09-21T21:01:46.6963660Z Generating translations for lojack
+2026-09-21T21:01:46.6963948Z Generating translations for midea
+2026-09-21T21:01:46.6964230Z Generating translations for essent
+2026-09-21T21:01:46.6964528Z Generating translations for sunricher_dali
+2026-09-21T21:01:46.6964991Z Generating translations for monoprice
+2026-09-21T21:01:46.6965316Z Generating translations for solaredge_modbus
+2026-09-21T21:01:46.6965650Z Generating translations for launch_library
+2026-09-21T21:01:46.6965967Z Generating translations for marantz_infrared
+2026-09-21T21:01:46.6966293Z Generating translations for ruckus_unleashed
+2026-09-21T21:01:46.6966624Z Generating translations for niko_home_control
+2026-09-21T21:01:46.6966957Z Generating translations for monarch_money
+2026-09-21T21:01:46.6967268Z Generating translations for elgato
+2026-09-21T21:01:46.6967559Z Generating translations for modern_forms
+2026-09-21T21:01:46.6967861Z Generating translations for opensky
+2026-09-21T21:01:46.6968161Z Generating translations for irm_kmi
+2026-09-21T21:01:46.6968454Z Generating translations for teleinfo
+2026-09-21T21:01:46.6968756Z Generating translations for portainer
+2026-09-21T21:01:46.6969056Z Generating translations for somfy_mylink
+2026-09-21T21:01:46.6969357Z Generating translations for local_todo
+2026-09-21T21:01:46.6969665Z Generating translations for nightscout
+2026-09-21T21:01:46.6969968Z Generating translations for actron_air
+2026-09-21T21:01:46.6970264Z Generating translations for wiim
+2026-09-21T21:01:46.6970559Z Generating translations for airzone_cloud
+2026-09-21T21:01:46.6970864Z Generating translations for sfr_box
+2026-09-21T21:01:46.6971152Z Generating translations for ring
+2026-09-21T21:01:46.6971436Z Generating translations for blink
+2026-09-21T21:01:46.6971723Z Generating translations for acaia
+2026-09-21T21:01:46.6972024Z Generating translations for nextcloud
+2026-09-21T21:01:46.6972513Z Generating translations for light
+2026-09-21T21:01:46.6972845Z Generating translations for google_travel_time
+2026-09-21T21:01:46.6973186Z Generating translations for airos
+2026-09-21T21:01:46.6973497Z Generating translations for chess_com
+2026-09-21T21:01:46.6973826Z Generating translations for eurotronic_cometblue
+2026-09-21T21:01:46.6974169Z Generating translations for button
+2026-09-21T21:01:46.6974477Z Generating translations for homevolt
+2026-09-21T21:01:46.6974781Z Generating translations for iometer
+2026-09-21T21:01:46.6975093Z Generating translations for teslemetry
+2026-09-21T21:01:46.6975400Z Generating translations for air_quality
+2026-09-21T21:01:46.6975731Z Generating translations for minecraft_server
+2026-09-21T21:01:46.6976056Z Generating translations for battery
+2026-09-21T21:01:46.6976349Z Generating translations for nut
+2026-09-21T21:01:46.6976645Z Generating translations for screenlogic
+2026-09-21T21:01:46.6976948Z Generating translations for syncthing
+2026-09-21T21:01:46.6977247Z Generating translations for ws66i
+2026-09-21T21:01:46.6977536Z Generating translations for ollama
+2026-09-21T21:01:46.6977847Z Generating translations for rainforest_eagle
+2026-09-21T21:01:46.6978169Z Generating translations for motionmount
+2026-09-21T21:01:46.6978470Z Generating translations for lg_thinq
+2026-09-21T21:01:46.6978766Z Generating translations for aosmith
+2026-09-21T21:01:46.6979073Z Generating translations for command_line
+2026-09-21T21:01:46.6979384Z Generating translations for flipr
+2026-09-21T21:01:46.6979847Z Generating translations for homeassistant_alerts
+2026-09-21T21:01:46.6980174Z Generating translations for sma
+2026-09-21T21:01:46.6980459Z Generating translations for honeywell
+2026-09-21T21:01:46.6980756Z Generating translations for braviatv
+2026-09-21T21:01:46.6981047Z Generating translations for osoenergy
+2026-09-21T21:01:46.6981336Z Generating translations for llama_cpp
+2026-09-21T21:01:46.6981629Z Generating translations for agent_dvr
+2026-09-21T21:01:46.6981920Z Generating translations for hue_ble
+2026-09-21T21:01:46.6982417Z Generating translations for teltonika
+2026-09-21T21:01:46.6982728Z Generating translations for open_router
+2026-09-21T21:01:46.6983048Z Generating translations for geonetnz_volcano
+2026-09-21T21:01:46.6983361Z Generating translations for version
+2026-09-21T21:01:46.6983665Z Generating translations for streamlabswater
+2026-09-21T21:01:46.6984120Z Generating translations for smappee
+2026-09-21T21:01:46.6984412Z Generating translations for siren
+2026-09-21T21:01:46.6984740Z Generating translations for green_planet_energy
+2026-09-21T21:01:46.6985078Z Generating translations for matter
+2026-09-21T21:01:46.6985371Z Generating translations for discogs
+2026-09-21T21:01:46.6985668Z Generating translations for starline
+2026-09-21T21:01:46.6985972Z Generating translations for tankerkoenig
+2026-09-21T21:01:46.6986288Z Generating translations for gate
+2026-09-21T21:01:46.6986598Z Generating translations for epic_games_store
+2026-09-21T21:01:46.6986918Z Generating translations for vlc_telnet
+2026-09-21T21:01:46.6987225Z Generating translations for flow_it
+2026-09-21T21:01:46.6987342Z Generating translations for evohome
+2026-09-21T21:01:46.6987463Z Generating translations for sensorpush
+2026-09-21T21:01:46.6987585Z Generating translations for purpleair
+2026-09-21T21:01:46.6987705Z Generating translations for huawei_lte
+2026-09-21T21:01:46.6987816Z Generating translations for elkm1
+2026-09-21T21:01:46.6987936Z Generating translations for kiosker
+2026-09-21T21:01:46.6988084Z Generating translations for tesla_wall_connector
+2026-09-21T21:01:46.6988194Z Generating translations for apcupsd
+2026-09-21T21:01:46.6988313Z Generating translations for smarla
+2026-09-21T21:01:46.6988429Z Generating translations for matrix
+2026-09-21T21:01:46.6988542Z Generating translations for harmony
+2026-09-21T21:01:46.6988654Z Generating translations for sql
+2026-09-21T21:01:46.6988774Z Generating translations for ondilo_ico
+2026-09-21T21:01:46.6988896Z Generating translations for google_cloud
+2026-09-21T21:01:46.6989012Z Generating translations for openuv
+2026-09-21T21:01:46.6989131Z Generating translations for guntamatic
+2026-09-21T21:01:46.6989257Z Generating translations for airvisual_pro
+2026-09-21T21:01:46.6989373Z Generating translations for brother
+2026-09-21T21:01:46.6989484Z Generating translations for sia
+2026-09-21T21:01:46.6989600Z Generating translations for abode
+2026-09-21T21:01:46.6989720Z Generating translations for p1_monitor
+2026-09-21T21:01:46.6989830Z Generating translations for melnor
+2026-09-21T21:01:46.6989947Z Generating translations for netio
+2026-09-21T21:01:46.6990068Z Generating translations for lg_infrared
+2026-09-21T21:01:46.6990183Z Generating translations for smarttub
+2026-09-21T21:01:46.6990301Z Generating translations for bluesound
+2026-09-21T21:01:46.6990439Z Generating translations for garages_amsterdam
+2026-09-21T21:01:46.6990554Z Generating translations for zwave_js
+2026-09-21T21:01:46.6990675Z Generating translations for transmission
+2026-09-21T21:01:46.6990789Z Generating translations for venstar
+2026-09-21T21:01:46.6990906Z Generating translations for airq
+2026-09-21T21:01:46.6991020Z Generating translations for tessie
+2026-09-21T21:01:46.6991136Z Generating translations for denon_rs232
+2026-09-21T21:01:46.6991257Z Generating translations for airgradient
+2026-09-21T21:01:46.6991396Z Generating translations for devolo_home_network
+2026-09-21T21:01:46.6991528Z Generating translations for seventeentrack
+2026-09-21T21:01:46.6991644Z Generating translations for dexcom
+2026-09-21T21:01:46.6991895Z Generating translations for zwave_me
+2026-09-21T21:01:46.6992012Z Generating translations for pyload
+2026-09-21T21:01:46.6992287Z Generating translations for hue
+2026-09-21T21:01:46.6992404Z Generating translations for emonitor
+2026-09-21T21:01:46.6992533Z Generating translations for folder_watcher
+2026-09-21T21:01:46.6992650Z Generating translations for soundtouch
+2026-09-21T21:01:46.6992764Z Generating translations for iotawatt
+2026-09-21T21:01:46.6992882Z Generating translations for harman_luxury
+2026-09-21T21:01:46.6992996Z Generating translations for dlna_dmr
+2026-09-21T21:01:46.6993109Z Generating translations for amcrest
+2026-09-21T21:01:46.6993231Z Generating translations for forked_daapd
+2026-09-21T21:01:46.6993346Z Generating translations for brunt
+2026-09-21T21:01:46.6993458Z Generating translations for ipp
+2026-09-21T21:01:46.6993572Z Generating translations for go2rtc
+2026-09-21T21:01:46.6993845Z Generating translations for tractive
+2026-09-21T21:01:46.6993973Z Generating translations for meteoclimatic
+2026-09-21T21:01:46.6994085Z Generating translations for whois
+2026-09-21T21:01:46.6994198Z Generating translations for led_ble
+2026-09-21T21:01:46.6994310Z Generating translations for reolink
+2026-09-21T21:01:46.6994426Z Generating translations for azure_storage
+2026-09-21T21:01:46.6994567Z Generating translations for route_b_smart_meter
+2026-09-21T21:01:46.6994687Z Generating translations for pilight
+2026-09-21T21:01:46.6994813Z Generating translations for palazzetti
+2026-09-21T21:01:46.6994935Z Generating translations for humidifier
+2026-09-21T21:01:46.6995065Z Generating translations for remote_calendar
+2026-09-21T21:01:46.6995182Z Generating translations for co2signal
+2026-09-21T21:01:46.6995295Z Generating translations for fluss
+2026-09-21T21:01:46.6995409Z Generating translations for ebusd
+2026-09-21T21:01:46.6995525Z Generating translations for prusalink
+2026-09-21T21:01:46.6995642Z Generating translations for mullvad
+2026-09-21T21:01:46.6995754Z Generating translations for swisscom
+2026-09-21T21:01:46.6995867Z Generating translations for todo
+2026-09-21T21:01:46.6995990Z Generating translations for centriconnect
+2026-09-21T21:01:46.6996116Z Generating translations for input_datetime
+2026-09-21T21:01:46.6996233Z Generating translations for hassio
+2026-09-21T21:01:46.6996349Z Generating translations for miele
+2026-09-21T21:01:46.6996471Z Generating translations for ambient_station
+2026-09-21T21:01:46.6996880Z 🌎 Generated translation files for all integrations
+2026-09-21T21:01:46.7032736Z ##[group]Run . venv/bin/activate
+2026-09-21T21:01:46.7032907Z . venv/bin/activate
+2026-09-21T21:01:46.7033018Z python --version
+2026-09-21T21:01:46.7033130Z set -o pipefail
+2026-09-21T21:01:46.7033238Z cov_params=()
+2026-09-21T21:01:46.7033393Z if [[ "${SKIP_COVERAGE}" != "true" ]]; then
+2026-09-21T21:01:46.7033535Z   cov_params+=(--cov="homeassistant")
+2026-09-21T21:01:46.7033657Z   cov_params+=(--cov-report=xml)
+2026-09-21T21:01:46.7033872Z   cov_params+=(--junitxml=junit.xml -o junit_family=legacy)
+2026-09-21T21:01:46.7033969Z fi
+2026-09-21T21:01:46.7034065Z 
+2026-09-21T21:01:46.7034323Z echo "Test group ${TEST_GROUP}: $(sed -n "${TEST_GROUP},1p" pytest_buckets.txt)"
+2026-09-21T21:01:46.7034467Z python3 -b -X dev -m pytest \
+2026-09-21T21:01:46.7034568Z   -qq \
+2026-09-21T21:01:46.7034677Z   --timeout=9 \
+2026-09-21T21:01:46.7034820Z   --durations=0 \
+2026-09-21T21:01:46.7034934Z   --durations-min=1 \
+2026-09-21T21:01:46.7035049Z   --numprocesses auto \
+2026-09-21T21:01:46.7035165Z   --snapshot-details \
+2026-09-21T21:01:46.7035267Z   --dist=loadfile \
+2026-09-21T21:01:46.7035382Z   ${cov_params[@]} \
+2026-09-21T21:01:46.7035515Z   -o console_output_style=count \
+2026-09-21T21:01:46.7035622Z   -p no:sugar \
+2026-09-21T21:01:46.7035922Z   --exclude-warning-annotations \
+2026-09-21T21:01:46.7036093Z   $(sed -n "${TEST_GROUP},1p" pytest_buckets.txt) \
+2026-09-21T21:01:46.7036272Z     2>&1 | tee pytest-${PYTHON_VERSION}-${TEST_GROUP}.txt
+2026-09-21T21:01:46.7075452Z shell: /usr/bin/bash -e {0}
+2026-09-21T21:01:46.7075553Z env:
+2026-09-21T21:01:46.7075663Z   CACHE_VERSION: 4
+2026-09-21T21:01:46.7075769Z   MYPY_CACHE_VERSION: 1
+2026-09-21T21:01:46.7075876Z   HA_SHORT_VERSION: 2026.10
+2026-09-21T21:01:46.7076001Z   ADDITIONAL_PYTHON_VERSIONS: []
+2026-09-21T21:01:46.7076360Z   MARIADB_VERSIONS: ['mariadb:10.3.32','mariadb:10.6.10','mariadb:10.10.3','mariadb:10.11.2','mariadb:11.4.9','mysql:8.0.32']
+2026-09-21T21:01:46.7076591Z   POSTGRESQL_VERSIONS: ['postgres:12.22','postgres:15.19', 'postgres:18.6']
+2026-09-21T21:01:46.7076845Z   SQLITE_VERSIONS: [{"version": "3.40.1", "year": "2022"}, {"version": "3.53.4", "year": "2026"}]
+2026-09-21T21:01:46.7077236Z   RECORDER_TEST_DIRS: tests/components/history tests/components/logbook tests/components/recorder tests/components/sensor
+2026-09-21T21:01:46.7077361Z   UV_CACHE_DIR: /tmp/uv-cache
+2026-09-21T21:01:46.7077469Z   APT_CACHE_VERSION: 1
+2026-09-21T21:01:46.7077576Z   SQLALCHEMY_WARN_20: 1
+2026-09-21T21:01:46.7077684Z   PYTHONASYNCIODEBUG: 1
+2026-09-21T21:01:46.7077781Z   HASS_CI: 1
+2026-09-21T21:01:46.7077917Z   CACHE_KEY: 22a3147dd785dad2d35c5a5e68b7c7d9
+2026-09-21T21:01:46.7078106Z   UV_PYTHON_INSTALL_DIR: /home/runner/work/_temp/uv-python-dir
+2026-09-21T21:01:46.7078213Z   UV_PYTHON: 3.14.5
+2026-09-21T21:01:46.7078325Z   PYTHONDONTWRITEBYTECODE: 1
+2026-09-21T21:01:46.7078431Z   SKIP_COVERAGE: 
+2026-09-21T21:01:46.7078537Z   TEST_GROUP: 5
+2026-09-21T21:01:46.7078647Z   PYTHON_VERSION: 3.14.5
+2026-09-21T21:01:46.7078748Z ##[endgroup]
+2026-09-21T21:01:46.7174554Z Python 3.14.5
+2026-09-21T21:01:46.7199120Z Test group 5: tests/components/smartthings tests/components/homekit_controller tests/components/moisture tests/components/zha tests/components/illuminance tests/components/overkiz tests/components/whirlpool tests/components/switchbot_cloud tests/components/led_infrared tests/components/lawn_mower tests/components/vacuum tests/components/zone tests/components/alexa tests/components/enphase_envoy tests/components/http tests/components/conversation tests/components/roborock tests/components/power tests/components/timer tests/components/bluetooth tests/components/midea tests/components/openai_conversation tests/components/config tests/components/assist_satellite tests/components/google_assistant tests/components/azure_openai tests/components/lock tests/components/tplink tests/components/switch tests/components/tasmota tests/components/energy tests/components/counter tests/components/airvisual
+2026-09-21T21:01:47.6223043Z /home/runner/work/core/core/venv/lib/python3.14/site-packages/rich/segment.py:547: SyntaxWarning: 'return' in a 'finally' block
+2026-09-21T21:01:47.6223725Z   return
+2026-09-21T21:02:02.3834254Z /home/runner/work/core/core/venv/lib/python3.14/site-packages/rich/segment.py:547: SyntaxWarning: 'return' in a 'finally' block
+2026-09-21T21:02:02.3835353Z   return
+2026-09-21T21:02:02.4664339Z /home/runner/work/core/core/venv/lib/python3.14/site-packages/rich/segment.py:547: SyntaxWarning: 'return' in a 'finally' block
+2026-09-21T21:02:02.4665401Z   return
+2026-09-21T21:02:31.7957302Z bringing up nodes...
+2026-09-21T21:02:31.7964493Z bringing up nodes...
+2026-09-21T21:02:31.7964825Z 
+2026-09-21T21:02:32.6483261Z ................................................................... [  67/8857]
+2026-09-21T21:02:33.5471146Z ................................................................... [ 134/8857]
+2026-09-21T21:02:34.7244680Z ................................................................... [ 201/8857]
+2026-09-21T21:02:36.3640566Z ................................................................... [ 268/8857]
+2026-09-21T21:02:37.8069809Z ................................................................... [ 335/8857]
+2026-09-21T21:02:39.3673156Z ................................................................... [ 402/8857]
+2026-09-21T21:02:40.6818673Z ................................................................... [ 469/8857]
+2026-09-21T21:02:42.1566712Z ................................................................... [ 536/8857]
+2026-09-21T21:02:43.3885790Z ................................................................... [ 603/8857]
+2026-09-21T21:02:44.7860548Z ................................................................... [ 670/8857]
+2026-09-21T21:02:46.3462021Z ................................................................... [ 737/8857]
+2026-09-21T21:02:47.8564432Z ................................................................... [ 804/8857]
+2026-09-21T21:02:49.2814419Z ................................................................... [ 871/8857]
+2026-09-21T21:02:50.7423566Z ................................................................... [ 938/8857]
+2026-09-21T21:02:52.0823627Z ................................................................... [1005/8857]
+2026-09-21T21:02:53.1812722Z ................................................................... [1072/8857]
+2026-09-21T21:02:54.2381907Z ................................................................... [1139/8857]
+2026-09-21T21:02:55.3049461Z ................................................................... [1206/8857]
+2026-09-21T21:02:56.3713868Z ................................................................... [1273/8857]
+2026-09-21T21:02:57.5534281Z ................................................................... [1340/8857]
+2026-09-21T21:02:58.8894025Z ................................................................... [1407/8857]
+2026-09-21T21:03:00.2167357Z ................................................................... [1474/8857]
+2026-09-21T21:03:01.5681515Z ................................................................... [1541/8857]
+2026-09-21T21:03:02.8999652Z ................................................................... [1608/8857]
+2026-09-21T21:03:04.2178338Z ................................................................... [1675/8857]
+2026-09-21T21:03:05.5145481Z ................................................................... [1742/8857]
+2026-09-21T21:03:06.7476385Z ................................................................... [1809/8857]
+2026-09-21T21:03:07.9350625Z ................................................................... [1876/8857]
+2026-09-21T21:03:09.1155805Z ................................................................... [1943/8857]
+2026-09-21T21:03:10.2806090Z ................................................................... [2010/8857]
+2026-09-21T21:03:11.2390380Z ................................................................... [2077/8857]
+2026-09-21T21:03:12.1256679Z ................................................................... [2144/8857]
+2026-09-21T21:03:13.6772939Z ................................................................... [2211/8857]
+2026-09-21T21:03:14.6059579Z ................................................................... [2278/8857]
+2026-09-21T21:03:15.5567351Z ................................................................... [2345/8857]
+2026-09-21T21:03:16.8372842Z ................................................................... [2412/8857]
+2026-09-21T21:03:18.2309103Z ................................................................... [2479/8857]
+2026-09-21T21:03:19.6376298Z ................................................................... [2546/8857]
+2026-09-21T21:03:21.0932025Z ................................................................... [2613/8857]
+2026-09-21T21:03:22.7414910Z ................................................................... [2680/8857]
+2026-09-21T21:03:24.5033170Z ................................................................... [2747/8857]
+2026-09-21T21:03:26.1020161Z ................................................................... [2814/8857]
+2026-09-21T21:03:27.8149383Z ................................................................... [2881/8857]
+2026-09-21T21:03:29.2948880Z ................................................................... [2948/8857]
+2026-09-21T21:03:32.6202655Z ................................................................... [3015/8857]
+2026-09-21T21:03:39.2132908Z ................................................................... [3082/8857]
+2026-09-21T21:03:46.9069401Z ................................................................... [3149/8857]
+2026-09-21T21:03:53.0343508Z ................................................................... [3216/8857]
+2026-09-21T21:03:55.4220375Z ................................................................... [3283/8857]
+2026-09-21T21:03:57.5742345Z ................................................................... [3350/8857]
+2026-09-21T21:04:01.2155086Z ................................................................... [3417/8857]
+2026-09-21T21:04:04.8889863Z ................................................................... [3484/8857]
+2026-09-21T21:04:09.8869544Z ................................................................... [3551/8857]
+2026-09-21T21:04:14.3604375Z ................................................................... [3618/8857]
+2026-09-21T21:04:16.8425471Z ................................................................... [3685/8857]
+2026-09-21T21:04:18.2358297Z ................................................................... [3752/8857]
+2026-09-21T21:04:22.2491082Z ................................................................... [3819/8857]
+2026-09-21T21:04:27.3266200Z ................................................................... [3886/8857]
+2026-09-21T21:04:29.4810767Z ................................................................... [3953/8857]
+2026-09-21T21:04:30.9640367Z ................................................................... [4020/8857]
+2026-09-21T21:04:32.4058640Z ................................................................... [4087/8857]
+2026-09-21T21:04:33.7085083Z ................................................................... [4154/8857]
+2026-09-21T21:04:37.6081029Z ................................................................... [4221/8857]
+2026-09-21T21:04:41.7842522Z ................................................................... [4288/8857]
+2026-09-21T21:04:47.8295763Z ................................................................... [4355/8857]
+2026-09-21T21:04:51.6303722Z ................................................................... [4422/8857]
+2026-09-21T21:04:56.2362638Z ................................................................... [4489/8857]
+2026-09-21T21:04:59.9638661Z ................................................................... [4556/8857]
+2026-09-21T21:05:03.0072372Z ................................................................... [4623/8857]
+2026-09-21T21:05:05.9392749Z ................................................................... [4690/8857]
+2026-09-21T21:05:09.0467396Z ................................................................... [4757/8857]
+2026-09-21T21:05:10.1028385Z ................................................................... [4824/8857]
+2026-09-21T21:05:12.4897292Z ................................................................... [4891/8857]
+2026-09-21T21:05:15.5966294Z ................................................................... [4958/8857]
+2026-09-21T21:05:18.6754177Z ................................................................... [5025/8857]
+2026-09-21T21:05:22.5448167Z ................................................................... [5092/8857]
+2026-09-21T21:05:23.3275834Z ................................................................... [5159/8857]
+2026-09-21T21:05:24.3999814Z ................................................................... [5226/8857]
+2026-09-21T21:05:25.2039188Z ................................................................... [5293/8857]
+2026-09-21T21:05:26.4472960Z ................................................................... [5360/8857]
+2026-09-21T21:05:27.7918614Z ................................................................... [5427/8857]
+2026-09-21T21:05:31.4143538Z ................................................................... [5494/8857]
+2026-09-21T21:05:37.4498170Z ................................................................... [5561/8857]
+2026-09-21T21:05:42.6813858Z ................................................................... [5628/8857]
+2026-09-21T21:05:44.5967573Z ................................................................... [5695/8857]
+2026-09-21T21:05:46.2204684Z ................................................................... [5762/8857]
+2026-09-21T21:05:50.4464181Z ................................................................... [5829/8857]
+2026-09-21T21:05:52.8965544Z ................................................................... [5896/8857]
+2026-09-21T21:05:56.4229360Z ................................................................... [5963/8857]
+2026-09-21T21:05:58.7039118Z ................................................................... [6030/8857]
+2026-09-21T21:06:00.8623780Z ................................................................... [6097/8857]
+2026-09-21T21:06:04.3868168Z ................................................................... [6164/8857]
+2026-09-21T21:06:08.0618319Z ................................................ssss............... [6231/8857]
+2026-09-21T21:06:13.4515511Z ................................................................... [6298/8857]
+2026-09-21T21:06:16.5099026Z ................................................................... [6365/8857]
+2026-09-21T21:06:18.2312786Z ................................................................... [6432/8857]
+2026-09-21T21:06:22.8740852Z ................................................................... [6499/8857]
+2026-09-21T21:06:27.2319426Z ................................................................... [6566/8857]
+2026-09-21T21:06:29.1676506Z ................................................................... [6633/8857]
+2026-09-21T21:06:31.7918469Z ................................................................... [6700/8857]
+2026-09-21T21:06:33.2744137Z ................................................................... [6767/8857]
+2026-09-21T21:06:39.8921085Z ................................................................... [6834/8857]
+2026-09-21T21:06:45.6628576Z ................................................................... [6901/8857]
+2026-09-21T21:06:50.2491800Z ................................................................... [6968/8857]
+2026-09-21T21:06:53.1491598Z ................................................................... [7035/8857]
+2026-09-21T21:06:55.6912630Z ................................................................... [7102/8857]
+2026-09-21T21:06:57.5010369Z ................................................................... [7169/8857]
+2026-09-21T21:06:59.4877344Z ................................................................... [7236/8857]
+2026-09-21T21:07:01.4024699Z ................................................................... [7303/8857]
+2026-09-21T21:07:04.1049306Z ................................................................... [7370/8857]
+2026-09-21T21:07:06.9122974Z .........................................................s......... [7437/8857]
+2026-09-21T21:07:11.3884887Z ................................................................... [7504/8857]
+2026-09-21T21:07:13.6599118Z ................................................................... [7571/8857]
+2026-09-21T21:07:16.7771588Z ................................................................... [7638/8857]
+2026-09-21T21:07:19.4165393Z ................................................................... [7705/8857]
+2026-09-21T21:07:23.2083600Z ................................................................... [7772/8857]
+2026-09-21T21:07:27.5602888Z ................................................................... [7839/8857]
+2026-09-21T21:07:28.9183862Z ................................................................... [7906/8857]
+2026-09-21T21:07:30.9489028Z ................................................................... [7973/8857]
+2026-09-21T21:07:37.4562030Z ................................................................... [8040/8857]
+2026-09-21T21:07:40.7625275Z ................................................................... [8107/8857]
+2026-09-21T21:07:42.1002477Z ................................................................... [8174/8857]
+2026-09-21T21:07:47.1478879Z ................................................................... [8241/8857]
+2026-09-21T21:07:50.7352927Z ................................................................... [8308/8857]
+2026-09-21T21:07:52.3658562Z ................................................................... [8375/8857]
+2026-09-21T21:07:56.2858820Z ................................................................... [8442/8857]
+2026-09-21T21:07:59.4108465Z ................................................................... [8509/8857]
+2026-09-21T21:08:04.3025811Z ................................................................... [8576/8857]
+2026-09-21T21:08:08.7180357Z ................................................................... [8643/8857]
+2026-09-21T21:08:13.0683194Z ................................................................... [8710/8857]
+2026-09-21T21:08:19.0814084Z ................................................................... [8777/8857]
+2026-09-21T21:08:23.7239857Z ................................................................... [8844/8857]
+2026-09-21T21:10:46.6436189Z .............                                                       [8857/8857]INFO:pyrate_limiter.limiter:Initializing default bucket(InMemoryBucket) with rates: [limit=1/1000, limit=3/60000, limit=10/3600000, limit=20/86400000]
+2026-09-21T21:10:46.6438115Z INFO:pyrate_limiter.limiter:Initializing default bucket(InMemoryBucket) with rates: [limit=1/1000, limit=3/60000, limit=5/3600000, limit=40/86400000]
+2026-09-21T21:10:46.6440871Z WARNING:asyncio:Executing <TimerHandle when=595.271565701 _set_result_unless_cancelled(<Future finis...events.py:459>, None) at /home/runner/work/_temp/uv-python-dir/cpython-3.14.5-linux-x86_64-gnu/lib/python3.14/asyncio/futures.py:319 created at /home/runner/work/_temp/uv-python-dir/cpython-3.14.5-linux-x86_64-gnu/lib/python3.14/asyncio/tasks.py:698> took 0.534 seconds
+2026-09-21T21:10:46.6443087Z 
+2026-09-21T21:10:46.6443370Z ================================ tests coverage ================================
+2026-09-21T21:10:46.6444521Z _______________ coverage: platform linux, python 3.14.5-final-0 ________________
+2026-09-21T21:10:46.6445040Z 
+2026-09-21T21:10:46.6445242Z Coverage XML written to file coverage.xml
+2026-09-21T21:10:46.6445901Z --------------------------- snapshot report summary ----------------------------
+2026-09-21T21:10:46.6446524Z 5759 snapshots passed.
+2026-09-21T21:10:46.6447015Z ============================== slowest durations ===============================
+2026-09-21T21:10:46.6447979Z 1.91s call     tests/components/azure_openai/test_config_flow.py::test_form_stores_stt_api_version_override
+2026-09-21T21:10:46.6449019Z 1.67s setup    tests/components/zha/test_websocket_api.py::test_device_clusters
+2026-09-21T21:10:46.6450342Z 1.54s setup    tests/components/zha/test_config_flow.py::test_zeroconf_discovery[tubeszb-cc2652-poe-epid=aa:bb:cc:dd:ee:00:00:00-RadioType.znp-service_info0]
+2026-09-21T21:10:46.6451318Z 
+2026-09-21T21:10:46.6451488Z (26563 durations < 1s hidden.)
+2026-09-21T21:10:50.2782435Z ##[group]Run actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+2026-09-21T21:10:50.2782889Z with:
+2026-09-21T21:10:50.2783130Z   name: pytest-363940-3.14.5-5
+2026-09-21T21:10:50.2783410Z   path: pytest-*.txt
+2026-09-21T21:10:50.2783654Z   overwrite: true
+2026-09-21T21:10:50.2783904Z   if-no-files-found: warn
+2026-09-21T21:10:50.2784167Z   compression-level: 6
+2026-09-21T21:10:50.2784433Z   include-hidden-files: false
+2026-09-21T21:10:50.2784702Z   archive: true
+2026-09-21T21:10:50.2784930Z env:
+2026-09-21T21:10:50.2785139Z   CACHE_VERSION: 4
+2026-09-21T21:10:50.2785608Z   MYPY_CACHE_VERSION: 1
+2026-09-21T21:10:50.2785861Z   HA_SHORT_VERSION: 2026.10
+2026-09-21T21:10:50.2786142Z   ADDITIONAL_PYTHON_VERSIONS: []
+2026-09-21T21:10:50.2786665Z   MARIADB_VERSIONS: ['mariadb:10.3.32','mariadb:10.6.10','mariadb:10.10.3','mariadb:10.11.2','mariadb:11.4.9','mysql:8.0.32']
+2026-09-21T21:10:50.2787306Z   POSTGRESQL_VERSIONS: ['postgres:12.22','postgres:15.19', 'postgres:18.6']
+2026-09-21T21:10:50.2787891Z   SQLITE_VERSIONS: [{"version": "3.40.1", "year": "2022"}, {"version": "3.53.4", "year": "2026"}]
+2026-09-21T21:10:50.2788597Z   RECORDER_TEST_DIRS: tests/components/history tests/components/logbook tests/components/recorder tests/components/sensor
+2026-09-21T21:10:50.2789172Z   UV_CACHE_DIR: /tmp/uv-cache
+2026-09-21T21:10:50.2789447Z   APT_CACHE_VERSION: 1
+2026-09-21T21:10:50.2789700Z   SQLALCHEMY_WARN_20: 1
+2026-09-21T21:10:50.2789955Z   PYTHONASYNCIODEBUG: 1
+2026-09-21T21:10:50.2790189Z   HASS_CI: 1
+2026-09-21T21:10:50.2790444Z   CACHE_KEY: 22a3147dd785dad2d35c5a5e68b7c7d9
+2026-09-21T21:10:50.2790846Z   UV_PYTHON_INSTALL_DIR: /home/runner/work/_temp/uv-python-dir
+2026-09-21T21:10:50.2791210Z   UV_PYTHON: 3.14.5
+2026-09-21T21:10:50.2791447Z ##[endgroup]
+2026-09-21T21:10:50.4223638Z With the provided path, there will be 1 file uploaded
+2026-09-21T21:10:50.6310238Z Artifact name is valid!
+2026-09-21T21:10:50.6310730Z Root directory input is valid!
+2026-09-21T21:10:50.8802866Z Uploading artifact: pytest-363940-3.14.5-5.zip
+2026-09-21T21:10:50.8846798Z Beginning upload of artifact content to blob storage
+2026-09-21T21:10:51.0303504Z Uploaded bytes 1471
+2026-09-21T21:10:51.0646387Z Finished uploading artifact content to blob storage!
+2026-09-21T21:10:51.0647218Z SHA256 digest of uploaded artifact is 194f62a85c3c39548b8111bf768a6e356f364ed07da5f604373fa7c8370bdb4e
+2026-09-21T21:10:51.0647778Z Finalizing artifact upload
+2026-09-21T21:10:51.3322417Z ##[error]Failed to FinalizeArtifact: Received non-retryable error: Failed request: (403) Forbidden: Error from intermediary with HTTP status code 403 "Forbidden"
+2026-09-21T21:10:51.3475469Z ##[group]Run actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+2026-09-21T21:10:51.3475922Z with:
+2026-09-21T21:10:51.3476176Z   name: test-results-full-3.14.5-5
+2026-09-21T21:10:51.3476478Z   path: junit.xml
+2026-09-21T21:10:51.3476728Z   if-no-files-found: warn
+2026-09-21T21:10:51.3477001Z   compression-level: 6
+2026-09-21T21:10:51.3477255Z   overwrite: false
+2026-09-21T21:10:51.3477512Z   include-hidden-files: false
+2026-09-21T21:10:51.3477793Z   archive: true
+2026-09-21T21:10:51.3478024Z env:
+2026-09-21T21:10:51.3478244Z   CACHE_VERSION: 4
+2026-09-21T21:10:51.3478484Z   MYPY_CACHE_VERSION: 1
+2026-09-21T21:10:51.3478742Z   HA_SHORT_VERSION: 2026.10
+2026-09-21T21:10:51.3479056Z   ADDITIONAL_PYTHON_VERSIONS: []
+2026-09-21T21:10:51.3479589Z   MARIADB_VERSIONS: ['mariadb:10.3.32','mariadb:10.6.10','mariadb:10.10.3','mariadb:10.11.2','mariadb:11.4.9','mysql:8.0.32']
+2026-09-21T21:10:51.3480285Z   POSTGRESQL_VERSIONS: ['postgres:12.22','postgres:15.19', 'postgres:18.6']
+2026-09-21T21:10:51.3480865Z   SQLITE_VERSIONS: [{"version": "3.40.1", "year": "2022"}, {"version": "3.53.4", "year": "2026"}]
+2026-09-21T21:10:51.3481596Z   RECORDER_TEST_DIRS: tests/components/history tests/components/logbook tests/components/recorder tests/components/sensor
+2026-09-21T21:10:51.3482409Z   UV_CACHE_DIR: /tmp/uv-cache
+2026-09-21T21:10:51.3482715Z   APT_CACHE_VERSION: 1
+2026-09-21T21:10:51.3495249Z   SQLALCHEMY_WARN_20: 1
+2026-09-21T21:10:51.3495696Z   PYTHONASYNCIODEBUG: 1
+2026-09-21T21:10:51.3496054Z   HASS_CI: 1
+2026-09-21T21:10:51.3496413Z   CACHE_KEY: 22a3147dd785dad2d35c5a5e68b7c7d9
+2026-09-21T21:10:51.3496850Z   UV_PYTHON_INSTALL_DIR: /home/runner/work/_temp/uv-python-dir
+2026-09-21T21:10:51.3497235Z   UV_PYTHON: 3.14.5
+2026-09-21T21:10:51.3497486Z ##[endgroup]
+2026-09-21T21:10:51.4901778Z With the provided path, there will be 1 file uploaded
+2026-09-21T21:10:51.4906728Z Artifact name is valid!
+2026-09-21T21:10:51.4907319Z Root directory input is valid!
+2026-09-21T21:10:51.7428250Z Uploading artifact: test-results-full-3.14.5-5.zip
+2026-09-21T21:10:51.7467372Z Beginning upload of artifact content to blob storage
+2026-09-21T21:10:51.9650725Z Uploaded bytes 130432
+2026-09-21T21:10:51.9980548Z Finished uploading artifact content to blob storage!
+2026-09-21T21:10:51.9981569Z SHA256 digest of uploaded artifact is dc2dfb11ccbb05f486d06d6b4c173eeda32b1528ee5fa9a6b1ddd01ac576341c
+2026-09-21T21:10:51.9982707Z Finalizing artifact upload
+2026-09-21T21:10:52.2574059Z ##[error]Failed to FinalizeArtifact: Received non-retryable error: Failed request: (403) Forbidden: Error from intermediary with HTTP status code 403 "Forbidden"
+2026-09-21T21:10:52.2805631Z Post job cleanup.
+2026-09-21T21:10:52.2809402Z ##[start-action display=Set up uv and managed Python;id=__4ebeacbe-3e37-474a-8321-a833207d87db.python]
+2026-09-21T21:10:52.2854737Z Post job cleanup.
+2026-09-21T21:10:52.2857537Z ##[start-action display=Set up uv;id=__4ebeacbe-3e37-474a-8321-a833207d87db.python.uv]
+2026-09-21T21:10:52.2859746Z ##[end-action id=__4ebeacbe-3e37-474a-8321-a833207d87db.python.uv;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-09-21T21:10:52.2864921Z ##[end-action id=__4ebeacbe-3e37-474a-8321-a833207d87db.python;outcome=success;conclusion=success;duration_ms=5]
+2026-09-21T21:10:52.2926961Z Post job cleanup.
+2026-09-21T21:10:52.3753290Z [command]/usr/bin/git version
+2026-09-21T21:10:52.3789978Z git version 2.55.0
+2026-09-21T21:10:52.3823033Z Temporarily overriding HOME='/home/runner/work/_temp/4865e562-b2c1-4b48-a379-a6b619f1372d' before making global git config changes
+2026-09-21T21:10:52.3824342Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-21T21:10:52.3828264Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/core/core
+2026-09-21T21:10:52.3858210Z Removing SSH command configuration
+2026-09-21T21:10:52.3864798Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-21T21:10:52.3899559Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-21T21:10:52.4157074Z Removing HTTP extra header
+2026-09-21T21:10:52.4162037Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-21T21:10:52.4194533Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-21T21:10:52.4444422Z Removing includeIf entries pointing to credentials config files
+2026-09-21T21:10:52.4450230Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-21T21:10:52.4481598Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-21T21:10:52.4901167Z Cleaning up orphan processes

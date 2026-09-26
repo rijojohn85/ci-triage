@@ -1,0 +1,36 @@
+﻿2026-08-17T15:07:26.9080352Z Current runner version: '2.336.0'
+2026-08-17T15:07:26.9103920Z ##[group]Runner Image Provisioner
+2026-08-17T15:07:26.9105198Z Hosted Compute Agent
+2026-08-17T15:07:26.9105798Z Version: 20260729.566
+2026-08-17T15:07:26.9106496Z Commit: cf7153fe6e25b664e8693c24944bf2b00355d109
+2026-08-17T15:07:26.9107307Z Build Date: 2026-07-29T19:17:02Z
+2026-08-17T15:07:26.9108011Z Worker ID: {c9acd6c0-ac73-42c1-b609-fa0786db87f8}
+2026-08-17T15:07:26.9108819Z Azure Region: westus
+2026-08-17T15:07:26.9109395Z ##[endgroup]
+2026-08-17T15:07:26.9111160Z ##[group]Operating System
+2026-08-17T15:07:26.9111940Z Ubuntu
+2026-08-17T15:07:26.9112460Z 24.04.4
+2026-08-17T15:07:26.9113036Z LTS
+2026-08-17T15:07:26.9113564Z ##[endgroup]
+2026-08-17T15:07:26.9114120Z ##[group]Runner Image
+2026-08-17T15:07:26.9114985Z Image: ubuntu-24.04
+2026-08-17T15:07:26.9115569Z Version: 20260810.271.1
+2026-08-17T15:07:26.9116919Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260810.271/images/ubuntu/Ubuntu2404-Readme.md
+2026-08-17T15:07:26.9118449Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260810.271
+2026-08-17T15:07:26.9119466Z ##[endgroup]
+2026-08-17T15:07:26.9120637Z ##[group]GITHUB_TOKEN Permissions
+2026-08-17T15:07:26.9122523Z Contents: read
+2026-08-17T15:07:26.9123171Z Metadata: read
+2026-08-17T15:07:26.9123734Z ##[endgroup]
+2026-08-17T15:07:26.9126000Z Secret source: None
+2026-08-17T15:07:26.9127115Z Prepare workflow directory
+2026-08-17T15:07:26.9517966Z Prepare all required actions
+2026-08-17T15:07:26.9566780Z Getting action download info
+2026-08-17T15:07:27.3408450Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-08-17T15:07:27.4863859Z Download action repository 'erlef/setup-beam@54075bcc5e249e4758d363f27d099f55d843f124' (SHA:54075bcc5e249e4758d363f27d099f55d843f124)
+2026-08-17T15:07:38.2472131Z ##[warning]Failed to download action 'https://codeload.github.com/erlef/setup-beam/tar.gz/54075bcc5e249e4758d363f27d099f55d843f124'. Error: Response status code does not indicate success: 429 (Too Many Requests). 6BC0:3C1A50:377E166:37B7ECC:6A8323AF
+2026-08-17T15:07:38.2489367Z ##[warning]Back off 28.809 seconds before retry.
+2026-08-17T15:08:25.8608012Z ##[warning]Failed to download action 'https://codeload.github.com/erlef/setup-beam/tar.gz/54075bcc5e249e4758d363f27d099f55d843f124'. Error: Response status code does not indicate success: 429 (Too Many Requests). 6BC0:2F9619:4457C6:47649B:6A8323D7
+2026-08-17T15:08:25.8610335Z ##[warning]Back off 28.942 seconds before retry.
+2026-08-17T15:09:03.1648155Z ##[error]Response status code does not indicate success: 502 (Bad Gateway).
+2026-08-17T15:09:03.1665796Z ##[error]Failed to download archive 'https://codeload.github.com/erlef/setup-beam/tar.gz/54075bcc5e249e4758d363f27d099f55d843f124' after 3 attempts.

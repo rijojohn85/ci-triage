@@ -1,0 +1,637 @@
+﻿2026-09-24T22:51:39.9423720Z Current runner version: '2.337.0'
+2026-09-24T22:51:39.9438500Z ##[group]Runner Image Provisioner
+2026-09-24T22:51:39.9439240Z Hosted Compute Agent
+2026-09-24T22:51:39.9440320Z Version: 20260828.587
+2026-09-24T22:51:39.9441020Z Commit: abac92662cab4cc7352de4f9f9d2e2419aad9c29
+2026-09-24T22:51:39.9441700Z Build Date: 2026-08-28T16:44:25Z
+2026-09-24T22:51:39.9442260Z Worker ID: {64fa77eb-48bd-44c3-880c-d832370f1452}
+2026-09-24T22:51:39.9442740Z Azure Region: westus
+2026-09-24T22:51:39.9443200Z ##[endgroup]
+2026-09-24T22:51:39.9445070Z ##[group]Operating System
+2026-09-24T22:51:39.9445740Z macOS
+2026-09-24T22:51:39.9447120Z 26.6.2
+2026-09-24T22:51:39.9447830Z 25G83
+2026-09-24T22:51:39.9448260Z ##[endgroup]
+2026-09-24T22:51:39.9448680Z ##[group]Runner Image
+2026-09-24T22:51:39.9449160Z Image: macos-26-arm64
+2026-09-24T22:51:39.9449550Z Version: 20260907.0351.1
+2026-09-24T22:51:39.9450450Z Included Software: https://github.com/actions/runner-images/blob/macos-26-arm64/20260907.0351/images/macos/macos-26-arm64-Readme.md
+2026-09-24T22:51:39.9451650Z Image Release: https://github.com/actions/runner-images/releases/tag/macos-26-arm64%2F20260907.0351
+2026-09-24T22:51:39.9452470Z ##[endgroup]
+2026-09-24T22:51:39.9453240Z ##[group]GITHUB_TOKEN Permissions
+2026-09-24T22:51:39.9454700Z Contents: read
+2026-09-24T22:51:39.9455240Z Metadata: read
+2026-09-24T22:51:39.9455630Z ##[endgroup]
+2026-09-24T22:51:39.9457710Z Secret source: None
+2026-09-24T22:51:39.9458420Z Cache mode: write
+2026-09-24T22:51:39.9459010Z Prepare workflow directory
+2026-09-24T22:51:39.9726340Z Prepare all required actions
+2026-09-24T22:51:39.9758580Z Getting action download info
+2026-09-24T22:51:40.2604080Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-09-24T22:51:40.6406120Z Complete job name: macos-latest - chrome
+2026-09-24T22:51:40.6838460Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+2026-09-24T22:51:40.6839220Z with:
+2026-09-24T22:51:40.6839670Z   repository: microsoft/playwright
+2026-09-24T22:51:40.6842270Z   token: ***
+2026-09-24T22:51:40.6842560Z   ssh-strict: true
+2026-09-24T22:51:40.6842860Z   ssh-user: git
+2026-09-24T22:51:40.6843180Z   persist-credentials: true
+2026-09-24T22:51:40.6843510Z   clean: true
+2026-09-24T22:51:40.6843830Z   sparse-checkout-cone-mode: true
+2026-09-24T22:51:40.6844190Z   fetch-depth: 1
+2026-09-24T22:51:40.6844490Z   fetch-tags: false
+2026-09-24T22:51:40.6844910Z   show-progress: true
+2026-09-24T22:51:40.6845230Z   lfs: false
+2026-09-24T22:51:40.6845530Z   submodules: false
+2026-09-24T22:51:40.6845840Z   set-safe-directory: true
+2026-09-24T22:51:40.6846190Z   allow-unsafe-pr-checkout: false
+2026-09-24T22:51:40.6846650Z env:
+2026-09-24T22:51:40.6846940Z   FORCE_COLOR: 1
+2026-09-24T22:51:40.6847240Z   DEBUG: pw:mcp:error
+2026-09-24T22:51:40.6847580Z ##[endgroup]
+2026-09-24T22:51:41.4749190Z Syncing repository: microsoft/playwright
+2026-09-24T22:51:41.4751180Z ##[group]Getting Git version info
+2026-09-24T22:51:41.4751930Z Working directory is '/Users/runner/work/playwright/playwright'
+2026-09-24T22:51:41.4752990Z [command]/opt/homebrew/bin/git version
+2026-09-24T22:51:41.5223320Z git version 2.55.0
+2026-09-24T22:51:41.5236710Z ##[endgroup]
+2026-09-24T22:51:41.5242650Z Copying '/Users/runner/.gitconfig' to '/Users/runner/work/_temp/e8cb007e-1a70-4322-8b8d-e3cdb32f7261/.gitconfig'
+2026-09-24T22:51:41.5248380Z Temporarily overriding HOME='/Users/runner/work/_temp/e8cb007e-1a70-4322-8b8d-e3cdb32f7261' before making global git config changes
+2026-09-24T22:51:41.5249530Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-24T22:51:41.5252550Z [command]/opt/homebrew/bin/git config --global --add safe.directory /Users/runner/work/playwright/playwright
+2026-09-24T22:51:41.5434840Z Deleting the contents of '/Users/runner/work/playwright/playwright'
+2026-09-24T22:51:41.5457910Z ##[group]Determining repository object format
+2026-09-24T22:51:41.5459200Z ##[endgroup]
+2026-09-24T22:51:41.5461170Z ##[group]Initializing the repository
+2026-09-24T22:51:41.5462220Z [command]/opt/homebrew/bin/git init /Users/runner/work/playwright/playwright
+2026-09-24T22:51:41.5666740Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-09-24T22:51:41.5668090Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-09-24T22:51:41.5669210Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-09-24T22:51:41.5670230Z hint: call:
+2026-09-24T22:51:41.5670760Z hint:
+2026-09-24T22:51:41.5671380Z hint: 	git config --global init.defaultBranch <name>
+2026-09-24T22:51:41.5671880Z hint:
+2026-09-24T22:51:41.5691210Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-09-24T22:51:41.5692510Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-09-24T22:51:41.5693230Z hint:
+2026-09-24T22:51:41.5693650Z hint: 	git branch -m <name>
+2026-09-24T22:51:41.5694040Z hint:
+2026-09-24T22:51:41.5694950Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-09-24T22:51:41.5696020Z Initialized empty Git repository in /Users/runner/work/playwright/playwright/.git/
+2026-09-24T22:51:41.5697840Z [command]/opt/homebrew/bin/git remote add origin https://github.com/microsoft/playwright
+2026-09-24T22:51:41.5765970Z ##[endgroup]
+2026-09-24T22:51:41.5766760Z ##[group]Disabling automatic garbage collection
+2026-09-24T22:51:41.5768470Z [command]/opt/homebrew/bin/git config --local gc.auto 0
+2026-09-24T22:51:41.5844910Z ##[endgroup]
+2026-09-24T22:51:41.5845760Z ##[group]Setting up auth
+2026-09-24T22:51:41.5846260Z Removing SSH command configuration
+2026-09-24T22:51:41.5850120Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-24T22:51:41.5953570Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-24T22:51:41.7303150Z Removing HTTP extra header
+2026-09-24T22:51:41.7304290Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-24T22:51:41.7391390Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-24T22:51:41.8177840Z Removing includeIf entries pointing to credentials config files
+2026-09-24T22:51:41.8181080Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-24T22:51:41.8236570Z [command]/opt/homebrew/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-24T22:51:41.9839050Z [command]/opt/homebrew/bin/git config --file /Users/runner/work/_temp/git-credentials-cc218202-f20b-4e6d-b385-6c8d59f0814a.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-09-24T22:51:41.9970300Z [command]/opt/homebrew/bin/git config --local includeIf.gitdir:/Users/runner/work/playwright/playwright/.git.path /Users/runner/work/_temp/git-credentials-cc218202-f20b-4e6d-b385-6c8d59f0814a.config
+2026-09-24T22:51:41.9972920Z [command]/opt/homebrew/bin/git config --local includeIf.gitdir:/Users/runner/work/playwright/playwright/.git/worktrees/*.path /Users/runner/work/_temp/git-credentials-cc218202-f20b-4e6d-b385-6c8d59f0814a.config
+2026-09-24T22:51:41.9975630Z [command]/opt/homebrew/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-cc218202-f20b-4e6d-b385-6c8d59f0814a.config
+2026-09-24T22:51:41.9978210Z [command]/opt/homebrew/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-cc218202-f20b-4e6d-b385-6c8d59f0814a.config
+2026-09-24T22:51:41.9998970Z ##[endgroup]
+2026-09-24T22:51:41.9999690Z ##[group]Fetching the repository
+2026-09-24T22:51:42.0004300Z [command]/opt/homebrew/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +0d05cbad3988557233b39a7a6f61b6bb81282bec:refs/remotes/pull/42922/merge
+2026-09-24T22:51:43.8409710Z From https://github.com/microsoft/playwright
+2026-09-24T22:51:43.8415290Z  * [new ref]         0d05cbad3988557233b39a7a6f61b6bb81282bec -> pull/42922/merge
+2026-09-24T22:51:43.8437100Z ##[endgroup]
+2026-09-24T22:51:43.8445360Z ##[group]Determining the checkout info
+2026-09-24T22:51:43.8459430Z ##[endgroup]
+2026-09-24T22:51:43.8472130Z [command]/opt/homebrew/bin/git sparse-checkout disable
+2026-09-24T22:51:43.8611280Z [command]/opt/homebrew/bin/git config --local --unset-all extensions.worktreeConfig
+2026-09-24T22:51:43.8616140Z ##[group]Checking out the ref
+2026-09-24T22:51:43.8616730Z [command]/opt/homebrew/bin/git checkout --progress --force refs/remotes/pull/42922/merge
+2026-09-24T22:51:44.3647300Z HEAD is now at 0d05cba Merge 19c9e7263d84e57fbc7687cd75509ea521d2d9fb into df9cbf1bfaca2b336b12187049334d57fe90d209
+2026-09-24T22:51:44.3656740Z ##[endgroup]
+2026-09-24T22:51:44.3764660Z [command]/opt/homebrew/bin/git log -1 --format=%H
+2026-09-24T22:51:44.3835950Z 0d05cbad3988557233b39a7a6f61b6bb81282bec
+2026-09-24T22:51:44.4139860Z Prepare all required actions
+2026-09-24T22:51:44.4140470Z Getting action download info
+2026-09-24T22:51:44.5341730Z Download action repository 'actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38' (SHA:249970729cb0ef3589644e2896645e5dc5ba9c38)
+2026-09-24T22:51:44.6950860Z ##[group]Run ./.github/actions/run-test
+2026-09-24T22:51:44.6951100Z with:
+2026-09-24T22:51:44.6951240Z   node-version: 22
+2026-09-24T22:51:44.6951440Z   command: npm run test-mcp -- --project=chrome
+2026-09-24T22:51:44.6951690Z   bot-name: mcp-macos-latest-chrome
+2026-09-24T22:51:44.6951900Z   shard-index: 0
+2026-09-24T22:51:44.6952030Z   shell: bash
+2026-09-24T22:51:44.6952160Z env:
+2026-09-24T22:51:44.6952290Z   FORCE_COLOR: 1
+2026-09-24T22:51:44.6952430Z   DEBUG: pw:mcp:error
+2026-09-24T22:51:44.6952610Z ##[endgroup]
+2026-09-24T22:51:44.7006900Z ##[start-action display=Run actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38;id=__self.__actions_setup-node]
+2026-09-24T22:51:44.7086180Z ##[group]Run actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+2026-09-24T22:51:44.7086580Z with:
+2026-09-24T22:51:44.7086770Z   node-version: 22
+2026-09-24T22:51:44.7086960Z   check-latest: false
+2026-09-24T22:51:44.7089230Z   token: ***
+2026-09-24T22:51:44.7089420Z   package-manager-cache: true
+2026-09-24T22:51:44.7089630Z env:
+2026-09-24T22:51:44.7089780Z   FORCE_COLOR: 1
+2026-09-24T22:51:44.7089920Z   DEBUG: pw:mcp:error
+2026-09-24T22:51:44.7090070Z ##[endgroup]
+2026-09-24T22:51:44.8586810Z Found in cache @ /Users/runner/hostedtoolcache/node/22.23.2/arm64
+2026-09-24T22:51:44.8589700Z ##[group]Environment details
+2026-09-24T22:51:45.4287950Z node: v22.23.2
+2026-09-24T22:51:45.4294290Z npm: 10.9.8
+2026-09-24T22:51:45.4301550Z yarn: 1.22.22
+2026-09-24T22:51:45.4319430Z ##[endgroup]
+2026-09-24T22:51:45.4459530Z ##[end-action id=__self.__actions_setup-node;outcome=success;conclusion=success;duration_ms=739]
+2026-09-24T22:51:45.4464200Z ##[start-action display=Run echo "::group::npm ci";id=__self.__run]
+2026-09-24T22:51:45.4505930Z ##[group]Run echo "::group::npm ci"
+2026-09-24T22:51:45.4506290Z echo "::group::npm ci"
+2026-09-24T22:51:45.4506530Z npm ci
+2026-09-24T22:51:45.4506700Z echo "::endgroup::"
+2026-09-24T22:51:45.4566980Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+2026-09-24T22:51:45.4567320Z env:
+2026-09-24T22:51:45.4567500Z   FORCE_COLOR: 1
+2026-09-24T22:51:45.4567720Z   DEBUG: pw:mcp:error
+2026-09-24T22:51:45.4567900Z ##[endgroup]
+2026-09-24T22:51:45.5402030Z ##[group]npm ci
+2026-09-24T22:51:52.4611400Z 
+2026-09-24T22:51:52.4618250Z added 627 packages, and audited 644 packages in 7s
+2026-09-24T22:51:52.4618610Z 
+2026-09-24T22:51:52.4618880Z 185 packages are looking for funding
+2026-09-24T22:51:52.4619230Z   run `npm fund` for details
+2026-09-24T22:51:52.4761360Z 
+2026-09-24T22:51:52.4762330Z 9 vulnerabilities (4 moderate, 5 high)
+2026-09-24T22:51:52.4762940Z 
+2026-09-24T22:51:52.4763350Z To address issues that do not require attention, run:
+2026-09-24T22:51:52.4763910Z   npm audit fix
+2026-09-24T22:51:52.4764140Z 
+2026-09-24T22:51:52.4764370Z To address all issues, run:
+2026-09-24T22:51:52.4764840Z   npm audit fix --force
+2026-09-24T22:51:52.4765200Z 
+2026-09-24T22:51:52.4765400Z Run `npm audit` for details.
+2026-09-24T22:51:52.6004860Z ##[endgroup]
+2026-09-24T22:51:52.6030810Z ##[end-action id=__self.__run;outcome=success;conclusion=success;duration_ms=7152]
+2026-09-24T22:51:52.6044460Z ##[start-action display=Run echo "::group::npm run build";id=__self.__run_2]
+2026-09-24T22:51:52.6090950Z ##[group]Run echo "::group::npm run build"
+2026-09-24T22:51:52.6092190Z echo "::group::npm run build"
+2026-09-24T22:51:52.6092980Z npm run build
+2026-09-24T22:51:52.6094170Z echo "::endgroup::"
+2026-09-24T22:51:52.6158210Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+2026-09-24T22:51:52.6158730Z env:
+2026-09-24T22:51:52.6158890Z   FORCE_COLOR: 1
+2026-09-24T22:51:52.6159100Z   DEBUG: pw:mcp:error
+2026-09-24T22:51:52.6159870Z ##[endgroup]
+2026-09-24T22:51:52.6652350Z ##[group]npm run build
+2026-09-24T22:51:52.7984650Z 
+2026-09-24T22:51:52.7985160Z > playwright-internal@1.64.0-next build
+2026-09-24T22:51:52.7985670Z > node utils/build/build.js
+2026-09-24T22:51:52.7985800Z 
+2026-09-24T22:51:53.1801190Z ==== Starting parallel group
+2026-09-24T22:51:53.1902510Z ==== Running npm ci --save=false --fund=false --audit=false in /Users/runner/work/playwright/playwright/tests/playwright-test/stable-test-runner
+2026-09-24T22:51:54.1270250Z 
+2026-09-24T22:51:54.1271050Z added 3 packages in 836ms
+2026-09-24T22:51:54.1319440Z ==== Parallel group finished in 950 ms
+2026-09-24T22:51:54.1332600Z ==== Running node utils/generate_clip_paths.js in /Users/runner/work/playwright/playwright
+2026-09-24T22:51:54.2112970Z ==== Running node utils/generate_injected.js in /Users/runner/work/playwright/playwright
+2026-09-24T22:51:54.3729560Z ==== Running esbuild: packages/playwright-client/src/index.ts
+2026-09-24T22:51:54.4435770Z      bundle: packages/playwright-client/lib/index.mjs  (93 files, 4 external, 2 licenses, 504.3 KB)
+2026-09-24T22:51:54.4436730Z ==== Done in 71 ms
+2026-09-24T22:51:54.4443390Z ==== Running esbuild: packages/playwright-core/src/bootstrap.ts, packages/playwright-core/src/entry/cliDaemon.ts, packages/playwright-core/src/entry/dashboardApp.ts, packages/playwright-core/src/entry/mcp.ts, packages/playwright-core/src/entry/oopBrowserDownload.ts, packages/playwright-core/src/tools/cli-client/*.ts, packages/playwright-core/src/package.ts, packages/playwright-core/src/tools/utils/socketConnection.ts, packages/playwright-core/src/tools/utils/extension.ts
+2026-09-24T22:51:54.4587410Z ==== Done in 15 ms
+2026-09-24T22:51:54.4588330Z ==== Running esbuild: packages/playwright-core/src/serverRegistry.js
+2026-09-24T22:51:54.4670600Z      bundle: packages/playwright-core/lib/serverRegistry.js  (5 files, 0 external, 2 licenses, 55.7 KB)
+2026-09-24T22:51:54.4671880Z ==== Done in 8 ms
+2026-09-24T22:51:54.4672610Z ==== Running esbuild: packages/playwright-core/src/utilsBundle.ts
+2026-09-24T22:51:54.7576370Z      bundle: packages/playwright-core/lib/utilsBundle.js  (608 files, 3 external, 79 licenses, 2992.1 KB)
+2026-09-24T22:51:54.7577180Z ==== Done in 291 ms
+2026-09-24T22:51:54.7577820Z ==== Running esbuild: packages/playwright-core/src/coreBundle.ts
+2026-09-24T22:51:54.9064080Z      bundle: packages/playwright-core/lib/coreBundle.js  (405 files, 27 external, 3489.2 KB)
+2026-09-24T22:51:54.9065150Z ==== Done in 149 ms
+2026-09-24T22:51:54.9204740Z ==== coreBundle.js: no node_modules/ references
+2026-09-24T22:51:54.9205380Z ==== Running esbuild: packages/playwright/src/transform/esmLoader.ts
+2026-09-24T22:51:54.9340620Z      bundle: packages/playwright/lib/transform/esmLoader.js  (51 files, 3 external, 12 licenses, 282.4 KB)
+2026-09-24T22:51:54.9344180Z ==== Done in 13 ms
+2026-09-24T22:51:54.9346230Z ==== Running esbuild: packages/playwright/src/*.ts, packages/playwright/src/agents/**/*.ts, packages/playwright/src/cli/**/*.ts, packages/playwright/src/mcp/**/*.ts
+2026-09-24T22:51:54.9437840Z ==== Done in 9 ms
+2026-09-24T22:51:54.9438450Z ==== Running esbuild: packages/playwright/src/transform/babelBundle.ts
+2026-09-24T22:51:55.0907890Z      bundle: packages/playwright/lib/transform/babelBundle.js  (321 files, 0 external, 69 licenses, 2758.5 KB)
+2026-09-24T22:51:55.0914520Z ==== Done in 147 ms
+2026-09-24T22:51:55.0915580Z ==== Running esbuild: packages/playwright/src/matchers/expect.ts
+2026-09-24T22:51:55.1290080Z      bundle: packages/playwright/lib/matchers/expect.js  (59 files, 2 external, 27 licenses, 534.3 KB)
+2026-09-24T22:51:55.1291210Z ==== Done in 38 ms
+2026-09-24T22:51:55.1291850Z ==== Running esbuild: packages/playwright/src/common/index.ts
+2026-09-24T22:51:55.1403280Z      bundle: packages/playwright/lib/common/index.js  (20 files, 8 external, 113.4 KB)
+2026-09-24T22:51:55.1403980Z ==== Done in 11 ms
+2026-09-24T22:51:55.1404960Z ==== Running esbuild: packages/playwright/src/runner/index.ts
+2026-09-24T22:51:55.1589360Z      bundle: packages/playwright/lib/runner/index.js  (48 files, 8 external, 317.4 KB)
+2026-09-24T22:51:55.1653060Z ==== Done in 18 ms
+2026-09-24T22:51:55.1655390Z ==== Running esbuild: packages/playwright/src/isomorphic/index.ts
+2026-09-24T22:51:55.1657050Z      bundle: packages/playwright/lib/isomorphic.js  (3 files, 0 external, 8.0 KB)
+2026-09-24T22:51:55.1661460Z ==== Done in 7 ms
+2026-09-24T22:51:55.1662790Z ==== Running esbuild: packages/playwright/src/loader/loaderProcessEntry.ts
+2026-09-24T22:51:55.1698650Z      bundle: packages/playwright/lib/loader/loaderProcessEntry.js  (2 files, 1 external, 1.2 KB)
+2026-09-24T22:51:55.1700210Z ==== Done in 4 ms
+2026-09-24T22:51:55.1701140Z ==== Running esbuild: packages/playwright/src/worker/workerProcessEntry.ts
+2026-09-24T22:51:55.1831050Z      bundle: packages/playwright/lib/worker/workerProcessEntry.js  (8 files, 5 external, 74.2 KB)
+2026-09-24T22:51:55.1831860Z ==== Done in 13 ms
+2026-09-24T22:51:55.1832420Z ==== Running esbuild: packages/playwright-core/src/server/electron/loader.ts
+2026-09-24T22:51:55.1857040Z      bundle: packages/playwright-core/lib/server/electron/loader.js  (2 files, 1 external, 5.1 KB)
+2026-09-24T22:51:55.1857660Z ==== Done in 2 ms
+2026-09-24T22:51:55.1865260Z ==== Copied xdg-open to /Users/runner/work/playwright/playwright/packages/playwright-core/lib/xdg-open
+2026-09-24T22:51:55.1867220Z ==== Running /Users/runner/hostedtoolcache/node/22.23.2/arm64/bin/node /Users/runner/work/playwright/playwright/node_modules/vite/bin/vite.js build --clearScreen=false in /Users/runner/work/playwright/playwright/packages/html-reporter
+2026-09-24T22:51:55.5712520Z vite v8.1.0 building client environment for production...
+2026-09-24T22:51:55.5742870Z [warn] `inlineDynamicImports` option is deprecated, please use `codeSplitting: false` instead.
+2026-09-24T22:51:55.5917560Z 
+2026-09-24T22:51:55.6810480Z transforming...✓ 89 modules transformed.
+2026-09-24T22:51:55.7018970Z rendering chunks...
+2026-09-24T22:51:55.7810390Z computing gzip size...
+2026-09-24T22:51:55.7878400Z ../playwright-core/lib/vite/htmlReport/index.html    0.46 kB │ gzip:   0.29 kB
+2026-09-24T22:51:55.7879690Z ../playwright-core/lib/vite/htmlReport/report.css  100.45 kB │ gzip:  17.49 kB
+2026-09-24T22:51:55.7881300Z ../playwright-core/lib/vite/htmlReport/report.js   415.88 kB │ gzip: 174.94 kB
+2026-09-24T22:51:55.7881990Z 
+2026-09-24T22:51:55.7929070Z ✓ built in 216ms
+2026-09-24T22:51:55.8482600Z ==== Running /Users/runner/hostedtoolcache/node/22.23.2/arm64/bin/node /Users/runner/work/playwright/playwright/node_modules/vite/bin/vite.js build --clearScreen=false in /Users/runner/work/playwright/playwright/packages/recorder
+2026-09-24T22:51:56.0586170Z vite v8.1.0 building client environment for production...
+2026-09-24T22:51:56.0675030Z 
+2026-09-24T22:51:56.1718860Z transforming...✓ 137 modules transformed.
+2026-09-24T22:51:56.2046380Z rendering chunks...
+2026-09-24T22:51:56.2586630Z computing gzip size...
+2026-09-24T22:51:56.2625960Z ../playwright-core/lib/vite/recorder/index.html                              1.07 kB │ gzip:   0.65 kB
+2026-09-24T22:51:56.2627180Z ../playwright-core/lib/vite/recorder/assets/codicon-DCmgc-ay.ttf            80.34 kB
+2026-09-24T22:51:56.2628600Z ../playwright-core/lib/vite/recorder/assets/codeMirrorModule--QdMvsKi.css    6.25 kB │ gzip:   1.62 kB
+2026-09-24T22:51:56.2630410Z ../playwright-core/lib/vite/recorder/assets/index-BZpYJZ-P.css              85.50 kB │ gzip:  14.98 kB
+2026-09-24T22:51:56.2632700Z ../playwright-core/lib/vite/recorder/assets/codeMirrorModule-DK72OMRi.js   307.37 kB │ gzip: 101.31 kB
+2026-09-24T22:51:56.2635640Z ../playwright-core/lib/vite/recorder/assets/index-Cn0mmDuv.js              358.64 kB │ gzip: 110.22 kB
+2026-09-24T22:51:56.2636430Z 
+2026-09-24T22:51:56.2637890Z ✓ built in 203ms
+2026-09-24T22:51:56.2711980Z ==== Running /Users/runner/hostedtoolcache/node/22.23.2/arm64/bin/node /Users/runner/work/playwright/playwright/node_modules/vite/bin/vite.js build --clearScreen=false in /Users/runner/work/playwright/playwright/packages/trace-viewer
+2026-09-24T22:51:56.5031180Z vite v8.1.0 building client environment for production...
+2026-09-24T22:51:56.5090890Z 
+2026-09-24T22:51:56.6426110Z transforming...✓ 255 modules transformed.
+2026-09-24T22:51:56.6912450Z rendering chunks...
+2026-09-24T22:51:56.7704730Z computing gzip size...
+2026-09-24T22:51:56.7788620Z ../playwright-core/lib/vite/traceViewer/snapshot.html                             0.38 kB │ gzip:   0.28 kB
+2026-09-24T22:51:56.7789670Z ../playwright-core/lib/vite/traceViewer/uiMode.html                               0.72 kB │ gzip:   0.38 kB
+2026-09-24T22:51:56.7790950Z ../playwright-core/lib/vite/traceViewer/index.html                                2.36 kB │ gzip:   1.05 kB
+2026-09-24T22:51:56.7792010Z ../playwright-core/lib/vite/traceViewer/codicon.DCmgc-ay.ttf                     80.34 kB
+2026-09-24T22:51:56.7793020Z ../playwright-core/lib/vite/traceViewer/index.B_TqY17P.css                        2.05 kB │ gzip:   0.74 kB
+2026-09-24T22:51:56.7794000Z ../playwright-core/lib/vite/traceViewer/xtermModule.kHJ-D0s7.css                  2.85 kB │ gzip:   0.77 kB
+2026-09-24T22:51:56.7795070Z ../playwright-core/lib/vite/traceViewer/codeMirrorModule.-QdMvsKi.css             6.25 kB │ gzip:   1.62 kB
+2026-09-24T22:51:56.7796310Z ../playwright-core/lib/vite/traceViewer/uiMode.CyMfwkXJ.css                      54.59 kB │ gzip:   8.65 kB
+2026-09-24T22:51:56.7797470Z ../playwright-core/lib/vite/traceViewer/defaultSettingsView.C8BeHuxd.css        107.27 kB │ gzip:  18.93 kB
+2026-09-24T22:51:56.7798450Z ../playwright-core/lib/vite/traceViewer/snapshot.B_Jk1wbt.js                      0.65 kB │ gzip:   0.39 kB
+2026-09-24T22:51:56.7799590Z ../playwright-core/lib/vite/traceViewer/assets/urlMatch-L3liM589.js               2.51 kB │ gzip:   1.19 kB
+2026-09-24T22:51:56.7800590Z ../playwright-core/lib/vite/traceViewer/index.DDCeqIAJ.js                         6.63 kB │ gzip:   2.56 kB
+2026-09-24T22:51:56.7802190Z ../playwright-core/lib/vite/traceViewer/uiMode.BTAwNWJp.js                       38.12 kB │ gzip:  12.54 kB
+2026-09-24T22:51:56.7803280Z ../playwright-core/lib/vite/traceViewer/assets/xtermModule-8EM7-Eln.js          288.73 kB │ gzip:  68.26 kB
+2026-09-24T22:51:56.7804290Z ../playwright-core/lib/vite/traceViewer/assets/codeMirrorModule-DYSgjQni.js     307.39 kB │ gzip: 101.32 kB
+2026-09-24T22:51:56.7805380Z ../playwright-core/lib/vite/traceViewer/assets/defaultSettingsView-DGtOyZhI.js  663.74 kB │ gzip: 194.92 kB
+2026-09-24T22:51:56.7805880Z 
+2026-09-24T22:51:56.7806250Z [plugin builtin:vite-reporter] 
+2026-09-24T22:51:56.7806720Z (!) Some chunks are larger than 500 kB after minification. Consider:
+2026-09-24T22:51:56.7807300Z - Using dynamic import() to code-split the application
+2026-09-24T22:51:56.7808160Z - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+2026-09-24T22:51:56.7809180Z - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+2026-09-24T22:51:56.7809750Z ✓ built in 276ms
+2026-09-24T22:51:56.7810220Z vite v8.1.0 building sw environment for production...
+2026-09-24T22:51:56.7837590Z 
+2026-09-24T22:51:56.7948320Z transforming...✓ 37 modules transformed.
+2026-09-24T22:51:56.8012730Z rendering chunks...
+2026-09-24T22:51:56.8111880Z computing gzip size...
+2026-09-24T22:51:56.8124450Z ../playwright-core/lib/vite/traceViewer/sw.bundle.js  96.73 kB │ gzip: 33.53 kB
+2026-09-24T22:51:56.8124920Z 
+2026-09-24T22:51:56.8125520Z ✓ built in 33ms
+2026-09-24T22:51:56.8246200Z ==== Running /Users/runner/hostedtoolcache/node/22.23.2/arm64/bin/node /Users/runner/work/playwright/playwright/node_modules/vite/bin/vite.js build --clearScreen=false in /Users/runner/work/playwright/playwright/packages/dashboard
+2026-09-24T22:51:57.0385710Z vite v8.1.0 building client environment for production...
+2026-09-24T22:51:57.0453870Z 
+2026-09-24T22:51:57.1277840Z transforming...✓ 108 modules transformed.
+2026-09-24T22:51:57.1652390Z rendering chunks...
+2026-09-24T22:51:57.2076300Z computing gzip size...
+2026-09-24T22:51:57.2119180Z ../playwright-core/lib/vite/dashboard/index.html                              1.07 kB │ gzip:   0.65 kB
+2026-09-24T22:51:57.2121700Z ../playwright-core/lib/vite/dashboard/assets/safari-na3_-uQk.svg              5.25 kB │ gzip:   2.03 kB
+2026-09-24T22:51:57.2123190Z ../playwright-core/lib/vite/dashboard/assets/firefox-1bWoP6pv.svg             7.48 kB │ gzip:   2.27 kB
+2026-09-24T22:51:57.2125390Z ../playwright-core/lib/vite/dashboard/assets/firefox-nightly-Cp5nfeDT.svg     9.14 kB │ gzip:   2.56 kB
+2026-09-24T22:51:57.2126810Z ../playwright-core/lib/vite/dashboard/assets/firefox-beta-k3eOH_eK.svg        9.28 kB │ gzip:   2.97 kB
+2026-09-24T22:51:57.2128240Z ../playwright-core/lib/vite/dashboard/assets/codicon-DCmgc-ay.ttf            80.34 kB
+2026-09-24T22:51:57.2129820Z ../playwright-core/lib/vite/dashboard/assets/codeMirrorModule--QdMvsKi.css    6.25 kB │ gzip:   1.62 kB
+2026-09-24T22:51:57.2133040Z ../playwright-core/lib/vite/dashboard/assets/index-AwgwcYie.css             139.11 kB │ gzip:  24.69 kB
+2026-09-24T22:51:57.2134300Z ../playwright-core/lib/vite/dashboard/assets/codeMirrorModule-CQ8RZGBm.js   307.37 kB │ gzip: 101.31 kB
+2026-09-24T22:51:57.2137120Z ../playwright-core/lib/vite/dashboard/assets/index-hRvO4yU2.js              336.49 kB │ gzip: 111.24 kB
+2026-09-24T22:51:57.2137760Z 
+2026-09-24T22:51:57.2138160Z ✓ built in 173ms
+2026-09-24T22:51:57.2199710Z ==== Running /Users/runner/hostedtoolcache/node/22.23.2/arm64/bin/node /Users/runner/work/playwright/playwright/node_modules/vite/bin/vite.js build --clearScreen=false in /Users/runner/work/playwright/playwright/packages/extension
+2026-09-24T22:51:57.3684110Z vite v8.1.0 building client environment for production...
+2026-09-24T22:51:57.3748060Z 
+2026-09-24T22:51:57.4086100Z transforming...✓ 25 modules transformed.
+2026-09-24T22:51:57.4149270Z rendering chunks...
+2026-09-24T22:51:57.4407060Z [vite-plugin-static-copy] Copied 5 items.
+2026-09-24T22:51:57.4408370Z computing gzip size...
+2026-09-24T22:51:57.4460380Z dist/status.html             0.44 kB │ gzip:  0.27 kB
+2026-09-24T22:51:57.4460940Z dist/lib/ui/icon-16.png      0.57 kB
+2026-09-24T22:51:57.4461630Z dist/connect.html            1.13 kB │ gzip:  0.64 kB
+2026-09-24T22:51:57.4462680Z dist/lib/ui/icon-32.png      1.25 kB
+2026-09-24T22:51:57.4463270Z dist/lib/ui/authToken.css   49.86 kB │ gzip:  9.96 kB
+2026-09-24T22:51:57.4463890Z dist/lib/ui/status.js        3.05 kB │ gzip:  1.05 kB
+2026-09-24T22:51:57.4464460Z dist/lib/ui/connect.js       6.96 kB │ gzip:  2.29 kB
+2026-09-24T22:51:57.4465040Z dist/lib/ui/authToken.js   495.53 kB │ gzip: 95.63 kB
+2026-09-24T22:51:57.4465300Z 
+2026-09-24T22:51:57.4465830Z ✓ built in 77ms
+2026-09-24T22:51:57.4466290Z vite v8.1.0 building sw environment for production...
+2026-09-24T22:51:57.4498930Z 
+2026-09-24T22:51:57.4517720Z transforming...✓ 5 modules transformed.
+2026-09-24T22:51:57.4527300Z rendering chunks...
+2026-09-24T22:51:57.4539190Z computing gzip size...
+2026-09-24T22:51:57.4542690Z dist/lib/background.mjs  19.34 kB │ gzip: 5.07 kB
+2026-09-24T22:51:57.4543010Z 
+2026-09-24T22:51:57.4543190Z ✓ built in 8ms
+2026-09-24T22:51:57.4637180Z ==== Running node /Users/runner/work/playwright/playwright/utils/generate_cli_help.js in /Users/runner/work/playwright/playwright
+2026-09-24T22:51:57.4650150Z ==== Running node /Users/runner/work/playwright/playwright/utils/generate_injected.js in /Users/runner/work/playwright/playwright
+2026-09-24T22:51:57.4677450Z ==== Running node /Users/runner/work/playwright/playwright/utils/generate_channels.js in /Users/runner/work/playwright/playwright
+2026-09-24T22:51:57.4806750Z ==== Running node /Users/runner/work/playwright/playwright/utils/generate_types/index.js in /Users/runner/work/playwright/playwright
+2026-09-24T22:51:57.7579220Z Writing  packages/playwright-core/lib/tools/cli-client/help.json
+2026-09-24T22:51:59.9428900Z ##[endgroup]
+2026-09-24T22:51:59.9510500Z ##[end-action id=__self.__run_2;outcome=success;conclusion=success;duration_ms=7342]
+2026-09-24T22:51:59.9527400Z ##[start-action display=Run echo "::group::npx playwright install --with-deps";id=__self.__run_3]
+2026-09-24T22:51:59.9552980Z ##[group]Run echo "::group::npx playwright install --with-deps"
+2026-09-24T22:51:59.9553340Z echo "::group::npx playwright install --with-deps"
+2026-09-24T22:51:59.9553680Z npx playwright install --with-deps 
+2026-09-24T22:51:59.9553960Z echo "::endgroup::"
+2026-09-24T22:51:59.9601010Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+2026-09-24T22:51:59.9601300Z env:
+2026-09-24T22:51:59.9601530Z   FORCE_COLOR: 1
+2026-09-24T22:51:59.9601750Z   DEBUG: pw:mcp:error
+2026-09-24T22:51:59.9602000Z ##[endgroup]
+2026-09-24T22:52:00.0184450Z ##[group]npx playwright install --with-deps
+2026-09-24T22:52:00.7971590Z Downloading Chrome for Testing 154.0.8037.0 (playwright chromium v1246) from https://cdn.playwright.dev/builds/cft/154.0.8037.0/mac-arm64/chrome-mac-arm64.zip
+2026-09-24T22:52:01.4947610Z |                                                                                |   0% of 182.5 MiB
+2026-09-24T22:52:02.0755040Z |■■■■■■■■                                                                        |  10% of 182.5 MiB
+2026-09-24T22:52:02.3202450Z |■■■■■■■■■■■■■■■■                                                                |  20% of 182.5 MiB
+2026-09-24T22:52:02.5396420Z |■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 182.5 MiB
+2026-09-24T22:52:02.9985930Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 182.5 MiB
+2026-09-24T22:52:03.5836820Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 182.5 MiB
+2026-09-24T22:52:03.8482850Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 182.5 MiB
+2026-09-24T22:52:04.0594500Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 182.5 MiB
+2026-09-24T22:52:04.2676390Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 182.5 MiB
+2026-09-24T22:52:04.4737280Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 182.5 MiB
+2026-09-24T22:52:04.6818250Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 182.5 MiB
+2026-09-24T22:52:07.0639930Z Chrome for Testing 154.0.8037.0 (playwright chromium v1246) downloaded to /Users/runner/Library/Caches/ms-playwright/chromium-1246
+2026-09-24T22:52:07.0645250Z Downloading Chrome Headless Shell 154.0.8037.0 (playwright chromium-headless-shell v1246) from https://cdn.playwright.dev/builds/cft/154.0.8037.0/mac-arm64/chrome-headless-shell-mac-arm64.zip
+2026-09-24T22:52:07.6793300Z |                                                                                |   0% of 94.8 MiB
+2026-09-24T22:52:08.1367150Z |■■■■■■■■                                                                        |  10% of 94.8 MiB
+2026-09-24T22:52:08.2431760Z |■■■■■■■■■■■■■■■■                                                                |  20% of 94.8 MiB
+2026-09-24T22:52:08.3651840Z |■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 94.8 MiB
+2026-09-24T22:52:08.4761900Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 94.8 MiB
+2026-09-24T22:52:08.5835600Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 94.8 MiB
+2026-09-24T22:52:08.6948610Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 94.8 MiB
+2026-09-24T22:52:08.8027440Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 94.8 MiB
+2026-09-24T22:52:08.9191550Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 94.8 MiB
+2026-09-24T22:52:09.0259340Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 94.8 MiB
+2026-09-24T22:52:09.1344890Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 94.8 MiB
+2026-09-24T22:52:10.4400530Z Chrome Headless Shell 154.0.8037.0 (playwright chromium-headless-shell v1246) downloaded to /Users/runner/Library/Caches/ms-playwright/chromium_headless_shell-1246
+2026-09-24T22:52:10.4402860Z Downloading Firefox 156.0 (playwright firefox v1551) from https://cdn.playwright.dev/dbazure/download/playwright/builds/firefox/1551/firefox-mac-arm64.zip
+2026-09-24T22:52:11.0016750Z |                                                                                |   0% of 105.2 MiB
+2026-09-24T22:52:11.2841260Z |■■■■■■■■                                                                        |  10% of 105.2 MiB
+2026-09-24T22:52:11.3876080Z |■■■■■■■■■■■■■■■■                                                                |  20% of 105.2 MiB
+2026-09-24T22:52:11.6988140Z |■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 105.2 MiB
+2026-09-24T22:52:11.8597560Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 105.2 MiB
+2026-09-24T22:52:12.0510370Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 105.2 MiB
+2026-09-24T22:52:12.2394980Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 105.2 MiB
+2026-09-24T22:52:12.3550510Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 105.2 MiB
+2026-09-24T22:52:12.4811370Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 105.2 MiB
+2026-09-24T22:52:12.7498370Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 105.2 MiB
+2026-09-24T22:52:12.9292280Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 105.2 MiB
+2026-09-24T22:52:14.7714450Z Firefox 156.0 (playwright firefox v1551) downloaded to /Users/runner/Library/Caches/ms-playwright/firefox-1551
+2026-09-24T22:52:14.7723690Z Downloading WebKit 26.6 (playwright webkit v2367) from https://cdn.playwright.dev/dbazure/download/playwright/builds/webkit/2367/webkit-mac-26-arm64.zip
+2026-09-24T22:52:15.3123590Z |                                                                                |   0% of 78.3 MiB
+2026-09-24T22:52:15.6082100Z |■■■■■■■■                                                                        |  10% of 78.3 MiB
+2026-09-24T22:52:15.7402110Z |■■■■■■■■■■■■■■■■                                                                |  20% of 78.3 MiB
+2026-09-24T22:52:15.8516900Z |■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 78.3 MiB
+2026-09-24T22:52:15.9588340Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 78.3 MiB
+2026-09-24T22:52:16.0552570Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 78.3 MiB
+2026-09-24T22:52:16.1784720Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 78.3 MiB
+2026-09-24T22:52:16.3028850Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 78.3 MiB
+2026-09-24T22:52:16.4037850Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 78.3 MiB
+2026-09-24T22:52:16.5290050Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 78.3 MiB
+2026-09-24T22:52:16.6970810Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 78.3 MiB
+2026-09-24T22:52:22.0886070Z WebKit 26.6 (playwright webkit v2367) downloaded to /Users/runner/Library/Caches/ms-playwright/webkit-2367
+2026-09-24T22:52:22.0910090Z Downloading FFmpeg (playwright ffmpeg v1011) from https://cdn.playwright.dev/dbazure/download/playwright/builds/ffmpeg/1011/ffmpeg-mac-arm64.zip
+2026-09-24T22:52:22.7550730Z |                                                                                |   1% of 1 MiB
+2026-09-24T22:52:22.8563600Z |■■■■■■■■                                                                        |  10% of 1 MiB
+2026-09-24T22:52:22.9959670Z |■■■■■■■■■■■■■■■■                                                                |  20% of 1 MiB
+2026-09-24T22:52:23.1393510Z |■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 1 MiB
+2026-09-24T22:52:23.2957500Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 1 MiB
+2026-09-24T22:52:23.3360820Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  51% of 1 MiB
+2026-09-24T22:52:23.3592700Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 1 MiB
+2026-09-24T22:52:23.3873100Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 1 MiB
+2026-09-24T22:52:23.4132690Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 1 MiB
+2026-09-24T22:52:23.4404380Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  91% of 1 MiB
+2026-09-24T22:52:23.4591890Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 1 MiB
+2026-09-24T22:52:23.4961390Z FFmpeg (playwright ffmpeg v1011) downloaded to /Users/runner/Library/Caches/ms-playwright/ffmpeg-1011
+2026-09-24T22:52:23.5229000Z ##[endgroup]
+2026-09-24T22:52:23.5313850Z ##[end-action id=__self.__run_3;outcome=success;conclusion=success;duration_ms=23566]
+2026-09-24T22:52:23.5324870Z ##[start-action display=Run echo "PLAYWRIGHT_SETUP_COMPLETE=true" >> $GITHUB_ENV;id=__self.__run_4]
+2026-09-24T22:52:23.5357630Z ##[group]Run echo "PLAYWRIGHT_SETUP_COMPLETE=true" >> $GITHUB_ENV
+2026-09-24T22:52:23.5365330Z echo "PLAYWRIGHT_SETUP_COMPLETE=true" >> $GITHUB_ENV
+2026-09-24T22:52:23.5417710Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+2026-09-24T22:52:23.5418280Z env:
+2026-09-24T22:52:23.5420700Z   FORCE_COLOR: 1
+2026-09-24T22:52:23.5421300Z   DEBUG: pw:mcp:error
+2026-09-24T22:52:23.5421960Z ##[endgroup]
+2026-09-24T22:52:23.6180690Z ##[end-action id=__self.__run_4;outcome=success;conclusion=success;duration_ms=85]
+2026-09-24T22:52:23.6183490Z ##[start-action display=Run setup command;id=__self.__run_5]
+2026-09-24T22:52:23.6191570Z ##[end-action id=__self.__run_5;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-09-24T22:52:23.6194350Z ##[start-action display=Run tests;id=__self.__run_6]
+2026-09-24T22:52:23.6337090Z ##[group]Run if [[ "$(uname)" == "Linux" ]]; then
+2026-09-24T22:52:23.6337480Z if [[ "$(uname)" == "Linux" ]]; then
+2026-09-24T22:52:23.6338010Z   xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- npm run test-mcp -- --project=chrome
+2026-09-24T22:52:23.6338600Z else
+2026-09-24T22:52:23.6338830Z   npm run test-mcp -- --project=chrome
+2026-09-24T22:52:23.6339160Z fi
+2026-09-24T22:52:23.6372030Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+2026-09-24T22:52:23.6372310Z env:
+2026-09-24T22:52:23.6372560Z   FORCE_COLOR: 1
+2026-09-24T22:52:23.6372750Z   DEBUG: pw:mcp:error
+2026-09-24T22:52:23.6373010Z   PLAYWRIGHT_SETUP_COMPLETE: true
+2026-09-24T22:52:23.6373260Z   PW_TAG: @mcp-macos-latest-chrome
+2026-09-24T22:52:23.6373540Z ##[endgroup]
+2026-09-24T22:52:23.9492760Z 
+2026-09-24T22:52:23.9494120Z > playwright-internal@1.64.0-next test-mcp
+2026-09-24T22:52:23.9496040Z > playwright test --config=tests/mcp/playwright.config.ts --project=chrome
+2026-09-24T22:52:23.9496670Z 
+2026-09-24T22:52:27.5407720Z 
+2026-09-24T22:52:27.5409320Z Running 787 tests using 1 worker
+2026-09-24T22:55:38.9939280Z ················································································
+2026-09-24T22:58:51.2339190Z ················································································
+2026-09-24T23:01:38.9243100Z ······°·········································································
+2026-09-24T23:03:28.6292330Z ················································································
+2026-09-24T23:05:16.2577070Z ················································································
+2026-09-24T23:08:57.4345190Z ··················································°T····························
+2026-09-24T23:12:12.6556850Z ··········································°·····································
+2026-09-24T23:14:36.8194560Z ···················°°°°··················°······································
+2026-09-24T23:17:50.5946310Z ················································································
+2026-09-24T23:19:52.4138380Z ·················°·················································
+2026-09-24T23:19:52.4159230Z 
+2026-09-24T23:19:52.4205000Z   1) [chrome] › tests/mcp/files.spec.ts:201:5 › closing browser during download does not crash the server 
+2026-09-24T23:19:52.4205860Z 
+2026-09-24T23:19:52.4206470Z     Test timeout of 30000ms exceeded.
+2026-09-24T23:19:52.4207640Z 
+2026-09-24T23:19:52.4208360Z     McpError: MCP error -32000: Connection closed
+2026-09-24T23:19:52.4209410Z 
+2026-09-24T23:19:52.4210200Z     Error Context: test-results/files-closing-browser-duri-3268b-d-does-not-crash-the-server-chrome/error-context.md
+2026-09-24T23:19:52.4210820Z 
+2026-09-24T23:19:52.4225190Z   1 failed
+2026-09-24T23:19:52.4226420Z     [chrome] › tests/mcp/files.spec.ts:201:5 › closing browser during download does not crash the server 
+2026-09-24T23:19:52.4227120Z   9 skipped
+2026-09-24T23:19:52.4228100Z   777 passed (27.4m)
+2026-09-24T23:19:53.2297240Z ##[error]Process completed with exit code 1.
+2026-09-24T23:19:53.2357870Z ##[end-action id=__self.__run_6;outcome=failure;conclusion=failure;duration_ms=1648927]
+2026-09-24T23:19:53.2390830Z ##[start-action display=Run tests;id=__self.__run_7]
+2026-09-24T23:19:53.2400550Z ##[end-action id=__self.__run_7;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-09-24T23:19:53.2402530Z ##[start-action display=Upload blob report;id=__self.__self]
+2026-09-24T23:19:53.2508200Z Prepare all required actions
+2026-09-24T23:19:53.2508650Z Getting action download info
+2026-09-24T23:19:53.5225730Z Download action repository 'actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a' (SHA:043fb46d1a93c77aae656e7c1c64a875d1fc6a0a)
+2026-09-24T23:19:53.8701280Z ##[group]Run ./.github/actions/upload-blob-report
+2026-09-24T23:19:53.8703800Z with:
+2026-09-24T23:19:53.8704900Z   report_dir: blob-report
+2026-09-24T23:19:53.8705270Z   job_name: mcp-macos-latest-chrome-0
+2026-09-24T23:19:53.8706450Z env:
+2026-09-24T23:19:53.8707170Z   FORCE_COLOR: 1
+2026-09-24T23:19:53.8707560Z   DEBUG: pw:mcp:error
+2026-09-24T23:19:53.8708420Z   PLAYWRIGHT_SETUP_COMPLETE: true
+2026-09-24T23:19:53.8709320Z ##[endgroup]
+2026-09-24T23:19:53.8721590Z ##[start-action display=Integrity check;id=__self.__self.__run]
+2026-09-24T23:19:53.8784030Z ##[group]Run echo "::group::extracting blob archives"
+2026-09-24T23:19:53.8784370Z echo "::group::extracting blob archives"
+2026-09-24T23:19:53.8784800Z find "blob-report" -name "*.zip" -exec unzip -t {} \;
+2026-09-24T23:19:53.8785090Z echo "::endgroup::"
+2026-09-24T23:19:53.8850120Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+2026-09-24T23:19:53.8850550Z env:
+2026-09-24T23:19:53.8850730Z   FORCE_COLOR: 1
+2026-09-24T23:19:53.8850940Z   DEBUG: pw:mcp:error
+2026-09-24T23:19:53.8851130Z   PLAYWRIGHT_SETUP_COMPLETE: true
+2026-09-24T23:19:53.8851350Z ##[endgroup]
+2026-09-24T23:19:53.9288170Z ##[group]extracting blob archives
+2026-09-24T23:19:53.9462000Z Archive:  blob-report/report-chrome-7a826c6.zip
+2026-09-24T23:19:53.9463070Z     testing: resources/e24370725ac5e7e257e7b9ef511fd9e6b0a33c7d.md   OK
+2026-09-24T23:19:53.9752020Z     testing: report.jsonl             OK
+2026-09-24T23:19:53.9752760Z No errors detected in compressed data of blob-report/report-chrome-7a826c6.zip.
+2026-09-24T23:19:53.9755910Z ##[endgroup]
+2026-09-24T23:19:53.9763260Z ##[end-action id=__self.__self.__run;outcome=success;conclusion=success;duration_ms=104]
+2026-09-24T23:19:53.9765530Z ##[start-action display=Upload blob report to GitHub;id=__self.__self.__actions_upload-artifact]
+2026-09-24T23:19:53.9817310Z ##[group]Run actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+2026-09-24T23:19:53.9817650Z with:
+2026-09-24T23:19:53.9817830Z   name: blob-report-mcp-macos-latest-chrome-0
+2026-09-24T23:19:53.9818080Z   path: blob-report/**
+2026-09-24T23:19:53.9818240Z   retention-days: 7
+2026-09-24T23:19:53.9818420Z   overwrite: true
+2026-09-24T23:19:53.9818570Z   if-no-files-found: warn
+2026-09-24T23:19:53.9818750Z   compression-level: 6
+2026-09-24T23:19:53.9818920Z   include-hidden-files: false
+2026-09-24T23:19:53.9819110Z   archive: true
+2026-09-24T23:19:53.9819260Z env:
+2026-09-24T23:19:53.9819390Z   FORCE_COLOR: 1
+2026-09-24T23:19:53.9819550Z   DEBUG: pw:mcp:error
+2026-09-24T23:19:53.9819730Z   PLAYWRIGHT_SETUP_COMPLETE: true
+2026-09-24T23:19:53.9819940Z ##[endgroup]
+2026-09-24T23:19:54.4784900Z With the provided path, there will be 1 file uploaded
+2026-09-24T23:19:54.7398730Z Artifact name is valid!
+2026-09-24T23:19:54.7399520Z Root directory input is valid!
+2026-09-24T23:19:55.1372680Z Uploading artifact: blob-report-mcp-macos-latest-chrome-0.zip
+2026-09-24T23:19:55.1590930Z Beginning upload of artifact content to blob storage
+2026-09-24T23:19:55.5665480Z Uploaded bytes 605758
+2026-09-24T23:19:55.6089430Z Finished uploading artifact content to blob storage!
+2026-09-24T23:19:55.6090530Z SHA256 digest of uploaded artifact is f1a3563bb6a28f7cb939a1cf9f0e71f2e1b414554ccea06c88ed3391f696aa2f
+2026-09-24T23:19:55.6091140Z Finalizing artifact upload
+2026-09-24T23:19:55.9117390Z Artifact blob-report-mcp-macos-latest-chrome-0 successfully finalized. Artifact ID 10838881380
+2026-09-24T23:19:55.9120000Z Artifact blob-report-mcp-macos-latest-chrome-0 has been successfully uploaded! Final size is 605758 bytes. Artifact ID is 10838881380
+2026-09-24T23:19:55.9128930Z Artifact download URL: https://github.com/microsoft/playwright/actions/runs/36069582811/artifacts/10838881380
+2026-09-24T23:19:55.9283390Z ##[end-action id=__self.__self.__actions_upload-artifact;outcome=success;conclusion=success;duration_ms=1951]
+2026-09-24T23:19:55.9311560Z ##[end-action id=__self.__self;outcome=success;conclusion=success;duration_ms=2690]
+2026-09-24T23:19:55.9317340Z ##[start-action display=Upload parquet report;id=__self.__self_2]
+2026-09-24T23:19:55.9374650Z Prepare all required actions
+2026-09-24T23:19:55.9375130Z Getting action download info
+2026-09-24T23:19:56.0767520Z ##[group]Run ./.github/actions/upload-parquet-report
+2026-09-24T23:19:56.0767780Z with:
+2026-09-24T23:19:56.0768020Z   job_name: mcp-macos-latest-chrome-0
+2026-09-24T23:19:56.0768280Z   report_file: test-results/test-results.parquet
+2026-09-24T23:19:56.0768510Z env:
+2026-09-24T23:19:56.0768660Z   FORCE_COLOR: 1
+2026-09-24T23:19:56.0768830Z   DEBUG: pw:mcp:error
+2026-09-24T23:19:56.0769020Z   PLAYWRIGHT_SETUP_COMPLETE: true
+2026-09-24T23:19:56.0769220Z ##[endgroup]
+2026-09-24T23:19:56.0772220Z ##[start-action display=Upload parquet report to GitHub;id=__self.__self_2.__actions_upload-artifact]
+2026-09-24T23:19:56.3838330Z ##[group]Run actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+2026-09-24T23:19:56.3838780Z with:
+2026-09-24T23:19:56.3839080Z   name: parquet-report-mcp-macos-latest-chrome-0
+2026-09-24T23:19:56.3839420Z   path: test-results/test-results.parquet
+2026-09-24T23:19:56.3839690Z   retention-days: 7
+2026-09-24T23:19:56.3839890Z   overwrite: true
+2026-09-24T23:19:56.3840090Z   if-no-files-found: warn
+2026-09-24T23:19:56.3840340Z   compression-level: 6
+2026-09-24T23:19:56.3840560Z   include-hidden-files: false
+2026-09-24T23:19:56.3840760Z   archive: true
+2026-09-24T23:19:56.3840980Z env:
+2026-09-24T23:19:56.3841170Z   FORCE_COLOR: 1
+2026-09-24T23:19:56.3841520Z   DEBUG: pw:mcp:error
+2026-09-24T23:19:56.3841750Z   PLAYWRIGHT_SETUP_COMPLETE: true
+2026-09-24T23:19:56.3841980Z ##[endgroup]
+2026-09-24T23:19:56.5686760Z With the provided path, there will be 1 file uploaded
+2026-09-24T23:19:56.7440710Z Artifact name is valid!
+2026-09-24T23:19:56.7441130Z Root directory input is valid!
+2026-09-24T23:19:56.9982210Z Uploading artifact: parquet-report-mcp-macos-latest-chrome-0.zip
+2026-09-24T23:19:57.0046720Z Beginning upload of artifact content to blob storage
+2026-09-24T23:19:57.2139690Z Uploaded bytes 25735
+2026-09-24T23:19:57.2593990Z Finished uploading artifact content to blob storage!
+2026-09-24T23:19:57.2596850Z SHA256 digest of uploaded artifact is 16c72759c5a62c46cd0ef9534efef1a3fa2c7f6e494b7621835906643702ad06
+2026-09-24T23:19:57.2598680Z Finalizing artifact upload
+2026-09-24T23:19:57.5629120Z Artifact parquet-report-mcp-macos-latest-chrome-0 successfully finalized. Artifact ID 10839195162
+2026-09-24T23:19:57.5634600Z Artifact parquet-report-mcp-macos-latest-chrome-0 has been successfully uploaded! Final size is 25735 bytes. Artifact ID is 10839195162
+2026-09-24T23:19:57.5670890Z Artifact download URL: https://github.com/microsoft/playwright/actions/runs/36069582811/artifacts/10839195162
+2026-09-24T23:19:57.5724860Z ##[end-action id=__self.__self_2.__actions_upload-artifact;outcome=success;conclusion=success;duration_ms=1495]
+2026-09-24T23:19:57.5729530Z ##[end-action id=__self.__self_2;outcome=success;conclusion=success;duration_ms=1641]
+2026-09-24T23:19:57.5875490Z Post job cleanup.
+2026-09-24T23:19:57.5879220Z ##[start-action display=Run actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38;id=__0af8e7d8-db3b-4b66-b537-cebb56c8f44b.__actions_setup-node]
+2026-09-24T23:19:57.5881270Z ##[end-action id=__0af8e7d8-db3b-4b66-b537-cebb56c8f44b.__actions_setup-node;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-09-24T23:19:57.5950020Z Post job cleanup.
+2026-09-24T23:19:57.7062600Z [command]/opt/homebrew/bin/git version
+2026-09-24T23:19:57.7606710Z git version 2.55.0
+2026-09-24T23:19:57.7627580Z Copying '/Users/runner/.gitconfig' to '/Users/runner/work/_temp/a2ba06bc-4a0e-4e1d-bd8f-3e3f3c500149/.gitconfig'
+2026-09-24T23:19:57.7635590Z Temporarily overriding HOME='/Users/runner/work/_temp/a2ba06bc-4a0e-4e1d-bd8f-3e3f3c500149' before making global git config changes
+2026-09-24T23:19:57.7637150Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-24T23:19:57.7639370Z [command]/opt/homebrew/bin/git config --global --add safe.directory /Users/runner/work/playwright/playwright
+2026-09-24T23:19:57.7782720Z Removing SSH command configuration
+2026-09-24T23:19:57.7788900Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-24T23:19:57.7877900Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-24T23:19:57.9283610Z Removing HTTP extra header
+2026-09-24T23:19:57.9285170Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-24T23:19:57.9350630Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-24T23:19:58.0467100Z Removing includeIf entries pointing to credentials config files
+2026-09-24T23:19:58.0475320Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-24T23:19:58.0548040Z includeif.gitdir:/Users/runner/work/playwright/playwright/.git.path
+2026-09-24T23:19:58.0548690Z includeif.gitdir:/Users/runner/work/playwright/playwright/.git/worktrees/*.path
+2026-09-24T23:19:58.0549230Z includeif.gitdir:/github/workspace/.git.path
+2026-09-24T23:19:58.0549640Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-09-24T23:19:58.0555050Z [command]/opt/homebrew/bin/git config --local --get-all includeif.gitdir:/Users/runner/work/playwright/playwright/.git.path
+2026-09-24T23:19:58.0620720Z /Users/runner/work/_temp/git-credentials-cc218202-f20b-4e6d-b385-6c8d59f0814a.config
+2026-09-24T23:19:58.0631050Z [command]/opt/homebrew/bin/git config --local --unset includeif.gitdir:/Users/runner/work/playwright/playwright/.git.path \/Users\/runner\/work\/_temp\/git\-credentials\-cc218202\-f20b\-4e6d\-b385\-6c8d59f0814a\.config
+2026-09-24T23:19:58.0716680Z [command]/opt/homebrew/bin/git config --local --get-all includeif.gitdir:/Users/runner/work/playwright/playwright/.git/worktrees/*.path
+2026-09-24T23:19:58.0778710Z /Users/runner/work/_temp/git-credentials-cc218202-f20b-4e6d-b385-6c8d59f0814a.config
+2026-09-24T23:19:58.0787560Z [command]/opt/homebrew/bin/git config --local --unset includeif.gitdir:/Users/runner/work/playwright/playwright/.git/worktrees/*.path \/Users\/runner\/work\/_temp\/git\-credentials\-cc218202\-f20b\-4e6d\-b385\-6c8d59f0814a\.config
+2026-09-24T23:19:58.0951510Z [command]/opt/homebrew/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-09-24T23:19:58.0952680Z /github/runner_temp/git-credentials-cc218202-f20b-4e6d-b385-6c8d59f0814a.config
+2026-09-24T23:19:58.0963230Z [command]/opt/homebrew/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-cc218202\-f20b\-4e6d\-b385\-6c8d59f0814a\.config
+2026-09-24T23:19:58.1024530Z [command]/opt/homebrew/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-09-24T23:19:58.1085470Z /github/runner_temp/git-credentials-cc218202-f20b-4e6d-b385-6c8d59f0814a.config
+2026-09-24T23:19:58.1091820Z [command]/opt/homebrew/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-cc218202\-f20b\-4e6d\-b385\-6c8d59f0814a\.config
+2026-09-24T23:19:58.1162320Z [command]/opt/homebrew/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-24T23:19:58.2337320Z Removing credentials config '/Users/runner/work/_temp/git-credentials-cc218202-f20b-4e6d-b385-6c8d59f0814a.config'
+2026-09-24T23:19:58.2439520Z Cleaning up orphan processes
+2026-09-24T23:19:59.3468350Z Terminate orphan process: pid (18872) (Google Chrome H)
+2026-09-24T23:19:59.3928100Z Terminate orphan process: pid (18870) (Google Chrome H)
+2026-09-24T23:19:59.4376510Z Terminate orphan process: pid (18869) (Google Chrome H)
+2026-09-24T23:19:59.5211370Z Terminate orphan process: pid (18867) (chrome_crashpad)
+2026-09-24T23:19:59.5971740Z Terminate orphan process: pid (18865) (Google Chrome)

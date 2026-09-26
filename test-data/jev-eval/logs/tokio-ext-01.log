@@ -1,0 +1,593 @@
+﻿2026-09-09T17:51:11.7529962Z Current runner version: '2.337.0'
+2026-09-09T17:51:11.7548545Z ##[group]Runner Image Provisioner
+2026-09-09T17:51:11.7549280Z Hosted Compute Agent
+2026-09-09T17:51:11.7549769Z Version: 20260828.587
+2026-09-09T17:51:11.7550319Z Commit: abac92662cab4cc7352de4f9f9d2e2419aad9c29
+2026-09-09T17:51:11.7550940Z Build Date: 2026-08-28T16:44:25Z
+2026-09-09T17:51:11.7551528Z Worker ID: {5cb82dd5-527c-483a-a0c9-840b17a881c7}
+2026-09-09T17:51:11.7552120Z Azure Region: westus3
+2026-09-09T17:51:11.7552599Z ##[endgroup]
+2026-09-09T17:51:11.7553929Z ##[group]Operating System
+2026-09-09T17:51:11.7554472Z Ubuntu
+2026-09-09T17:51:11.7554896Z 24.04.5
+2026-09-09T17:51:11.7555355Z LTS
+2026-09-09T17:51:11.7555790Z ##[endgroup]
+2026-09-09T17:51:11.7556246Z ##[group]Runner Image
+2026-09-09T17:51:11.7556778Z Image: ubuntu-24.04
+2026-09-09T17:51:11.7557267Z Version: 20260907.300.1
+2026-09-09T17:51:11.7558297Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260907.300/images/ubuntu/Ubuntu2404-Readme.md
+2026-09-09T17:51:11.7559627Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260907.300
+2026-09-09T17:51:11.7560463Z ##[endgroup]
+2026-09-09T17:51:11.7561407Z ##[group]GITHUB_TOKEN Permissions
+2026-09-09T17:51:11.7563338Z Contents: read
+2026-09-09T17:51:11.7563863Z Metadata: read
+2026-09-09T17:51:11.7564399Z ##[endgroup]
+2026-09-09T17:51:11.7566105Z Secret source: None
+2026-09-09T17:51:11.7566953Z Cache mode: write
+2026-09-09T17:51:11.7567565Z Prepare workflow directory
+2026-09-09T17:51:11.7867068Z Prepare all required actions
+2026-09-09T17:51:11.7906749Z Getting action download info
+2026-09-09T17:51:12.1616941Z Download action repository 'actions/checkout@v7' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-09-09T17:51:12.3020329Z Download action repository 'dtolnay/rust-toolchain@master' (SHA:d1031067263f94b142dd6c0ce24c5eb9d02d52a0)
+2026-09-09T17:51:12.5560972Z Download action repository 'taiki-e/install-action@valgrind' (SHA:862342c4ecd8e471df9952012ca76c17127e4f68)
+2026-09-09T17:51:13.4369769Z Download action repository 'Swatinem/rust-cache@v2' (SHA:6323deb102c322ba6fcbdcafc7e3dddab59af2b6)
+2026-09-09T17:51:14.5835101Z Complete job name: Stress Test (simple_echo_tcp)
+2026-09-09T17:51:14.6560093Z ##[group]Run actions/checkout@v7
+2026-09-09T17:51:14.6561239Z with:
+2026-09-09T17:51:14.6562054Z   repository: tokio-rs/tokio
+2026-09-09T17:51:14.6570030Z   token: ***
+2026-09-09T17:51:14.6570875Z   ssh-strict: true
+2026-09-09T17:51:14.6572283Z   ssh-user: git
+2026-09-09T17:51:14.6573220Z   persist-credentials: true
+2026-09-09T17:51:14.6574105Z   clean: true
+2026-09-09T17:51:14.6574915Z   sparse-checkout-cone-mode: true
+2026-09-09T17:51:14.6575858Z   fetch-depth: 1
+2026-09-09T17:51:14.6576675Z   fetch-tags: false
+2026-09-09T17:51:14.6577486Z   show-progress: true
+2026-09-09T17:51:14.6578375Z   lfs: false
+2026-09-09T17:51:14.6579222Z   submodules: false
+2026-09-09T17:51:14.6580212Z   set-safe-directory: true
+2026-09-09T17:51:14.6581200Z   allow-unsafe-pr-checkout: false
+2026-09-09T17:51:14.6582539Z env:
+2026-09-09T17:51:14.6583513Z   RUSTFLAGS: -Dwarnings
+2026-09-09T17:51:14.6584430Z   RUST_BACKTRACE: 1
+2026-09-09T17:51:14.6585346Z   rust_stable: 1.82
+2026-09-09T17:51:14.6586309Z ##[endgroup]
+2026-09-09T17:51:14.7479480Z Syncing repository: tokio-rs/tokio
+2026-09-09T17:51:14.7481905Z ##[group]Getting Git version info
+2026-09-09T17:51:14.7483304Z Working directory is '/home/runner/work/tokio/tokio'
+2026-09-09T17:51:14.7485276Z [command]/usr/bin/git version
+2026-09-09T17:51:14.7621084Z git version 2.55.0
+2026-09-09T17:51:14.7635901Z ##[endgroup]
+2026-09-09T17:51:14.7642826Z Temporarily overriding HOME='/home/runner/work/_temp/0e9f2df1-cfc0-4a78-be5a-1a5755696170' before making global git config changes
+2026-09-09T17:51:14.7645881Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-09T17:51:14.7648054Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/tokio/tokio
+2026-09-09T17:51:14.7685420Z Deleting the contents of '/home/runner/work/tokio/tokio'
+2026-09-09T17:51:14.7688074Z ##[group]Determining repository object format
+2026-09-09T17:51:14.7690121Z ##[endgroup]
+2026-09-09T17:51:14.7691712Z ##[group]Initializing the repository
+2026-09-09T17:51:14.7693510Z [command]/usr/bin/git init /home/runner/work/tokio/tokio
+2026-09-09T17:51:14.8669875Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-09-09T17:51:14.8672489Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-09-09T17:51:14.8674837Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-09-09T17:51:14.8676519Z hint: call:
+2026-09-09T17:51:14.8677674Z hint:
+2026-09-09T17:51:14.8679140Z hint: 	git config --global init.defaultBranch <name>
+2026-09-09T17:51:14.8680449Z hint:
+2026-09-09T17:51:14.8681516Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-09-09T17:51:14.8684016Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-09-09T17:51:14.8685691Z hint:
+2026-09-09T17:51:14.8686497Z hint: 	git branch -m <name>
+2026-09-09T17:51:14.8687426Z hint:
+2026-09-09T17:51:14.8688558Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-09-09T17:51:14.8690596Z Initialized empty Git repository in /home/runner/work/tokio/tokio/.git/
+2026-09-09T17:51:14.8693683Z [command]/usr/bin/git remote add origin https://github.com/tokio-rs/tokio
+2026-09-09T17:51:14.8715638Z ##[endgroup]
+2026-09-09T17:51:14.8717003Z ##[group]Disabling automatic garbage collection
+2026-09-09T17:51:14.8718472Z [command]/usr/bin/git config --local gc.auto 0
+2026-09-09T17:51:14.8741115Z ##[endgroup]
+2026-09-09T17:51:14.8742461Z ##[group]Setting up auth
+2026-09-09T17:51:14.8743579Z Removing SSH command configuration
+2026-09-09T17:51:14.8745529Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-09T17:51:14.8768743Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-09T17:51:14.9017131Z Removing HTTP extra header
+2026-09-09T17:51:14.9020980Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-09T17:51:14.9043150Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-09T17:51:14.9192562Z Removing includeIf entries pointing to credentials config files
+2026-09-09T17:51:14.9195846Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-09T17:51:14.9226212Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-09T17:51:14.9387481Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-334d9281-a8ab-4417-9419-da0060ba0af8.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-09-09T17:51:14.9423461Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/tokio/tokio/.git.path /home/runner/work/_temp/git-credentials-334d9281-a8ab-4417-9419-da0060ba0af8.config
+2026-09-09T17:51:14.9447786Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/tokio/tokio/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-334d9281-a8ab-4417-9419-da0060ba0af8.config
+2026-09-09T17:51:14.9595597Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-334d9281-a8ab-4417-9419-da0060ba0af8.config
+2026-09-09T17:51:14.9629064Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-334d9281-a8ab-4417-9419-da0060ba0af8.config
+2026-09-09T17:51:14.9645846Z ##[endgroup]
+2026-09-09T17:51:14.9647201Z ##[group]Fetching the repository
+2026-09-09T17:51:14.9650324Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +03141765c1c91e8eec2359b8784f348bc3b95cf0:refs/remotes/pull/8438/merge
+2026-09-09T17:51:16.4634282Z From https://github.com/tokio-rs/tokio
+2026-09-09T17:51:16.4634934Z  * [new ref]         03141765c1c91e8eec2359b8784f348bc3b95cf0 -> pull/8438/merge
+2026-09-09T17:51:16.4637290Z ##[endgroup]
+2026-09-09T17:51:16.4637853Z ##[group]Determining the checkout info
+2026-09-09T17:51:16.4638364Z ##[endgroup]
+2026-09-09T17:51:16.4643905Z [command]/usr/bin/git sparse-checkout disable
+2026-09-09T17:51:16.4681678Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-09-09T17:51:16.4702187Z ##[group]Checking out the ref
+2026-09-09T17:51:16.4705592Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/8438/merge
+2026-09-09T17:51:16.5079283Z Note: switching to 'refs/remotes/pull/8438/merge'.
+2026-09-09T17:51:16.5082046Z 
+2026-09-09T17:51:16.5082353Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-09-09T17:51:16.5083214Z changes and commit them, and you can discard any commits you make in this
+2026-09-09T17:51:16.5083859Z state without impacting any branches by switching back to a branch.
+2026-09-09T17:51:16.5084192Z 
+2026-09-09T17:51:16.5084488Z If you want to create a new branch to retain commits you create, you may
+2026-09-09T17:51:16.5085010Z do so (now or later) by using -c with the switch command. Example:
+2026-09-09T17:51:16.5085319Z 
+2026-09-09T17:51:16.5085490Z   git switch -c <new-branch-name>
+2026-09-09T17:51:16.5085726Z 
+2026-09-09T17:51:16.5085874Z Or undo this operation with:
+2026-09-09T17:51:16.5086090Z 
+2026-09-09T17:51:16.5086204Z   git switch -
+2026-09-09T17:51:16.5086449Z 
+2026-09-09T17:51:16.5086762Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-09-09T17:51:16.5087172Z 
+2026-09-09T17:51:16.5087619Z HEAD is now at 0314176 Merge 4446b6dc7f654f550ec77976704e5a9ff73a4d72 into 022c004b4a7c42c0c534e9737e9c66ff916517b1
+2026-09-09T17:51:16.5089391Z ##[endgroup]
+2026-09-09T17:51:16.5115511Z [command]/usr/bin/git log -1 --format=%H
+2026-09-09T17:51:16.5132853Z 03141765c1c91e8eec2359b8784f348bc3b95cf0
+2026-09-09T17:51:16.5425201Z ##[group]Run dtolnay/rust-toolchain@master
+2026-09-09T17:51:16.5425474Z with:
+2026-09-09T17:51:16.5425665Z   toolchain: 1.82
+2026-09-09T17:51:16.5425855Z env:
+2026-09-09T17:51:16.5426038Z   RUSTFLAGS: -Dwarnings
+2026-09-09T17:51:16.5426244Z   RUST_BACKTRACE: 1
+2026-09-09T17:51:16.5426434Z   rust_stable: 1.82
+2026-09-09T17:51:16.5426646Z ##[endgroup]
+2026-09-09T17:51:16.5484527Z ##[start-action display=Parse toolchain version;id=__dtolnay_rust-toolchain.parse]
+2026-09-09T17:51:16.5521992Z ##[group]Run if [[ -z $toolchain ]]; then
+2026-09-09T17:51:16.5522349Z if [[ -z $toolchain ]]; then
+2026-09-09T17:51:16.5522812Z   # GitHub does not enforce `required: true` inputs itself. https://github.com/actions/runner/issues/1070
+2026-09-09T17:51:16.5523521Z   echo "'toolchain' is a required input" >&2
+2026-09-09T17:51:16.5523816Z   exit 1
+2026-09-09T17:51:16.5524165Z elif [[ $toolchain =~ ^stable' '[0-9]+' '(year|month|week|day)s?' 'ago$ ]]; then
+2026-09-09T17:51:16.5524525Z   if [[ Linux == macOS ]]; then
+2026-09-09T17:51:16.5524961Z     echo "toolchain=1.$((($(date -v-$(sed 's/stable \([0-9]*\) \(.\).*/\1\2/' <<< $toolchain) +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT
+2026-09-09T17:51:16.5525396Z   else
+2026-09-09T17:51:16.5525737Z     echo "toolchain=1.$((($(date --date "${toolchain#stable }" +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT
+2026-09-09T17:51:16.5526120Z   fi
+2026-09-09T17:51:16.5526393Z elif [[ $toolchain =~ ^stable' 'minus' '[0-9]+' 'releases?$ ]]; then
+2026-09-09T17:51:16.5526830Z   echo "toolchain=1.$((($(date +%s)/60/60/24-16569)/7/6-${toolchain//[^0-9]/}))" >> $GITHUB_OUTPUT
+2026-09-09T17:51:16.5527218Z elif [[ $toolchain =~ ^1\.[0-9]+$ ]]; then
+2026-09-09T17:51:16.5527807Z   echo "toolchain=1.$((i=${toolchain#1.}, c=($(date +%s)/60/60/24-16569)/7/6, i+9*i*(10*i<=c)+90*i*(100*i<=c)))" >> $GITHUB_OUTPUT
+2026-09-09T17:51:16.5528238Z else
+2026-09-09T17:51:16.5528467Z   echo "toolchain=$toolchain" >> $GITHUB_OUTPUT
+2026-09-09T17:51:16.5528729Z fi
+2026-09-09T17:51:16.5552594Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-09-09T17:51:16.5552934Z env:
+2026-09-09T17:51:16.5553278Z   RUSTFLAGS: -Dwarnings
+2026-09-09T17:51:16.5553514Z   RUST_BACKTRACE: 1
+2026-09-09T17:51:16.5553726Z   rust_stable: 1.82
+2026-09-09T17:51:16.5553926Z   toolchain: 1.82
+2026-09-09T17:51:16.5554126Z ##[endgroup]
+2026-09-09T17:51:16.5647343Z ##[end-action id=__dtolnay_rust-toolchain.parse;outcome=success;conclusion=success;duration_ms=16]
+2026-09-09T17:51:16.5658101Z ##[start-action display=Construct rustup command line;id=__dtolnay_rust-toolchain.flags]
+2026-09-09T17:51:16.5688172Z ##[group]Run echo "targets=$(for t in ${targets//,/ }; do echo -n ' --target' $t; done)" >> $GITHUB_OUTPUT
+2026-09-09T17:51:16.5688738Z echo "targets=$(for t in ${targets//,/ }; do echo -n ' --target' $t; done)" >> $GITHUB_OUTPUT
+2026-09-09T17:51:16.5689254Z echo "components=$(for c in ${components//,/ }; do echo -n ' --component' $c; done)" >> $GITHUB_OUTPUT
+2026-09-09T17:51:16.5689672Z echo "downgrade=" >> $GITHUB_OUTPUT
+2026-09-09T17:51:16.5707039Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-09-09T17:51:16.5707351Z env:
+2026-09-09T17:51:16.5707569Z   RUSTFLAGS: -Dwarnings
+2026-09-09T17:51:16.5707834Z   RUST_BACKTRACE: 1
+2026-09-09T17:51:16.5708031Z   rust_stable: 1.82
+2026-09-09T17:51:16.5708228Z   targets: 
+2026-09-09T17:51:16.5708410Z   components: 
+2026-09-09T17:51:16.5708601Z ##[endgroup]
+2026-09-09T17:51:16.5751930Z ##[end-action id=__dtolnay_rust-toolchain.flags;outcome=success;conclusion=success;duration_ms=9]
+2026-09-09T17:51:16.5754134Z ##[start-action display=Set $CARGO_HOME;id=__dtolnay_rust-toolchain.__run]
+2026-09-09T17:51:16.5774986Z ##[group]Run echo CARGO_HOME=${CARGO_HOME:-"$HOME/.cargo"} >> $GITHUB_ENV
+2026-09-09T17:51:16.5775526Z echo CARGO_HOME=${CARGO_HOME:-"$HOME/.cargo"} >> $GITHUB_ENV
+2026-09-09T17:51:16.5790729Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-09-09T17:51:16.5791054Z env:
+2026-09-09T17:51:16.5791250Z   RUSTFLAGS: -Dwarnings
+2026-09-09T17:51:16.5791470Z   RUST_BACKTRACE: 1
+2026-09-09T17:51:16.5791668Z   rust_stable: 1.82
+2026-09-09T17:51:16.5791867Z ##[endgroup]
+2026-09-09T17:51:16.5828300Z ##[end-action id=__dtolnay_rust-toolchain.__run;outcome=success;conclusion=success;duration_ms=7]
+2026-09-09T17:51:16.5830366Z ##[start-action display=Install rustup if needed;id=__dtolnay_rust-toolchain.__run_2]
+2026-09-09T17:51:16.5892790Z ##[group]Run if ! command -v rustup &>/dev/null; then
+2026-09-09T17:51:16.5893448Z if ! command -v rustup &>/dev/null; then
+2026-09-09T17:51:16.5894077Z   curl --proto '=https' --tlsv1.2 --retry 10 --retry-connrefused --location --silent --show-error --fail https://sh.rustup.rs | sh -s -- --default-toolchain none -y
+2026-09-09T17:51:16.5894686Z   echo "$CARGO_HOME/bin" >> $GITHUB_PATH
+2026-09-09T17:51:16.5894936Z fi
+2026-09-09T17:51:16.5909584Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-09-09T17:51:16.5909934Z env:
+2026-09-09T17:51:16.5910186Z   RUSTFLAGS: -Dwarnings
+2026-09-09T17:51:16.5910417Z   RUST_BACKTRACE: 1
+2026-09-09T17:51:16.5910637Z   rust_stable: 1.82
+2026-09-09T17:51:16.5910892Z   CARGO_HOME: /home/runner/.cargo
+2026-09-09T17:51:16.5911129Z ##[endgroup]
+2026-09-09T17:51:16.5944952Z ##[end-action id=__dtolnay_rust-toolchain.__run_2;outcome=success;conclusion=success;duration_ms=11]
+2026-09-09T17:51:16.5947029Z ##[start-action display=Install rustup if needed on windows;id=__dtolnay_rust-toolchain.__run_3]
+2026-09-09T17:51:16.5952574Z ##[end-action id=__dtolnay_rust-toolchain.__run_3;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-09-09T17:51:16.5956246Z ##[start-action display=rustup toolchain install 1.82;id=__dtolnay_rust-toolchain.__run_4]
+2026-09-09T17:51:16.5976971Z ##[group]Run rustup toolchain install 1.82 --profile minimal --no-self-update
+2026-09-09T17:51:16.5977434Z rustup toolchain install 1.82 --profile minimal --no-self-update
+2026-09-09T17:51:16.5992421Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-09-09T17:51:16.5992860Z env:
+2026-09-09T17:51:16.5993327Z   RUSTFLAGS: -Dwarnings
+2026-09-09T17:51:16.5993622Z   RUST_BACKTRACE: 1
+2026-09-09T17:51:16.5993892Z   rust_stable: 1.82
+2026-09-09T17:51:16.5994155Z   CARGO_HOME: /home/runner/.cargo
+2026-09-09T17:51:16.5994441Z   RUSTUP_PERMIT_COPY_RENAME: 1
+2026-09-09T17:51:16.5994741Z ##[endgroup]
+2026-09-09T17:51:16.6991898Z info: syncing channel updates for 1.82-x86_64-unknown-linux-gnu
+2026-09-09T17:51:16.9642845Z info: latest update on 2024-10-17 for version 1.82.0 (f6e511eec 2024-10-15)
+2026-09-09T17:51:16.9644054Z info: downloading 3 components
+2026-09-09T17:51:23.8297769Z 
+2026-09-09T17:51:23.8375490Z   1.82-x86_64-unknown-linux-gnu installed - rustc 1.82.0 (f6e511eec 2024-10-15)
+2026-09-09T17:51:23.8375863Z 
+2026-09-09T17:51:23.8424488Z ##[end-action id=__dtolnay_rust-toolchain.__run_4;outcome=success;conclusion=success;duration_ms=7246]
+2026-09-09T17:51:23.8430433Z ##[start-action display=rustup default 1.82;id=__dtolnay_rust-toolchain.__run_5]
+2026-09-09T17:51:23.8449684Z ##[group]Run rustup default 1.82
+2026-09-09T17:51:23.8450010Z rustup default 1.82
+2026-09-09T17:51:23.8470113Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-09-09T17:51:23.8470559Z env:
+2026-09-09T17:51:23.8470816Z   RUSTFLAGS: -Dwarnings
+2026-09-09T17:51:23.8471076Z   RUST_BACKTRACE: 1
+2026-09-09T17:51:23.8471408Z   rust_stable: 1.82
+2026-09-09T17:51:23.8471674Z   CARGO_HOME: /home/runner/.cargo
+2026-09-09T17:51:23.8471973Z ##[endgroup]
+2026-09-09T17:51:23.8546548Z info: using existing install for 1.82-x86_64-unknown-linux-gnu
+2026-09-09T17:51:23.8555786Z info: default toolchain set to 1.82-x86_64-unknown-linux-gnu
+2026-09-09T17:51:23.8556069Z 
+2026-09-09T17:51:23.8631546Z   1.82-x86_64-unknown-linux-gnu unchanged - rustc 1.82.0 (f6e511eec 2024-10-15)
+2026-09-09T17:51:23.8632140Z 
+2026-09-09T17:51:23.8643293Z ##[end-action id=__dtolnay_rust-toolchain.__run_5;outcome=success;conclusion=success;duration_ms=21]
+2026-09-09T17:51:23.8645678Z ##[start-action display=Create cachekey;id=__dtolnay_rust-toolchain.rustc-version]
+2026-09-09T17:51:23.8663713Z ##[group]Run DATE=$(rustc +1.82 --version --verbose | sed -ne 's/^commit-date: \(20[0-9][0-9]\)-\([01][0-9]\)-\([0-3][0-9]\)$/\1\2\3/p')
+2026-09-09T17:51:23.8664445Z DATE=$(rustc +1.82 --version --verbose | sed -ne 's/^commit-date: \(20[0-9][0-9]\)-\([01][0-9]\)-\([0-3][0-9]\)$/\1\2\3/p')
+2026-09-09T17:51:23.8665034Z HASH=$(rustc +1.82 --version --verbose | sed -ne 's/^commit-hash: //p')
+2026-09-09T17:51:23.8665490Z echo "cachekey=$(echo $DATE$HASH | head -c12)" >> $GITHUB_OUTPUT
+2026-09-09T17:51:23.8681981Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-09-09T17:51:23.8682412Z env:
+2026-09-09T17:51:23.8682669Z   RUSTFLAGS: -Dwarnings
+2026-09-09T17:51:23.8683208Z   RUST_BACKTRACE: 1
+2026-09-09T17:51:23.8683478Z   rust_stable: 1.82
+2026-09-09T17:51:23.8683735Z   CARGO_HOME: /home/runner/.cargo
+2026-09-09T17:51:23.8684082Z ##[endgroup]
+2026-09-09T17:51:23.8952652Z ##[end-action id=__dtolnay_rust-toolchain.rustc-version;outcome=success;conclusion=success;duration_ms=30]
+2026-09-09T17:51:23.8955250Z ##[start-action display=Disable incremental compilation;id=__dtolnay_rust-toolchain.__run_6]
+2026-09-09T17:51:23.8971307Z ##[group]Run if [ -z "${CARGO_INCREMENTAL+set}" ]; then
+2026-09-09T17:51:23.8971701Z if [ -z "${CARGO_INCREMENTAL+set}" ]; then
+2026-09-09T17:51:23.8972059Z   echo CARGO_INCREMENTAL=0 >> $GITHUB_ENV
+2026-09-09T17:51:23.8972369Z fi
+2026-09-09T17:51:23.8988077Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-09-09T17:51:23.8988556Z env:
+2026-09-09T17:51:23.8988822Z   RUSTFLAGS: -Dwarnings
+2026-09-09T17:51:23.8989145Z   RUST_BACKTRACE: 1
+2026-09-09T17:51:23.8989426Z   rust_stable: 1.82
+2026-09-09T17:51:23.8989704Z   CARGO_HOME: /home/runner/.cargo
+2026-09-09T17:51:23.8989990Z ##[endgroup]
+2026-09-09T17:51:23.9026415Z ##[end-action id=__dtolnay_rust-toolchain.__run_6;outcome=success;conclusion=success;duration_ms=7]
+2026-09-09T17:51:23.9028677Z ##[start-action display=Enable colors in Cargo output;id=__dtolnay_rust-toolchain.__run_7]
+2026-09-09T17:51:23.9045152Z ##[group]Run if [ -z "${CARGO_TERM_COLOR+set}" ]; then
+2026-09-09T17:51:23.9045592Z if [ -z "${CARGO_TERM_COLOR+set}" ]; then
+2026-09-09T17:51:23.9045943Z   echo CARGO_TERM_COLOR=always >> $GITHUB_ENV
+2026-09-09T17:51:23.9046277Z fi
+2026-09-09T17:51:23.9061448Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-09-09T17:51:23.9061819Z env:
+2026-09-09T17:51:23.9062076Z   RUSTFLAGS: -Dwarnings
+2026-09-09T17:51:23.9062391Z   RUST_BACKTRACE: 1
+2026-09-09T17:51:23.9062670Z   rust_stable: 1.82
+2026-09-09T17:51:23.9062919Z   CARGO_HOME: /home/runner/.cargo
+2026-09-09T17:51:23.9063464Z   CARGO_INCREMENTAL: 0
+2026-09-09T17:51:23.9063733Z ##[endgroup]
+2026-09-09T17:51:23.9099899Z ##[end-action id=__dtolnay_rust-toolchain.__run_7;outcome=success;conclusion=success;duration_ms=7]
+2026-09-09T17:51:23.9102208Z ##[start-action display=Enable Cargo sparse registry;id=__dtolnay_rust-toolchain.__run_8]
+2026-09-09T17:51:23.9120614Z ##[group]Run # implemented in 1.66, stabilized in 1.68, made default in 1.70
+2026-09-09T17:51:23.9121170Z # implemented in 1.66, stabilized in 1.68, made default in 1.70
+2026-09-09T17:51:23.9121791Z if [ -z "${CARGO_REGISTRIES_CRATES_IO_PROTOCOL+set}" -o -f "/home/runner/work/_temp"/.implicit_cargo_registries_crates_io_protocol ]; then
+2026-09-09T17:51:23.9122436Z   if rustc +1.82 --version --verbose | grep -q '^release: 1\.6[89]\.'; then
+2026-09-09T17:51:23.9122955Z     touch "/home/runner/work/_temp"/.implicit_cargo_registries_crates_io_protocol || true
+2026-09-09T17:51:23.9123773Z     echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse >> $GITHUB_ENV
+2026-09-09T17:51:23.9124236Z   elif rustc +1.82 --version --verbose | grep -q '^release: 1\.6[67]\.'; then
+2026-09-09T17:51:23.9124740Z     touch "/home/runner/work/_temp"/.implicit_cargo_registries_crates_io_protocol || true
+2026-09-09T17:51:23.9125226Z     echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=git >> $GITHUB_ENV
+2026-09-09T17:51:23.9125568Z   fi
+2026-09-09T17:51:23.9125809Z fi
+2026-09-09T17:51:23.9140411Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-09-09T17:51:23.9140786Z env:
+2026-09-09T17:51:23.9141029Z   RUSTFLAGS: -Dwarnings
+2026-09-09T17:51:23.9141356Z   RUST_BACKTRACE: 1
+2026-09-09T17:51:23.9141608Z   rust_stable: 1.82
+2026-09-09T17:51:23.9141855Z   CARGO_HOME: /home/runner/.cargo
+2026-09-09T17:51:23.9142143Z   CARGO_INCREMENTAL: 0
+2026-09-09T17:51:23.9142402Z   CARGO_TERM_COLOR: always
+2026-09-09T17:51:23.9142666Z ##[endgroup]
+2026-09-09T17:51:23.9382371Z ##[end-action id=__dtolnay_rust-toolchain.__run_8;outcome=success;conclusion=success;duration_ms=27]
+2026-09-09T17:51:23.9384886Z ##[start-action display=Work around spurious network errors in curl 8.0;id=__dtolnay_rust-toolchain.__run_9]
+2026-09-09T17:51:23.9401377Z ##[group]Run # https://rust-lang.zulipchat.com/#narrow/stream/246057-t-cargo/topic/timeout.20investigation
+2026-09-09T17:51:23.9402044Z # https://rust-lang.zulipchat.com/#narrow/stream/246057-t-cargo/topic/timeout.20investigation
+2026-09-09T17:51:23.9402567Z if rustc +1.82 --version --verbose | grep -q '^release: 1\.7[01]\.'; then
+2026-09-09T17:51:23.9403339Z   echo CARGO_HTTP_MULTIPLEXING=false >> $GITHUB_ENV
+2026-09-09T17:51:23.9403674Z fi
+2026-09-09T17:51:23.9418362Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-09-09T17:51:23.9418803Z env:
+2026-09-09T17:51:23.9419167Z   RUSTFLAGS: -Dwarnings
+2026-09-09T17:51:23.9419481Z   RUST_BACKTRACE: 1
+2026-09-09T17:51:23.9419738Z   rust_stable: 1.82
+2026-09-09T17:51:23.9419996Z   CARGO_HOME: /home/runner/.cargo
+2026-09-09T17:51:23.9420288Z   CARGO_INCREMENTAL: 0
+2026-09-09T17:51:23.9420572Z   CARGO_TERM_COLOR: always
+2026-09-09T17:51:23.9420842Z ##[endgroup]
+2026-09-09T17:51:23.9559629Z ##[end-action id=__dtolnay_rust-toolchain.__run_9;outcome=success;conclusion=success;duration_ms=17]
+2026-09-09T17:51:23.9562939Z ##[start-action display=rustc +1.82 --version --verbose;id=__dtolnay_rust-toolchain.__run_10]
+2026-09-09T17:51:23.9580064Z ##[group]Run rustc +1.82 --version --verbose
+2026-09-09T17:51:23.9580413Z rustc +1.82 --version --verbose
+2026-09-09T17:51:23.9595695Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-09-09T17:51:23.9596109Z env:
+2026-09-09T17:51:23.9596388Z   RUSTFLAGS: -Dwarnings
+2026-09-09T17:51:23.9596671Z   RUST_BACKTRACE: 1
+2026-09-09T17:51:23.9596949Z   rust_stable: 1.82
+2026-09-09T17:51:23.9597260Z   CARGO_HOME: /home/runner/.cargo
+2026-09-09T17:51:23.9597605Z   CARGO_INCREMENTAL: 0
+2026-09-09T17:51:23.9597894Z   CARGO_TERM_COLOR: always
+2026-09-09T17:51:23.9598222Z ##[endgroup]
+2026-09-09T17:51:23.9724887Z rustc 1.82.0 (f6e511eec 2024-10-15)
+2026-09-09T17:51:23.9725483Z binary: rustc
+2026-09-09T17:51:23.9725986Z commit-hash: f6e511eec7342f59a25f7c0534f1dbea00d01b14
+2026-09-09T17:51:23.9726461Z commit-date: 2024-10-15
+2026-09-09T17:51:23.9726870Z host: x86_64-unknown-linux-gnu
+2026-09-09T17:51:23.9727258Z release: 1.82.0
+2026-09-09T17:51:23.9727579Z LLVM version: 19.1.1
+2026-09-09T17:51:23.9739703Z ##[end-action id=__dtolnay_rust-toolchain.__run_10;outcome=success;conclusion=success;duration_ms=17]
+2026-09-09T17:51:23.9851800Z ##[group]Run taiki-e/install-action@valgrind
+2026-09-09T17:51:23.9852118Z with:
+2026-09-09T17:51:23.9852379Z   tool: valgrind
+2026-09-09T17:51:23.9852626Z   checksum: true
+2026-09-09T17:51:23.9852870Z   fallback: cargo-binstall
+2026-09-09T17:51:23.9853392Z env:
+2026-09-09T17:51:23.9853673Z   RUSTFLAGS: -Dwarnings
+2026-09-09T17:51:23.9853950Z   RUST_BACKTRACE: 1
+2026-09-09T17:51:23.9854206Z   rust_stable: 1.82
+2026-09-09T17:51:23.9854464Z   CARGO_HOME: /home/runner/.cargo
+2026-09-09T17:51:23.9854817Z   CARGO_INCREMENTAL: 0
+2026-09-09T17:51:23.9855093Z   CARGO_TERM_COLOR: always
+2026-09-09T17:51:23.9855366Z ##[endgroup]
+2026-09-09T17:51:23.9861943Z ##[start-action display=Run bail() {;id=__taiki-e_install-action.__run]
+2026-09-09T17:51:23.9879317Z ##[group]Run bail() {
+2026-09-09T17:51:23.9879647Z bail() {
+2026-09-09T17:51:23.9879954Z   printf '::error::install-action: %s\n' "$*"
+2026-09-09T17:51:23.9880303Z   exit 1
+2026-09-09T17:51:23.9880652Z }
+2026-09-09T17:51:23.9881027Z # If /bin/sh is dash, environment variable containing % is not imported, but is fine
+2026-09-09T17:51:23.9881542Z # because it also means that it will not be exposed to subprocess.
+2026-09-09T17:51:23.9881960Z if /usr/bin/env | grep -Eq '^BASH_FUNC_'; then
+2026-09-09T17:51:23.9882477Z   bail 'bash function injection via BASH_FUNC_ environment variable is not allowed for security reasons'
+2026-09-09T17:51:23.9883331Z fi
+2026-09-09T17:51:23.9883633Z if ! command -v bash >/dev/null; then
+2026-09-09T17:51:23.9884056Z   if grep -Eq '^ID=alpine' /etc/os-release; then
+2026-09-09T17:51:23.9884499Z     printf '::group::Install packages required for install-action (bash)\n'
+2026-09-09T17:51:23.9884937Z     # NB: sync with apk_install in main.sh
+2026-09-09T17:51:23.9885292Z     if command -v sudo >/dev/null; then
+2026-09-09T17:51:23.9885618Z       sudo apk --no-cache add bash
+2026-09-09T17:51:23.9885941Z     elif command -v doas >/dev/null; then
+2026-09-09T17:51:23.9886276Z       doas apk --no-cache add bash
+2026-09-09T17:51:23.9886606Z     else
+2026-09-09T17:51:23.9886885Z       apk --no-cache add bash
+2026-09-09T17:51:23.9887270Z     fi
+2026-09-09T17:51:23.9887536Z     printf '::endgroup::\n'
+2026-09-09T17:51:23.9887849Z   else
+2026-09-09T17:51:23.9888120Z     bail 'this action requires bash'
+2026-09-09T17:51:23.9888430Z   fi
+2026-09-09T17:51:23.9888667Z fi
+2026-09-09T17:51:23.9888963Z bash --noprofile --norc "${GITHUB_ACTION_PATH:?}/main.sh"
+2026-09-09T17:51:23.9890005Z shell: /usr/bin/env -u ENV -u BASH_ENV -u CDPATH -u SHELLOPTS -u BASHOPTS /bin/sh -eu {0}
+2026-09-09T17:51:23.9890420Z env:
+2026-09-09T17:51:23.9890763Z   RUSTFLAGS: -Dwarnings
+2026-09-09T17:51:23.9891061Z   RUST_BACKTRACE: 1
+2026-09-09T17:51:23.9891345Z   rust_stable: 1.82
+2026-09-09T17:51:23.9891612Z   CARGO_HOME: /home/runner/.cargo
+2026-09-09T17:51:23.9891913Z   CARGO_INCREMENTAL: 0
+2026-09-09T17:51:23.9892182Z   CARGO_TERM_COLOR: always
+2026-09-09T17:51:23.9892439Z   INPUT_TOOL: valgrind
+2026-09-09T17:51:23.9892738Z   INPUT_CHECKSUM: true
+2026-09-09T17:51:23.9893170Z   INPUT_FALLBACK: cargo-binstall
+2026-09-09T17:51:23.9895531Z   DEFAULT_GITHUB_TOKEN: ***
+2026-09-09T17:51:23.9895849Z   ACTION_USER_AGENT: taiki-e/install-action (valgrind)
+2026-09-09T17:51:23.9896160Z   RUNNER_OS: Linux
+2026-09-09T17:51:23.9896455Z   RUNNER_ARCH: X64
+2026-09-09T17:51:23.9896702Z ##[endgroup]
+2026-09-09T17:51:24.0004694Z info: host platform: x86_64_linux
+2026-09-09T17:51:24.0016436Z info: installing valgrind@latest
+2026-09-09T17:51:30.6950245Z E: Failed to fetch https://dl.google.com/linux/chrome-stable/deb/dists/stable/main/binary-amd64/Packages.gz  Hash Sum mismatch
+2026-09-09T17:51:30.6951054Z    Hashes of expected file:
+2026-09-09T17:51:30.6951525Z     - Filesize:1405 [weak]
+2026-09-09T17:51:30.6952394Z     - SHA256:233e56de019b57db89238fa7bcc3647718dbbea3a40c2dc1c633a8c8952aa9e9
+2026-09-09T17:51:30.6953308Z     - SHA1:f25f722f552dc3fd510081e6b65a0e7174ec9321 [weak]
+2026-09-09T17:51:30.6953800Z     - MD5Sum:2fc39e32c7bdf718a907c390338392ea [weak]
+2026-09-09T17:51:30.6954139Z    Hashes of received file:
+2026-09-09T17:51:30.6954585Z     - SHA256:bc1428ab27c6d76ee9bb76de07f1ded0ddb4aaabd958fc72855634ef5894a4b3
+2026-09-09T17:51:30.6955030Z     - SHA1:f601c49edc3ea059583213f0be1589cb0fa6e2e5 [weak]
+2026-09-09T17:51:30.6955377Z     - MD5Sum:2ce0a26fc7a49a488341fc13c6d05b52 [weak]
+2026-09-09T17:51:30.6955756Z     - Filesize:1405 [weak]
+2026-09-09T17:51:30.6956219Z    Last modification reported: Wed, 09 Sep 2026 09:41:12 +0000
+2026-09-09T17:51:30.6956796Z    Release file created at: Wed, 09 Sep 2026 17:16:59 +0000
+2026-09-09T17:51:30.6957430Z E: Some index files failed to download. They have been ignored, or old ones used instead.
+2026-09-09T17:51:32.8635597Z E: Failed to fetch https://dl.google.com/linux/chrome-stable/deb/dists/stable/main/binary-amd64/Packages.gz  Hash Sum mismatch
+2026-09-09T17:51:32.8636348Z    Hashes of expected file:
+2026-09-09T17:51:32.8636746Z     - Filesize:1405 [weak]
+2026-09-09T17:51:32.8637241Z     - SHA256:233e56de019b57db89238fa7bcc3647718dbbea3a40c2dc1c633a8c8952aa9e9
+2026-09-09T17:51:32.8637729Z     - SHA1:f25f722f552dc3fd510081e6b65a0e7174ec9321 [weak]
+2026-09-09T17:51:32.8638112Z     - MD5Sum:2fc39e32c7bdf718a907c390338392ea [weak]
+2026-09-09T17:51:32.8638451Z    Hashes of received file:
+2026-09-09T17:51:32.8638829Z     - SHA256:bc1428ab27c6d76ee9bb76de07f1ded0ddb4aaabd958fc72855634ef5894a4b3
+2026-09-09T17:51:32.8639298Z     - SHA1:f601c49edc3ea059583213f0be1589cb0fa6e2e5 [weak]
+2026-09-09T17:51:32.8639651Z     - MD5Sum:2ce0a26fc7a49a488341fc13c6d05b52 [weak]
+2026-09-09T17:51:32.8639961Z     - Filesize:1405 [weak]
+2026-09-09T17:51:32.8640277Z    Last modification reported: Wed, 09 Sep 2026 09:41:12 +0000
+2026-09-09T17:51:32.8640675Z    Release file created at: Wed, 09 Sep 2026 17:16:59 +0000
+2026-09-09T17:51:32.8641135Z E: Some index files failed to download. They have been ignored, or old ones used instead.
+2026-09-09T17:51:35.9893345Z E: Failed to fetch https://dl.google.com/linux/chrome-stable/deb/dists/stable/main/binary-amd64/Packages.gz  Hash Sum mismatch
+2026-09-09T17:51:35.9894597Z    Hashes of expected file:
+2026-09-09T17:51:35.9895157Z     - Filesize:1405 [weak]
+2026-09-09T17:51:35.9895754Z     - SHA256:233e56de019b57db89238fa7bcc3647718dbbea3a40c2dc1c633a8c8952aa9e9
+2026-09-09T17:51:35.9896542Z     - SHA1:f25f722f552dc3fd510081e6b65a0e7174ec9321 [weak]
+2026-09-09T17:51:35.9897401Z     - MD5Sum:2fc39e32c7bdf718a907c390338392ea [weak]
+2026-09-09T17:51:35.9897836Z    Hashes of received file:
+2026-09-09T17:51:35.9898479Z     - SHA256:bc1428ab27c6d76ee9bb76de07f1ded0ddb4aaabd958fc72855634ef5894a4b3
+2026-09-09T17:51:35.9899212Z     - SHA1:f601c49edc3ea059583213f0be1589cb0fa6e2e5 [weak]
+2026-09-09T17:51:35.9899779Z     - MD5Sum:2ce0a26fc7a49a488341fc13c6d05b52 [weak]
+2026-09-09T17:51:35.9900291Z     - Filesize:1405 [weak]
+2026-09-09T17:51:35.9900674Z    Last modification reported: Wed, 09 Sep 2026 09:41:12 +0000
+2026-09-09T17:51:35.9901101Z    Release file created at: Wed, 09 Sep 2026 17:16:59 +0000
+2026-09-09T17:51:35.9901590Z E: Some index files failed to download. They have been ignored, or old ones used instead.
+2026-09-09T17:51:40.1375394Z E: Failed to fetch https://dl.google.com/linux/chrome-stable/deb/dists/stable/main/binary-amd64/Packages.gz  Hash Sum mismatch
+2026-09-09T17:51:40.1376261Z    Hashes of expected file:
+2026-09-09T17:51:40.1376792Z     - Filesize:1405 [weak]
+2026-09-09T17:51:40.1377334Z     - SHA256:233e56de019b57db89238fa7bcc3647718dbbea3a40c2dc1c633a8c8952aa9e9
+2026-09-09T17:51:40.1378017Z     - SHA1:f25f722f552dc3fd510081e6b65a0e7174ec9321 [weak]
+2026-09-09T17:51:40.1378676Z     - MD5Sum:2fc39e32c7bdf718a907c390338392ea [weak]
+2026-09-09T17:51:40.1379195Z    Hashes of received file:
+2026-09-09T17:51:40.1380172Z     - SHA256:bc1428ab27c6d76ee9bb76de07f1ded0ddb4aaabd958fc72855634ef5894a4b3
+2026-09-09T17:51:40.1380644Z     - SHA1:f601c49edc3ea059583213f0be1589cb0fa6e2e5 [weak]
+2026-09-09T17:51:40.1380993Z     - MD5Sum:2ce0a26fc7a49a488341fc13c6d05b52 [weak]
+2026-09-09T17:51:40.1381376Z     - Filesize:1405 [weak]
+2026-09-09T17:51:40.1381882Z    Last modification reported: Wed, 09 Sep 2026 09:41:12 +0000
+2026-09-09T17:51:40.1382319Z    Release file created at: Wed, 09 Sep 2026 17:16:59 +0000
+2026-09-09T17:51:40.1383228Z E: Some index files failed to download. They have been ignored, or old ones used instead.
+2026-09-09T17:51:45.2720089Z E: Failed to fetch https://dl.google.com/linux/chrome-stable/deb/dists/stable/main/binary-amd64/Packages.gz  Hash Sum mismatch
+2026-09-09T17:51:45.2720795Z    Hashes of expected file:
+2026-09-09T17:51:45.2721225Z     - Filesize:1405 [weak]
+2026-09-09T17:51:45.2721686Z     - SHA256:233e56de019b57db89238fa7bcc3647718dbbea3a40c2dc1c633a8c8952aa9e9
+2026-09-09T17:51:45.2722189Z     - SHA1:f25f722f552dc3fd510081e6b65a0e7174ec9321 [weak]
+2026-09-09T17:51:45.2722647Z     - MD5Sum:2fc39e32c7bdf718a907c390338392ea [weak]
+2026-09-09T17:51:45.2723188Z    Hashes of received file:
+2026-09-09T17:51:45.2723673Z     - SHA256:bc1428ab27c6d76ee9bb76de07f1ded0ddb4aaabd958fc72855634ef5894a4b3
+2026-09-09T17:51:45.2724165Z     - SHA1:f601c49edc3ea059583213f0be1589cb0fa6e2e5 [weak]
+2026-09-09T17:51:45.2724526Z     - MD5Sum:2ce0a26fc7a49a488341fc13c6d05b52 [weak]
+2026-09-09T17:51:45.2724849Z     - Filesize:1405 [weak]
+2026-09-09T17:51:45.2725186Z    Last modification reported: Wed, 09 Sep 2026 09:41:12 +0000
+2026-09-09T17:51:45.2725592Z    Release file created at: Wed, 09 Sep 2026 17:16:59 +0000
+2026-09-09T17:51:45.2726054Z E: Some index files failed to download. They have been ignored, or old ones used instead.
+2026-09-09T17:51:51.5182120Z E: Failed to fetch https://dl.google.com/linux/chrome-stable/deb/dists/stable/main/binary-amd64/Packages.gz  Hash Sum mismatch
+2026-09-09T17:51:51.5183291Z    Hashes of expected file:
+2026-09-09T17:51:51.5183887Z     - Filesize:1405 [weak]
+2026-09-09T17:51:51.5184457Z     - SHA256:233e56de019b57db89238fa7bcc3647718dbbea3a40c2dc1c633a8c8952aa9e9
+2026-09-09T17:51:51.5185181Z     - SHA1:f25f722f552dc3fd510081e6b65a0e7174ec9321 [weak]
+2026-09-09T17:51:51.5185824Z     - MD5Sum:2fc39e32c7bdf718a907c390338392ea [weak]
+2026-09-09T17:51:51.5186757Z    Hashes of received file:
+2026-09-09T17:51:51.5187378Z     - SHA256:bc1428ab27c6d76ee9bb76de07f1ded0ddb4aaabd958fc72855634ef5894a4b3
+2026-09-09T17:51:51.5188127Z     - SHA1:f601c49edc3ea059583213f0be1589cb0fa6e2e5 [weak]
+2026-09-09T17:51:51.5188703Z     - MD5Sum:2ce0a26fc7a49a488341fc13c6d05b52 [weak]
+2026-09-09T17:51:51.5189178Z     - Filesize:1405 [weak]
+2026-09-09T17:51:51.5189588Z    Last modification reported: Wed, 09 Sep 2026 09:41:12 +0000
+2026-09-09T17:51:51.5189973Z    Release file created at: Wed, 09 Sep 2026 17:16:59 +0000
+2026-09-09T17:51:51.5190460Z E: Some index files failed to download. They have been ignored, or old ones used instead.
+2026-09-09T17:51:58.8159427Z E: Failed to fetch https://dl.google.com/linux/chrome-stable/deb/dists/stable/main/binary-amd64/Packages.gz  Hash Sum mismatch
+2026-09-09T17:51:58.8160343Z    Hashes of expected file:
+2026-09-09T17:51:58.8160919Z     - Filesize:1405 [weak]
+2026-09-09T17:51:58.8161519Z     - SHA256:233e56de019b57db89238fa7bcc3647718dbbea3a40c2dc1c633a8c8952aa9e9
+2026-09-09T17:51:58.8162262Z     - SHA1:f25f722f552dc3fd510081e6b65a0e7174ec9321 [weak]
+2026-09-09T17:51:58.8162842Z     - MD5Sum:2fc39e32c7bdf718a907c390338392ea [weak]
+2026-09-09T17:51:58.8163436Z    Hashes of received file:
+2026-09-09T17:51:58.8164010Z     - SHA256:bc1428ab27c6d76ee9bb76de07f1ded0ddb4aaabd958fc72855634ef5894a4b3
+2026-09-09T17:51:58.8164563Z     - SHA1:f601c49edc3ea059583213f0be1589cb0fa6e2e5 [weak]
+2026-09-09T17:51:58.8165083Z     - MD5Sum:2ce0a26fc7a49a488341fc13c6d05b52 [weak]
+2026-09-09T17:51:58.8165583Z     - Filesize:1405 [weak]
+2026-09-09T17:51:58.8165999Z    Last modification reported: Wed, 09 Sep 2026 09:41:12 +0000
+2026-09-09T17:51:58.8166760Z    Release file created at: Wed, 09 Sep 2026 17:16:59 +0000
+2026-09-09T17:51:58.8167232Z E: Some index files failed to download. They have been ignored, or old ones used instead.
+2026-09-09T17:52:06.9343903Z E: Failed to fetch https://dl.google.com/linux/chrome-stable/deb/dists/stable/main/binary-amd64/Packages.gz  Hash Sum mismatch
+2026-09-09T17:52:06.9344909Z    Hashes of expected file:
+2026-09-09T17:52:06.9345550Z     - Filesize:1405 [weak]
+2026-09-09T17:52:06.9346116Z     - SHA256:233e56de019b57db89238fa7bcc3647718dbbea3a40c2dc1c633a8c8952aa9e9
+2026-09-09T17:52:06.9347010Z     - SHA1:f25f722f552dc3fd510081e6b65a0e7174ec9321 [weak]
+2026-09-09T17:52:06.9347617Z     - MD5Sum:2fc39e32c7bdf718a907c390338392ea [weak]
+2026-09-09T17:52:06.9348078Z    Hashes of received file:
+2026-09-09T17:52:06.9348563Z     - SHA256:bc1428ab27c6d76ee9bb76de07f1ded0ddb4aaabd958fc72855634ef5894a4b3
+2026-09-09T17:52:06.9349080Z     - SHA1:f601c49edc3ea059583213f0be1589cb0fa6e2e5 [weak]
+2026-09-09T17:52:06.9349589Z     - MD5Sum:2ce0a26fc7a49a488341fc13c6d05b52 [weak]
+2026-09-09T17:52:06.9350029Z     - Filesize:1405 [weak]
+2026-09-09T17:52:06.9350449Z    Last modification reported: Wed, 09 Sep 2026 09:41:12 +0000
+2026-09-09T17:52:06.9350977Z    Release file created at: Wed, 09 Sep 2026 17:16:59 +0000
+2026-09-09T17:52:06.9351666Z E: Some index files failed to download. They have been ignored, or old ones used instead.
+2026-09-09T17:52:16.1027136Z E: Failed to fetch https://dl.google.com/linux/chrome-stable/deb/dists/stable/main/binary-amd64/Packages.gz  Hash Sum mismatch
+2026-09-09T17:52:16.1028147Z    Hashes of expected file:
+2026-09-09T17:52:16.1028548Z     - Filesize:1405 [weak]
+2026-09-09T17:52:16.1029006Z     - SHA256:233e56de019b57db89238fa7bcc3647718dbbea3a40c2dc1c633a8c8952aa9e9
+2026-09-09T17:52:16.1029511Z     - SHA1:f25f722f552dc3fd510081e6b65a0e7174ec9321 [weak]
+2026-09-09T17:52:16.1029932Z     - MD5Sum:2fc39e32c7bdf718a907c390338392ea [weak]
+2026-09-09T17:52:16.1030300Z    Hashes of received file:
+2026-09-09T17:52:16.1030738Z     - SHA256:bc1428ab27c6d76ee9bb76de07f1ded0ddb4aaabd958fc72855634ef5894a4b3
+2026-09-09T17:52:16.1031283Z     - SHA1:f601c49edc3ea059583213f0be1589cb0fa6e2e5 [weak]
+2026-09-09T17:52:16.1031790Z     - MD5Sum:2ce0a26fc7a49a488341fc13c6d05b52 [weak]
+2026-09-09T17:52:16.1032224Z     - Filesize:1405 [weak]
+2026-09-09T17:52:16.1032911Z    Last modification reported: Wed, 09 Sep 2026 09:41:12 +0000
+2026-09-09T17:52:16.1033629Z    Release file created at: Wed, 09 Sep 2026 17:16:59 +0000
+2026-09-09T17:52:16.1034310Z E: Some index files failed to download. They have been ignored, or old ones used instead.
+2026-09-09T17:52:26.2476921Z E: Failed to fetch https://dl.google.com/linux/chrome-stable/deb/dists/stable/main/binary-amd64/Packages.gz  Hash Sum mismatch
+2026-09-09T17:52:26.2477662Z    Hashes of expected file:
+2026-09-09T17:52:26.2478140Z     - Filesize:1405 [weak]
+2026-09-09T17:52:26.2478703Z     - SHA256:233e56de019b57db89238fa7bcc3647718dbbea3a40c2dc1c633a8c8952aa9e9
+2026-09-09T17:52:26.2479291Z     - SHA1:f25f722f552dc3fd510081e6b65a0e7174ec9321 [weak]
+2026-09-09T17:52:26.2479750Z     - MD5Sum:2fc39e32c7bdf718a907c390338392ea [weak]
+2026-09-09T17:52:26.2480108Z    Hashes of received file:
+2026-09-09T17:52:26.2480533Z     - SHA256:bc1428ab27c6d76ee9bb76de07f1ded0ddb4aaabd958fc72855634ef5894a4b3
+2026-09-09T17:52:26.2481107Z     - SHA1:f601c49edc3ea059583213f0be1589cb0fa6e2e5 [weak]
+2026-09-09T17:52:26.2481555Z     - MD5Sum:2ce0a26fc7a49a488341fc13c6d05b52 [weak]
+2026-09-09T17:52:26.2482007Z     - Filesize:1405 [weak]
+2026-09-09T17:52:26.2482432Z    Last modification reported: Wed, 09 Sep 2026 09:41:12 +0000
+2026-09-09T17:52:26.2483086Z    Release file created at: Wed, 09 Sep 2026 17:16:59 +0000
+2026-09-09T17:52:26.2483809Z E: Some index files failed to download. They have been ignored, or old ones used instead.
+2026-09-09T17:52:37.4541828Z E: Failed to fetch https://dl.google.com/linux/chrome-stable/deb/dists/stable/main/binary-amd64/Packages.gz  Hash Sum mismatch
+2026-09-09T17:52:37.4543210Z    Hashes of expected file:
+2026-09-09T17:52:37.4544012Z     - Filesize:1405 [weak]
+2026-09-09T17:52:37.4544613Z     - SHA256:233e56de019b57db89238fa7bcc3647718dbbea3a40c2dc1c633a8c8952aa9e9
+2026-09-09T17:52:37.4545344Z     - SHA1:f25f722f552dc3fd510081e6b65a0e7174ec9321 [weak]
+2026-09-09T17:52:37.4545997Z     - MD5Sum:2fc39e32c7bdf718a907c390338392ea [weak]
+2026-09-09T17:52:37.4546547Z    Hashes of received file:
+2026-09-09T17:52:37.4547191Z     - SHA256:bc1428ab27c6d76ee9bb76de07f1ded0ddb4aaabd958fc72855634ef5894a4b3
+2026-09-09T17:52:37.4547820Z     - SHA1:f601c49edc3ea059583213f0be1589cb0fa6e2e5 [weak]
+2026-09-09T17:52:37.4548304Z     - MD5Sum:2ce0a26fc7a49a488341fc13c6d05b52 [weak]
+2026-09-09T17:52:37.4548674Z     - Filesize:1405 [weak]
+2026-09-09T17:52:37.4549021Z    Last modification reported: Wed, 09 Sep 2026 09:41:12 +0000
+2026-09-09T17:52:37.4549442Z    Release file created at: Wed, 09 Sep 2026 17:16:59 +0000
+2026-09-09T17:52:37.4549888Z E: Some index files failed to download. They have been ignored, or old ones used instead.
+2026-09-09T17:52:37.4570484Z ##[error]Process completed with exit code 100.
+2026-09-09T17:52:37.4577406Z ##[end-action id=__taiki-e_install-action.__run;outcome=failure;conclusion=failure;duration_ms=73471]
+2026-09-09T17:52:37.4584301Z ##[start-action display=Run Set-StrictMode -Version Latest;id=__taiki-e_install-action.__run_2]
+2026-09-09T17:52:37.4588035Z ##[end-action id=__taiki-e_install-action.__run_2;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-09-09T17:52:37.4693726Z Post job cleanup.
+2026-09-09T17:52:37.5390483Z [command]/usr/bin/git version
+2026-09-09T17:52:37.5429212Z git version 2.55.0
+2026-09-09T17:52:37.5454673Z Temporarily overriding HOME='/home/runner/work/_temp/8e4e4243-db38-4188-af9e-d9662a20bb3b' before making global git config changes
+2026-09-09T17:52:37.5456107Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-09T17:52:37.5458905Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/tokio/tokio
+2026-09-09T17:52:37.5482064Z Removing SSH command configuration
+2026-09-09T17:52:37.5486755Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-09T17:52:37.5512262Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-09T17:52:37.5687014Z Removing HTTP extra header
+2026-09-09T17:52:37.5690826Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-09T17:52:37.5714623Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-09T17:52:37.5869868Z Removing includeIf entries pointing to credentials config files
+2026-09-09T17:52:37.5874623Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-09T17:52:37.5958036Z includeif.gitdir:/home/runner/work/tokio/tokio/.git.path
+2026-09-09T17:52:37.5958808Z includeif.gitdir:/home/runner/work/tokio/tokio/.git/worktrees/*.path
+2026-09-09T17:52:37.5959535Z includeif.gitdir:/github/workspace/.git.path
+2026-09-09T17:52:37.5960148Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-09-09T17:52:37.5964825Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/tokio/tokio/.git.path
+2026-09-09T17:52:37.5980604Z /home/runner/work/_temp/git-credentials-334d9281-a8ab-4417-9419-da0060ba0af8.config
+2026-09-09T17:52:37.5987716Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/tokio/tokio/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-334d9281\-a8ab\-4417\-9419\-da0060ba0af8\.config
+2026-09-09T17:52:37.6012381Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/tokio/tokio/.git/worktrees/*.path
+2026-09-09T17:52:37.6029280Z /home/runner/work/_temp/git-credentials-334d9281-a8ab-4417-9419-da0060ba0af8.config
+2026-09-09T17:52:37.6042664Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/tokio/tokio/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-334d9281\-a8ab\-4417\-9419\-da0060ba0af8\.config
+2026-09-09T17:52:37.6066350Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-09-09T17:52:37.6082892Z /github/runner_temp/git-credentials-334d9281-a8ab-4417-9419-da0060ba0af8.config
+2026-09-09T17:52:37.6089642Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-334d9281\-a8ab\-4417\-9419\-da0060ba0af8\.config
+2026-09-09T17:52:37.6113874Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-09-09T17:52:37.6131268Z /github/runner_temp/git-credentials-334d9281-a8ab-4417-9419-da0060ba0af8.config
+2026-09-09T17:52:37.6136390Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-334d9281\-a8ab\-4417\-9419\-da0060ba0af8\.config
+2026-09-09T17:52:37.6159039Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-09T17:52:37.6315260Z Removing credentials config '/home/runner/work/_temp/git-credentials-334d9281-a8ab-4417-9419-da0060ba0af8.config'
+2026-09-09T17:52:37.6455246Z Cleaning up orphan processes
