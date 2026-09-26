@@ -6,8 +6,6 @@ which is then served. No agent logic lives here (SOLID-S); tests inject
 fakes through the same parameters.
 """
 
-from typing import Final
-
 import uvicorn
 from starlette.applications import Starlette
 
@@ -20,9 +18,6 @@ from contracts.evidence import EvidencePack
 from contracts.jev import JevResult
 
 __all__ = ["build_app", "serve"]
-
-_HOST: Final[str] = "0.0.0.0"
-_PORT: Final[int] = 8080
 
 
 def build_app(
@@ -40,8 +35,12 @@ def build_app(
 
 
 def serve() -> None:
-    """Serve the composed app; blocks until the process is stopped."""
-    uvicorn.run(build_app(), host=_HOST, port=_PORT)
+    """Serve the composed app on the YAML-pinned host/port; blocks until
+    the process is stopped."""
+    jev_runtime = load_jev_runtime()
+    uvicorn.run(
+        build_app(runtime=jev_runtime), host=jev_runtime.host, port=jev_runtime.port
+    )
 
 
 if __name__ == "__main__":

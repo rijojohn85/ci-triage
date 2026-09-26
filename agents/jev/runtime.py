@@ -29,16 +29,19 @@ class RuntimeConfigError(ValueError):
 
 
 class JevRuntime(BaseModel):
-    """The pinned Jev model id and its per-skill `step_timeout` (AD-19).
+    """The pinned Jev model id, its per-skill `step_timeout` and the serve
+    host/port (AD-19).
 
-    A non-positive timeout is refused at load (a step that never times out
-    would hold a lease forever, AD-23).
+    A non-positive timeout or port is refused at load (a step that never
+    times out would hold a lease forever, AD-23).
     """
 
     model_config = ConfigDict(frozen=True)
 
     model: str = Field(min_length=1)
     step_timeout: int = Field(gt=0)
+    host: str = Field(default="0.0.0.0", min_length=1)
+    port: int = Field(default=8080, gt=0)
 
 
 def load_jev_runtime(path: Path = RUNTIME_CONFIG_PATH) -> JevRuntime:

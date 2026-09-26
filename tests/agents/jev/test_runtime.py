@@ -13,6 +13,8 @@ from pydantic import ValidationError
 from agents.jev.runtime import RuntimeConfigError, load_jev_runtime
 
 PINNED_STEP_TIMEOUT = 60
+PINNED_HOST = "0.0.0.0"
+PINNED_PORT = 8080
 
 
 def test_ac1_model_and_timeout_from_runtime_yaml() -> None:
@@ -20,6 +22,23 @@ def test_ac1_model_and_timeout_from_runtime_yaml() -> None:
 
     assert runtime.model == "typesafe/jev-1.13", "the pinned Jev model id (AD-19)"
     assert runtime.step_timeout == PINNED_STEP_TIMEOUT
+
+
+def test_ac1_host_and_port_from_runtime_yaml() -> None:
+    runtime = load_jev_runtime()
+
+    assert runtime.host == PINNED_HOST, "the serve host lives only in the YAML (AD-19)"
+    assert runtime.port == PINNED_PORT, "the serve port lives only in the YAML (AD-19)"
+
+
+def test_ac1_non_positive_port_is_refused(tmp_path: Path) -> None:
+    path = tmp_path / "runtime.yaml"
+    path.write_text(
+        "jev:\n  model: typesafe/jev-1.13\n  step_timeout: 60\n  port: 0\n"
+    )
+
+    with pytest.raises(ValidationError):
+        load_jev_runtime(path)
 
 
 def test_ac1_non_positive_timeout_is_refused(tmp_path: Path) -> None:
