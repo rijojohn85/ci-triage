@@ -31,7 +31,7 @@ import psycopg
 from contracts.usage import CallOutcome, ModelUsage
 from workflow.db import Connection, open_connection
 from workflow.service_log import EVENT_MODEL_CALL, InvocationLine, log_invocation
-from workflow.steps import DuplicateStepError, StepStatus
+from workflow.steps import StepStatus, duplicate_step_error
 
 __all__ = [
     "AuditIdentity",
@@ -48,10 +48,6 @@ _LOG = logging.getLogger(__name__)
 CALL_STEP_PREFIX = "call:"
 """Attempt rows live in this step-name namespace, never beside a step's own
 completion row (AD-2)."""
-
-IDENTITY_CONSTRAINT = "uq_run_step_identity"
-"""The `(run_id, step, attempt)` unique constraint: the duplicate backstop
-(AD-2). Only a violation of THIS constraint is a duplicate attempt."""
 
 _INSERT_ATTEMPT_SQL = """
 INSERT INTO run_step (
@@ -305,10 +301,9 @@ class PostgresUsageAuditStore:
                     ),
                 )
             except psycopg.errors.UniqueViolation as exc:
-                if exc.diag.constraint_name != IDENTITY_CONSTRAINT:
-                    raise  # not our identity: never masked as a duplicate
                 # `(run_id, step, attempt)` is unique (AD-2): a repeated
-                # attempt is definitive, never transient.
-                raise DuplicateStepError(
-                    attempt.run_id, attempt.step, attempt.attempt
+                # attempt is definitive, never transient — and only a
+                # violation of THIS constraint is one (shared translation).
+                raise duplicate_step_error(
+                    exc, attempt.run_id, attempt.step, attempt.attempt
                 ) from exc

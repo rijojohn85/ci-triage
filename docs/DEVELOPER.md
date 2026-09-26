@@ -36,6 +36,7 @@ Every message between orchestrator and agent is an A2A message whose data part i
 | 4.1 | The pure guardrails validator (AD-6/7/8/9/24/27): agent payloads are checked against the committed generated `TriageVerdict` schema, every citation resolves against the evidence served this run, suspects come only from the served candidates, `confidence_jev` must be this run's Jev number, and blame-free output carries no author key — all as collected structured issues, never raised; the A2A task view now serves each run's real confidence (unknown → blame-free) | `guardrails/validator.py`, `guardrails/citation_check.py`, `guardrails/attribution.py`, `workflow/task_store.py`, `workflow/a2a_server.py`, `workflow/evidence_collection.py`, `pyproject.toml` (pinned `jsonschema`), `tests/guardrails/`, `tests/workflow/test_task_store.py`, `tests/workflow/test_task_server.py` |
 | 6.1 | Central model-call audit (AD-18): every model/Jev invocation becomes its own attempt-level `run_step` row with the model, its token counters (NULL when the provider did not report them, never 0), status and a closed outcome; usage returned by a failed call is still saved, a crash saves nothing (nothing is invented), attempt rows never move run state, and every invocation logs one structured, secret-free JSON line | `contracts/usage.py`, `workflow/usage_audit.py`, `workflow/service_log.py`, `deploy/migrations/0007_run_step_audit.sql`, `tests/contracts/test_usage.py`, `tests/workflow/test_usage_audit.py`, `tests/workflow/test_service_log.py`, `tests/workflow/test_usage_audit_integration.py`; see [Model-call audit](#model-call-audit-story-61) |
 | 6.2 | Versioned NULL-aware model costs (AD-18): one provenance-carrying price table (`table_version`, per-model five-type rates each with source URL + retrieved date, the Jev rate NULL + flagged per OQ-3), a pure NULL-aware calculator (an unreported counter, an unpriced model or a Jev-billed call yields a NULL cost plus a flag, never 0; a run total with any incomplete part is NULL with the reasons listed), and the orchestrator-side reader that rolls 6.1's audit rows into per-run costs — computed, never stored | `monitoring/prices.yaml`, `monitoring/pricing.py`, `monitoring/costs.py`, `workflow/usage_costs.py`, `tests/monitoring/`, `tests/workflow/test_usage_costs.py`, `tests/workflow/test_usage_costs_integration.py`; see [Model costs](#model-costs-story-62) |
+| 2.8 | The shared step runner (AD-8, AD-22): one execution policy every agent step goes through — blocking non-streaming A2A `send_message` with `contextId = run_id` and a per-skill timeout, every attempted call audited centrally, one validation retry with the structured errors fed back (a second invalid output pauses with `validation_failed`), at most three transient attempts with config-driven backoff then a terminal `FAILED` with history written once, a definitive error failing without retry, every attempt its own `run_step` row, and the validated output + state move committed atomically under the lease guard | `workflow/step_runner.py`, `workflow/a2a_client.py`, `workflow/runtime_config.py`, `workflow/orchestrator_config.py` + `config/orchestrator.yaml` (retry budget), `guardrails/validator.py` (`validate_classification`), `tests/workflow/test_step_runner.py`, `tests/workflow/test_a2a_client.py`, `tests/workflow/test_runtime_config.py`, `tests/workflow/test_step_runner_integration.py`, `tests/guardrails/test_validator.py`; see [The shared step runner](#the-shared-step-runner-story-28) |
 
 ## Where things live
 
@@ -46,7 +47,7 @@ Every message between orchestrator and agent is an A2A message whose data part i
 | `guardrails/thresholds.yaml` | built (2.1, 2.2, 2.5) | the one thresholds file (AD-19): `review.max_rounds`, `workflow_path_glob`, the `confidence` cut-offs (`class_cutoff`, `no_route_cutoff`, `injection_screen_cutoff`, `injection_screen_cap`) and `distiller.max_bytes`; consumed via `workflow.thresholds.load_thresholds` |
 | `guardrails/confidence.py` | built (2.2) | the AD-9 min rule as code: `ClassConfidence`, `RouteConfidence`, `apply_injection_screen`, `below_class_cutoff`, `class_escalation` |
 | `guardrails/citation_check.py` | built (4.1) | citation resolution against the evidence served this run (AD-7): `ServedEvidence` (pack + the run's Jev call), the closed per-kind resolution table, `ValidationIssue` (the one issue shape) |
-| `guardrails/validator.py` | built (4.1) | the pure verdict validator (AD-6/7/8/9/27): `validate_verdict(payload, served, blame_free=…)` → `ValidationResult{verdict, issues}`; two layers (committed JSON schema + pydantic parse) plus the suspect/confidence/attribution checks; see [The guardrails validator](#the-guardrails-validator-story-41) |
+| `guardrails/validator.py` | built (4.1, 2.8) | the pure verdict validator (AD-6/7/8/9/27): `validate_verdict(payload, served, blame_free=…)` → `ValidationResult{verdict, issues}`; two layers (committed JSON schema + pydantic parse) plus the suspect/confidence/attribution checks; `validate_classification(payload)` (2.8, schema + parse only) is the CLASSIFYING surface; see [The guardrails validator](#the-guardrails-validator-story-41) |
 | `guardrails/attribution.py` | built (4.1) | the deep `author_login` walk (AD-27), moved from `workflow/task_store.py` (DRY): `strip_author_attribution`, `contains_author_attribution`, `attribution_location` |
 | `deploy/compose.yaml` | built (0.3, 1.1) | postgres:18 + one-shot `migrate` job + the real gateway (story 1.1) + orchestrator/agent placeholders, with AD-16 secret placement; see [deploy/README.md](../deploy/README.md) and [Compose and migrations](#compose-and-migrations-story-03) |
 | `deploy/migrations/` | built (0.3, 2.1, 1.1, 1.2, 2.3, 2.6, 6.1) | forward-only `.sql` files + naming rules; runner is `workflow/migrate.py`; `0001_triage_run.sql` owns run state, `0002_webhook_delivery.sql` records seen delivery ids for replay dedupe, `0003_triage_run_lease.sql` adds the AD-23 lease columns + claim index, `0004_run_step.sql` adds the AD-2 step record, `0005_history.sql` adds the AD-15 structured-only history table, `0006_pr_feedback.sql` adds the separate post-terminal PR feedback table, `0007_run_step_audit.sql` adds the AD-18 model-call audit columns to `run_step` |
@@ -54,7 +55,7 @@ Every message between orchestrator and agent is an A2A message whose data part i
 | `tests/scripts/` | built (0.4) | unit tests of the demo-repo read-back comparison logic against recorded API fixtures; live `gh` path is `@pytest.mark.integration` |
 | `test-data/` | built (0.4) | demo-repo evidence: `demo-repo-expected.json` (AD-16 set, one source for script + docs), `demo-repo.md` (live facts + scenario slots), `demo-repo-seed/` (pushed verbatim to the demo repo) |
 | `tests/contracts/` | built (0.2) | contract tests, named after the ACs they prove |
-| `tests/workflow/`, `tests/security/` | built (0.3, 2.1, 1.1, 1.2, 2.2, 2.3, 2.4, 2.5) | migration-runner and compose secret-placement tests; state-machine, projection and diagram tests; gateway signature/intake/limits tests; lease unit + fencing tests; step unit + atomic-commit/resume/fencing tests; A2A task-view unit + JSON-RPC ASGI tests; distiller AC tests (no I/O) (`@pytest.mark.integration` ones need Docker, `pytest -m integration`) |
+| `tests/workflow/`, `tests/security/` | built (0.3, 2.1, 1.1, 1.2, 2.2, 2.3, 2.4, 2.5, 2.8) | migration-runner and compose secret-placement tests; state-machine, projection and diagram tests; gateway signature/intake/limits tests; lease unit + fencing tests; step unit + atomic-commit/resume/fencing tests; A2A task-view unit + JSON-RPC ASGI tests; distiller AC tests (no I/O); step-runner, A2A-client and runtime-config tests (`@pytest.mark.integration` ones need Docker, `pytest -m integration`) |
 | `gateway/` | built (1.1) | webhook intake only — signature, accepted events, load limits, one enqueue; see [gateway/README.md](../gateway/README.md) |
 | `workflow/ids.py` | built (1.1) | pure `new_run_id()`: the one UUIDv7 run identity (AD-4) |
 | `workflow/leases.py` | built (1.2) | the pure AD-23 policy (claimable states, expiry predicates, owner token) and the small `RunLeaseStore` / connection protocol (SOLID-I) |
@@ -73,8 +74,10 @@ Every message between orchestrator and agent is an A2A message whose data part i
 | `workflow/a2a_server.py` | built (2.4, 4.1) | the A2A transport wiring: `RefusingExecutor` plus `create_app`, which serves `get_task`/`list_tasks` through a2a-sdk 1.1.5's JSON-RPC routes (AD-4, AD-5); each run's serving confidence comes from the reader |
 | `workflow/distiller.py` | built (2.5) | the pure AD-20 log distiller: `distill(ci_log, junit_xml, limits) -> list[DistilledLogLine]`, the ordered `ERROR_MARKERS` registry, ANSI/control stripping, JUnit evidence and the UTF-8-safe byte clip; no I/O, model, network or clock (SOLID-S) |
 | `config/gateway.yaml` | built (1.1) | per-installation rate limit and per-repo queue-depth cap (AD-19); consumed via `gateway.settings.load_gateway_limits` |
-| `config/orchestrator.yaml` | built (1.2) | `lease_seconds` / `renew_after_seconds` (AD-19); `workflow.orchestrator_config.load_orchestrator_config` reads it for the worker loop that will consume it |
-| `config/runtime.yaml` | placeholder | model IDs and per-skill `step_timeout` (AD-19) |
+| `config/orchestrator.yaml` | built (1.2, 2.8) | `lease_seconds` / `renew_after_seconds` plus the AD-22 transient-retry budget (`retry.max_attempts`, `retry.backoff_base_seconds`) (AD-19); `workflow.orchestrator_config.load_orchestrator_config` reads it |
+| `config/runtime.yaml` | built (2.8) | per-agent model IDs and `step_timeout` (AD-19); `workflow.runtime_config.load_runtime_config` is its one loader (`for_skill` maps the runner's skill names onto the agent keys) |
+| `workflow/step_runner.py` | built (2.8) | the shared step runner: `run_step(...)` with the two independent retry budgets (AD-8 validation retry + AD-22 transient ≤3 with backoff), the typed `TransientCallError`/`DefinitiveCallError` pair, `FailedAttempt` + the `AttemptRecorder` protocol and `PostgresAttemptRecorder` (insert-only failed-attempt rows), and the typed `committed`/`paused`/`failed` outcomes; see [The shared step runner](#the-shared-step-runner-story-28) |
+| `workflow/a2a_client.py` | built (2.8) | the blocking non-streaming A2A transport adapter (`A2aSkillTransport`): `contextId = run_id`, per-call timeout, and the `AgentError.retryable` → typed-error classification the runner's budgets consume (AD-4, AD-5, AD-22) |
 | `deploy/` | partially built (0.3, 1.1) | Compose, gateway image, k8s manifests, migrations (0.3+); k8s manifests + `registry.<env>.yaml` still placeholders |
 | `workflow/` (rest), `agents/`, `guardrails/` (risk_gate), `punch-out/` | placeholder | filled by Epics 2–6; each folder's README says what belongs there |
 | `prompts/`, `*.test.yaml` | placeholder | agent prompts and their promptfoo evals (Epic 3) |
@@ -722,6 +725,92 @@ The same marked test file includes a real GitHub read. To enable it, set
 failed attempt with available logs and a token authorized for that repository.
 Keep the token outside the repository. Without all five values, the GitHub
 check explicitly skips; a skip is not a successful live read.
+
+## The shared step runner (story 2.8)
+
+Every agent step — classify, analyze, propose, review — now goes through one
+piece of code that decides how a step is tried, retried, paused and written
+down. Before this story each caller would have had to invent that policy
+itself; now it is written once, in
+[`workflow/step_runner.py`](../workflow/step_runner.py). The rules are linked
+in the [architecture spine](../_bmad-output/planning-artifacts/architecture/architecture-stage4-2026-09-25/ARCHITECTURE-SPINE.md)
+(AD-1, AD-2, AD-8, AD-18, AD-19, AD-22, AD-23).
+
+**What one step looks like.** The runner asks the agent for an answer (one
+blocking call, no streaming), checks the answer against the facts of this
+run, and then either accepts it and moves the run on, asks the agent again,
+stops and waits for a person, or gives up and marks the run failed. Three
+plain rules drive everything:
+
+- **A wrong answer gets one second chance.** If the answer fails the checks,
+  the runner sends the exact list of problems back to the agent and tries
+  once more. If the second answer is also wrong, the run stops and waits for
+  a human, carrying the reason `validation_failed`. A wrong answer is never
+  written down as if it were a good one.
+- **A hiccup gets at most three tries.** Network trouble, "too busy"
+  answers, server errors and timeouts are all hiccups: the runner waits a
+  little longer between each try (the wait grows each time) and gives up for
+  good after three failed tries, marking the run failed and writing the
+  failure into history exactly once. A *definitive* error — one the agent
+  says must not be retried — gives up immediately.
+- **Every try is written down.** Each attempt, good or bad, gets its own
+  row, numbered in order, so the run's history shows exactly what was tried
+  and what happened. The two rules above keep separate count: a wrong answer
+  does not use up a hiccup try, and vice versa.
+
+**Who records what.** Two kinds of row are written per attempt. The audit
+row (`call:<skill>`, story 6.1) says which model was called and what it
+cost in tokens — written for every attempted call, success or failure. The
+plain row (the step's own name) records the attempt's outcome; a failed
+attempt that doesn't move the run is inserted on its own
+(`PostgresAttemptRecorder`), while the attempt that ends the step (accepted,
+paused, or finally failed) is written in the same lease-guarded transaction
+that moves the run's state — so output and state always change together, and
+a worker that lost its run in the meantime writes nothing (story 1.2's
+fence).
+
+**Where the numbers live.** Which model to use and how long to wait for an
+answer come from `config/runtime.yaml` (one loader,
+`workflow/runtime_config.py`); how many hiccup tries are allowed and how
+long the first wait is come from `config/orchestrator.yaml` under `retry:`
+(loaded with everything else by `workflow/orchestrator_config.py`). Both are
+placeholders today, not calibrated (OQ-2) — change the YAML, never the code.
+
+**How the call travels.** `workflow/a2a_client.py` is the only piece that
+speaks the wire: one blocking, non-streaming A2A `send_message` per try,
+addressed with `contextId = run_id`, cut off at the per-skill timeout. When
+an agent answers "I failed" with its typed error, the adapter turns the
+error's "you may retry me" flag into the runner's hiccup/definitive
+distinction. It holds no database or GitHub access. Two caller constraints
+are deliberate today and revisited by story 2.9's worker wiring: `call` is
+for synchronous callers only (it runs a fresh event loop per call, which
+raises inside a running one), and it opens a fresh HTTP client per call.
+
+**One known window.** When a step finally fails, the runner writes the
+failed attempt row and the `FAILED` state move in one guarded transaction,
+and the terminal history row in a second, separate write. A crash between
+the two leaves the run failed with history not yet written; the history
+write is idempotent per run, so story 2.12's recovery pass completes it
+without a duplicate.
+
+**What is deliberately not here yet.** No real agent is wired in — the
+runner's transport is a small interface (the seam story 2.9 connects), and
+the tests drive it with stand-ins. The caller also supplies, per run, the
+identity used for the terminal history write (test id, error type, stack
+frames); extracting those from real failures lands with stories 2.9/2.12.
+
+Run the focused checks:
+
+```bash
+.venv/bin/pytest tests/workflow/test_step_runner.py tests/workflow/test_a2a_client.py tests/workflow/test_runtime_config.py tests/workflow/test_orchestrator_config.py tests/guardrails/test_validator.py -q
+.venv/bin/pytest -m integration tests/workflow/test_step_runner_integration.py -q
+make check
+```
+
+The marked checks use real Postgres 18 through disposable Docker containers.
+They prove every attempt lands as its own row, a second wrong answer pauses
+with `validation_failed`, an exhausted hiccup budget ends `FAILED` with
+history written once, and a replaced worker's result is refused.
 
 ## Model-call audit (story 6.1)
 

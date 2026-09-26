@@ -13,11 +13,26 @@ from contracts.citations import CommitCitation, JevSignalCitation, LogLineCitati
 from contracts.enums import FailureClass, RiskTier
 from contracts.verdict import Suspect, TriageVerdict
 from guardrails.citation_check import ServedEvidence, ValidationIssue
-from guardrails.validator import validate_verdict
+from guardrails.validator import validate_classification, validate_verdict
 from tests.contracts.samples import FULL_SHA
 from tests.guardrails.test_citation_check import OTHER_SHA, served
 
 SOMEONE = "someone"
+
+
+def classification_payload() -> dict[str, object]:
+    """A fully valid Jev classification, dumped through the contract."""
+    from contracts.jev import JevChoice, JevClassification, JevInjectionScreen
+
+    classification = JevClassification(
+        choice=JevChoice(
+            answer=FailureClass.CODE,
+            confidence=0.9,
+            probabilities={FailureClass.CODE: 0.9},
+        ),
+        injection_screen=JevInjectionScreen(noul=0.1),
+    )
+    return classification.model_dump(mode="json")
 
 
 def verdict_payload() -> dict[str, object]:
@@ -261,3 +276,38 @@ def test_served_evidence_is_importable_from_the_validator_surface() -> None:
 
     assert ServedEvidenceAlias is ServedEvidence
     assert ValidationIssueAlias is ValidationIssue
+
+
+# --- story 2.8 / AC1: the CLASSIFYING validation surface (schema + parse only)
+
+
+def test_ac1_valid_classification_parses_with_zero_issues() -> None:
+    result = validate_classification(classification_payload())
+
+    assert result.issues == ()
+    assert result.classification is not None
+    assert result.classification.choice.answer is FailureClass.CODE
+
+
+def test_ac1_classification_schema_failure_is_structured() -> None:
+    payload = classification_payload()
+    payload["choice"]["answer"] = "nonsense"  # type: ignore[index]
+    payload["unknown_field"] = "nope"
+
+    result = validate_classification(payload)
+
+    assert result.classification is None
+    assert set(codes(result.issues)) == {"schema"}
+    locations = [issue.location for issue in result.issues]
+    assert "choice.answer" in locations
+    assert "unknown_field" in locations
+
+
+@pytest.mark.parametrize("payload", [None, [], "text", 7])
+def test_ac1_classification_non_object_payload_is_a_schema_issue(
+    payload: object,
+) -> None:
+    result = validate_classification(payload)
+
+    assert result.classification is None
+    assert set(codes(result.issues)) == {"schema"}

@@ -25,7 +25,6 @@ from workflow.lease_store import PostgresRunLeaseStore
 from workflow.leases import Claim, LeaseConnection, LeaseLost, RunLeaseStore
 from workflow.run_states import RunState
 from workflow.steps import (
-    DuplicateStepError,
     ResumeView,
     StepCommit,
     StepRecord,
@@ -33,6 +32,7 @@ from workflow.steps import (
     StepTaskMismatchError,
     StepWriteError,
     TaskRunIdentity,
+    duplicate_step_error,
 )
 from workflow.transitions import transition
 
@@ -148,9 +148,11 @@ class PostgresStepRecorder:
                 ).fetchone()
             except psycopg.errors.UniqueViolation as exc:
                 # `(run_id, step, attempt)` is unique (AD-2): a second
-                # completion of the same attempt is definitive, not transient.
-                raise DuplicateStepError(
-                    claim.run_id, commit.step, commit.attempt
+                # completion of the same attempt is definitive, not transient
+                # — only a violation of THIS constraint is one (shared
+                # translation).
+                raise duplicate_step_error(
+                    exc, claim.run_id, commit.step, commit.attempt
                 ) from exc
             advanced = conn.execute(
                 _ADVANCE_STATE_SQL,

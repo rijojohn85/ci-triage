@@ -21,6 +21,7 @@ from pathlib import Path
 import jsonschema
 from pydantic import BaseModel, ConfigDict, ValidationError
 
+from contracts.jev import JevClassification
 from contracts.verdict import TriageVerdict
 from guardrails.attribution import attribution_location
 from guardrails.citation_check import (
@@ -30,9 +31,11 @@ from guardrails.citation_check import (
 )
 
 __all__ = [
+    "ClassificationResult",
     "ServedEvidence",
     "ValidationIssue",
     "ValidationResult",
+    "validate_classification",
     "validate_verdict",
 ]
 
@@ -49,9 +52,14 @@ CONFIDENCE_MISMATCH = "confidence_mismatch"
 ATTRIBUTION_PRESENT = "attribution_present"
 """Issue code: an `author_login` key inside blame-free output (AD-27)."""
 
-_SCHEMA_PATH = Path(__file__).resolve().parent / "schemas" / "TriageVerdict.json"
+_SCHEMAS_DIR = Path(__file__).resolve().parent / "schemas"
+_SCHEMA_PATH = _SCHEMAS_DIR / "TriageVerdict.json"
 _VERDICT_CHECKER = jsonschema.Draft202012Validator(
     json.loads(_SCHEMA_PATH.read_text(encoding="utf-8"))
+)
+_CLASSIFICATION_SCHEMA_PATH = _SCHEMAS_DIR / "JevClassification.json"
+_CLASSIFICATION_CHECKER = jsonschema.Draft202012Validator(
+    json.loads(_CLASSIFICATION_SCHEMA_PATH.read_text(encoding="utf-8"))
 )
 
 
@@ -61,6 +69,20 @@ class ValidationResult(BaseModel):
     model_config = ConfigDict(frozen=True)
 
     verdict: TriageVerdict | None
+    issues: tuple[ValidationIssue, ...]
+
+
+class ClassificationResult(BaseModel):
+    """`validate_classification`'s whole answer (story 2.8, AC1).
+
+    Schema + parse only: the CLASSIFYING payload is Jev's own answer, so there
+    are no citations to resolve (AD-7 does not apply) — the two committed
+    layers (generated schema + contract parse) are the whole surface.
+    """
+
+    model_config = ConfigDict(frozen=True)
+
+    classification: JevClassification | None
     issues: tuple[ValidationIssue, ...]
 
 
@@ -90,6 +112,48 @@ def validate_verdict(
     issues.extend(_suspect_issues(verdict, served))
     issues.extend(_confidence_issues(verdict, served))
     return ValidationResult(verdict=verdict, issues=tuple(issues))
+
+
+def validate_classification(payload: object) -> ClassificationResult:
+    """Validate one raw CLASSIFYING payload: schema + parse only (story 2.8).
+
+    Same two-layer pattern as `validate_verdict`, same issue shape — the
+    committed generated `JevClassification.json` (AD-6) catches shape/enum
+    violations; the `contracts.JevClassification` parse catches the invariants
+    JSON Schema cannot express. Issues are collected, never raised: AD-8's
+    retry/pause policy belongs to the shared step runner (2.8).
+    """
+    issues: list[ValidationIssue] = [
+        ValidationIssue(
+            code=SCHEMA,
+            message=error.message,
+            location=_format_path(error.absolute_path),
+        )
+        for error in _CLASSIFICATION_CHECKER.iter_errors(payload)
+    ]
+    classification = _parse_classification(payload, issues)
+    return ClassificationResult(classification=classification, issues=tuple(issues))
+
+
+def _parse_classification(
+    payload: object,
+    issues: list[ValidationIssue],
+) -> JevClassification | None:
+    """Parse with the contract so model invariants surface as the same issues."""
+    if not isinstance(payload, Mapping):
+        return None  # the schema layer already reported the type violation
+    try:
+        return JevClassification.model_validate(dict(payload))
+    except ValidationError as error:
+        issues.extend(
+            ValidationIssue(
+                code=SCHEMA,
+                message=str(item["msg"]),
+                location=_format_path(item["loc"]),
+            )
+            for item in error.errors()
+        )
+        return None
 
 
 def _schema_issues(payload: object) -> list[ValidationIssue]:

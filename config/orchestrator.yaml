@@ -4,7 +4,16 @@
 # A worker claims a run for `lease_seconds`; if a step runs long the owner
 # renews once `renew_after_seconds` or less remains, before the lease expires
 # (AD-23). `renew_after_seconds` must be smaller than `lease_seconds`.
+#
+# `retry` is the AD-22 transient-retry budget (story 2.8): at most
+# `max_attempts` transient attempts per step, sleeping `backoff_base_seconds`
+# (exponentially) between them. Placeholders, not calibrated (OQ-2).
 
 lease:
   lease_seconds: 300
   renew_after_seconds: 120
+
+retry:
+  max_attempts: 3
+  backoff_base_seconds: 2.0
+  backoff_factor: 2
