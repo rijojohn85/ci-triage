@@ -252,3 +252,6 @@ worker/specialist integration remains future work. No source/spine conflict foun
 
 Batch stop: user requested stop after 2.7. Stories 4.1, 6.1, 6.2 and 2.8 were
 not started; 2.9 was not started. No push or merge performed.
+
+Status: done. Sprint status synchronized to review for human review. Binding
+story branch remains `story/2-7-build-and-persist-the-deterministic-evidence-pack`.

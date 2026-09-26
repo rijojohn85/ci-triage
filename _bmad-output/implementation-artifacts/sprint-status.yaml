@@ -36,7 +36,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 # - Retrospective appends its action items to action_items; the status view surfaces open ones
 generated: 09-25-2026 03:29
-last_updated: 09-26-2026 14:22
+last_updated: 09-26-2026
 project: stage4
 project_key: NOKEY
 tracking_system: file-system
@@ -62,7 +62,7 @@ development_status:
   2-4-serve-a-read-only-a2a-task-projection: done
   2-5-distill-ci-logs-deterministically: done
   2-6-maintain-structured-tenant-scoped-history: review
-  2-7-build-and-persist-the-deterministic-evidence-pack: backlog
+  2-7-build-and-persist-the-deterministic-evidence-pack: review
   2-8-shared-step-runner-ad-8-validation-retry-ad-22-transient-ret: backlog
   2-9-integrate-evaluated-classification-and-analysis-with-pauses: backlog
   2-10-integrate-proposal-review-revisions-and-risk-gating: backlog
