@@ -10,6 +10,7 @@ precedent) so the tests call its functions directly.
 """
 
 import importlib.util
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -22,6 +23,10 @@ SCRIPT = ROOT / "scripts" / "build_jev_eval_cases.py"
 EVAL_DIR = ROOT / "test-data" / "jev-eval"
 MANIFEST = EVAL_DIR / "manifest.yaml"
 GENERATED = EVAL_DIR / "cases.generated.yaml"
+
+# The runner-prefix shape the distiller strips; the generator must match markers
+# against the stripped line, so the test states the rule independently.
+_RUNNER_PREFIX = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z ")
 
 _spec = importlib.util.spec_from_file_location("build_jev_eval_cases", SCRIPT)
 assert _spec is not None and _spec.loader is not None
@@ -104,6 +109,8 @@ def test_ac1_unknown_cases_carry_no_cause_lines() -> None:
         assert lines[-1]["text"] == generator.BARE_ERROR_LINE
         for line in lines[:-1]:
             assert not any(marker.search(line["text"]) for marker in ERROR_MARKERS)
+            stripped = _RUNNER_PREFIX.sub("", line["text"])
+            assert not any(marker.search(stripped) for marker in ERROR_MARKERS)
 
 
 def test_ac1_unknown_cases_spread_across_repos() -> None:

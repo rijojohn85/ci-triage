@@ -30,7 +30,11 @@ import yaml
 ROOT: Final[Path] = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))  # contracts/ is not a pip package; run from anywhere
 
-from workflow.distiller import ERROR_MARKERS, distill  # noqa: E402 — path set above
+from workflow.distiller import (  # noqa: E402 — path set above
+    _RUNNER_LINE_PREFIX,
+    ERROR_MARKERS,
+    distill,
+)
 from workflow.thresholds import DistillerLimits, load_thresholds  # noqa: E402
 
 EVAL_DIR: Final[Path] = ROOT / "test-data" / "jev-eval"
@@ -194,12 +198,18 @@ def _trick_case(
 
 
 def _cause_free_lines(log_text: str, count: int) -> list[str]:
-    """The first `count` non-empty lines with no distiller error marker."""
+    """The first `count` non-empty lines with no distiller error marker.
+
+    A marker is matched against the line with its runner prefix stripped — the
+    distiller's own definition of an "error line" (AD-20) — while the raw line
+    is what the emitted case keeps.
+    """
     kept: list[str] = []
     for line in log_text.splitlines():
         if not line.strip():
             continue
-        if any(marker.search(line) for marker in ERROR_MARKERS):
+        stripped = _RUNNER_LINE_PREFIX.sub("", line)
+        if any(marker.search(stripped) for marker in ERROR_MARKERS):
             continue
         kept.append(line)
         if len(kept) == count:

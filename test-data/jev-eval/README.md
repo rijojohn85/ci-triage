@@ -10,6 +10,7 @@ It is the calibration data for the story 3.2 Jev classification eval
 | `manifest.yaml` | one entry per case: repo, class, evidence, run/job ids, the exact log line that proves the label |
 | `logs/<id>.log` | the raw log of the one failing job (ANSI codes stripped, secrets scrubbed; last 1 MB kept when the original was larger) |
 | `cases.generated.yaml` | **generated** — the promptfoo cases the eval runs; do not edit by hand (see below) |
+| `distiller-exceptions.yaml` | committed exceptions: manifest ids whose `key_line` cannot survive distillation without weakening AD-20 (`id` + `reason` + `status`); empty today (story 2.13) |
 
 ## The generated eval cases (story 3.2)
 
