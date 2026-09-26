@@ -11,8 +11,7 @@ pool — and is injected through the same seam in tests.
 from collections.abc import Mapping
 from typing import Final, Protocol
 
-from typesafe_sdk import AsyncTypeSafeClient, RetryPolicy
-from typesafe_sdk._core.question_types import Question
+from typesafe_sdk import AsyncTypeSafeClient, Choice, Noul, RetryPolicy
 
 from contracts.jev import SdkChoiceAnswer, SdkNoulAnswer
 
@@ -63,7 +62,7 @@ class SystemOneClient(Protocol):
     async def system_one(
         self,
         state: str,
-        questions: Mapping[str, Question],
+        questions: Mapping[str, Choice | Noul],
         *,
         model: str,
         timeout: float,
@@ -77,7 +76,7 @@ class JevProvider(Protocol):
     async def system_one(
         self,
         state: str,
-        questions: Mapping[str, Question],
+        questions: Mapping[str, Choice | Noul],
         *,
         model: str,
         timeout: float,
@@ -95,7 +94,7 @@ class TypeSafeJevProvider:
     async def system_one(
         self,
         state: str,
-        questions: Mapping[str, Question],
+        questions: Mapping[str, Choice | Noul],
         *,
         model: str,
         timeout: float,
