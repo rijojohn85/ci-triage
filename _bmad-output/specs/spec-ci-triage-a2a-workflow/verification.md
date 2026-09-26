@@ -24,7 +24,7 @@ Diagrams stay in companions: the adopted spine contains the structural/state dia
 
 ## Quality and audit
 
-Use shared generated schemas in promptfoo assertions. Jev classification eval uses labelled distilled logs; calibration compares effective AD-9 confidence with correctness, retains the original Jev result/caps for traceability, and identifies sample counts and the unresolved population choice (OQ-5). Do not describe five E2E points alone as validated calibration. Analyzer may switch from Haiku to Sonnet via config if it fails the supplied bar.
+Use shared generated schemas in promptfoo assertions. Jev classification eval uses labelled distilled logs plus structured flake evidence; calibration compares effective AD-9 confidence with correctness, retains the original Jev result/caps for traceability, and identifies sample counts and the unresolved population choice (OQ-5). Do not describe five E2E points alone as validated calibration. Analyzer may switch from Haiku to Sonnet via config if it fails the supplied bar.
 
 Record every model call, including Jev routing and every retry. Preserve input/output/cache-read and 5m/1h cache-write usage separately; unavailable counters and unsourced prices are NULL, never zero. Compute costs centrally and flag incomplete totals. runs/ and results/ metrics are database exports, not hand-authored numbers; red-team findings prose records observations. Verify Claude prices from official sources at build and retain retrieval dates; Jev pricing remains OQ-3.
 

@@ -167,7 +167,7 @@ Any non-terminal state may also move to `FAILED` (AD-22).
 
 - **Binds:** `agents/jev/`, `workflow/` routing, `jev.test.yaml`
 - **Prevents:** divergent Jev usage / double calls on the same log; class descriptions drifting between agent and eval
-- **Rule:** One `system_one` call on the distilled log carries both the 5-class `Choice` and the injection pre-screen `Noul`. The classes are `code | flaky | infra | external | unknown`. The class descriptions and the Noul instruction live once in `prompts/jev-classes.yaml`. A positive injection screen adds a cited cap (`jev_signal`); it never blocks on its own.
+- **Rule:** One `system_one` call on the distilled log — plus the evidence pack's structured flake evidence (AD-24) in its own delimited section — carries both the 5-class `Choice` and the injection pre-screen `Noul`. The classes are `code | flaky | infra | external | unknown`. The class descriptions and the Noul instruction live once in `prompts/jev-classes.yaml`. A positive injection screen adds a cited cap (`jev_signal`); it never blocks on its own. (Amended 2026-09-27, sprint-change-proposal-2026-09-27: flaky cannot be decided from one log.)
 
 ### AD-12 — Revision loop
 
@@ -272,7 +272,7 @@ Any non-terminal state may also move to `FAILED` (AD-22).
 - **Binds:** all prompts, Log Distiller, registry → Jev criteria
 - **Prevents:** logs, commits, PR titles, history, or Agent Card text acting as instructions
 - **Rule:**
-  - **Distiller:** no LLM sees raw CI logs; only Log Distiller output. The distiller takes CI log text and JUnit XML, keeps error blocks and stack traces, drops narrative lines outside them, strips ANSI/control characters, numbers the lines, and truncates at max bytes.
+  - **Distiller:** no LLM sees raw CI logs; only Log Distiller output. The distiller takes CI log text and JUnit XML, keeps error blocks and stack traces, drops narrative lines outside them, strips ANSI/control characters and CI-runner line prefixes (timestamps), numbers the lines, and truncates at max bytes. (Clarified 2026-09-27.)
   - **Untrusted text:** the distilled log, commit messages, PR title, history rows and Agent Card descriptions are passed inside delimited data sections marked untrusted, never concatenated into instructions.
 
 ### AD-21 — Quarantine is never in the diff

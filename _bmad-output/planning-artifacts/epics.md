@@ -237,7 +237,7 @@ Any non-terminal state may also move to `FAILED` (AD-22).
 
 - **Binds:** `agents/jev/`, `workflow/` routing, `jev.test.yaml`
 - **Prevents:** divergent Jev usage / double calls on the same log; class descriptions drifting between agent and eval
-- **Rule:** One `system_one` call on the distilled log carries both the 5-class `Choice` and the injection pre-screen `Noul`. The classes are `code | flaky | infra | external | unknown`. The class descriptions and the Noul instruction live once in `prompts/jev-classes.yaml`. A positive injection screen adds a cited cap (`jev_signal`); it never blocks on its own.
+- **Rule:** One `system_one` call on the distilled log — plus the evidence pack's structured flake evidence (AD-24) in its own delimited section — carries both the 5-class `Choice` and the injection pre-screen `Noul`. The classes are `code | flaky | infra | external | unknown`. The class descriptions and the Noul instruction live once in `prompts/jev-classes.yaml`. A positive injection screen adds a cited cap (`jev_signal`); it never blocks on its own. (Amended 2026-09-27, sprint-change-proposal-2026-09-27: flaky cannot be decided from one log.)
 
 ##### AD-12 — Revision loop
 
@@ -342,7 +342,7 @@ Any non-terminal state may also move to `FAILED` (AD-22).
 - **Binds:** all prompts, Log Distiller, registry → Jev criteria
 - **Prevents:** logs, commits, PR titles, history, or Agent Card text acting as instructions
 - **Rule:**
-  - **Distiller:** no LLM sees raw CI logs; only Log Distiller output. The distiller takes CI log text and JUnit XML, keeps error blocks and stack traces, drops narrative lines outside them, strips ANSI/control characters, numbers the lines, and truncates at max bytes.
+  - **Distiller:** no LLM sees raw CI logs; only Log Distiller output. The distiller takes CI log text and JUnit XML, keeps error blocks and stack traces, drops narrative lines outside them, strips ANSI/control characters and CI-runner line prefixes (timestamps), numbers the lines, and truncates at max bytes. (Clarified 2026-09-27.)
   - **Untrusted text:** the distilled log, commit messages, PR title, history rows and Agent Card descriptions are passed inside delimited data sections marked untrusted, never concatenated into instructions.
 
 ##### AD-21 — Quarantine is never in the diff
@@ -1089,7 +1089,7 @@ So that the graded runtime accepts real signed events safely.
 
 ## Epic 2: Turn failures into durable, evidence-backed triage
 
-Deliver the approved E2 outcome for FR2 / CAP-2. This epic contains 12 stories.
+Deliver the approved E2 outcome for FR2 / CAP-2. This epic contains 13 stories.
 
 ### Story 2.1: Enforce the explicit state transition invariants
 
@@ -1528,9 +1528,39 @@ So that operators can trust state, effects and attempt accounting.
 **Then** the old run remains FAILED with history once, and the new (repo_id, workflow_run_id, run_attempt) key creates a new run through normal intake,
 **And** no manual re-insert exists; a replay of that attempt is still a no-op; every attempted call has usage/status evidence and separate validation/review budgets remain intact.
 
+### Story 2.13: Distil real GitHub Actions logs across stacks
+
+As a triage maintainer,
+I want the distiller to keep the failing line of real GitHub Actions logs from any common stack,
+So that agents receive the evidence that explains the failure instead of only the exit code.
+
+**Scope:** MUST — CAP-2.
+
+**Binding ADs:** AD-19, AD-20, AD-24.
+
+**Dependencies:** 2.5, 3.2.
+
+**External inputs / open questions:** None.
+
+**Acceptance Criteria:**
+
+**AC1**
+
+**Given** real GitHub Actions log lines that begin with the runner's ISO-8601 timestamp prefix,
+**When** the distiller matches error markers,
+**Then** markers are matched against the line without that prefix, and the emitted line drops the prefix (it is runner metadata, not evidence),
+**And** logs without a prefix behave exactly as before (every existing 2.5 test stays green, unchanged).
+
+**AC2**
+
+**Given** fixtures cut from the committed real logs in `test-data/jev-eval/logs/` for Go, TAP/Node, Rust, Dart/Flutter, npm, apt, Playwright, Elixir/Mix, Ruby, PHP and Java/Gradle failures,
+**When** the distiller runs,
+**Then** each stack's failure line is kept, each new pattern is one new `ERROR_MARKERS` registry entry (open/closed), and every pattern stays linear-time on adversarial input,
+**And** a test runs the distiller over every labelled manifest log and asserts the manifest `key_line` survives in every case, except entries in a committed, human-approved exceptions list with a reason per entry (target: no exceptions; a non-empty list is reported in the story result).
+
 ## Epic 3: Discover and evaluate trustworthy specialist agents
 
-Deliver the approved E3 outcome for FR3 / CAP-3. This epic contains 10 stories.
+Deliver the approved E3 outcome for FR3 / CAP-3. This epic contains 13 stories.
 
 ### Story 3.1: Serve the Jev classifier and batched injection screen
 
@@ -1866,6 +1896,103 @@ So that the certification demonstrates description routing even when S1–S5 use
 **When** coverage is indexed,
 **Then** they demonstrate the mandatory CAP-3 integration proof,
 **And** RT-05 candidate_cards promptfoo remains deferred.
+
+### Story 3.11: Guard the Jev eval against unanswerable cases
+
+As a triage maintainer,
+I want the eval to refuse cases whose evidence did not reach Jev,
+So that an eval score measures Jev, not the pipeline in front of it.
+
+**Scope:** MUST — CAP-3, CAP-6.
+
+**Binding ADs:** AD-6, AD-19, AD-20.
+
+**Dependencies:** 3.2, 2.13.
+
+**External inputs / open questions:** OQ-5 (population) stays open.
+
+**Acceptance Criteria:**
+
+**AC1**
+
+**Given** the labelled manifest and the real distiller,
+**When** the case generator builds the eval cases,
+**Then** it fails, naming each case, if a labelled case's `key_line` does not survive distillation or if two cases with different labels produce identical distilled input,
+**And** the receipt records the evidence-retention count (labelled cases whose proof reached Jev / all labelled cases).
+
+**AC2**
+
+**Given** the `unknown` and trick case builders,
+**When** cases are generated,
+**Then** no two `unknown` cases share the same non-final content once timestamps, run ids and version numbers are normalised, and every trick case is built only on a base case whose proof survives,
+**And** the 3.2 receipt is kept unchanged as the historical baseline, and the summary names it as superseded by the next run.
+
+### Story 3.12: Teach Jev the CI-platform failure convention
+
+As a triage maintainer,
+I want Jev's class descriptions to state that CI-platform failures are infra,
+So that Jev and the labelled data use the same definition.
+
+**Scope:** MUST — CAP-3, CAP-6.
+
+**Binding ADs:** AD-6, AD-9, AD-11, AD-18, AD-19, AD-20.
+
+**Dependencies:** 3.11.
+
+**External inputs / open questions:** OQ-1 bar as supplied 2026-09-27; OQ-3 (Jev price) and OQ-5 stay open.
+
+**Acceptance Criteria:**
+
+**AC1**
+
+**Given** the eval cases whose label is `infra` because the CI platform itself failed,
+**When** the eval-first change is made,
+**Then** those failing cases are cited as the red eval before `prompts/jev-classes.yaml` changes, and the `infra`/`external` criteria then state that failures of the CI platform (action downloads, artifacts, cache, the CI provider's API) are `infra` while third parties the project's build depends on are `external`,
+**And** no label, case or bar changes in this story.
+
+**AC2**
+
+**Given** the fixed distiller, the guarded cases and the amended criteria,
+**When** `make eval-jev` runs (at most 2 full runs),
+**Then** a new receipt is saved under `results/jev-eval/` with the verdict against the unchanged OQ-1 bar, the evidence-retention count, and a before/after table against the 3.2 baseline,
+**And** flaky is reported as still lacking history evidence (owned by 3.13) — never tuned around.
+
+### Story 3.13: Give Jev structured flake evidence
+
+As a triage maintainer,
+I want Jev to see a failing test's structured recent history in the same classification call,
+So that flaky failures can be recognised from evidence rather than guessed from one log.
+
+**Scope:** MUST — CAP-2, CAP-3, CAP-6.
+
+**Binding ADs:** AD-5, AD-6, AD-9, AD-11 (as amended 2026-09-27), AD-15, AD-18, AD-19, AD-20, AD-24.
+
+**Dependencies:** 3.12, 2.6, 2.7.
+
+**External inputs / open questions:** OQ-1 bar as supplied; OQ-5 stays open (flaky n is small).
+
+**Acceptance Criteria:**
+
+**AC1**
+
+**Given** a failed run being triaged,
+**When** the orchestrator builds the evidence pack,
+**Then** the pack carries structured, repo-scoped flake evidence: prior `history` rows for the failing fingerprint with their `terminal_state` and `human_verdict`, and the failing job's recent outcomes on the same branch (runs, failures, failures whose rerun on the same tested commit passed), over a window whose size lives in `guardrails/thresholds.yaml`,
+**And** only runs created before the failing run are used (no future information), no free text enters the evidence (AD-15), the orchestrator collects it via the GitHub App, and Jev holds no token (AD-5).
+
+**AC2**
+
+**Given** an evidence pack with flake evidence,
+**When** Jev classifies,
+**Then** it is still exactly one `system_one` call carrying `Choice` and `Noul`, with the flake evidence in its own nonce-delimited untrusted data section next to the distilled log (AD-11, AD-20), and the `flaky` criterion in `prompts/jev-classes.yaml` refers to that evidence (eval-first),
+**And** unit tests pin the call shape with a fake provider; contracts and generated schemas are updated.
+
+**AC3**
+
+**Given** every labelled eval case,
+**When** the eval data is built,
+**Then** each case (all classes, not only flaky) carries real flake evidence fetched from GitHub for runs before that case's failing run, stored beside the manifest with its source URLs, and cases without retrievable history are reported, not guessed,
+**And** `make eval-jev` produces a new receipt with a before/after table against the 3.12 receipt, verdict against the unchanged OQ-1 bar.
 
 ## Epic 4: Contain unsafe actions and demonstrate adversarial defences
 
@@ -2604,34 +2731,38 @@ This table maps every story exactly once to the six approved phases. Row order i
 | 19 | 2 — Queue, evidence, pure controls and early audit | 6.2 | Compute versioned NULL-aware model costs |
 | 20 | 3 — Standalone agents and immediately following evals | 3.1 | Serve the Jev classifier and batched injection screen |
 | 21 | 3 — Standalone agents and immediately following evals | 3.2 | Evaluate Jev classification before connection |
-| 22 | 3 — Standalone agents and immediately following evals | 3.3 | Serve the evidence-grounded Analyzer |
-| 23 | 3 — Standalone agents and immediately following evals | 3.4 | Evaluate Analyzer evidence and attribution |
-| 24 | 3 — Standalone agents and immediately following evals | 3.5 | Serve the sole-author fix, deflake and mock Proposer |
-| 25 | 3 — Standalone agents and immediately following evals | 3.6 | Evaluate all three Proposer variants |
-| 26 | 3 — Standalone agents and immediately following evals | 3.7 | Serve an objections-only adversarial Reviewer |
-| 27 | 3 — Standalone agents and immediately following evals | 3.8 | Evaluate Reviewer objections before connection |
-| 28 | 4 — Registry/routing and evaluated workflow integration | 3.9 | Pin agent discovery and implement two-stage routing |
-| 29 | 4 — Registry/routing and evaluated workflow integration | 2.8 | Shared step runner: AD-8 validation retry + AD-22 transient retry |
-| 30 | 4 — Registry/routing and evaluated workflow integration | 2.9 | Integrate evaluated classification and analysis with pauses |
-| 31 | 4 — Registry/routing and evaluated workflow integration | 3.10 | Prove description selection and no-route pause |
-| 32 | 4 — Registry/routing and evaluated workflow integration | 2.10 | Integrate proposal review, revisions and risk gating |
-| 33 | 4 — Registry/routing and evaluated workflow integration | 2.11 | Deliver idempotent drafts, quarantine metadata and reports |
-| 34 | 4 — Registry/routing and evaluated workflow integration | 2.12 | Prove live-pipeline recovery and retry accounting |
-| 35 | 5 — Human resolution and real-pipeline adversarial evaluation | 5.1 | Authenticate CODEOWNER decisions and audit refusals |
-| 36 | 5 — Human resolution and real-pipeline adversarial evaluation | 5.2 | Approve an existing proposal with a bound decision |
-| 37 | 5 — Human resolution and real-pipeline adversarial evaluation | 5.3 | Approve without a proposal through full reanalysis |
-| 38 | 5 — Human resolution and real-pipeline adversarial evaluation | 5.4 | Reject a paused task and prove bypass resistance |
-| 39 | 5 — Human resolution and real-pipeline adversarial evaluation | 4.4 | Expose a production-disabled real-pipeline dry-run |
-| 40 | 5 — Human resolution and real-pipeline adversarial evaluation | 4.5 | Wire adopted red-team fixtures and verify configuration |
-| 41 | 5 — Human resolution and real-pipeline adversarial evaluation | 4.6 | Execute red-team coverage and freeze findings |
-| 42 | 6 — Calibration, quality, operations, graded batch and exports | 6.3 | Calibrate confidence and central thresholds on labelled data |
-| 43 | 6 — Calibration, quality, operations, graded batch and exports | 6.4 | Record the supplied per-agent quality pass decision |
-| 44 | 6 — Calibration, quality, operations, graded batch and exports | 6.5 | Verify graded operations and same-image cluster manifests |
-| 45 | 6 — Calibration, quality, operations, graded batch and exports | 6.6 | Seed and drive the code and flaky GitHub scenarios |
-| 46 | 6 — Calibration, quality, operations, graded batch and exports | 6.7 | Seed and drive infra and external GitHub scenarios |
-| 47 | 6 — Calibration, quality, operations, graded batch and exports | 6.8 | Drive S5 high-risk timeout-bump and live human decision |
-| 48 | 6 — Calibration, quality, operations, graded batch and exports | 6.9 | Execute the final five-scenario certification batch |
-| 49 | 6 — Calibration, quality, operations, graded batch and exports | 6.10 | Export the results index and reproducible README |
+| 22 | 3 — Standalone agents and immediately following evals | 2.13 | Distil real GitHub Actions logs across stacks |
+| 23 | 3 — Standalone agents and immediately following evals | 3.11 | Guard the Jev eval against unanswerable cases |
+| 24 | 3 — Standalone agents and immediately following evals | 3.12 | Teach Jev the CI-platform failure convention |
+| 25 | 3 — Standalone agents and immediately following evals | 3.13 | Give Jev structured flake evidence |
+| 26 | 3 — Standalone agents and immediately following evals | 3.3 | Serve the evidence-grounded Analyzer |
+| 27 | 3 — Standalone agents and immediately following evals | 3.4 | Evaluate Analyzer evidence and attribution |
+| 28 | 3 — Standalone agents and immediately following evals | 3.5 | Serve the sole-author fix, deflake and mock Proposer |
+| 29 | 3 — Standalone agents and immediately following evals | 3.6 | Evaluate all three Proposer variants |
+| 30 | 3 — Standalone agents and immediately following evals | 3.7 | Serve an objections-only adversarial Reviewer |
+| 31 | 3 — Standalone agents and immediately following evals | 3.8 | Evaluate Reviewer objections before connection |
+| 32 | 4 — Registry/routing and evaluated workflow integration | 3.9 | Pin agent discovery and implement two-stage routing |
+| 33 | 4 — Registry/routing and evaluated workflow integration | 2.8 | Shared step runner: AD-8 validation retry + AD-22 transient retry |
+| 34 | 4 — Registry/routing and evaluated workflow integration | 2.9 | Integrate evaluated classification and analysis with pauses |
+| 35 | 4 — Registry/routing and evaluated workflow integration | 3.10 | Prove description selection and no-route pause |
+| 36 | 4 — Registry/routing and evaluated workflow integration | 2.10 | Integrate proposal review, revisions and risk gating |
+| 37 | 4 — Registry/routing and evaluated workflow integration | 2.11 | Deliver idempotent drafts, quarantine metadata and reports |
+| 38 | 4 — Registry/routing and evaluated workflow integration | 2.12 | Prove live-pipeline recovery and retry accounting |
+| 39 | 5 — Human resolution and real-pipeline adversarial evaluation | 5.1 | Authenticate CODEOWNER decisions and audit refusals |
+| 40 | 5 — Human resolution and real-pipeline adversarial evaluation | 5.2 | Approve an existing proposal with a bound decision |
+| 41 | 5 — Human resolution and real-pipeline adversarial evaluation | 5.3 | Approve without a proposal through full reanalysis |
+| 42 | 5 — Human resolution and real-pipeline adversarial evaluation | 5.4 | Reject a paused task and prove bypass resistance |
+| 43 | 5 — Human resolution and real-pipeline adversarial evaluation | 4.4 | Expose a production-disabled real-pipeline dry-run |
+| 44 | 5 — Human resolution and real-pipeline adversarial evaluation | 4.5 | Wire adopted red-team fixtures and verify configuration |
+| 45 | 5 — Human resolution and real-pipeline adversarial evaluation | 4.6 | Execute red-team coverage and freeze findings |
+| 46 | 6 — Calibration, quality, operations, graded batch and exports | 6.3 | Calibrate confidence and central thresholds on labelled data |
+| 47 | 6 — Calibration, quality, operations, graded batch and exports | 6.4 | Record the supplied per-agent quality pass decision |
+| 48 | 6 — Calibration, quality, operations, graded batch and exports | 6.5 | Verify graded operations and same-image cluster manifests |
+| 49 | 6 — Calibration, quality, operations, graded batch and exports | 6.6 | Seed and drive the code and flaky GitHub scenarios |
+| 50 | 6 — Calibration, quality, operations, graded batch and exports | 6.7 | Seed and drive infra and external GitHub scenarios |
+| 51 | 6 — Calibration, quality, operations, graded batch and exports | 6.8 | Drive S5 high-risk timeout-bump and live human decision |
+| 52 | 6 — Calibration, quality, operations, graded batch and exports | 6.9 | Execute the final five-scenario certification batch |
+| 53 | 6 — Calibration, quality, operations, graded batch and exports | 6.10 | Export the results index and reproducible README |
 
 ## Branch receipt ownership outside 5/5
 
@@ -2654,6 +2785,8 @@ This table maps every story exactly once to the six approved phases. Row order i
 Story 6.10 AC2 indexes all of these without changing the denominator. S5 owns the high-risk timeout-bump gate_blocked checkpoint; 4.2 owns RT-07 per-rule gate pytest. These are distinct from the branch receipts above.
 
 ## Draft validation record
+
+- **Change 2026-09-27 (sprint-change-proposal-2026-09-27):** added stories 2.13, 3.11, 3.12, 3.13 after 3.2 (global rows 22–25; later rows +4) and amended AD-11 (structured flake evidence in the one Jev call) and AD-20 (CI-runner line prefixes). Now 53 stories / 53 global-order rows; E2 13, E3 13.
 
 - Epic design and amended story draft approved for final validation; steps 01–03 are complete. No implementation, model-eval or scenario pass is claimed.
 - Mechanical validation PASS: 49 unique stories, 49 global-order rows across six phases, and 133 dependency references, all strictly backward. Counts: E0 4; E1 3; E2 12; E3 10; E4 6; E5 4; E6 10. Checked against the saved Markdown: exact order membership, within-epic order, CAP/AD traces, Given/When/Then criteria, all four agent/eval pairs adjacent before live integration, OQ-1–OQ-5 gates, branch receipt owners and E0 real demo-repo permission requirements.
