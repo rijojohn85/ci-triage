@@ -9,9 +9,9 @@ pool — and is injected through the same seam in tests.
 """
 
 from collections.abc import Mapping
-from typing import Protocol
+from typing import Final, Protocol
 
-from typesafe_sdk import AsyncTypeSafeClient
+from typesafe_sdk import AsyncTypeSafeClient, RetryPolicy
 from typesafe_sdk._core.question_types import Question
 
 from contracts.jev import SdkChoiceAnswer, SdkNoulAnswer
@@ -23,6 +23,12 @@ __all__ = [
     "SystemOneUsage",
     "TypeSafeJevProvider",
 ]
+
+NO_SDK_RETRIES: Final = RetryPolicy(max_retries=0)
+"""The SDK's own retry layer is disabled (AD-18): the workflow's step runner
+is the ONLY retry layer, so hidden SDK retries cannot multiply unrecorded
+model calls or outlive a step's lease. RetryPolicy is frozen, so one shared
+instance is safe."""
 
 
 class SystemOneUsage(Protocol):
@@ -61,6 +67,7 @@ class SystemOneClient(Protocol):
         *,
         model: str,
         timeout: float,
+        retry: RetryPolicy | None = None,
     ) -> SystemOneResult: ...
 
 
@@ -82,7 +89,7 @@ class TypeSafeJevProvider:
 
     def __init__(self, client: SystemOneClient | None = None) -> None:
         self._client: SystemOneClient = (
-            client if client is not None else AsyncTypeSafeClient()
+            client if client is not None else AsyncTypeSafeClient(retry=NO_SDK_RETRIES)
         )
 
     async def system_one(
@@ -93,7 +100,12 @@ class TypeSafeJevProvider:
         model: str,
         timeout: float,
     ) -> SystemOneResult:
-        """Forward the one call to the client built (or injected) once."""
+        """Forward the one call to the client built (or injected) once, with
+        the SDK retry layer explicitly off on the call as well (AD-18)."""
         return await self._client.system_one(
-            state=state, questions=questions, model=model, timeout=timeout
+            state=state,
+            questions=questions,
+            model=model,
+            timeout=timeout,
+            retry=NO_SDK_RETRIES,
         )
