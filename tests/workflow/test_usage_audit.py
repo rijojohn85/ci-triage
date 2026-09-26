@@ -169,10 +169,17 @@ def test_ac2_completed_result_cannot_carry_a_failure_outcome() -> None:
 
     with pytest.raises(ValueError):
         wrapper(store)(
-            lambda: ModelCallResult(value="payload", outcome=CallOutcome.TIMEOUT)
+            lambda: ModelCallResult(
+                value="payload", usage=FULL_USAGE, outcome=CallOutcome.TIMEOUT
+            )
         )
 
-    assert store.attempts == [], "the incoherent result is refused, not recorded"
+    # AD-22: the call really ran (and may have spent tokens), so the refused
+    # result is still recorded — as a failed attempt, never as completed.
+    [row] = store.attempts
+    assert row.status is StepStatus.FAILED
+    assert row.outcome is CallOutcome.ERROR
+    assert row.usage == FULL_USAGE
 
 
 def test_ac2_failed_call_without_usage_has_null_counters() -> None:

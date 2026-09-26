@@ -832,7 +832,10 @@ with stand-in calls. The rules are linked in the
   model call goes through. It runs the call, writes the attempt row with
   the returned usage on success **and** on failure, and emits one log line.
   If the process dies mid-call, no row is written — the missing row *is*
-  the honest record that usage was lost; nothing is invented. Agents never
+  the honest record that usage was lost; nothing is invented. A call that
+  returns but is labelled with a failure outcome (a caller bug) is saved as
+  a failed attempt — its tokens were still spent — and then refused with
+  `ValueError`, so the bug is loud but the call is never lost. Agents never
   touch the database: the wrapper lives in the orchestrator/eval-harness
   layer, and the callers (story 2.8's step runner, the evaluation harness,
   the A2A client) wire it in when they exist.

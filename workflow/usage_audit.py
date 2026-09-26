@@ -131,7 +131,8 @@ class ModelCallResult(Generic[T]):
     """What a wrapped call hands back: its value plus the provider usage.
 
     `outcome` must be `VERDICT` (the model produced its answer — the
-    wrapper refuses anything else); a failure is signalled by raising
+    wrapper records anything else as a failed attempt, then refuses it);
+    a failure is signalled by raising
     `ModelCallError`, never by a sentinel.
     """
 
@@ -201,6 +202,9 @@ def audit_model_call(
             _record(store, context, StepStatus.FAILED, CallOutcome.ERROR, None)
             raise
         if result.outcome is not CallOutcome.VERDICT:
+            # AD-22: the call ran and may have spent tokens — record it as a
+            # failed attempt before refusing the incoherent result.
+            _record(store, context, StepStatus.FAILED, CallOutcome.ERROR, result.usage)
             raise ValueError(
                 f"a completed attempt cannot carry outcome {result.outcome.value!r}"
             )
