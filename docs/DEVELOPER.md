@@ -668,35 +668,64 @@ same input, same answer, every time — no model, no database, no network — in
 
 **What it watches, in plain words.** The gate looks at the proposed diff
 (what files the fix would change and their new content), the current content
-of the files being changed, and any objection the Reviewer raised. A change
-is blocked when it:
+of the files being changed, and any objection the Reviewer raised. Every
+path is first put in one canonical form (`./a/b`, `a/../a/b` and
+backslash spellings all collapse to `a/b`), so a path cannot dodge the
+rules by how it is written; a path that is absolute, still climbs out of
+the repo with `..`, or names no file at all is blocked outright
+(`unsafe_path` — fail closed). A change is blocked when it:
 
 - **Disables a test.** A new `pytest.mark.skip`/`skipif`/`xfail`, a
-  `pytest.skip(...)` or a `unittest.skip` on a line the diff adds — or a
-  whole test file deleted.
-- **Adds retries.** Retry machinery (`retries`, `rerun`, `@retry`,
-  `tenacity`) on a line the diff adds. A retry that already existed before
-  the fix is not a new one.
-- **Raises a timeout.** The biggest `timeout=…`/`timeout(…)` number in the
-  new content of a changed file may not be bigger than the biggest one in
-  the file before the change. Lowering a timeout is fine.
-- **Weakens an assertion.** A strong check removed while a weak check on the
-  same target was added (`assertEqual(tok, …)` → `assertIn(tok, …)`,
-  `assert tok == …` → `assert tok in …`). Strengthening is fine.
+  `pytest.skip(...)`, `pytest.importorskip(...)`, a `unittest.skip` or
+  `unittest.SkipTest`, `self.skipTest(...)`, the bare `mark.*` forms
+  (after `from pytest import mark`), or `pytest.skip.Exception` on a line
+  the diff adds — or a whole test file deleted. `skip` inside an unrelated
+  name (`skip_header_rows`) never trips it.
+- **Adds retries.** Retry machinery on a line the diff adds, matched
+  case-insensitively: `retry`/`retries`/`reruns` (including inside
+  `max_retries=…`), `.on_exception`, `@backoff.`, `flaky`, `stamina`,
+  `tenacity`. A retry that already existed before the fix is not a new one.
+- **Raises a timeout.** Compared per changed line, not per file: any
+  added timeout value bigger than the value it replaced blocks, a brand-new
+  timeout line blocks, and any timeout in a newly added file blocks — so a
+  bump cannot hide beside a larger unchanged timeout. The spellings caught
+  are case-insensitive and include `TIMEOUT = …`, `set_timeout(…)`,
+  `timeout_seconds=`/`timeout_ms=`/`connect_timeout:`, `@pytest.mark.timeout(N)`,
+  floats and digit separators (`1_000`), compared numerically. Lowering a
+  timeout is fine; the bare word "timeout" without a value is not a hit.
+- **Weakens an assertion.** Two ways: a strong check removed while a weak
+  check on the same target was added (`assertEqual(tok, …)` →
+  `assertIn(tok, …)`, `assert tok == …` → `assert tok in …`, `assertTrue(…)`,
+  `assertIsNotNone(…)`, a `pytest.approx` comparison — the target may be a
+  dotted or subscripted name like `resp.status` or `data["k"]`); or a test
+  file whose changed lines hold net fewer assertion lines than before
+  (an outright deletion). Strengthening and pure relocations are fine.
 - **Touches protected paths.** Any file under the workflow glob
   (`.github/workflows/**`), a secret path (`.env`, `.env.*`, `*.pem`,
-  `*.key`, `*secrets/*`) or an infra manifest (`Dockerfile`s, compose files,
-  Terraform, `k8s/`/`kubernetes/`) — the globs live only in
-  `guardrails/thresholds.yaml` (AD-19), never in code.
+  `*.key`, `*secrets/*`, `*secret*`, `*credentials*`, `*id_rsa*`,
+  `*id_ed25519*`, `*.npmrc`) or an infra manifest (`Dockerfile`s, compose
+  files, Terraform, `k8s/`/`kubernetes/`, `*charts/*`, `*helm/*`,
+  `*deploy/*`) — the globs live only in `guardrails/thresholds.yaml`
+  (AD-19), never in code.
 - **Was called dangerous by the Reviewer.** One objection with severity
-  `dangerous` blocks even a change that trips no other rule (AD-12).
+  `dangerous` blocks even a change that trips no other rule — and even a
+  gate run with no diff at all (AD-12: "any `dangerous` objection escalates
+  early to `GATING`, which blocks"; AD-13: "also `blocked` if the Reviewer
+  marked the change `dangerous`").
 - **Hides its starting point.** If a file is being changed but the caller
   did not supply what the file looked like before, the change is blocked
   (`prior_content_missing`) — gating must never be silently skipped. This
   is the fail-closed rule.
 
+**Known gaps.** The content rules are deliberately conservative pattern
+tripwires, not a semantic reviewer: they can over-block (a comment
+mentioning `flaky` trips the retry rule — the fail-safe direction) and a
+few exotic spellings may still slip past; the red-team story (4.6) owns
+widening with fixtures.
+
 **What comes back.** `evaluate_risk(GateInput)` returns a `GateDecision`:
-`not_gated` when there is no diff to judge, `blocked` with **every** reason
+`not_gated` when there is no diff to judge (unless a `dangerous` Reviewer
+objection stands — that blocks), `blocked` with **every** reason
 collected when any rule trips, `normal` otherwise. Each reason is a small
 structured record — the rule's `code`, a human-readable `message` and the
 `location` (the file path, or `objections[0]` for a Reviewer objection).
@@ -1034,30 +1063,42 @@ layer (story 2.2).
 
 **The one untrusted-data rule (AD-20).** The distilled log travels as a
 delimited data section (the call's `state`), never inside the instructions.
-Even if the log shouts "ignore your instructions", it is only ever text to
-classify.
+The delimiters carry a fresh random nonce on every call
+(`<<<distilled_log:{nonce}` … `distilled_log:{nonce}>>>`), so a log line
+that happens to contain delimiter-looking text can never close the section
+early — injection-looking log text is just data and blocks nothing on its
+own. Embedded newlines inside one log line are escaped so every numbered
+line stays exactly one line.
+
+**One retry layer (AD-18, AD-22).** The typesafe-sdk ships its own hidden
+retry policy (2 retries by default). The Jev adapter disables it — the
+client is built with `RetryPolicy(max_retries=0)` and every call passes the
+same policy — so the workflow's step runner is the ONLY retry layer: every
+attempt is recorded, and a step can never quietly multiply model calls or
+outlive its lease.
 
 **Where things live.**
 
 - `prompts/jev-classes.yaml` — the single copy of the five class
   descriptions and the injection-screen instruction. The agent and the eval
   suite both point at this one file; no class wording is duplicated in code.
-- `prompts/jev.md` — the **eval-side prompt contract**: the served call's
-  instructions are the `Choice`/`Noul` instructions built from
-  `prompts/jev-classes.yaml`, so the agent never loads this file; it exists
-  for the promptfoo eval, which drives the prompt as a chat prompt.
+- `prompts/jev.md` — currently unused: neither the agent nor the eval loads
+  it (the served call's instructions are the `Choice`/`Noul` instructions
+  from `prompts/jev-classes.yaml`). Deletion is left to a human decision.
 - `agents/jev/questions.py` — loads the yaml once per process and builds the
   two-part question; `classifier.py` — the pure classify step, including the
   split that decides which provider failures are worth retrying (AD-22);
   `provider.py` — the small seam (`JevProvider` protocol) with the
-  typesafe-sdk adapter, so tests inject fakes and no real model is ever
-  called in tests; `runtime.py` — reads the `jev` key of
-  `config/runtime.yaml` (model id `typesafe/jev-1.13`, 60s timeout — values
-  live only in the YAML, AD-19); `card.py`/`executor.py`/`server.py` — the
-  transport: the Agent Card declaring the one catalogue skill
-  `classify-failure`, the executor that turns a malformed request into a
-  JSON-RPC invalid-request error without calling the provider, and the
-  JSON-RPC app.
+  typesafe-sdk adapter (public SDK types only; SDK retries off, see above),
+  so tests inject fakes and no real model is ever called in unit tests;
+  `runtime.py` — reads the `jev` key of `config/runtime.yaml` (model id
+  `typesafe/jev-1.13`, 60s timeout, serve host/port — values live only in
+  the YAML, AD-19); `card.py`/`executor.py`/`server.py` — the transport:
+  the Agent Card declaring the one catalogue skill `classify-failure`, the
+  executor that refuses a malformed request or a data-part envelope whose
+  `context_id` does not match the request's run id (AD-4) without calling
+  the provider, and the JSON-RPC app; `__main__.py` — the servable
+  composition (`python -m agents.jev`), host/port from the YAML.
 - `contracts/jev.py::JevResult` — the reply shape; it is part of the
   `DataPart` payload union and its JSON Schema is generated and committed
   (`guardrails/schemas/JevResult.json`), like every inter-agent payload
@@ -1076,7 +1117,8 @@ payload; the reply task's status message carries the `JevResult` (or the
 `AgentError` on `FAILED`). The agent serves its card at
 `/.well-known/agent-card.json` for discovery (story 3.9).
 
-**Run and test it** (no real model is ever called — the provider is a fake):
+**Run and test it** (unit tests never call a real model — the provider is a
+fake):
 
 ```bash
 .venv/bin/pytest tests/agents/jev tests/contracts/test_jev.py -q
@@ -1084,8 +1126,22 @@ payload; the reply task's status message carries the `JevResult` (or the
 make check
 ```
 
-The promptfoo cases in `jev.test.yaml` exist and are exercised eval-first
-(AGENTS.md "prompts are code"); the pinned Jev model is a *decisions* model
-that OpenRouter refuses to serve over the chat endpoint promptfoo uses, so
-the real eval quality bar is owned by story 3.2 (OQ-1) — the structured
-one-call shape is pinned by the unit tests instead.
+**The eval** (`jev.test.yaml`) drives the real served path: a promptfoo
+Python provider (`agents/jev/eval_provider.py`) builds the `EvidencePack`
+from each case's log and calls the real `classify()` with the real
+`TypeSafeJevProvider` (pinned model/timeout from the YAML), asserting on the
+`JevResult` JSON the service answers with. It needs `TYPESAFE_API_KEY`
+(OpenRouter) in the environment — promptfoo loads `.env` itself, but must be
+told which Python has the repo's dependencies:
+
+```bash
+PROMPTFOO_PYTHON=$PWD/.venv/bin/python npx promptfoo eval -c jev.test.yaml
+```
+
+**The live smoke test** makes ONE real `system_one` call and asserts a
+schema-valid `JevResult` with usage; it is marked `integration` and skipped
+without a key:
+
+```bash
+TYPESAFE_API_KEY=... .venv/bin/pytest -m integration tests/agents/jev/test_integration.py -q
+```
