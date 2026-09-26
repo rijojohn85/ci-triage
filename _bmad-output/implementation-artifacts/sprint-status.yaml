@@ -84,7 +84,7 @@ development_status:
   epic-3-retrospective: optional
 
   epic-4: backlog
-  4-1-validate-schemas-served-citations-and-attribution: backlog
+  4-1-validate-schemas-served-citations-and-attribution: review
   4-2-block-every-deterministic-risk-rule: backlog
   4-3-assert-real-least-privilege-and-data-boundaries: backlog
   4-4-expose-a-production-disabled-real-pipeline-dry-run: backlog
