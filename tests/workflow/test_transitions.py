@@ -91,6 +91,38 @@ def test_ac1_thresholds_loaded_not_literal() -> None:
     thresholds = load_thresholds()
     assert thresholds.review_max_rounds == TEST_MAX_ROUNDS
     assert thresholds.workflow_path_glob == ".github/workflows/**"
+    assert thresholds.risk_gate.secret_path_globs == (
+        ".env",
+        ".env.*",
+        "*/.env",
+        "*/.env.*",
+        "*.pem",
+        "*.key",
+        "*secrets/*",
+        "*secret.*",
+        "*secrets.*",
+        "*credentials*",
+        "*id_rsa*",
+        "*id_ed25519*",
+        "*.npmrc",
+        "*.pypirc",
+        "*.p12",
+        "*.pfx",
+    )
+    assert thresholds.risk_gate.infra_path_globs == (
+        "*Dockerfile*",
+        "*docker-compose*.y*ml",
+        "*compose*.y*ml",
+        "*.tf",
+        "*.tfvars",
+        "*k8s*/*",
+        "*kubernetes/*",
+        "*charts/*",
+        "*helm/*",
+        "deploy/*",
+        "*.tfstate*",
+        "*terraform/*",
+    )
 
 
 def test_ac1_diagram_byte_identical() -> None:

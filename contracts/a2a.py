@@ -5,6 +5,7 @@ from pydantic import UUID7, BaseModel, ConfigDict, model_validator
 from contracts.approval import ApprovalPayload, Escalation
 from contracts.errors import AgentError
 from contracts.evidence import EvidencePack
+from contracts.jev import JevResult
 from contracts.verdict import TriageVerdict
 
 __all__ = ["DataPart"]
@@ -21,7 +22,14 @@ class DataPart(BaseModel):
 
     task_id: UUID7
     context_id: UUID7
-    payload: TriageVerdict | EvidencePack | AgentError | ApprovalPayload | Escalation
+    payload: (
+        TriageVerdict
+        | EvidencePack
+        | AgentError
+        | ApprovalPayload
+        | Escalation
+        | JevResult
+    )
 
     @model_validator(mode="after")
     def convention_ids_match(self) -> "DataPart":

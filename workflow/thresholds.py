@@ -8,13 +8,14 @@ never carries a threshold literal.
 from pathlib import Path
 
 import yaml
-from pydantic import BaseModel, ConfigDict, PositiveInt
+from pydantic import BaseModel, ConfigDict, Field, PositiveInt
 
 from guardrails.confidence import ConfidenceCutoffs
 
 __all__ = [
     "THRESHOLDS_PATH",
     "DistillerLimits",
+    "RiskGateLimits",
     "Thresholds",
     "load_thresholds",
 ]
@@ -44,6 +45,17 @@ class EvidenceLimits(BaseModel):
     max_history_rows: PositiveInt
 
 
+class RiskGateLimits(BaseModel):
+    """Risk-gate path globs (AD-13, AD-19, story 4.2): which paths the
+    deterministic risk gate treats as secret or infra surfaces; the workflow
+    surface is the top-level `workflow_path_glob`."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    secret_path_globs: tuple[str, ...] = Field(min_length=1)
+    infra_path_globs: tuple[str, ...] = Field(min_length=1)
+
+
 class Thresholds(BaseModel):
     """Values read from `guardrails/thresholds.yaml` (AD-19 single source)."""
 
@@ -54,6 +66,7 @@ class Thresholds(BaseModel):
     confidence: ConfidenceCutoffs
     distiller: DistillerLimits
     evidence: EvidenceLimits
+    risk_gate: RiskGateLimits
 
 
 def load_thresholds(path: Path = THRESHOLDS_PATH) -> Thresholds:
@@ -67,4 +80,5 @@ def load_thresholds(path: Path = THRESHOLDS_PATH) -> Thresholds:
         confidence=ConfidenceCutoffs.model_validate(raw["confidence"]),
         distiller=distiller,
         evidence=EvidenceLimits(distiller=distiller, **raw["evidence"]),
+        risk_gate=RiskGateLimits.model_validate(raw["risk_gate"]),
     )

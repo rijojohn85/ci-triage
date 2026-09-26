@@ -47,6 +47,42 @@ def test_evidence_max_history_rows_loads_from_fixture() -> None:
     assert thresholds.evidence.distiller == thresholds.distiller
 
 
+def test_ac1_risk_gate_config_loads_from_thresholds_yaml() -> None:
+    thresholds = load_thresholds(FIXTURE)
+    assert thresholds.risk_gate.secret_path_globs == (
+        ".env",
+        ".env.*",
+        "*/.env",
+        "*/.env.*",
+        "*.pem",
+        "*.key",
+        "*secrets/*",
+        "*secret.*",
+        "*secrets.*",
+        "*credentials*",
+        "*id_rsa*",
+        "*id_ed25519*",
+        "*.npmrc",
+        "*.pypirc",
+        "*.p12",
+        "*.pfx",
+    )
+    assert thresholds.risk_gate.infra_path_globs == (
+        "*Dockerfile*",
+        "*docker-compose*.y*ml",
+        "*compose*.y*ml",
+        "*.tf",
+        "*.tfvars",
+        "*k8s*/*",
+        "*kubernetes/*",
+        "*charts/*",
+        "*helm/*",
+        "deploy/*",
+        "*.tfstate*",
+        "*terraform/*",
+    )
+
+
 def test_evidence_max_history_rows_must_be_positive(tmp_path: Path) -> None:
     raw = yaml.safe_load(FIXTURE.read_text(encoding="utf-8"))
     raw["evidence"]["max_history_rows"] = 0

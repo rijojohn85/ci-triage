@@ -13,11 +13,13 @@ from typing import Annotated, Protocol
 from pydantic import BaseModel, ConfigDict, Field
 
 from contracts.enums import FailureClass
+from contracts.usage import ModelUsage
 
 __all__ = [
     "JevChoice",
     "JevClassification",
     "JevInjectionScreen",
+    "JevResult",
     "SdkChoiceAnswer",
     "SdkNoulAnswer",
 ]
@@ -88,3 +90,17 @@ class JevClassification(BaseModel):
 
     choice: JevChoice
     injection_screen: JevInjectionScreen
+
+
+class JevResult(BaseModel):
+    """What the Jev agent serves for one `classify-failure` call (story 3.1).
+
+    The classification plus the provider-reported usage (AD-18): the
+    orchestrator/harness owns the accounting, so the agent only reports what
+    the provider reported — unreported counters stay NULL, never 0.
+    """
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    classification: JevClassification
+    usage: ModelUsage
