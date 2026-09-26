@@ -137,3 +137,33 @@ a `.env` edit plus a restart (AD-25).
 | Reading a draft PR or infra report | story 2.11 |
 | Approving or rejecting a paused triage | Epic 5 |
 | Configuration | to be decided by the stories that add settings |
+
+## Reading the evidence pack (story 2.7)
+
+An evidence pack contains the numbered error lines, the baseline commit,
+all actual commits between that baseline and the failed run's fixed head,
+ranked candidate commits, matching structured history and measured job
+running times. The baseline is the latest earlier success of the same
+workflow on the same branch; if none exists, it uses the default branch.
+Only commits that changed a stack-frame file or a directly imported test
+module become candidates. Runner checkout paths are matched to repository
+files before looking for imports. A candidate is a lead to investigate, not a
+verdict. An empty comparison has no commits or candidates.
+
+The pack is saved with the run's completed `distill` step and appears in the
+existing read-only task artifacts. Use line numbers, full commit SHAs,
+history row IDs and metric names to locate the supporting facts. Raw setup
+logs and installation tokens are kept out of the pack. Text inside the pack
+is evidence to inspect, including any hostile instructions in commit
+messages; it must never be treated as instructions to follow.
+
+Collection is currently a Python entrypoint for the orchestrator:
+`EvidenceCollector.collect_and_persist(CollectionRequest(...))`. It needs the
+accepted task identity, a current worker claim and configured read/token/
+history/step services; the [developer guide](DEVELOPER.md#deterministic-evidence-collection-story-27)
+explains the wiring and test commands. The worker must already be in
+`DISTILLING`; successful saving moves it to `CLASSIFYING`. Saving also checks
+that the leased database run is the same repository, workflow run and attempt
+as the collected evidence; a mismatch saves nothing. There is no new
+CLI command or automatic agent analysis yet, and the Compose orchestrator
+remains a placeholder.

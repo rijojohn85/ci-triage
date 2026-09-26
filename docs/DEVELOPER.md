@@ -569,3 +569,75 @@ The orchestrator runs every triage as a life of exactly one record, `triage_run`
 **Where the lines live.** All lines are in `guardrails/thresholds.yaml` under `confidence:`. Today they are guesses, each marked `ASSUMPTION — OQ-2, not calibrated`. `workflow/thresholds.py` reads that file once. The confidence tests read their own copy, `tests/fixtures/thresholds.test.yaml`, so changing the real numbers never breaks them; one test checks the two files still list the same keys, so the copy can't quietly drift out of shape.
 
 **To add a new reason to trust Jev less:** build a `Cap` with its evidence and add it with `ClassConfidence.with_cap(...)`. Never add a new score field, and never write your own "smallest of" code. **To add a new line:** add it to `guardrails/thresholds.yaml` and to `ConfidenceCutoffs`, never as a number in code.
+
+## Deterministic evidence collection (story 2.7)
+
+The worker can now build and save one pack of facts for a failed run. The
+rules are linked in the [architecture spine](../_bmad-output/planning-artifacts/architecture/architecture-stage4-2026-09-25/ARCHITECTURE-SPINE.md)
+(AD-7, AD-15, AD-16, AD-20, AD-24, AD-27).
+
+- `workflow/evidence.py` chooses the latest earlier successful run of the same
+  workflow and branch, or the repository's default-branch head. It ranks only
+  commits whose files overlap stack frames or direct test imports: most
+  overlapping files first, then full SHA to break ties.
+- `workflow/github_evidence.py::GitHubEvidenceReader` reads the task's repository
+  and failed attempt, follows all pages, and compares against that attempt's
+  fixed head. It reads each commit's files, job logs and actual job durations.
+  Python test imports are resolved against files in that head's tree. Linux
+  and Windows runner checkout paths are made relative to the task repository;
+  traversal paths are refused. Comparison endpoints, job attempts and each
+  tree/source locator are checked, and source bytes must match the expected
+  Git blob. No
+  dependency graph is involved. Incomplete trees or comparison ranges are
+  refused. The injected request boundary returns `GitHubResponse`; `has_next`
+  must reflect GitHub's next-page link. It must handle log download redirects
+  without forwarding the installation token outside `api.github.com`.
+- `workflow/evidence_collection.py::EvidenceCollector.collect_and_persist`
+  takes a `CollectionRequest` containing the accepted `RunIdentity`, worker
+  claim and failure fields for history lookup. Inject the reader, a token
+  issuer, `PostgresHistoryStore`, `PostgresStepRecorder` and
+  `load_thresholds().distiller`. The token issuer's `mint(installation_id,
+  repo_id)` is called once per collection. The collector trims and numbers
+  logs, looks up matching history in that repository, and saves the pack as
+  the `distill` step while moving `DISTILLING` to `CLASSIFYING` through the
+  existing guarded transaction. `StepCommit.task_identity` carries the task's
+  repository, workflow run and attempt; the recorder checks these against the
+  leased database row inside that transaction before writing anything. Existing
+  callers may omit this optional field. A mismatched task, stale claim or
+  failed write returns no pack.
+- `agent_context(pack)` puts the saved facts inside an escaped
+  `<untrusted_evidence>` block. Instructions belong outside it. It reuses
+  `workflow/task_store.py::without_author_attribution`; the task view continues
+  to apply the existing rule about when authors may be shown.
+
+The callable collection entrypoint is available for worker wiring. There is
+no new command, background worker, live token issuer or specialist-agent
+connection in this story. Raw logs and tokens are neither step output nor
+agent context. No GitHub writes occur. Empty comparisons produce empty commit
+and candidate lists, and missing timing measurements produce no metric.
+
+GitHub API shapes and pagination were checked against the official
+[commit documentation](https://docs.github.com/en/rest/commits/commits),
+[workflow-run documentation](https://docs.github.com/en/rest/actions/workflow-runs)
+and [workflow-job documentation](https://docs.github.com/en/rest/actions/workflow-jobs).
+
+Run the focused checks:
+
+```bash
+.venv/bin/pytest tests/workflow/test_evidence.py tests/workflow/test_github_evidence.py tests/workflow/test_evidence_scope.py tests/workflow/test_evidence_collection.py tests/workflow/test_evidence_identity.py tests/contracts/test_evidence.py -q
+.venv/bin/pytest -m integration tests/workflow/test_evidence_integration.py -q
+make check
+```
+
+The marked checks use real Postgres 18 through disposable Docker containers.
+They prove the pack and state move commit together, a database fault rolls
+both back, a replaced worker cannot save its pack, and evidence for a different
+workflow run cannot be attached to the leased run.
+
+The same marked test file includes a real GitHub read. To enable it, set
+`TRIAGE_EVIDENCE_INSTALLATION_ID`, `TRIAGE_EVIDENCE_REPO_ID`,
+`TRIAGE_EVIDENCE_WORKFLOW_RUN_ID`, `TRIAGE_EVIDENCE_RUN_ATTEMPT` and
+`TRIAGE_EVIDENCE_INSTALLATION_TOKEN` in the test process environment. Use a
+failed attempt with available logs and a token authorized for that repository.
+Keep the token outside the repository. Without all five values, the GitHub
+check explicitly skips; a skip is not a successful live read.

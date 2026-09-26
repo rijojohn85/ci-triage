@@ -44,6 +44,7 @@ __all__ = [
     "RunRecord",
     "TaskReader",
     "build_task",
+    "without_author_attribution",
 ]
 
 # JSON data outputs (objects and arrays) go into a data artifact; anything
@@ -122,23 +123,23 @@ def build_task(
 
 
 def _artifact(record: StepRecord, *, blame_free: bool) -> Artifact:
-    output = _without_author_attribution(record.output) if blame_free else record.output
+    output = without_author_attribution(record.output) if blame_free else record.output
     artifact_id = str(record.step_id)
     if isinstance(output, _DATA_OUTPUT_TYPES):
         return new_data_artifact(record.step, output, artifact_id=artifact_id)
     return new_text_artifact(record.step, str(output), artifact_id=artifact_id)
 
 
-def _without_author_attribution(value: object) -> object:
+def without_author_attribution(value: object) -> object:
     """Drop the AD-27 author key at any depth; everything else is untouched."""
     if isinstance(value, Mapping):
         return {
-            key: _without_author_attribution(item)
+            key: without_author_attribution(item)
             for key, item in value.items()
             if key != AUTHOR_ATTRIBUTION_FIELD
         }
     if isinstance(value, (list, tuple)):
-        return [_without_author_attribution(item) for item in value]
+        return [without_author_attribution(item) for item in value]
     return value
 
 

@@ -82,3 +82,10 @@ def test_ac3_metrics_reject_nan_and_infinity() -> None:
     with pytest.raises(ValidationError) as exc:
         EvidencePack.model_validate(payload)
     assert "load_duration_seconds" in str(exc.value)
+
+
+def test_ac1_empty_comparison_has_no_fabricated_commit() -> None:
+    payload = representative_evidence_payload()
+    payload["commits"] = []
+    payload["candidate_suspects"] = []
+    assert EvidencePack.model_validate(payload).commits == []

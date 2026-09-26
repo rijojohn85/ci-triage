@@ -128,7 +128,6 @@
       "items": {
         "$ref": "#/$defs/CommitRecord"
       },
-      "minItems": 1,
       "title": "Commits",
       "type": "array"
     },

@@ -31,7 +31,9 @@ __all__ = [
     "StepRecord",
     "StepRecorder",
     "StepStatus",
+    "StepTaskMismatchError",
     "StepWriteError",
+    "TaskRunIdentity",
 ]
 
 
@@ -95,6 +97,23 @@ class StepRecord:
     created_at: datetime
 
 
+class StepTaskMismatchError(Exception):
+    """The leased run is not the task whose evidence was collected (AD-15)."""
+
+    retryable = False
+
+    def __init__(self, run_id: uuid.UUID) -> None:
+        super().__init__(f"task identity mismatch for run {run_id}")
+        self.run_id = run_id
+
+
+@dataclass(frozen=True)
+class TaskRunIdentity:
+    repo_id: int
+    workflow_run_id: int
+    run_attempt: int
+
+
 @dataclass(frozen=True)
 class StepCommit:
     """The step outcome to persist together with its run-state move (AD-2).
@@ -110,6 +129,7 @@ class StepCommit:
     status: StepStatus = StepStatus.COMPLETED
     output: object = None
     guards: GuardInput = field(default_factory=GuardInput)
+    task_identity: TaskRunIdentity | None = None
 
 
 @dataclass(frozen=True)

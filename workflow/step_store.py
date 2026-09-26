@@ -30,7 +30,9 @@ from workflow.steps import (
     StepCommit,
     StepRecord,
     StepStatus,
+    StepTaskMismatchError,
     StepWriteError,
+    TaskRunIdentity,
 )
 from workflow.transitions import transition
 
@@ -39,6 +41,11 @@ __all__ = ["PostgresStepRecorder"]
 # The state row is already locked by `guarded_commit`'s owner re-check (AD-23),
 # so the read needs no row lock of its own — fencing stays in story 1.2.
 _SELECT_STATE_SQL = "SELECT state FROM triage_run WHERE run_id = %s AND repo_id = %s"
+
+_SELECT_TASK_IDENTITY_SQL = """
+SELECT repo_id, workflow_run_id, run_attempt FROM triage_run
+WHERE run_id = %s AND repo_id = %s
+"""
 
 _SELECT_COMPLETED_STEPS_SQL = """
 SELECT step FROM run_step
@@ -120,6 +127,8 @@ class PostgresStepRecorder:
     ) -> Callable[[LeaseConnection], StepRecord]:
         def work(conn: LeaseConnection) -> StepRecord:
             current = self._current_state(conn, claim, repo_id)
+            if commit.task_identity is not None:
+                self._validate_task_identity(conn, claim, repo_id, commit.task_identity)
             # AD-1: the move must be a row in story 2.1's table, not a raw
             # assignment. An illegal move raises before any write.
             transition(current, commit.to_state, commit.guards)
@@ -169,6 +178,22 @@ class PostgresStepRecorder:
             )
 
         return work
+
+    def _validate_task_identity(
+        self,
+        conn: LeaseConnection,
+        claim: Claim,
+        repo_id: int,
+        identity: TaskRunIdentity,
+    ) -> None:
+        # AD-15: the locked run must be the task whose evidence was read;
+        # repository scope alone does not distinguish runs or attempts.
+        row = conn.execute(
+            _SELECT_TASK_IDENTITY_SQL, (claim.run_id, repo_id)
+        ).fetchone()
+        expected = (identity.repo_id, identity.workflow_run_id, identity.run_attempt)
+        if identity.repo_id != repo_id or row != expected:
+            raise StepTaskMismatchError(claim.run_id)
 
     def _current_state(
         self, conn: LeaseConnection, claim: Claim, repo_id: int
