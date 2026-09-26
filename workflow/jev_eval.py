@@ -18,6 +18,7 @@ calibration set.
 from __future__ import annotations
 
 import json
+import re
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from enum import Enum
@@ -49,8 +50,11 @@ __all__ = [
     "TrickOutcome",
     "Verdict",
     "build_attempt",
+    "receipt_name",
+    "render_comparison_md",
     "render_summary_md",
     "score_attempts",
+    "slug",
     "trick_passed",
 ]
 
@@ -70,6 +74,10 @@ OQ5_CAVEAT: Final[str] = (
 )
 ERROR_RATE_BAR: Final[str] = "error_rate"
 """The one bar name the verdict precedence keys on (`_bars` and `_verdict`)."""
+_UNKNOWN_DATE: Final[str] = "unknown"
+"""The date a dateless summary is named by. `_receipt_dir` fills the real local
+date before naming a receipt directory, so this only labels a legacy column in
+a comparison — `receipt_name` stays pure (no clock)."""
 
 
 class CaseKind(str, Enum):
@@ -194,7 +202,8 @@ class RunMeta(BaseModel):
 
     The harness supplies these: the pinned model id and promptfoo version, the
     SHA-256 of the prompt file the classifier loads, the git commit, the local
-    date and the repeats count read from the bar.
+    date and the repeats count read from the bar. `label` is the optional
+    `--label` suffix that names a run (before/after) so receipts never collide.
     """
 
     model_config = ConfigDict(frozen=True)
@@ -205,6 +214,7 @@ class RunMeta(BaseModel):
     git_commit: str = ""
     date: str = ""
     repeats: int = Field(default=1, ge=1)
+    label: str = ""
 
 
 class EvalSummary(BaseModel):
@@ -228,6 +238,7 @@ class EvalSummary(BaseModel):
     git_commit: str = ""
     date: str = ""
     repeats: int = Field(default=1, ge=1)
+    label: str = ""
     reported_models: tuple[str, ...]
     attempts_count: int = Field(ge=0)
     accuracy_population: int = Field(ge=0)
@@ -394,6 +405,7 @@ def score_attempts(
         git_commit=meta.git_commit,
         date=meta.date,
         repeats=meta.repeats,
+        label=meta.label,
         reported_models=_reported_models(run.attempts),
         attempts_count=len(run.attempts),
         accuracy_population=len(run.scored_attempts),
@@ -446,6 +458,88 @@ def render_summary_md(summary: EvalSummary) -> str:
     return "\n".join(lines)
 
 
+def receipt_name(summary: EvalSummary) -> str:
+    """The run's stable name: `<date>-<model>`, plus `-<label>` when labelled.
+
+    One source for both the receipt directory (`scripts/run_jev_eval.py`) and
+    the comparison's column headers, so a column maps straight to a directory.
+    Pure: a dateless summary is named `unknown-<model>` (`_UNKNOWN_DATE`); the
+    harness fills the real local date before naming a receipt directory.
+    """
+    parts = [summary.date or _UNKNOWN_DATE, slug(summary.model)]
+    if summary.label:
+        parts.append(slug(summary.label))
+    return "-".join(parts)
+
+
+def slug(value: str) -> str:
+    """The one rule that makes a name filesystem- and column-safe (or empty)."""
+    return re.sub(r"[^A-Za-z0-9._-]+", "-", value).strip("-")
+
+
+def render_comparison_md(current: EvalSummary, baselines: Sequence[EvalSummary]) -> str:
+    """The before/after table for a labelled run (AC2).
+
+    One column per receipt — the baselines in the order given, then the current
+    run — and one row per headline metric. Pure: the harness reads each
+    baseline's `summary.json` into `EvalSummary` and writes the file (SOLID-S).
+    """
+    columns = [*baselines, current]
+    names = [receipt_name(summary) for summary in columns]
+    lines = [
+        "# Jev eval comparison",
+        "",
+        "| metric | " + " | ".join(names) + " |",
+        "| --- | " + " | ".join("---" for _ in columns) + " |",
+        *_comparison_rows(columns),
+        "",
+    ]
+    return "\n".join(lines)
+
+
+def _comparison_rows(columns: Sequence[EvalSummary]) -> list[str]:
+    rows: list[tuple[str, list[str]]] = [
+        ("verdict", [summary.verdict.value for summary in columns]),
+        ("overall accuracy", [_pct(summary.overall_accuracy) for summary in columns]),
+    ]
+    rows += [
+        (
+            f"per-class accuracy: {failure_class.value}",
+            [_class_accuracy(summary, failure_class) for summary in columns],
+        )
+        for failure_class in FailureClass
+    ]
+    rows += [
+        ("confident-wrong", [str(len(summary.confident_wrong)) for summary in columns]),
+        ("trick pass rate", [_trick_rate(summary) for summary in columns]),
+        ("evidence retention", [_retention(summary) for summary in columns]),
+    ]
+    return [f"| {name} | " + " | ".join(values) + " |" for name, values in rows]
+
+
+def _class_accuracy(summary: EvalSummary, failure_class: FailureClass) -> str:
+    for score in summary.class_scores:
+        if score.failure_class is failure_class:
+            return _pct(score.accuracy)
+    return "n/a"
+
+
+def _trick_rate(summary: EvalSummary) -> str:
+    return f"{summary.injection_passed}/{summary.injection_total}"
+
+
+def _retention(summary: EvalSummary) -> str:
+    """Recompute retention from the attempts so a pre-3.11 baseline is honest.
+
+    A baseline written before story 3.11 stores no retention count and its
+    attempts carry no `proof_present` (the default), so reading the stored
+    fields would show `0/0`; recomputing from the attempts shows the true
+    `0/<labelled>` (`_evidence_retention`, the one source of the count).
+    """
+    retained, total = _evidence_retention(summary.attempts)
+    return f"{retained}/{total}"
+
+
 def _header_lines(summary: EvalSummary) -> list[str]:
     calls_hold = (
         "yes"
@@ -462,6 +556,7 @@ def _header_lines(summary: EvalSummary) -> list[str]:
         f"- git commit: `{summary.git_commit or 'unknown'}`",
         f"- date: {summary.date or 'unknown'}",
         f"- repeats: {summary.repeats}",
+        *([f"- label: {summary.label}"] if summary.label else []),
         f"- attempts: {summary.attempts_count}; model calls: "
         f"{_count(summary.calls_made)} ({summary.calls_unreported} unreported; "
         f"calls == attempts: {calls_hold})",

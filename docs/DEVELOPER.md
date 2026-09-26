@@ -55,10 +55,10 @@ Every message between orchestrator and agent is an A2A message whose data part i
 | `guardrails/attribution.py` | built (4.1) | the deep `author_login` walk (AD-27), moved from `workflow/task_store.py` (DRY): `strip_author_attribution`, `contains_author_attribution`, `attribution_location` |
 | `deploy/compose.yaml` | built (0.3, 1.1) | postgres:18 + one-shot `migrate` job + the real gateway (story 1.1) + orchestrator/agent placeholders, with AD-16 secret placement; see [deploy/README.md](../deploy/README.md) and [Compose and migrations](#compose-and-migrations-story-03) |
 | `deploy/migrations/` | built (0.3, 2.1, 1.1, 1.2, 2.3, 2.6, 6.1) | forward-only `.sql` files + naming rules; runner is `workflow/migrate.py`; `0001_triage_run.sql` owns run state, `0002_webhook_delivery.sql` records seen delivery ids for replay dedupe, `0003_triage_run_lease.sql` adds the AD-23 lease columns + claim index, `0004_run_step.sql` adds the AD-2 step record, `0005_history.sql` adds the AD-15 structured-only history table, `0006_pr_feedback.sql` adds the separate post-terminal PR feedback table, `0007_run_step_audit.sql` adds the AD-18 model-call audit columns to `run_step` |
-| `scripts/` | built (0.1, 0.2, 0.4, 1.1, 2.1, 2.6, 3.2) | `bootstrap.sh`, `check_layer_contract.py`, `generate_schemas.py`, `verify_demo_repo.py`, `generate_state_diagram.py`, `history_import.py`, `build_jev_eval_cases.py` (the 3.2 case generator, `--check` drift gate), `run_jev_eval.py` (the 3.2 harness); `ruleset-seed.json` payload for the demo-repo ruleset |
+| `scripts/` | built (0.1, 0.2, 0.4, 1.1, 2.1, 2.6, 3.2, 3.12) | `bootstrap.sh`, `check_layer_contract.py`, `generate_schemas.py`, `verify_demo_repo.py`, `generate_state_diagram.py`, `history_import.py`, `build_jev_eval_cases.py` (the 3.2 case generator, `--check` drift gate), `run_jev_eval.py` (the 3.2 harness; `--label`/`--compare` from 3.12 write a distinct receipt and a `comparison.md`); `ruleset-seed.json` payload for the demo-repo ruleset |
 | `tests/scripts/` | built (0.4, 3.2) | unit tests of the demo-repo read-back comparison logic against recorded API fixtures and of the Jev case generator; live `gh` path is `@pytest.mark.integration` |
 | `test-data/` | built (0.4, 3.2, 2.13) | demo-repo evidence: `demo-repo-expected.json` (AD-16 set, one source for script + docs), `demo-repo.md` (live facts + scenario slots), `demo-repo-seed/` (pushed verbatim to the demo repo); `jev-eval/` — the 38 labelled Jev cases (`manifest.yaml` + `logs/`), the generated `cases.generated.yaml` and `distiller-exceptions.yaml` (the committed key_line exceptions, empty today); see [test-data/jev-eval/README.md](../test-data/jev-eval/README.md) |
-| `results/jev-eval/` | built (3.2) | the committed Jev eval receipts (`<date>-<model>/summary.md`, `summary.json`, `promptfoo-output.json`); un-ignored in `.gitignore`; see [results/README.md](../results/README.md) |
+| `results/jev-eval/` | built (3.2, 3.12) | the committed Jev eval receipts (`<date>-<model>[-<label>]/summary.md`, `summary.json`, `promptfoo-output.json`, plus `comparison.md` when `--compare` is given); un-ignored in `.gitignore`; see [results/README.md](../results/README.md) |
 | `tests/contracts/` | built (0.2) | contract tests, named after the ACs they prove |
 | `tests/workflow/`, `tests/security/` | built (0.3, 2.1, 1.1, 1.2, 2.2, 2.3, 2.4, 2.5, 2.8, 2.13) | migration-runner and compose secret-placement tests; state-machine, projection and diagram tests; gateway signature/intake/limits tests; lease unit + fencing tests; step unit + atomic-commit/resume/fencing tests; A2A task-view unit + JSON-RPC ASGI tests; distiller AC tests (no I/O) incl. the runner-prefix and real-log `key_line` tests; step-runner, A2A-client and runtime-config tests (`@pytest.mark.integration` ones need Docker, `pytest -m integration`) |
 | `gateway/` | built (1.1) | webhook intake only — signature, accepted events, load limits, one enqueue; see [gateway/README.md](../gateway/README.md) |
@@ -78,7 +78,7 @@ Every message between orchestrator and agent is an A2A message whose data part i
 | `workflow/task_store.py` | built (2.4, 4.1) | the read-only A2A task view: `RunRecord`, the small `TaskReader` protocol (now including `get_confidence`), `build_task` (2.1's `project` + 2.2's `attribution_allowed`; an unknown confidence is served blame-free) and `ReadOnlyTaskStore`, whose `save`/`delete` refuse (AD-4, SOLID-S/I) |
 | `workflow/a2a_server.py` | built (2.4, 4.1) | the A2A transport wiring: `RefusingExecutor` plus `create_app`, which serves `get_task`/`list_tasks` through a2a-sdk 1.1.5's JSON-RPC routes (AD-4, AD-5); each run's serving confidence comes from the reader |
 | `workflow/distiller.py` | built (2.5, 2.13) | the pure AD-20 log distiller: `distill(ci_log, junit_xml, limits) -> list[DistilledLogLine]`, the ordered `ERROR_MARKERS` registry, ANSI/control and CI-runner-timestamp-prefix stripping, JUnit evidence and the UTF-8-safe byte clip; no I/O, model, network or clock (SOLID-S) |
-| `workflow/jev_eval.py` | built (3.2) | the pure Jev-eval domain: `Attempt`/`build_attempt`, `ClassScore`, `CaseCount`, `BarResult`, `EvalSummary`, `Verdict`, `trick_passed`, `score_attempts` and `render_summary_md`; validates every result against the committed `guardrails/schemas/JevResult.json` and reuses `guardrails.confidence.apply_injection_screen` (the one AD-9 path); no I/O, model or clock; see [The Jev eval](#the-jev-eval-story-32) |
+| `workflow/jev_eval.py` | built (3.2, 3.12) | the pure Jev-eval domain: `Attempt`/`build_attempt`, `ClassScore`, `CaseCount`, `BarResult`, `EvalSummary`, `Verdict`, `trick_passed`, `score_attempts`, `render_summary_md` and the 3.12 `receipt_name`/`render_comparison_md`; validates every result against the committed `guardrails/schemas/JevResult.json` and reuses `guardrails.confidence.apply_injection_screen` (the one AD-9 path); no I/O, model or clock; see [The Jev eval](#the-jev-eval-story-32) |
 | `config/gateway.yaml` | built (1.1) | per-installation rate limit and per-repo queue-depth cap (AD-19); consumed via `gateway.settings.load_gateway_limits` |
 | `config/orchestrator.yaml` | built (1.2, 2.8) | `lease_seconds` / `renew_after_seconds` plus the AD-22 transient-retry budget (`retry.max_attempts`, `retry.backoff_base_seconds`) (AD-19); `workflow.orchestrator_config.load_orchestrator_config` reads it |
 | `config/runtime.yaml` | built (2.8) | per-agent model IDs and `step_timeout` (AD-19); `workflow.runtime_config.load_runtime_config` is its one loader (`for_skill` maps the runner's skill names onto the agent keys) |
@@ -1197,6 +1197,17 @@ turns the 38 hand-labelled real CI failures in
 promptfoo suite, runs the **real** classifier against them, and writes an
 honest receipt — including when the result is a failure.
 
+**The CI-platform convention (story 3.12).** The `infra` and `external`
+criteria in `prompts/jev-classes.yaml` state the human labelling convention the
+cases follow: a failure of the CI platform itself — action downloads, artifacts,
+the cache service, the provider's own API or storage — is `infra`, and a third
+party is a service the project's build depends on (an external API, registry or
+upstream), **not** the CI platform. The 3.2 receipt shows the platform-failure
+`infra` cases were answered `external`, so the criteria were made explicit as an
+eval-first change: the red eval (run A) is measured on the unchanged prompt, the
+criteria then state the convention, and the change is measured again (run B).
+No label, case or bar moves.
+
 **How the cases are built** (`scripts/build_jev_eval_cases.py`, deterministic;
 the committed `test-data/jev-eval/cases.generated.yaml` is the drift gate):
 
@@ -1264,14 +1275,37 @@ as-is, but the target fails so a breached bar cannot pass unnoticed. Only
 an existing raw output instead of running the suite, so a receipt can be
 re-derived from its committed evidence with zero model calls.
 
-**Where the receipt lands.** `results/jev-eval/<date>-<model>/` (committed
-evidence; see [results/README.md](../results/README.md)), where `<date>` is the
-local system date and the model id's `/` becomes `-`:
+**Labelled runs and the comparison.** `--label <name>` suffixes the receipt
+directory (`<date>-<model>-<name>`), so an eval-first before/after pair never
+overwrites the 3.2 receipt or each other. `--compare <receipt-dir>...`
+(repeatable) reads each baseline's `summary.json` into `EvalSummary` and writes
+`comparison.md` beside the new receipt — one column per receipt (the baselines
+in the order given, then the new run) and one row per headline metric: the
+verdict, overall accuracy, per-class accuracy (code/flaky/infra/external/
+unknown), confident-wrong, trick pass rate (`passed/total`) and evidence
+retention (`retained/total`). The retention row is recomputed from each
+receipt's attempts, so the 3.2 baseline — written before story 3.11, with no
+stored count and no per-attempt `proof_present` — reads `0/38`, not `0/0`. Both
+flags also work with `--from-output`, so a comparison can be regenerated with
+zero model calls. The whole table is the pure `render_comparison_md`
+(`workflow/jev_eval.py`); the harness owns reading the baselines and writing the
+file. A `--label` that slugs to nothing is rejected, and a `--compare` directory
+that is not a receipt (no readable `summary.json`) or that repeats a baseline
+or is this run's own receipt is refused, so the table always has distinct
+columns.
+
+**Where the receipt lands.** `results/jev-eval/<date>-<model>[-<label>]/`
+(committed evidence; see [results/README.md](../results/README.md)), named by
+`receipt_name` (`workflow/jev_eval.py`): `<date>` is the local system date, and
+the model id and label are slugged — any character outside letters, digits,
+`.`, `_` and `-` becomes `-`:
 
 - `summary.md` — the human-readable receipt;
 - `summary.json` — the same, machine-readable (every attempt, both confidence
   numbers and the caps, token totals, bar outcomes);
-- `promptfoo-output.json` — the complete promptfoo report.
+- `promptfoo-output.json` — the complete promptfoo report;
+- `comparison.md` — the before/after table, written only when `--compare` is
+  given.
 
 The receipt records the run provenance and the whole measurement: the model id
 and the provider-reported model string, the SHA-256 of `prompts/jev-classes.yaml`,
@@ -1315,6 +1349,8 @@ drop a hard case or move the bar — that is a later, separately-reviewed change
 ```bash
 make jev-eval-cases                 # regenerate test-data/jev-eval/cases.generated.yaml
 make eval-jev                       # run the suite once; writes results/jev-eval/<date>-<model>/
+make eval-jev EVAL_ARGS="--label before"   # a labelled run: results/jev-eval/<date>-<model>-before/
+make eval-jev EVAL_ARGS="--label after --compare results/jev-eval/2026-09-27-typesafe-jev-1.13"  # writes comparison.md
 .venv/bin/pytest tests/workflow/test_jev_eval.py tests/scripts/test_build_jev_eval_cases.py -q
 ```
 

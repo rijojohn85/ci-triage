@@ -15,6 +15,12 @@ no model call goes unaccounted (AD-18).
 
 `--from-output <path>` skips promptfoo and re-scores an existing raw output
 (zero model calls), so a receipt can be re-derived from its committed evidence.
+
+`--label <name>` suffixes the receipt directory (`<date>-<model>-<name>`), so
+run A and run B never overwrite the 3.2 receipt or each other. `--compare
+<receipt-dir>...` (repeatable) reads each baseline's `summary.json` into
+`EvalSummary` and writes `comparison.md` beside the new receipt — the pure
+before/after table (`workflow.jev_eval.render_comparison_md`).
 """
 
 import argparse
@@ -30,6 +36,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Final
 
+from pydantic import ValidationError
+
 ROOT: Final[Path] = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))  # contracts/ is not a pip package; run from anywhere
 
@@ -39,8 +47,11 @@ from workflow.jev_eval import (  # noqa: E402
     EvalSummary,
     RunMeta,
     build_attempt,
+    receipt_name,
+    render_comparison_md,
     render_summary_md,
     score_attempts,
+    slug,
 )
 from workflow.thresholds import load_thresholds  # noqa: E402
 
@@ -161,7 +172,10 @@ def _calls(results: Iterable[dict[str, Any]]) -> int:
 
 
 def _summary(
-    results: Sequence[dict[str, Any]], promptfoo_version: str, repeats: int
+    results: Sequence[dict[str, Any]],
+    promptfoo_version: str,
+    repeats: int,
+    label: str = "",
 ) -> EvalSummary:
     thresholds = load_thresholds()
     limits = thresholds.eval.jev
@@ -178,6 +192,7 @@ def _summary(
         git_commit=_git_commit(),
         date=_local_date(),
         repeats=repeats,
+        label=label,
     )
     summary = score_attempts(
         attempts, limits=limits, cutoffs=thresholds.confidence, meta=meta
@@ -214,8 +229,15 @@ def _local_date() -> str:
 
 
 def _receipt_dir(base: Path, summary: EvalSummary) -> Path:
-    model = re.sub(r"[^A-Za-z0-9._-]+", "-", summary.model).strip("-")
-    return base / f"{summary.date or _local_date()}-{model}"
+    """`<date>-<model>[-<label>]`; the one naming rule lives in `receipt_name`.
+
+    `receipt_name` is pure, so a dateless summary is dated here (the local
+    system date) before naming — a receipt directory always reads as its day.
+    """
+    dated = (
+        summary if summary.date else summary.model_copy(update={"date": _local_date()})
+    )
+    return base / receipt_name(dated)
 
 
 def _write_receipt(directory: Path, raw_output: Path, summary: EvalSummary) -> None:
@@ -231,14 +253,60 @@ def _write_receipt(directory: Path, raw_output: Path, summary: EvalSummary) -> N
 
 
 def _write_from_raw(
-    raw_output: Path, repeats: int, results_dir: Path
+    raw_output: Path, repeats: int, results_dir: Path, label: str = ""
 ) -> tuple[EvalSummary, Path]:
     """Score one raw promptfoo output and write its receipt (zero model calls)."""
     results, version = _read_output(raw_output)
-    summary = _summary(results, version, repeats)
+    summary = _summary(results, version, repeats, label)
     directory = _receipt_dir(results_dir, summary)
     _write_receipt(directory, raw_output, summary)
     return summary, directory
+
+
+def _read_baseline(directory: Path) -> EvalSummary:
+    """Read a committed receipt's `summary.json` into an `EvalSummary` (AC2).
+
+    A baseline written before story 3.11 lacks the retention fields; pydantic
+    fills their defaults (and each attempt's `proof_present`), so the legacy
+    column renders honestly rather than failing to load. A directory that is
+    not a receipt (missing or unreadable `summary.json`) is reported clearly
+    instead of raising a raw traceback.
+    """
+    path = directory / "summary.json"
+    if not path.is_file():
+        raise SystemExit(f"{directory} is not a receipt directory (no summary.json)")
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+        return EvalSummary.model_validate(data)
+    except (json.JSONDecodeError, ValidationError) as error:
+        raise SystemExit(f"{path} is not a readable Jev receipt: {error}") from error
+
+
+def _write_comparison(
+    directory: Path, summary: EvalSummary, baselines: Sequence[Path]
+) -> Path:
+    """Write the before/after table beside the new receipt and return its path."""
+    loaded = [_read_baseline(path) for path in baselines]
+    _require_distinct_columns(
+        receipt_name(summary), [receipt_name(baseline) for baseline in loaded]
+    )
+    destination = directory / "comparison.md"
+    destination.write_text(render_comparison_md(summary, loaded), encoding="utf-8")
+    return destination
+
+
+def _require_distinct_columns(current: str, baselines: Sequence[str]) -> None:
+    """Refuse a self or repeated baseline (AC2): one column per distinct receipt."""
+    seen: set[str] = set()
+    for name in baselines:
+        if name == current:
+            raise SystemExit(
+                f"--compare baseline {name!r} is this run's own receipt; "
+                "a comparison needs distinct columns"
+            )
+        if name in seen:
+            raise SystemExit(f"--compare baseline {name!r} was given twice")
+        seen.add(name)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -265,7 +333,32 @@ def main(argv: list[str] | None = None) -> int:
             "committed evidence"
         ),
     )
+    parser.add_argument(
+        "--label",
+        default="",
+        help=(
+            "suffix the receipt directory (`<date>-<model>-<label>`) so a "
+            "labelled run never overwrites the 3.2 receipt or another run"
+        ),
+    )
+    parser.add_argument(
+        "--compare",
+        type=Path,
+        action="append",
+        default=None,
+        metavar="RECEIPT_DIR",
+        help=(
+            "a baseline receipt directory whose summary.json joins the "
+            "before/after table written as comparison.md beside the new receipt "
+            "(repeatable; baselines appear in the order given)"
+        ),
+    )
     args = parser.parse_args(argv)
+    if args.label and not slug(args.label):
+        raise SystemExit(
+            f"--label {args.label!r} has no usable characters; use letters, "
+            "digits, '.', '_' or '-'"
+        )
 
     thresholds = load_thresholds()
     bar = thresholds.eval.jev
@@ -273,7 +366,7 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.from_output is not None:
         summary, directory = _write_from_raw(
-            args.from_output, repeats, args.results_dir
+            args.from_output, repeats, args.results_dir, args.label
         )
     else:
         node = resolve_node()
@@ -281,13 +374,17 @@ def main(argv: list[str] | None = None) -> int:
         temp_output.parent.mkdir(parents=True, exist_ok=True)
         try:
             _run_promptfoo(node, repeats, temp_output)
-            summary, directory = _write_from_raw(temp_output, repeats, args.results_dir)
+            summary, directory = _write_from_raw(
+                temp_output, repeats, args.results_dir, args.label
+            )
         finally:
             temp_output.unlink(missing_ok=True)
 
     print(render_summary_md(summary))
     print(f"\nVERDICT: {summary.verdict.value}")
     print(f"receipt: {directory}")
+    if args.compare:
+        print(f"comparison: {_write_comparison(directory, summary, args.compare)}")
     return 0 if summary.verdict.value in {"PASSED", "measured / pending-bar"} else 1
 
 

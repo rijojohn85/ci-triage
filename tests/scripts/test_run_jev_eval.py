@@ -238,3 +238,168 @@ def test_from_output_rescores_and_writes_the_receipt(tmp_path: Path) -> None:
     assert summary["verdict"] == "FAILED"
     assert summary["attempts_count"] == 3
     assert summary["calls_made"] == 3
+
+
+# --- Story 3.12 AC2: the receipt label and the comparison table ---------------
+
+COMMITTED_BASELINE = ROOT / "results" / "jev-eval" / "2026-09-27-typesafe-jev-1.13"
+
+
+def _labelled_output(answer: str = "infra") -> str:
+    return _raw_output(
+        [
+            {
+                "vars": {
+                    "case_id": "curl-infra-01",
+                    "case_kind": "labelled",
+                    "expected_label": "infra",
+                    "repo": "curl/curl",
+                },
+                "tokenUsage": {"numRequests": 1},
+                "response": {"output": _jev_result(answer)},
+            }
+        ]
+        * 3
+    )
+
+
+def test_ac2_receipt_dir_carries_the_label(tmp_path: Path) -> None:
+    summary = harness.EvalSummary.model_construct(
+        model="typesafe/jev-1.13", date="2026-09-27", label="before"
+    )
+    assert harness._receipt_dir(tmp_path, summary) == (
+        tmp_path / "2026-09-27-typesafe-jev-1.13-before"
+    )
+
+
+def test_ac2_compare_reads_each_baseline_summary() -> None:
+    summary = harness._read_baseline(COMMITTED_BASELINE)
+    assert summary.model == "typesafe/jev-1.13"
+    assert summary.label == ""  # the 3.2 receipt predates --label
+    assert summary.verdict.value == "FAILED"
+    assert summary.evidence_total == 0  # the 3.2 receipt predates the stored count
+    assert summary.attempts and not any(a.proof_present for a in summary.attempts)
+    # Recomputed from its attempts, the legacy column still reads 0/38, not 0/0.
+    text = harness.render_comparison_md(summary, [])
+    assert "| evidence retention | 0/38 |" in text
+
+
+def test_ac2_compare_writes_comparison_md_beside_the_receipt(tmp_path: Path) -> None:
+    raw = tmp_path / "promptfoo-output.json"
+    raw.write_text(_labelled_output(), encoding="utf-8")
+    baselines = tmp_path / "baselines"
+    harness.main(["--from-output", str(raw), "--results-dir", str(baselines)])
+    baseline_dir = next(baselines.glob("*-typesafe-jev-1.13"))
+    harness.main(
+        [
+            "--from-output",
+            str(raw),
+            "--results-dir",
+            str(tmp_path),
+            "--label",
+            "after",
+            "--compare",
+            str(baseline_dir),
+        ]
+    )
+    receipt = next(tmp_path.glob("*-typesafe-jev-1.13-after"))
+    comparison = receipt / "comparison.md"
+    assert comparison.is_file()
+    header = next(
+        line
+        for line in comparison.read_text(encoding="utf-8").splitlines()
+        if line.startswith("| metric |")
+    )
+    assert [cell.strip() for cell in header.strip("|").split("|")] == [
+        "metric",
+        baseline_dir.name,
+        receipt.name,
+    ]
+
+
+def test_ac2_receipt_dir_dates_a_dateless_summary(tmp_path: Path) -> None:
+    """A dateless summary is dated now, never named `unknown-<model>`."""
+    summary = harness.EvalSummary.model_construct(model="typesafe/jev-1.13")
+    assert harness._receipt_dir(tmp_path, summary) == (
+        tmp_path / f"{harness._local_date()}-typesafe-jev-1.13"
+    )
+
+
+def test_ac2_label_that_slugs_to_nothing_is_rejected(tmp_path: Path) -> None:
+    raw = tmp_path / "promptfoo-output.json"
+    raw.write_text(_labelled_output(), encoding="utf-8")
+    with pytest.raises(SystemExit) as caught:
+        harness.main(
+            [
+                "--from-output",
+                str(raw),
+                "--results-dir",
+                str(tmp_path),
+                "--label",
+                "!",
+            ]
+        )
+    assert "no usable characters" in str(caught.value)
+
+
+def test_ac2_compare_rejects_a_non_receipt_directory(tmp_path: Path) -> None:
+    raw = tmp_path / "promptfoo-output.json"
+    raw.write_text(_labelled_output(), encoding="utf-8")
+    not_a_receipt = tmp_path / "not-a-receipt"
+    not_a_receipt.mkdir()
+    with pytest.raises(SystemExit) as caught:
+        harness.main(
+            [
+                "--from-output",
+                str(raw),
+                "--results-dir",
+                str(tmp_path),
+                "--compare",
+                str(not_a_receipt),
+            ]
+        )
+    assert "not a receipt directory" in str(caught.value)
+
+
+def test_ac2_compare_refuses_a_self_or_duplicate_baseline(tmp_path: Path) -> None:
+    raw = tmp_path / "promptfoo-output.json"
+    raw.write_text(_labelled_output(), encoding="utf-8")
+    baselines = tmp_path / "baselines"
+    harness.main(["--from-output", str(raw), "--results-dir", str(baselines)])
+    baseline_dir = next(baselines.glob("*-typesafe-jev-1.13"))
+
+    with pytest.raises(SystemExit) as repeated:
+        harness.main(
+            [
+                "--from-output",
+                str(raw),
+                "--results-dir",
+                str(tmp_path),
+                "--label",
+                "after",
+                "--compare",
+                str(baseline_dir),
+                "--compare",
+                str(baseline_dir),
+            ]
+        )
+    assert "twice" in str(repeated.value)
+
+    harness.main(
+        ["--from-output", str(raw), "--results-dir", str(tmp_path), "--label", "after"]
+    )
+    self_dir = next(tmp_path.glob("*-typesafe-jev-1.13-after"))
+    with pytest.raises(SystemExit) as self_column:
+        harness.main(
+            [
+                "--from-output",
+                str(raw),
+                "--results-dir",
+                str(tmp_path),
+                "--label",
+                "after",
+                "--compare",
+                str(self_dir),
+            ]
+        )
+    assert "own receipt" in str(self_column.value)
