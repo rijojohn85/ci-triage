@@ -68,7 +68,7 @@ development_status:
   2-10-integrate-proposal-review-revisions-and-risk-gating: backlog
   2-11-deliver-idempotent-drafts-quarantine-metadata-and-reports: backlog
   2-12-prove-live-pipeline-recovery-and-retry-accounting: backlog
-  2-13-distil-real-github-actions-logs-across-stacks: backlog
+  2-13-distil-real-github-actions-logs-across-stacks: review
   epic-2-retrospective: optional
 
   epic-3: in-progress
