@@ -98,7 +98,7 @@ The following is copied from the FINAL spine to preserve AD identifiers, enums, 
 | --- | --- | --- |
 | Ingress | `gateway/` | Postgres (enqueue only) |
 | Process manager | `workflow/` | `contracts/`, `guardrails/`, Postgres, GitHub API, A2A clients → `agents/*`, Jev (routing) |
-| Guardrails (pure, deterministic) | `guardrails/` | `contracts/` only |
+| Guardrails (pure, deterministic) | `guardrails/` | `contracts/` + pinned pure libraries (`pydantic`, `jsonschema`); no I/O |
 | Spoke agents | `agents/{jev,analyzer,proposer,reviewer}/` | `contracts/`, `prompts/`, own model API only |
 | Shared types | `contracts/` | nothing |
 | Human punch-out | `punch-out/` (CLI) | orchestrator A2A endpoint only |
@@ -1892,7 +1892,7 @@ So that untrusted evidence cannot fabricate a valid verdict.
 **Given** an agent output and this run’s EvidencePack/Jev answers,
 **When** pure validators execute,
 **Then** schema and closed citation-kind checks require log_line in numbered log, commit in last_green..HEAD, history_row among served rows, metric among collected keys and jev_signal among this run’s answers,
-**And** missing/unresolvable citations return structured validator errors; guardrails imports contracts only.
+**And** missing/unresolvable citations return structured validator errors; guardrails imports `contracts/` plus pinned pure libraries (`pydantic`, `jsonschema`) only — no I/O.
 
 **AC2**
 

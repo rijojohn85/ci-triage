@@ -42,7 +42,7 @@ deferred:
 **(1) Story:** 4.1 — Validate schemas, served citations and attribution (sprint-status key `4-1-validate-schemas-served-citations-and-attribution`).
 
 **(2) ACs in one line each:**
-- AC1: pure validators check agent output against the committed JSON schema and resolve every citation against the EvidencePack/Jev answers served this run; missing/unresolvable citations return structured validator errors; guardrails imports contracts only.
+- AC1: pure validators check agent output against the committed JSON schema and resolve every citation against the EvidencePack/Jev answers served this run; missing/unresolvable citations return structured validator errors; guardrails imports `contracts/` plus pinned pure libraries (`pydantic`, `jsonschema`) only — no I/O.
 - AC2: suspects are candidates carrying both a commit and a log_line citation; caps carry cited reasons and cannot raise confidence; foreign-repo evidence, short production SHAs and probabilities-as-confidence are rejected.
 - AC3: output for AWAITING_APPROVAL, REPORTING, or a run below the class cutoff (including 2.4's stored projection fixtures) shows no author attribution; fixtures prove invalid-citation and attribution failures; the validator returns errors for the shared step runner (2.8) rather than implementing a competing workflow.
 
@@ -68,7 +68,7 @@ deferred:
 
 ## Boundaries & Constraints
 
-**Always:** guardrails imports `contracts/` only (layer contract); every citation resolves against the pack served this run; errors are structured (`code` + `message` + `location`), all issues collected per validation, never raised as bare exceptions past the validator boundary; thresholds/cutoffs only from `guardrails/thresholds.yaml`; full 40-char SHAs in production payloads.
+**Always:** guardrails imports `contracts/` plus pinned pure libraries (`pydantic`, `jsonschema`) only — no I/O (layer contract); every citation resolves against the pack served this run; errors are structured (`code` + `message` + `location`), all issues collected per validation, never raised as bare exceptions past the validator boundary; thresholds/cutoffs only from `guardrails/thresholds.yaml`; full 40-char SHAs in production payloads.
 
 **Never:** no retry/pause/state-transition logic in the validator (AD-8 is 2.8's shared step runner); no GitHub/Postgres/LLM I/O in guardrails; no new citation kinds or contract changes; no schema hand-edits (regenerate only); no weakening of the 2.4 projection tests.
 
@@ -173,7 +173,7 @@ ValidationIssue(
 
 **Commands:**
 - `uv run pytest tests/guardrails tests/workflow/test_task_server.py tests/workflow/test_task_store.py -q` -- expected: all pass, new AC-named tests green.
-- `uv run python scripts/check_layer_contract.py` -- expected: PASS (guardrails imports contracts only).
+- `uv run python scripts/check_layer_contract.py` -- expected: PASS (guardrails imports contracts + pinned pure libraries only).
 - `make check` -- expected: PASS (bootstrap, layer contract, schema drift, ruff, mypy --strict, pylint duplicate-code, pytest ≥85% on contracts/guardrails/workflow).
 
 ## Auto Run Result

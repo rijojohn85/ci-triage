@@ -27,7 +27,7 @@ companions: [README-draft.md, workflow-diagram.svg]
 | --- | --- | --- |
 | Ingress | `gateway/` | Postgres (enqueue only) |
 | Process manager | `workflow/` | `contracts/`, `guardrails/`, Postgres, GitHub API, A2A clients → `agents/*`, Jev (routing) |
-| Guardrails (pure, deterministic) | `guardrails/` | `contracts/` only |
+| Guardrails (pure, deterministic) | `guardrails/` | `contracts/` + pinned pure libraries (`pydantic`, `jsonschema`); no I/O |
 | Spoke agents | `agents/{jev,analyzer,proposer,reviewer}/` | `contracts/`, `prompts/`, own model API only |
 | Shared types | `contracts/` | nothing |
 | Human punch-out | `punch-out/` (CLI) | orchestrator A2A endpoint only |
