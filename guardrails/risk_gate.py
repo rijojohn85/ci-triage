@@ -521,10 +521,17 @@ RISK_RULES: Final[tuple[RiskRule, ...]] = (
 
 
 def evaluate_risk(gate: GateInput) -> GateDecision:
-    """The one gate entry point: no diff → `not_gated`; any rule hit →
-    `blocked` with ALL reasons collected; otherwise `normal`. Deterministic
-    and pure — no GitHub, Postgres, HTTP or model call (AD-13)."""
+    """The one gate entry point: any rule hit → `blocked` with ALL reasons
+    collected; no diff → `not_gated` — unless a `dangerous` Reviewer
+    objection stands, which blocks even a diff-less gate (AD-12 "any
+    `dangerous` objection escalates early to `GATING`, which blocks"; AD-13
+    "also blocked if the Reviewer marked the change dangerous"). Otherwise
+    `normal`. Deterministic and pure — no GitHub, Postgres, HTTP or model
+    call (AD-13)."""
+    dangerous = _check_reviewer_dangerous(gate)
     if gate.diff is None:
+        if dangerous:
+            return GateDecision(risk_tier=RiskTier.BLOCKED, reasons=dangerous)
         return GateDecision(risk_tier=RiskTier.NOT_GATED, reasons=())
     reasons = tuple(reason for rule in RISK_RULES for reason in rule.check(gate))
     if reasons:

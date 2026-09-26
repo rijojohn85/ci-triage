@@ -884,6 +884,50 @@ def test_ac1_skip_in_an_unrelated_identifier_is_not_a_hit() -> None:
     assert decision.reasons == ()
 
 
+# --- AC1 (F7): the new thresholds.yaml glob families block their surfaces
+
+
+@pytest.mark.parametrize(
+    "path",
+    [
+        "deploy/aws/credentials.json",
+        "config/id_rsa",
+        "home/id_ed25519.pub",
+        ".npmrc",
+        "deploy/compose.yaml",
+        "charts/app/Chart.yaml",
+        "helm/values.yaml",
+        "k8s-deploy/patch.yml",
+    ],
+)
+def test_ac1_new_glob_families_block_their_paths(path: str) -> None:
+    decision = evaluate_risk(
+        gate_input(
+            diff_of(DiffFile(path=path, op=DiffOperation.ADD, new_content=""))
+        )
+    )
+
+    assert decision.risk_tier is RiskTier.BLOCKED, f"{path} must block"
+
+
+def test_ac2_lookalike_paths_stay_normal() -> None:
+    decision = evaluate_risk(
+        gate_input(
+            diff_of(
+                DiffFile(
+                    path="src/composer.py",
+                    op=DiffOperation.MODIFY,
+                    new_content="def compose():\n    return 2\n",
+                )
+            ),
+            prior={"src/composer.py": "def compose():\n    return 1\n"},
+        )
+    )
+
+    assert decision.risk_tier is RiskTier.NORMAL
+    assert decision.reasons == ()
+
+
 # --- AC1: the S5 timeout-bump fixture (the only-obvious-fix case)
 
 
@@ -903,6 +947,16 @@ def test_ac1_s5_timeout_bump_fixture_blocked() -> None:
 
     assert decision.risk_tier is RiskTier.BLOCKED
     assert rule_codes(decision.reasons) == {"timeout_increased"}
+
+
+# --- AC1 (F8): a dangerous objection blocks even with no diff to gate
+
+
+def test_ac1_dangerous_objection_without_diff_is_blocked() -> None:
+    decision = evaluate_risk(gate_input(None, objections=(dangerous_objection(),)))
+
+    assert decision.risk_tier is RiskTier.BLOCKED
+    assert rule_codes(decision.reasons) == {"reviewer_dangerous"}
 
 
 # --- AC2: a safe root-cause diff is normal

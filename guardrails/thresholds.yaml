@@ -12,14 +12,30 @@ workflow_path_glob: ".github/workflows/**"
 # deterministic risk gate treats as secret or infra surfaces; the workflow
 # surface is the top-level `workflow_path_glob` above. fnmatch patterns.
 risk_gate:
-  secret_path_globs: [".env", ".env.*", "*/.env", "*/.env.*", "*.pem", "*.key", "*secrets/*"]
+  secret_path_globs:
+    - ".env"
+    - ".env.*"
+    - "*/.env"
+    - "*/.env.*"
+    - "*.pem"
+    - "*.key"
+    - "*secrets/*"
+    - "*secret*"
+    - "*credentials*"
+    - "*id_rsa*"
+    - "*id_ed25519*"
+    - "*.npmrc"
   infra_path_globs:
     - "*Dockerfile*"
     - "*docker-compose*.y*ml"
+    - "*compose*.y*ml"
     - "*.tf"
     - "*.tfvars"
     - "*k8s/*"
     - "*kubernetes/*"
+    - "*charts/*"
+    - "*helm/*"
+    - "*deploy/*"
 
 # Classification-branch cut-offs (AD-9, AD-14) and the injection pre-screen
 # (spine "One Jev call carries both Choice and Noul"). Placeholders below are

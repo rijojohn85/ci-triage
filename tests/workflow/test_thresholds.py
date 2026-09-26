@@ -57,14 +57,23 @@ def test_ac1_risk_gate_config_loads_from_thresholds_yaml() -> None:
         "*.pem",
         "*.key",
         "*secrets/*",
+        "*secret*",
+        "*credentials*",
+        "*id_rsa*",
+        "*id_ed25519*",
+        "*.npmrc",
     )
     assert thresholds.risk_gate.infra_path_globs == (
         "*Dockerfile*",
         "*docker-compose*.y*ml",
+        "*compose*.y*ml",
         "*.tf",
         "*.tfvars",
         "*k8s/*",
         "*kubernetes/*",
+        "*charts/*",
+        "*helm/*",
+        "*deploy/*",
     )
 
 
