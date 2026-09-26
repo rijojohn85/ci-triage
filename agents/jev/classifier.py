@@ -7,6 +7,10 @@ contracts with the provider-reported usage (unreported counters NULL, AD-18).
 SDK errors are typed with the AD-22 retryable split; nothing escapes untyped.
 """
 
+import secrets
+from collections.abc import Callable
+from typing import Final
+
 from pydantic import ValidationError
 from typesafe_sdk import (
     TypeSafeAPIConnectionError,
@@ -33,10 +37,7 @@ from contracts.jev import (
 )
 from contracts.usage import ModelUsage
 
-__all__ = ["LOG_END", "LOG_START", "ClassifyError", "agent_error", "classify"]
-
-LOG_START = "<<<distilled_log"
-LOG_END = "distilled_log>>>"
+__all__ = ["ClassifyError", "agent_error", "classify"]
 
 _RETRYABLE_SDK_ERRORS = (
     TypeSafeAPIConnectionError,
@@ -84,22 +85,33 @@ def agent_error(exc: Exception) -> AgentError:
     )
 
 
-def _delimited_state(pack: EvidencePack) -> str:
+_LOG_START_PREFIX: Final[str] = "<<<distilled_log:"
+_LOG_END_SUFFIX: Final[str] = ">>>"
+_NONCE_BYTES: Final[int] = 16
+
+
+def _new_nonce() -> str:
+    """The default per-call nonce source: a fresh random token."""
+    return secrets.token_hex(_NONCE_BYTES)
+
+
+def _delimited_state(pack: EvidencePack, nonce: str) -> str:
     """The distilled log as one delimited untrusted data section (AD-20).
 
-    Fails closed when a log line carries a delimiter literal: the section
-    would close early and the rest of the log would leak into the model's
-    instructions.
+    The delimiters carry a per-call random nonce, so a collision with log
+    text is practically impossible — an injection-looking log line stays
+    data and can never close the section early (AC2: a positive screen
+    never blocks on its own, so a denial-of-service refusal is wrong too).
+    Embedded newlines in a line's text are escaped so every numbered line
+    stays exactly one line.
     """
-    for line in pack.distilled_log:
-        if LOG_START in line.text or LOG_END in line.text:
-            raise _definitive(
-                "log_delimiter_collision",
-                f"distilled log line {line.line_number} carries a section "
-                "delimiter; refusing to serve it as untrusted state (AD-20)",
-            )
-    lines = "\n".join(f"{line.line_number} {line.text}" for line in pack.distilled_log)
-    return f"{LOG_START}\n{lines}\n{LOG_END}"
+    start = f"{_LOG_START_PREFIX}{nonce}"
+    end = f"distilled_log:{nonce}{_LOG_END_SUFFIX}"
+    lines = "\n".join(
+        f"{line.line_number} {line.text.replace(chr(10), chr(92) + 'n')}"
+        for line in pack.distilled_log
+    )
+    return f"{start}\n{lines}\n{end}"
 
 
 def _definitive(code: str, message: str) -> ClassifyError:
@@ -134,18 +146,26 @@ def _result(response: SystemOneResult) -> JevResult:
 
 
 async def classify(
-    pack: EvidencePack, provider: JevProvider, runtime: JevRuntime
+    pack: EvidencePack,
+    provider: JevProvider,
+    runtime: JevRuntime,
+    *,
+    new_nonce: Callable[[], str] = _new_nonce,
 ) -> JevResult:
-    """One batched provider call over the delimited log; typed errors only."""
+    """One batched provider call over the delimited log; typed errors only.
+
+    `new_nonce` is the injectable per-call delimiter nonce source (tests
+    pin it for determinism; production uses `secrets`).
+    """
     try:
         questions = load_questions()
-        state = _delimited_state(pack)
     except ClassifyError:
         raise
     except Exception as error:
         raise _definitive(
             "invalid_configuration", f"the Jev question setup failed: {error}"
         ) from error
+    state = _delimited_state(pack, new_nonce())
     try:
         response = await provider.system_one(
             state=state,

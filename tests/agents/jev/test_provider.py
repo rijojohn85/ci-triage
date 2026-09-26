@@ -123,7 +123,7 @@ class FiftyThreeTransport(httpx2.AsyncBaseTransport):
     def __init__(self) -> None:
         self.requests = 0
 
-    async def handle_async_request(self, request: Any) -> httpx2.Response:
+    async def handle_async_request(self, request: Any) -> httpx2.Response:  # noqa: ARG002 — transport API fixes the signature
         self.requests += 1
         return httpx2.Response(503)
 

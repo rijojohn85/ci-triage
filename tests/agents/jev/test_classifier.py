@@ -17,12 +17,7 @@ from jsonschema import validate as schema_validate
 from typesafe_sdk import ChoiceAnswer, NoulAnswer
 
 from agents.jev import questions as questions_module
-from agents.jev.classifier import (
-    LOG_END,
-    LOG_START,
-    ClassifyError,
-    classify,
-)
+from agents.jev.classifier import ClassifyError, classify
 from agents.jev.questions import CHOICE_KEY, NOUL_KEY, load_questions
 from agents.jev.runtime import JevRuntime
 from contracts.a2a import DataPart
@@ -164,7 +159,7 @@ def test_ac1_untrusted_log_travels_as_state_not_instructions() -> None:
     classify_with(provider)
 
     state = provider.calls[0]["state"]
-    assert state.startswith(LOG_START) and state.endswith(LOG_END), (
+    assert state.startswith("<<<distilled_log:") and state.endswith(">>>"), (
         "the distilled log travels delimited (AD-20)"
     )
     assert "FAILED tests/test_x.py" in state
@@ -245,11 +240,16 @@ def test_ac2_missing_answers_are_a_definitive_agent_error() -> None:
     assert exc.value.error.retryable is False
 
 
-# --- review hardening: config/delimiter guards and the widened parse guard
+# --- review hardening: config guards and the widened parse guard
 
 
 def colliding_pack() -> EvidencePack:
-    """A pack whose log carries the closing delimiter literal (AD-20)."""
+    """A pack whose log carries the OLD closing delimiter literal (AD-20).
+
+    With per-call nonce delimiters a collision is practically impossible,
+    so a line carrying the well-known literal must classify NORMALLY —
+    an injection-like input blocks nothing on its own (AC2).
+    """
     return EvidencePack(
         repo_id="org/demo-repo",
         last_green=FULL_SHA,
@@ -266,15 +266,52 @@ def colliding_pack() -> EvidencePack:
     )
 
 
-def test_ac1_log_line_carrying_a_delimiter_fails_closed() -> None:
+def test_ac1_log_line_carrying_an_old_delimiter_classifies_normally() -> None:
     provider = FakeProvider(fixture_response())
 
-    with pytest.raises(ClassifyError) as exc:
-        classify_with(provider, colliding_pack())
+    result = classify_with(provider, colliding_pack())
 
-    assert provider.calls == [], "a colliding log never reaches the provider"
-    assert exc.value.error.retryable is False, "fail closed, deterministically"
-    assert exc.value.error.code == "log_delimiter_collision"
+    assert len(provider.calls) == 1, "a delimiter-looking line is just log text"
+    assert result.classification.choice.answer is FailureClass.FLAKY
+
+
+def test_ac1_end_marker_apars_exactly_once_and_cannot_be_forged() -> None:
+    provider = FakeProvider(fixture_response())
+
+    classify_with(provider, colliding_pack())
+
+    state = provider.calls[0]["state"]
+    nonce = state.split("<<<distilled_log:")[1].split("\n")[0]
+    end_marker = f"distilled_log:{nonce}>>>"
+    assert state.count(end_marker) == 1, "the end marker closes the section once"
+    assert state.endswith(end_marker)
+    # A log line cannot close the section: only the caller's nonce matches.
+    assert state.count("distilled_log>>>") == 0 or "\n" not in state.split(
+        "distilled_log:")[0]
+
+
+def test_ac1_multiline_log_text_stays_on_one_numbered_line() -> None:
+    pack = EvidencePack(
+        repo_id="org/demo-repo",
+        last_green=FULL_SHA,
+        distilled_log=[
+            DistilledLogLine(line_number=1, text="FAILED tests/test_x.py"),
+            DistilledLogLine(line_number=2, text="assert 512 == 500\nE  boom"),
+        ],
+        commits=[],
+        candidate_suspects=[],
+        history_rows=[],
+        metrics={},
+    )
+    provider = FakeProvider(fixture_response())
+
+    classify_with(provider, pack)
+
+    state = provider.calls[0]["state"]
+    lines = state.split("\n")
+    expected_lines = 4  # start + 2 numbered lines + end
+    assert len(lines) == expected_lines, "no embedded newline survives"
+    assert lines[2] == "2 assert 512 == 500\\nE  boom"
 
 
 def test_ac2_malformed_questions_yaml_is_a_definitive_agent_error(
