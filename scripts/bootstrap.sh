@@ -60,6 +60,20 @@ for cmd in node npm; do
     fail_and_exit_2
   fi
 done
+NODE_MIN="$(cat .nvmrc)"
+nodever="$(node --version 2>/dev/null || true)"
+if ! "$PY" - "$NODE_MIN" "$nodever" <<'PY_NODE'
+import re
+import sys
+minimum = tuple(int(part) for part in sys.argv[1].split('.'))
+match = re.fullmatch(r'v?(\d+)\.(\d+)\.(\d+)', sys.argv[2])
+version = tuple(int(part) for part in match.groups()) if match else ()
+sys.exit(0 if version and version[0] == minimum[0] and version >= minimum else 1)
+PY_NODE
+then
+  report_mismatch "Node ${NODE_MIN%%.*} >= ${NODE_MIN}" "$NODE_MIN" "found ${nodever:-not runnable}; run 'nvm install' and 'nvm use' from the repository root"
+  fail_and_exit_2
+fi
 echo "preflight: python ${pyver}, node $(node --version), npm $(npm --version)"
 
 # ---- Env creation / installs ----
@@ -163,6 +177,16 @@ done
 for entry in "${NPM_PINS[@]}"; do
   verify_npm "${entry%% *}" "${entry##* }"
 done
+
+# A pin can be present even when a native module cannot load on this Node.
+smoke_dir="$(mktemp -d)"
+trap 'rm -rf "$smoke_dir"' EXIT
+if ! smoke_err="$(PROMPTFOO_CONFIG_DIR="$smoke_dir" node_modules/.bin/promptfoo --version 2>&1)"; then
+  report_mismatch "promptfoo CLI startup" "local CLI runs" "$smoke_err"
+fi
+if ! smoke_err="$(node_modules/.bin/smee --help 2>&1)"; then
+  report_mismatch "smee CLI startup" "local CLI runs" "$smoke_err"
+fi
 
 if [ "$PRINT_ONLY" -eq 1 ]; then
   print_versions

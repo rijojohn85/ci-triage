@@ -78,18 +78,18 @@ def test_nvm_candidates_are_newest_first(
     ]
 
 
-def test_resolve_node_picks_the_first_suitable_candidate(
+def test_ac3_resolve_node_picks_the_first_suitable_candidate(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
     too_old = _touch(tmp_path / "old-node")
     suitable = _touch(tmp_path / "new-node")
     monkeypatch.setattr(harness, "_candidate_nodes", lambda: [too_old, suitable])
-    versions = {too_old: (22, 20, 0), suitable: (24, 13, 1)}
+    versions = {too_old: (22, 20, 0), suitable: (26, 10, 0)}
     monkeypatch.setattr(harness, "_node_version", lambda binary: versions[binary])
     assert harness.resolve_node() == suitable
 
 
-def test_resolve_node_errors_clearly_when_none_is_suitable(
+def test_ac3_resolve_node_errors_clearly_when_none_is_suitable(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
     too_old = _touch(tmp_path / "old-node")
@@ -103,7 +103,9 @@ def test_resolve_node_errors_clearly_when_none_is_suitable(
     with pytest.raises(SystemExit) as caught:
         harness.resolve_node()
     message = str(caught.value)
-    assert "no node >= 22.22.0" in message
+    assert "Node 26 >= 26.10.0" in message
+    assert "nvm install" in message
+    assert "nvm use" in message
     assert str(too_old) in message
     assert "not runnable" in message
 
@@ -238,3 +240,76 @@ def test_from_output_rescores_and_writes_the_receipt(tmp_path: Path) -> None:
     assert summary["verdict"] == "FAILED"
     assert summary["attempts_count"] == 3
     assert summary["calls_made"] == 3
+
+
+@pytest.mark.parametrize("version", [(22, 22, 0), (24, 13, 1), (26, 9, 9), (27, 0, 0)])
+def test_ac3_skips_unsuitable_candidates(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, version: tuple[int, int, int]
+) -> None:
+    unsuitable = _touch(tmp_path / "old-node")
+    supported = _touch(tmp_path / "node")
+    monkeypatch.setattr(harness, "_candidate_nodes", lambda: [unsuitable, supported])
+    monkeypatch.setattr(
+        harness,
+        "_node_version",
+        lambda binary: version if binary == unsuitable else (26, 11, 0),
+    )
+    assert harness.resolve_node() == supported
+
+
+@pytest.mark.parametrize("version", [(26, 10, 0), (26, 10, 1), (26, 11, 0)])
+def test_ac3_accepts_supported_node(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, version: tuple[int, int, int]
+) -> None:
+    node = _touch(tmp_path / "node")
+    monkeypatch.setattr(harness, "_candidate_nodes", lambda: [node])
+    monkeypatch.setattr(harness, "_node_version", lambda binary: version)
+    assert harness.resolve_node() == node
+
+
+def test_ac3_main_uses_selected_node_for_local_child(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    node_dir = tmp_path / "supported"
+    node_dir.mkdir()
+    node = node_dir / "node"
+    node.write_text("#!/bin/sh\necho v26.10.0\n")
+    node.chmod(0o755)
+    marker = tmp_path / "child-version"
+    promptfoo = tmp_path / "promptfoo"
+    promptfoo.write_text(f"#!/bin/sh\nnode --version > '{marker}'\nexit 9\n")
+    promptfoo.chmod(0o755)
+    monkeypatch.setattr(harness, "_candidate_nodes", lambda: [node])
+    monkeypatch.setattr(harness, "PROMPTFOO", promptfoo)
+    with pytest.raises(SystemExit, match="exit code 9"):
+        harness.main(["--results-dir", str(tmp_path / "results")])
+    assert marker.read_text().strip() == "v26.10.0"
+
+
+def test_ac3_main_fails_before_promptfoo_when_no_supported_node(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    node = tmp_path / "node"
+    node.write_text("#!/bin/sh\necho v27.0.0\n")
+    node.chmod(0o755)
+    marker = tmp_path / "promptfoo-called"
+    promptfoo = tmp_path / "promptfoo"
+    promptfoo.write_text(f"#!/bin/sh\ntouch '{marker}'\n")
+    promptfoo.chmod(0o755)
+    monkeypatch.setattr(harness, "_candidate_nodes", lambda: [node])
+    monkeypatch.setattr(harness, "PROMPTFOO", promptfoo)
+    with pytest.raises(SystemExit, match="Node 26 >= 26.10.0"):
+        harness.main(["--results-dir", str(tmp_path / "results")])
+    assert not marker.exists()
+
+
+@pytest.mark.parametrize("version", ["26.10.0-rc.1", "26.11.0-nightly20260927"])
+def test_ac3_resolve_rejects_prerelease_executable(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, version: str
+) -> None:
+    candidate = tmp_path / "node"
+    candidate.write_text(f"#!/bin/sh\necho v{version}\n")
+    candidate.chmod(0o755)
+    monkeypatch.setattr(harness, "_candidate_nodes", lambda: [candidate])
+    with pytest.raises(SystemExit, match="Node 26 >= 26.10.0"):
+        harness.resolve_node()

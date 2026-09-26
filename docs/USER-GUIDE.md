@@ -16,7 +16,26 @@ It never blames a person without evidence.
 
 ## Run it locally (story 0.3)
 
-Requirements: Docker with the Compose plugin (`docker compose version` prints ≥ 2.27), Python ≥ 3.10 with `psycopg 3.3.6` available (`.venv` from `bash scripts/bootstrap.sh`).
+Requirements: Node 26 at or above [`.nvmrc`](../.nvmrc), Docker with the Compose plugin (`docker compose version` prints ≥ 2.27), Python ≥ 3.10 with `psycopg 3.3.6` available (`.venv` from `bash scripts/bootstrap.sh`).
+
+Install the local tools from the repository root before starting services:
+
+```bash
+nvm install
+nvm use
+bash scripts/bootstrap.sh
+```
+
+After switching Node versions, run `npm ci` to reinstall the locked tools.
+Bootstrap refuses older Node versions and other major versions before installing,
+and tells you to run `nvm install` and `nvm use`. It verifies the local commands
+`node_modules/.bin/promptfoo --version` and `node_modules/.bin/smee --help`.
+Use `node_modules/.bin/smee` for the webhook tunnel rather than a global copy
+installed with an earlier Node. Tool pins are recorded in the
+[architecture spine](../_bmad-output/planning-artifacts/architecture/architecture-stage4-2026-09-25/ARCHITECTURE-SPINE.md).
+Windows 32-bit is unsupported because an optional image package does not support
+Node 26 there. Optional provider or backend build warnings need separate
+verification if you use those features; the startup check covers the local CLIs.
 
 1. Copy the sample env file and fill in the names it lists (only `POSTGRES_PASSWORD` is needed for the database to start):
 
