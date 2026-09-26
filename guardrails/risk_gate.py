@@ -142,11 +142,21 @@ _TIMEOUT_PATTERN: Final[re.Pattern[str]] = re.compile(
 keyword argument or mapping entry), plus the `timeout(N)` call/marker form.
 Values may be floats or use digit separators; they are compared numerically."""
 _STRONG_ASSERTION: Final[re.Pattern[str]] = re.compile(
-    r"assertEqual\((\w+)\s*,|assert\s+(\w+)\s*=="
+    r"""assertEqual\(([\w.\[\]"']+)\s*,|assert\s+([\w.\[\]"']+)\s*=="""
 )
 _WEAK_ASSERTION: Final[re.Pattern[str]] = re.compile(
-    r"assertIn\((\w+)\s*,|assert\s+(\w+)\s+in\b"
+    r"""assertIn\(([\w.\[\]"']+)\s*,|assert\s+([\w.\[\]"']+)\s+in\b"""
+    r"""|assertTrue\(([\w.\[\]"']+)|assertIsNotNone\(([\w.\[\]"']+)"""
+    r"""|assert\s+([\w.\[\]"']+)\s*==\s*pytest\.approx"""
 )
+_ASSERTION_LINE: Final[re.Pattern[str]] = re.compile(
+    r"\bassert\b|self\.assert\w+\(|\bassert\w+\("
+)
+"""The loosening rule's target token accepts dotted and subscripted names
+(`resp.status`, `data["k"]`), and the weak set covers assertTrue /
+assertIsNotNone / a `pytest.approx` comparison — weaker checks on the same
+target. The line pattern is the deletion arm: a test file with net fewer
+assertion lines than its base is a loosening too (AD-13)."""
 _TEST_FILE_GLOBS: Final[tuple[str, ...]] = ("test_*.py", "*_test.py", "conftest.py")
 # Rule constant, not a tunable (AD-19): what counts as a test file IS the rule.
 
@@ -208,7 +218,12 @@ def _timeout_values(text: str) -> list[float]:
 
 
 def _assertion_tokens(lines: Sequence[str], pattern: re.Pattern[str]) -> set[str]:
-    return {first or second for first, second in pattern.findall("\n".join(lines))}
+    return {
+        group
+        for groups in pattern.findall("\n".join(lines))
+        for group in groups
+        if group
+    }
 
 
 def _added_line_hits(
@@ -311,17 +326,18 @@ def _check_timeout_increased(gate: GateInput) -> tuple[GateReason, ...]:
 def _check_assertion_loosened(gate: GateInput) -> tuple[GateReason, ...]:
     """A strong assertion removed while a weak one on the same target token
     was added (AD-13): `assertEqual(tok,` → `assertIn(tok,`,
-    `assert tok ==` → `assert tok in`."""
+    `assert tok ==` → `assert tok in`/`assertTrue(tok`/`assertIsNotNone(tok`/
+    `assert tok == pytest.approx` — the token may be dotted or subscripted.
+    A test file whose changed lines hold net fewer assertion lines than its
+    base is a deletion, and blocks too."""
     if gate.diff is None:
         return ()
     reasons: list[GateReason] = []
     for file in gate.diff.files:
-        removed = _assertion_tokens(
-            _removed_lines(file, gate.prior_contents), _STRONG_ASSERTION
-        )
-        added = _assertion_tokens(
-            _added_lines(file, gate.prior_contents), _WEAK_ASSERTION
-        )
+        removed_lines = _removed_lines(file, gate.prior_contents)
+        added_lines = _added_lines(file, gate.prior_contents)
+        removed = _assertion_tokens(removed_lines, _STRONG_ASSERTION)
+        added = _assertion_tokens(added_lines, _WEAK_ASSERTION)
         reasons.extend(
             GateReason(
                 rule_code=ASSERTION_LOOSENED,
@@ -330,6 +346,19 @@ def _check_assertion_loosened(gate: GateInput) -> tuple[GateReason, ...]:
             )
             for token in sorted(removed & added)
         )
+        removed_count = sum(1 for line in removed_lines if _ASSERTION_LINE.search(line))
+        added_count = sum(1 for line in added_lines if _ASSERTION_LINE.search(line))
+        if removed_count > added_count:
+            reasons.append(
+                GateReason(
+                    rule_code=ASSERTION_LOOSENED,
+                    message=(
+                        f"assertion lines removed without a replacement "
+                        f"({removed_count} removed, {added_count} added)"
+                    ),
+                    location=file.path,
+                )
+            )
     return tuple(reasons)
 
 

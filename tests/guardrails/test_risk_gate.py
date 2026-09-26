@@ -75,7 +75,7 @@ POSITIVE_FIXTURES = {
                 op=DiffOperation.ADD,
                 new_content=(
                     "import pytest\n\n\n"
-                    "@pytest.mark.skip(reason='flaky')\n"
+                    "@pytest.mark.skip(reason='known-issue')\n"
                     "def test_pay():\n    assert True\n"
                 ),
             )
@@ -338,12 +338,12 @@ def test_ac1_relocated_skip_line_is_still_blocked() -> None:
         "def test_a():\n"
         "    assert True\n"
         "\n"
-        "@pytest.mark.skip(reason='flaky')\n"
+        "@pytest.mark.skip(reason='known-issue')\n"
         "def test_b():\n"
         "    assert True\n"
     )
     moved = (
-        "@pytest.mark.skip(reason='flaky')\n"
+        "@pytest.mark.skip(reason='known-issue')\n"
         "def test_a():\n"
         "    assert True\n"
         "\n"
@@ -644,6 +644,109 @@ def test_ac1_pre_existing_retry_comment_is_not_a_hit() -> None:
 
     assert decision.risk_tier is RiskTier.NORMAL
     assert decision.reasons == ()
+
+
+# --- AC1 (F4): assertion deletions and weaker spellings are caught too
+
+
+def test_ac1_assertion_deleted_without_replacement_is_blocked() -> None:
+    prior = "r = f()\nassert r == 5\n"
+    new = "r = f()\n"
+
+    decision = evaluate_risk(
+        gate_input(
+            diff_of(
+                DiffFile(
+                    path="tests/test_calc.py",
+                    op=DiffOperation.MODIFY,
+                    new_content=new,
+                )
+            ),
+            prior={"tests/test_calc.py": prior},
+        )
+    )
+
+    assert decision.risk_tier is RiskTier.BLOCKED
+    assert rule_codes(decision.reasons) == {"assertion_loosened"}
+
+
+def test_ac1_dotted_target_loosened_is_blocked() -> None:
+    prior = "assert resp.status == 200\n"
+    new = "assert resp.status in (200, 500)\n"
+
+    decision = evaluate_risk(
+        gate_input(
+            diff_of(
+                DiffFile(
+                    path="tests/test_api.py",
+                    op=DiffOperation.MODIFY,
+                    new_content=new,
+                )
+            ),
+            prior={"tests/test_api.py": prior},
+        )
+    )
+
+    assert decision.risk_tier is RiskTier.BLOCKED
+    assert rule_codes(decision.reasons) == {"assertion_loosened"}
+
+
+def test_ac1_weak_assertion_forms_are_loosenings() -> None:
+    cases = [
+        ("assert flag == True", "assertTrue(flag)"),
+        ("assert obj == fetch()", "assertIsNotNone(obj)"),
+        ("assert total == 5", "assert total == pytest.approx(5, abs=3)"),
+    ]
+    for strong, weak in cases:
+        decision = evaluate_risk(
+            gate_input(
+                diff_of(
+                    DiffFile(
+                        path="tests/test_calc.py",
+                        op=DiffOperation.MODIFY,
+                        new_content=f"{weak}\n",
+                    )
+                ),
+                prior={"tests/test_calc.py": f"{strong}\n"},
+            )
+        )
+
+        assert decision.risk_tier is RiskTier.BLOCKED, f"{strong} -> {weak}"
+
+
+def test_ac1_assertion_moved_or_strengthened_is_normal() -> None:
+    moved_prior = "def test_a():\n    assert total == 5\n\ndef test_b():\n    assert True\n"
+    moved_new = "def test_a():\n    assert True\n\ndef test_b():\n    assert total == 5\n"
+    strengthened_prior = "assert total in items\n"
+    strengthened_new = "assert total == 5\n"
+
+    moved = evaluate_risk(
+        gate_input(
+            diff_of(
+                DiffFile(
+                    path="tests/test_calc.py",
+                    op=DiffOperation.MODIFY,
+                    new_content=moved_new,
+                )
+            ),
+            prior={"tests/test_calc.py": moved_prior},
+        )
+    )
+    strengthened = evaluate_risk(
+        gate_input(
+            diff_of(
+                DiffFile(
+                    path="tests/test_calc.py",
+                    op=DiffOperation.MODIFY,
+                    new_content=strengthened_new,
+                )
+            ),
+            prior={"tests/test_calc.py": strengthened_prior},
+        )
+    )
+
+    assert moved.risk_tier is RiskTier.NORMAL and moved.reasons == ()
+    assert strengthened.risk_tier is RiskTier.NORMAL and strengthened.reasons == ()
 
 
 # --- AC1: the S5 timeout-bump fixture (the only-obvious-fix case)
