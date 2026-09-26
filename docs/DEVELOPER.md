@@ -38,7 +38,7 @@ Every message between orchestrator and agent is an A2A message whose data part i
 | 6.2 | Versioned NULL-aware model costs (AD-18): one provenance-carrying price table (`table_version`, per-model five-type rates each with source URL + retrieved date, the Jev rate NULL + flagged per OQ-3), a pure NULL-aware calculator (an unreported counter, an unpriced model or a Jev-billed call yields a NULL cost plus a flag, never 0; a run total with any incomplete part is NULL with the reasons listed), and the orchestrator-side reader that rolls 6.1's audit rows into per-run costs — computed, never stored | `monitoring/prices.yaml`, `monitoring/pricing.py`, `monitoring/costs.py`, `workflow/usage_costs.py`, `tests/monitoring/`, `tests/workflow/test_usage_costs.py`, `tests/workflow/test_usage_costs_integration.py`; see [Model costs](#model-costs-story-62) |
 | 2.8 | The shared step runner (AD-8, AD-22): one execution policy every agent step goes through — blocking non-streaming A2A `send_message` with `contextId = run_id` and a per-skill timeout, every attempted call audited centrally, one validation retry with the structured errors fed back (a second invalid output pauses with `validation_failed`), at most three transient attempts with config-driven backoff then a terminal `FAILED` with history written once, a definitive error failing without retry, every attempt its own `run_step` row, and the validated output + state move committed atomically under the lease guard | `workflow/step_runner.py`, `workflow/a2a_client.py`, `workflow/runtime_config.py`, `workflow/orchestrator_config.py` + `config/orchestrator.yaml` (retry budget), `guardrails/validator.py` (`validate_classification`), `tests/workflow/test_step_runner.py`, `tests/workflow/test_a2a_client.py`, `tests/workflow/test_runtime_config.py`, `tests/workflow/test_step_runner_integration.py`, `tests/guardrails/test_validator.py`; see [The shared step runner](#the-shared-step-runner-story-28) |
 | 4.2 | The deterministic risk gate (AD-13, AD-12, AD-21): one registry entry per rule — skip/disable/xfail a test (incl. test-file deletion), added retries, increased timeouts, loosened assertions, workflow/secret/infra paths, a `dangerous` Reviewer objection, missing base content (fail closed) — evaluated over the proposed diff, the base content of modified files and the Reviewer's objections; returns `normal | blocked | not_gated` with structured reasons, no I/O, no model, and no model-asserted tier can override it; the new path globs live in `guardrails/thresholds.yaml` | `guardrails/risk_gate.py`, `guardrails/thresholds.yaml` (`risk_gate:` globs), `workflow/thresholds.py`, `tests/guardrails/test_risk_gate.py`, `tests/workflow/test_thresholds.py`; see [The risk gate](#the-risk-gate-story-42) |
-| 3.1 | The Jev classifier agent served: a stateless A2A service answering `classify-failure` over JSON-RPC — one batched model call carries the five-class `Choice` and the `Noul` injection screen over the delimited distilled log, the reply is the shared `JevResult` (classification + provider-reported usage) matching the generated schema, errors are typed `AgentError` on an A2A `FAILED` task, and the agent holds no GitHub token and no database client | `agents/jev/`, `prompts/jev.md`, `prompts/jev-classes.yaml`, `contracts/jev.py` (`JevResult`), `contracts/a2a.py`, `guardrails/schemas/JevResult.json`, `jev.test.yaml`, `tests/agents/jev/`; see [The Jev classifier agent](#the-jev-classifier-agent-story-31) |
+| 3.1 | The Jev classifier agent served: a stateless A2A service answering `classify-failure` over JSON-RPC — one batched model call carries the five-class `Choice` and the `Noul` injection screen over the delimited distilled log, the reply is the shared `JevResult` (classification + provider-reported usage) matching the generated schema, errors are typed `AgentError` on an A2A `FAILED` task, and the agent holds no GitHub token and no database client | `agents/jev/`, `prompts/jev-classes.yaml`, `contracts/jev.py` (`JevResult`), `contracts/a2a.py`, `guardrails/schemas/JevResult.json`, `jev.test.yaml`, `tests/agents/jev/`; see [The Jev classifier agent](#the-jev-classifier-agent-story-31) |
 
 ## Where things live
 
@@ -85,7 +85,7 @@ Every message between orchestrator and agent is an A2A message whose data part i
 | `workflow/` (rest), `agents/` (analyzer, proposer, reviewer), `punch-out/` | placeholder | filled by Epics 2–6; each folder's README says what belongs there |
 | `prompts/` (analyzer, proposer, reviewer), `*.test.yaml` (analyzer, proposer, reviewer) | placeholder | agent prompts and their promptfoo evals (Epic 3) |
 | `agents/jev/` | built (3.1) | the Jev classifier agent (stateless A2A service): `questions.py` (the batched `Choice`+`Noul` pair, loaded once from the yaml), `classifier.py` (the pure classify step + the AD-22 error split), `provider.py` (`JevProvider` protocol + the typesafe-sdk adapter), `runtime.py` (the jev-key reader of `config/runtime.yaml`), `card.py`/`executor.py`/`server.py` (transport); see [The Jev classifier agent](#the-jev-classifier-agent-story-31) |
-| `prompts/jev.md`, `prompts/jev-classes.yaml` | built (3.1) | the eval-side prompt contract and the single copy of the five class descriptions + the injection-screen instruction — the served call's instructions come from the yaml (AD-11, AD-19); `jev.test.yaml` holds the promptfoo cases (eval-first; the real eval bar is story 3.2, OQ-1) |
+| `prompts/jev-classes.yaml` | built (3.1) | the single copy of the five class descriptions + the injection-screen instruction (the Jev agent has no separate `.md` prompt — spine layout) — the served call's instructions come from the yaml (AD-11, AD-19); `jev.test.yaml` holds the promptfoo cases (eval-first; the real eval bar is story 3.2, OQ-1) |
 
 Layer rules (enforced by `scripts/check_layer_contract.py`): `contracts/` imports only stdlib and pydantic; `guardrails/` imports only `contracts/` (+ pydantic and the pinned `jsonschema` that checks payloads against the committed schemas — still no I/O, no GitHub, no Postgres); agents hold no GitHub or Postgres clients; model IDs and timeouts live in YAML; secrets come from environment variables.
 
@@ -699,13 +699,20 @@ the repo with `..`, or names no file at all is blocked outright
   `assertIsNotNone(…)`, a `pytest.approx` comparison — the target may be a
   dotted or subscripted name like `resp.status` or `data["k"]`); or a test
   file whose changed lines hold net fewer assertion lines than before
-  (an outright deletion). Strengthening and pure relocations are fine.
+  (an outright deletion); or the same target asserted against a different
+  expected value (`assert f() == 1` → `assert f() == 2`,
+  `assertEqual(total, 5)` → `assertEqual(total, 6)`) — rewriting the test to
+  match the current output. Strengthening, pure relocations and comment-only
+  edits are fine.
 - **Touches protected paths.** Any file under the workflow glob
   (`.github/workflows/**`), a secret path (`.env`, `.env.*`, `*.pem`,
-  `*.key`, `*secrets/*`, `*secret*`, `*credentials*`, `*id_rsa*`,
-  `*id_ed25519*`, `*.npmrc`) or an infra manifest (`Dockerfile`s, compose
-  files, Terraform, `k8s/`/`kubernetes/`, `*charts/*`, `*helm/*`,
-  `*deploy/*`) — the globs live only in `guardrails/thresholds.yaml`
+  `*.key`, `*secrets/*`, `*secret.*`, `*secrets.*`, `*credentials*`,
+  `*id_rsa*`, `*id_ed25519*`, `*.npmrc`, `*.pypirc`, `*.p12`, `*.pfx`) or an
+  infra manifest (`Dockerfile`s, compose files, Terraform files, state
+  (`*.tfstate*`) and `terraform/` folders, `k8s*/`/`kubernetes/`,
+  `*charts/*`, `*helm/*`, the top-level `deploy/*`). The secret and deploy
+  globs are deliberately narrow so `src/secret_scanner.py` or
+  `docs/deploy/guide.md` do not pause a run for nothing — the globs live only in `guardrails/thresholds.yaml`
   (AD-19), never in code.
 - **Was called dangerous by the Reviewer.** One objection with severity
   `dangerous` blocks even a change that trips no other rule — and even a
@@ -1082,9 +1089,6 @@ outlive its lease.
 - `prompts/jev-classes.yaml` — the single copy of the five class
   descriptions and the injection-screen instruction. The agent and the eval
   suite both point at this one file; no class wording is duplicated in code.
-- `prompts/jev.md` — currently unused: neither the agent nor the eval loads
-  it (the served call's instructions are the `Choice`/`Noul` instructions
-  from `prompts/jev-classes.yaml`). Deletion is left to a human decision.
 - `agents/jev/questions.py` — loads the yaml once per process and builds the
   two-part question; `classifier.py` — the pure classify step, including the
   split that decides which provider failures are worth retrying (AD-22);

@@ -99,11 +99,15 @@ def test_ac1_thresholds_loaded_not_literal() -> None:
         "*.pem",
         "*.key",
         "*secrets/*",
-        "*secret*",
+        "*secret.*",
+        "*secrets.*",
         "*credentials*",
         "*id_rsa*",
         "*id_ed25519*",
         "*.npmrc",
+        "*.pypirc",
+        "*.p12",
+        "*.pfx",
     )
     assert thresholds.risk_gate.infra_path_globs == (
         "*Dockerfile*",
@@ -111,11 +115,13 @@ def test_ac1_thresholds_loaded_not_literal() -> None:
         "*compose*.y*ml",
         "*.tf",
         "*.tfvars",
-        "*k8s/*",
+        "*k8s*/*",
         "*kubernetes/*",
         "*charts/*",
         "*helm/*",
-        "*deploy/*",
+        "deploy/*",
+        "*.tfstate*",
+        "*terraform/*",
     )
 
 

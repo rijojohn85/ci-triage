@@ -170,6 +170,15 @@ _ASSERTION_LINE: Final[re.Pattern[str]] = re.compile(
 assertIsNotNone / a `pytest.approx` comparison — weaker checks on the same
 target. The line pattern is the deletion arm: a test file with net fewer
 assertion lines than its base is a loosening too (AD-13)."""
+_EQUALITY_ASSERTION: Final[re.Pattern[str]] = re.compile(
+    r"^\s*assert\s+(?P<target>.+?)\s*==\s*(?P<expected>.+?)\s*(?:#.*)?$"
+    r"|^\s*(?:self\.)?assertEqual\(\s*(?P<eq_target>.+?)\s*,"
+    r"\s*(?P<eq_expected>.+?)\s*\)\s*(?:#.*)?$"
+)
+"""The expected-value arm: `assert target == expected` / `assertEqual(target,
+expected)` split into target and expected value. The same target asserted
+against a different expected value is a test rewritten to match the current
+output — the model normalizing a bug-hiding repair (AD-13)."""
 _TEST_FILE_GLOBS: Final[tuple[str, ...]] = ("test_*.py", "*_test.py", "conftest.py")
 # Rule constant, not a tunable (AD-19): what counts as a test file IS the rule.
 
@@ -252,6 +261,32 @@ def _assertion_tokens(lines: Sequence[str], pattern: re.Pattern[str]) -> set[str
         for group in groups
         if group
     }
+
+
+def _expected_values(lines: Sequence[str]) -> dict[str, set[str]]:
+    """Each asserted target mapped to the expected values it is compared to."""
+    expected: dict[str, set[str]] = {}
+    for line in lines:
+        match = _EQUALITY_ASSERTION.match(line)
+        if match is None:
+            continue
+        target = match["target"] or match["eq_target"]
+        value = match["expected"] or match["eq_expected"]
+        expected.setdefault(target, set()).add(value)
+    return expected
+
+
+def _expected_value_changes(
+    removed_lines: Sequence[str], added_lines: Sequence[str]
+) -> list[str]:
+    """Targets whose expected value was replaced by a different one."""
+    before = _expected_values(removed_lines)
+    after = _expected_values(added_lines)
+    return sorted(
+        target
+        for target in before.keys() & after.keys()
+        if after[target] - before[target]
+    )
 
 
 def _added_line_hits(
@@ -357,7 +392,8 @@ def _check_assertion_loosened(gate: GateInput) -> tuple[GateReason, ...]:
     `assert tok ==` → `assert tok in`/`assertTrue(tok`/`assertIsNotNone(tok`/
     `assert tok == pytest.approx` — the token may be dotted or subscripted.
     A test file whose changed lines hold net fewer assertion lines than its
-    base is a deletion, and blocks too."""
+    base is a deletion, and blocks too; so is the same target asserted
+    against a different expected value."""
     if gate.diff is None:
         return ()
     reasons: list[GateReason] = []
@@ -373,6 +409,14 @@ def _check_assertion_loosened(gate: GateInput) -> tuple[GateReason, ...]:
                 location=file.path,
             )
             for token in sorted(removed & added)
+        )
+        reasons.extend(
+            GateReason(
+                rule_code=ASSERTION_LOOSENED,
+                message=f"expected value of the assertion on {target!r} changed",
+                location=file.path,
+            )
+            for target in _expected_value_changes(removed_lines, added_lines)
         )
         removed_count = sum(1 for line in removed_lines if _ASSERTION_LINE.search(line))
         added_count = sum(1 for line in added_lines if _ASSERTION_LINE.search(line))

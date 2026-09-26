@@ -727,6 +727,56 @@ def test_ac1_weak_assertion_forms_are_loosenings() -> None:
         assert decision.risk_tier is RiskTier.BLOCKED, f"{strong} -> {weak}"
 
 
+@pytest.mark.parametrize(
+    ("before", "after"),
+    [
+        ("assert f() == 1", "assert f() == 2"),
+        ("assert resp.json()['total'] == 5", "assert resp.json()['total'] == 6"),
+        ("self.assertEqual(total, 5)", "self.assertEqual(total, 6)"),
+        ("assertEqual(calc(2), 4)", "assertEqual(calc(2), 5)"),
+    ],
+)
+def test_ac1_expected_value_changed_is_blocked(before: str, after: str) -> None:
+    decision = evaluate_risk(
+        gate_input(
+            diff_of(
+                DiffFile(
+                    path="tests/test_calc.py",
+                    op=DiffOperation.MODIFY,
+                    new_content=f"def test_x():\n    {after}\n",
+                )
+            ),
+            prior={"tests/test_calc.py": f"def test_x():\n    {before}\n"},
+        )
+    )
+
+    assert decision.risk_tier is RiskTier.BLOCKED, f"{before} -> {after}"
+    assert rule_codes(decision.reasons) == {"assertion_loosened"}
+
+
+def test_ac1_expected_value_unchanged_or_new_target_is_normal() -> None:
+    prior = "def test_x():\n    assert f() == 1  # old note\n"
+    commented = "def test_x():\n    assert f() == 1  # new note\n"
+    retargeted = "def test_x():\n    assert g() == 1\n"
+
+    for new in (commented, retargeted):
+        decision = evaluate_risk(
+            gate_input(
+                diff_of(
+                    DiffFile(
+                        path="tests/test_calc.py",
+                        op=DiffOperation.MODIFY,
+                        new_content=new,
+                    )
+                ),
+                prior={"tests/test_calc.py": prior},
+            )
+        )
+
+        assert decision.risk_tier is RiskTier.NORMAL, new
+        assert decision.reasons == ()
+
+
 def test_ac1_assertion_moved_or_strengthened_is_normal() -> None:
     moved_prior = "def test_a():\n    assert total == 5\n\ndef test_b():\n    assert True\n"
     moved_new = "def test_a():\n    assert True\n\ndef test_b():\n    assert total == 5\n"
@@ -898,6 +948,15 @@ def test_ac1_skip_in_an_unrelated_identifier_is_not_a_hit() -> None:
         "charts/app/Chart.yaml",
         "helm/values.yaml",
         "k8s-deploy/patch.yml",
+        "infra/terraform.tfstate",
+        "infra/terraform.tfstate.backup",
+        "infra/terraform/backend.hcl",
+        ".pypirc",
+        "certs/client.p12",
+        "certs/client.pfx",
+        "config/secrets.yaml",
+        "app/secret.json",
+        "deploy/prod.yaml",
     ],
 )
 def test_ac1_new_glob_families_block_their_paths(path: str) -> None:
@@ -925,6 +984,21 @@ def test_ac2_lookalike_paths_stay_normal() -> None:
     )
 
     assert decision.risk_tier is RiskTier.NORMAL
+    assert decision.reasons == ()
+
+
+@pytest.mark.parametrize(
+    "path", ["src/secret_scanner.py", "docs/deploy/guide.md", "src/deployer.py"]
+)
+def test_ac2_broad_glob_lookalikes_stay_normal(path: str) -> None:
+    decision = evaluate_risk(
+        gate_input(
+            diff_of(DiffFile(path=path, op=DiffOperation.MODIFY, new_content="b\n")),
+            prior={path: "a\n"},
+        )
+    )
+
+    assert decision.risk_tier is RiskTier.NORMAL, f"{path} must stay normal"
     assert decision.reasons == ()
 
 
