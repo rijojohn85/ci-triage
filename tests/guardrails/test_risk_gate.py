@@ -586,6 +586,66 @@ def test_ac1_timeout_word_without_a_value_is_not_a_hit() -> None:
     assert decision.reasons == ()
 
 
+# --- AC1 (F3): retry spellings beyond the bare word are caught too
+
+
+@pytest.mark.parametrize(
+    "line",
+    [
+        "session = Session(max_retries=3)",
+        "reruns = 3",
+        "pytest.ini: --reruns 2",
+        "options.add_argument('--reruns')",
+        "@backoff.on_exception(backoff.expo, ValueError)",
+        "client.retry = True",
+        "handler = tenacity.retry(fn)",
+        "@flaky(max_runs=3)",
+        "import stamina",
+        "await stamina.retry_context(fn)",
+    ],
+)
+def test_ac1_retry_spellings_are_blocked(line: str) -> None:
+    prior = "def test_pay():\n    assert True\n"
+    new = f"def test_pay():\n    {line}\n    assert True\n"
+
+    decision = evaluate_risk(
+        gate_input(
+            diff_of(
+                DiffFile(
+                    path="tests/test_pay.py",
+                    op=DiffOperation.MODIFY,
+                    new_content=new,
+                )
+            ),
+            prior={"tests/test_pay.py": prior},
+        )
+    )
+
+    assert decision.risk_tier is RiskTier.BLOCKED, f"{line} must block"
+    assert rule_codes(decision.reasons) == {"retry_added"}
+
+
+def test_ac1_pre_existing_retry_comment_is_not_a_hit() -> None:
+    prior = "# the retry here is intentional\ndef test_pay():\n    assert True\n"
+    new = "def test_pay():\n    assert True\n"
+
+    decision = evaluate_risk(
+        gate_input(
+            diff_of(
+                DiffFile(
+                    path="tests/test_pay.py",
+                    op=DiffOperation.MODIFY,
+                    new_content=new,
+                )
+            ),
+            prior={"tests/test_pay.py": prior},
+        )
+    )
+
+    assert decision.risk_tier is RiskTier.NORMAL
+    assert decision.reasons == ()
+
+
 # --- AC1: the S5 timeout-bump fixture (the only-obvious-fix case)
 
 

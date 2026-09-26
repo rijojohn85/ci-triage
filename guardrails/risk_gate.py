@@ -127,8 +127,13 @@ _SKIP_PATTERN: Final[re.Pattern[str]] = re.compile(
     r"|pytest\.xfail\(|pytest\.importorskip\(|unittest\.skip"
 )
 _RETRY_PATTERN: Final[re.Pattern[str]] = re.compile(
-    r"\bretries\b|\brerun\b|@retry\b|\btenacity\b"
+    r"(?i)\b[a-z_]*(?:retry|retries|rerun|reruns)\b"
+    r"|\bon_exception\b|@backoff\.|\bflaky\b|\bstamina\b|\btenacity\b"
 )
+"""Case-insensitive, word-bounded on the stem so `max_retries=` inside a
+call is caught too: retry/retries/rerun(s), retry=, .on_exception, @backoff,
+flaky, stamina, tenacity. A retry that already existed is not a new one —
+only added lines are scanned."""
 _TIMEOUT_PATTERN: Final[re.Pattern[str]] = re.compile(
     r"(?i)\b[a-z_]*timeout[a-z_]*\s*[=:]\s*([0-9][0-9_]*(?:\.[0-9]+)?)"
     r"|timeout\(\s*([0-9][0-9_]*(?:\.[0-9]+)?)\s*\)"
