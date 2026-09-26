@@ -38,6 +38,7 @@ Every message between orchestrator and agent is an A2A message whose data part i
 | 6.2 | Versioned NULL-aware model costs (AD-18): one provenance-carrying price table (`table_version`, per-model five-type rates each with source URL + retrieved date, the Jev rate NULL + flagged per OQ-3), a pure NULL-aware calculator (an unreported counter, an unpriced model or a Jev-billed call yields a NULL cost plus a flag, never 0; a run total with any incomplete part is NULL with the reasons listed), and the orchestrator-side reader that rolls 6.1's audit rows into per-run costs — computed, never stored | `monitoring/prices.yaml`, `monitoring/pricing.py`, `monitoring/costs.py`, `workflow/usage_costs.py`, `tests/monitoring/`, `tests/workflow/test_usage_costs.py`, `tests/workflow/test_usage_costs_integration.py`; see [Model costs](#model-costs-story-62) |
 | 2.8 | The shared step runner (AD-8, AD-22): one execution policy every agent step goes through — blocking non-streaming A2A `send_message` with `contextId = run_id` and a per-skill timeout, every attempted call audited centrally, one validation retry with the structured errors fed back (a second invalid output pauses with `validation_failed`), at most three transient attempts with config-driven backoff then a terminal `FAILED` with history written once, a definitive error failing without retry, every attempt its own `run_step` row, and the validated output + state move committed atomically under the lease guard | `workflow/step_runner.py`, `workflow/a2a_client.py`, `workflow/runtime_config.py`, `workflow/orchestrator_config.py` + `config/orchestrator.yaml` (retry budget), `guardrails/validator.py` (`validate_classification`), `tests/workflow/test_step_runner.py`, `tests/workflow/test_a2a_client.py`, `tests/workflow/test_runtime_config.py`, `tests/workflow/test_step_runner_integration.py`, `tests/guardrails/test_validator.py`; see [The shared step runner](#the-shared-step-runner-story-28) |
 | 4.2 | The deterministic risk gate (AD-13, AD-12, AD-21): one registry entry per rule — skip/disable/xfail a test (incl. test-file deletion), added retries, increased timeouts, loosened assertions, workflow/secret/infra paths, a `dangerous` Reviewer objection, missing base content (fail closed) — evaluated over the proposed diff, the base content of modified files and the Reviewer's objections; returns `normal | blocked | not_gated` with structured reasons, no I/O, no model, and no model-asserted tier can override it; the new path globs live in `guardrails/thresholds.yaml` | `guardrails/risk_gate.py`, `guardrails/thresholds.yaml` (`risk_gate:` globs), `workflow/thresholds.py`, `tests/guardrails/test_risk_gate.py`, `tests/workflow/test_thresholds.py`; see [The risk gate](#the-risk-gate-story-42) |
+| 3.1 | The Jev classifier agent served: a stateless A2A service answering `classify-failure` over JSON-RPC — one batched model call carries the five-class `Choice` and the `Noul` injection screen over the delimited distilled log, the reply is the shared `JevResult` (classification + provider-reported usage) matching the generated schema, errors are typed `AgentError` on an A2A `FAILED` task, and the agent holds no GitHub token and no database client | `agents/jev/`, `prompts/jev.md`, `prompts/jev-classes.yaml`, `contracts/jev.py` (`JevResult`), `contracts/a2a.py`, `guardrails/schemas/JevResult.json`, `jev.test.yaml`, `tests/agents/jev/`; see [The Jev classifier agent](#the-jev-classifier-agent-story-31) |
 
 ## Where things live
 
@@ -81,8 +82,10 @@ Every message between orchestrator and agent is an A2A message whose data part i
 | `workflow/a2a_client.py` | built (2.8) | the blocking non-streaming A2A transport adapter (`A2aSkillTransport`): `contextId = run_id`, per-call timeout, and the `AgentError.retryable` → typed-error classification the runner's budgets consume (AD-4, AD-5, AD-22) |
 | `deploy/` | partially built (0.3, 1.1) | Compose, gateway image, k8s manifests, migrations (0.3+); k8s manifests + `registry.<env>.yaml` still placeholders |
 | `guardrails/risk_gate.py` | built (4.2) | the deterministic risk gate (AD-13): `evaluate_risk(GateInput)` → `GateDecision{risk_tier, reasons}`, the `RISK_RULES` registry (one frozen `RiskRule{code, check}` per rule), `RiskGateConfig` built by the caller from `guardrails/thresholds.yaml`; no I/O, no model; see [The risk gate](#the-risk-gate-story-42) |
-| `workflow/` (rest), `agents/`, `punch-out/` | placeholder | filled by Epics 2–6; each folder's README says what belongs there |
-| `prompts/`, `*.test.yaml` | placeholder | agent prompts and their promptfoo evals (Epic 3) |
+| `workflow/` (rest), `agents/` (analyzer, proposer, reviewer), `punch-out/` | placeholder | filled by Epics 2–6; each folder's README says what belongs there |
+| `prompts/` (analyzer, proposer, reviewer), `*.test.yaml` (analyzer, proposer, reviewer) | placeholder | agent prompts and their promptfoo evals (Epic 3) |
+| `agents/jev/` | built (3.1) | the Jev classifier agent (stateless A2A service): `questions.py` (the batched `Choice`+`Noul` pair, loaded once from the yaml), `classifier.py` (the pure classify step + the AD-22 error split), `provider.py` (`JevProvider` protocol + the typesafe-sdk adapter), `runtime.py` (the jev-key reader of `config/runtime.yaml`), `card.py`/`executor.py`/`server.py` (transport); see [The Jev classifier agent](#the-jev-classifier-agent-story-31) |
+| `prompts/jev.md`, `prompts/jev-classes.yaml` | built (3.1) | the eval-side prompt contract and the single copy of the five class descriptions + the injection-screen instruction — the served call's instructions come from the yaml (AD-11, AD-19); `jev.test.yaml` holds the promptfoo cases (eval-first; the real eval bar is story 3.2, OQ-1) |
 
 Layer rules (enforced by `scripts/check_layer_contract.py`): `contracts/` imports only stdlib and pydantic; `guardrails/` imports only `contracts/` (+ pydantic and the pinned `jsonschema` that checks payloads against the committed schemas — still no I/O, no GitHub, no Postgres); agents hold no GitHub or Postgres clients; model IDs and timeouts live in YAML; secrets come from environment variables.
 
@@ -1002,3 +1005,87 @@ The marked checks use real Postgres 18 through disposable Docker
 containers. They prove the reader reads 6.1's real audit rows with NULL
 counters preserved, a Jev-billed or incomplete run carries a NULL, flagged
 total, a complete run sums cleanly, and the read is repo-bound.
+
+## The Jev classifier agent (story 3.1)
+
+The Jev agent is the specialist that answers one question: *what kind of
+failure is this?* It is a small, stateless web service that speaks the same
+A2A protocol the orchestrator uses. It is not wired into the live workflow
+yet — story 2.9 makes the first real call; story 3.2 evaluates it before
+that connection is allowed.
+
+**What it answers.** A caller sends one `classify-failure` message whose
+data part is a `DataPart` wrapping an `EvidencePack` (the numbered, distilled
+log plus the run's commits and history). The agent makes **exactly one**
+model call (AD-11) that asks two things at once:
+
+- which of the five failure classes (`code | flaky | infra | external |
+  unknown`) the failure belongs to, and
+- how likely the log is an *injection attempt* — text inside the log trying
+  to give the model instructions — rather than genuine failure output.
+
+The reply's data part is a `JevResult`: the classification (class, one
+confidence number, per-class probabilities kept separately for audit only,
+AD-9) plus the token usage the provider reported. A counter the provider did
+not report stays empty, never zero (AD-18). A positive injection screen is
+just a number in the reply — the agent never blocks or lowers anything on
+its own; the confidence cap for it is added downstream by the guardrails
+layer (story 2.2).
+
+**The one untrusted-data rule (AD-20).** The distilled log travels as a
+delimited data section (the call's `state`), never inside the instructions.
+Even if the log shouts "ignore your instructions", it is only ever text to
+classify.
+
+**Where things live.**
+
+- `prompts/jev-classes.yaml` — the single copy of the five class
+  descriptions and the injection-screen instruction. The agent and the eval
+  suite both point at this one file; no class wording is duplicated in code.
+- `prompts/jev.md` — the **eval-side prompt contract**: the served call's
+  instructions are the `Choice`/`Noul` instructions built from
+  `prompts/jev-classes.yaml`, so the agent never loads this file; it exists
+  for the promptfoo eval, which drives the prompt as a chat prompt.
+- `agents/jev/questions.py` — loads the yaml once per process and builds the
+  two-part question; `classifier.py` — the pure classify step, including the
+  split that decides which provider failures are worth retrying (AD-22);
+  `provider.py` — the small seam (`JevProvider` protocol) with the
+  typesafe-sdk adapter, so tests inject fakes and no real model is ever
+  called in tests; `runtime.py` — reads the `jev` key of
+  `config/runtime.yaml` (model id `typesafe/jev-1.13`, 60s timeout — values
+  live only in the YAML, AD-19); `card.py`/`executor.py`/`server.py` — the
+  transport: the Agent Card declaring the one catalogue skill
+  `classify-failure`, the executor that turns a malformed request into a
+  JSON-RPC invalid-request error without calling the provider, and the
+  JSON-RPC app.
+- `contracts/jev.py::JevResult` — the reply shape; it is part of the
+  `DataPart` payload union and its JSON Schema is generated and committed
+  (`guardrails/schemas/JevResult.json`), like every inter-agent payload
+  (AD-6).
+
+**Errors.** Every failure is a typed `AgentError{code, message, retryable}`
+carried on an A2A `FAILED` task: connection, timeout, throttling and server
+errors are retryable; authentication, bad request, not-found, permission,
+validation and "the answer is not a valid Jev answer" are not. The step
+runner (2.8) reads that flag to decide whether to retry.
+
+**How 2.9 will call it.** The orchestrator's existing transport
+(`workflow/a2a_client.py`) already speaks the right shape: a blocking
+non-streaming `SendMessage` with `contextId = run_id` and the `DataPart`
+payload; the reply task's status message carries the `JevResult` (or the
+`AgentError` on `FAILED`). The agent serves its card at
+`/.well-known/agent-card.json` for discovery (story 3.9).
+
+**Run and test it** (no real model is ever called — the provider is a fake):
+
+```bash
+.venv/bin/pytest tests/agents/jev tests/contracts/test_jev.py -q
+.venv/bin/python scripts/check_layer_contract.py   # agents hold no GitHub/Postgres clients
+make check
+```
+
+The promptfoo cases in `jev.test.yaml` exist and are exercised eval-first
+(AGENTS.md "prompts are code"); the pinned Jev model is a *decisions* model
+that OpenRouter refuses to serve over the chat endpoint promptfoo uses, so
+the real eval quality bar is owned by story 3.2 (OQ-1) — the structured
+one-call shape is pinned by the unit tests instead.

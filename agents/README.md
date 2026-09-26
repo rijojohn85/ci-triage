@@ -1,1 +1,1 @@
-agents/ — spoke agents jev/, analyzer/, proposer/, reviewer/. No GitHub/Postgres clients; model API + contracts only. Filled by: epics 2–3 stories.
+agents/ — spoke agents jev/, analyzer/, proposer/, reviewer/. No GitHub/Postgres clients; model API + contracts only. jev/ is built (story 3.1); the other three are filled by later Epic 3 stories (see epics.md).

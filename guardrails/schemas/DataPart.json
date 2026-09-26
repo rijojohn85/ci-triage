@@ -427,6 +427,93 @@
       "title": "HistoryRowCitation",
       "type": "object"
     },
+    "JevChoice": {
+      "additionalProperties": false,
+      "description": "The 5-class `Choice` answer: `confidence_jev`'s source (AD-9, AD-11).\n\nFrozen once built (AD-9): nothing downstream may mutate the Jev number.",
+      "properties": {
+        "answer": {
+          "$ref": "#/$defs/FailureClass"
+        },
+        "confidence": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "probabilities": {
+          "additionalProperties": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "type": "number"
+          },
+          "propertyNames": {
+            "$ref": "#/$defs/FailureClass"
+          },
+          "title": "Probabilities",
+          "type": "object"
+        }
+      },
+      "required": [
+        "answer",
+        "confidence",
+        "probabilities"
+      ],
+      "title": "JevChoice",
+      "type": "object"
+    },
+    "JevClassification": {
+      "additionalProperties": false,
+      "description": "One Jev `system_one` call: the class choice plus the injection screen\n(spine: one call carries both the 5-class `Choice` and the `Noul`\npre-screen).",
+      "properties": {
+        "choice": {
+          "$ref": "#/$defs/JevChoice"
+        },
+        "injection_screen": {
+          "$ref": "#/$defs/JevInjectionScreen"
+        }
+      },
+      "required": [
+        "choice",
+        "injection_screen"
+      ],
+      "title": "JevClassification",
+      "type": "object"
+    },
+    "JevInjectionScreen": {
+      "additionalProperties": false,
+      "description": "The injection pre-screen `Noul` answer (spine \"One Jev call\" rule):\na probability, not a boolean \u2014 `guardrails.confidence` turns it into a\ncited cap above its cutoff.",
+      "properties": {
+        "noul": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Noul",
+          "type": "number"
+        }
+      },
+      "required": [
+        "noul"
+      ],
+      "title": "JevInjectionScreen",
+      "type": "object"
+    },
+    "JevResult": {
+      "additionalProperties": false,
+      "description": "What the Jev agent serves for one `classify-failure` call (story 3.1).\n\nThe classification plus the provider-reported usage (AD-18): the\norchestrator/harness owns the accounting, so the agent only reports what\nthe provider reported \u2014 unreported counters stay NULL, never 0.",
+      "properties": {
+        "classification": {
+          "$ref": "#/$defs/JevClassification"
+        },
+        "usage": {
+          "$ref": "#/$defs/ModelUsage"
+        }
+      },
+      "required": [
+        "classification",
+        "usage"
+      ],
+      "title": "JevResult",
+      "type": "object"
+    },
     "JevSignalCitation": {
       "additionalProperties": false,
       "description": "`jev_signal` locator: the answer key of this run's Jev call (AD-7, AD-11).",
@@ -491,6 +578,87 @@
         "metric_key"
       ],
       "title": "MetricCitation",
+      "type": "object"
+    },
+    "ModelUsage": {
+      "additionalProperties": false,
+      "description": "What one model call consumed: the model and its token counters.\n\nEvery counter is nullable; NULL means \"provider did not report\" (AD-18),\nso downstream costing (6.2) can keep incomplete totals visibly\nincomplete instead of silently summing zeros.",
+      "properties": {
+        "cache_creation_input_tokens_1h": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Cache Creation Input Tokens 1H"
+        },
+        "cache_creation_input_tokens_5m": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Cache Creation Input Tokens 5M"
+        },
+        "cache_read_input_tokens": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Cache Read Input Tokens"
+        },
+        "input_tokens": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Input Tokens"
+        },
+        "model": {
+          "minLength": 1,
+          "title": "Model",
+          "type": "string"
+        },
+        "output_tokens": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Output Tokens"
+        }
+      },
+      "required": [
+        "model"
+      ],
+      "title": "ModelUsage",
       "type": "object"
     },
     "ProposedDiff": {
@@ -799,6 +967,9 @@
         },
         {
           "$ref": "#/$defs/Escalation"
+        },
+        {
+          "$ref": "#/$defs/JevResult"
         }
       ],
       "title": "Payload"
