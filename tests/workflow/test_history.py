@@ -245,7 +245,7 @@ class TestLookup:
         connection = FakeConnection([sample_row(uuid.uuid4(), uuid.uuid4(), "fp")])
         store = store_against(connection)
 
-        store.lookup(REPO_ID, "fp")
+        store.lookup(REPO_ID, "fp", 20)
 
         assert len(connection.calls) == 1
         _sql, params = connection.calls[0]
@@ -258,11 +258,11 @@ class TestLookup:
         connection = FakeConnection([])
         store = store_against(connection)
 
-        rows = store.lookup(OTHER_REPO_ID, "fp")
+        rows = store.lookup(OTHER_REPO_ID, "fp", 20)
 
         assert rows == []
         _sql, params = connection.calls[0]
-        assert params == (OTHER_REPO_ID, "fp")
+        assert params == (OTHER_REPO_ID, "fp", 20)
 
 
 class TestImportSeed:

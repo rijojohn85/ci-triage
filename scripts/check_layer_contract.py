@@ -140,8 +140,8 @@ LAYERS: tuple[tuple[str, tuple[str, ...], str], ...] = (
     ("contracts", (PYDANTIC,), "imports stdlib + pydantic + intra-package only"),
     (
         "guardrails",
-        (PYDANTIC, "contracts"),
-        "depends only on contracts (+ pydantic, self, stdlib)",
+        (PYDANTIC, "contracts", "jsonschema"),
+        "depends only on contracts (+ pydantic, jsonschema, self, stdlib)",
     ),
 )
 

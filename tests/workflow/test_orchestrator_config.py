@@ -69,3 +69,38 @@ def test_ac1_unusable_timings_are_refused_at_load(
 def test_ac1_real_config_still_declares_both_timings() -> None:
     raw = yaml.safe_load(ORCHESTRATOR_CONFIG_PATH.read_text(encoding="utf-8"))
     assert set(raw["lease"]) == {"lease_seconds", "renew_after_seconds"}
+
+
+# --- story 2.8 / AC2: the AD-22 transient-retry budget lives in the same file
+
+
+def test_ac2_retry_budget_loads_from_the_one_config_file() -> None:
+    config = load_orchestrator_config()
+
+    assert config.retry.max_attempts == 3, "AD-22: at most three transient attempts"
+    assert config.retry.backoff_base_seconds > 0
+    assert config.retry.backoff_factor == 2, "the growth factor lives in YAML (AD-19)"
+
+
+def test_ac2_missing_retry_section_is_refused(tmp_path: Path) -> None:
+    path = tmp_path / "orchestrator.yaml"
+    path.write_text(
+        "lease:\n  lease_seconds: 300\n  renew_after_seconds: 120\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValidationError):
+        load_orchestrator_config(path)
+
+
+def test_ac2_unusable_retry_budget_is_refused_at_load(tmp_path: Path) -> None:
+    path = tmp_path / "orchestrator.yaml"
+    path.write_text(
+        "lease:\n  lease_seconds: 300\n  renew_after_seconds: 120\n"
+        "retry:\n  max_attempts: 0\n  backoff_base_seconds: 0\n"
+        "  backoff_factor: 0.5\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValidationError):
+        load_orchestrator_config(path)

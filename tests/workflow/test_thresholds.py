@@ -14,6 +14,7 @@ from tests.fixtures.thresholds import FIXTURE_THRESHOLDS_PATH
 from workflow.thresholds import (
     THRESHOLDS_PATH,
     DistillerLimits,
+    EvidenceLimits,
     Thresholds,
     load_thresholds,
 )
@@ -37,6 +38,22 @@ def test_ac3_distiller_max_bytes_loads_from_fixture() -> None:
     thresholds = load_thresholds(FIXTURE)
     assert isinstance(thresholds.distiller, DistillerLimits)
     assert thresholds.distiller.max_bytes == 4096
+
+
+def test_evidence_max_history_rows_loads_from_fixture() -> None:
+    thresholds = load_thresholds(FIXTURE)
+    assert isinstance(thresholds.evidence, EvidenceLimits)
+    assert thresholds.evidence.max_history_rows == 5
+    assert thresholds.evidence.distiller == thresholds.distiller
+
+
+def test_evidence_max_history_rows_must_be_positive(tmp_path: Path) -> None:
+    raw = yaml.safe_load(FIXTURE.read_text(encoding="utf-8"))
+    raw["evidence"]["max_history_rows"] = 0
+    path = tmp_path / "thresholds.yaml"
+    path.write_text(yaml.safe_dump(raw), encoding="utf-8")
+    with pytest.raises(ValidationError):
+        load_thresholds(path)
 
 
 def test_ac3_thresholds_is_frozen() -> None:

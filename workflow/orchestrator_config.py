@@ -9,17 +9,34 @@ Mirrors `workflow/thresholds.py`.
 from pathlib import Path
 
 import yaml
-from pydantic import BaseModel, ConfigDict, model_validator
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 __all__ = [
     "ORCHESTRATOR_CONFIG_PATH",
     "OrchestratorConfig",
+    "RetryBudget",
     "load_orchestrator_config",
 ]
 
 ORCHESTRATOR_CONFIG_PATH = (
     Path(__file__).resolve().parent.parent / "config" / "orchestrator.yaml"
 )
+
+
+class RetryBudget(BaseModel):
+    """The AD-22 transient-retry budget (story 2.8, AC2).
+
+    At most `max_attempts` transient attempts per step, sleeping
+    `backoff_base_seconds * backoff_factor ** n` between them. Values live
+    only in `config/orchestrator.yaml` — never a literal in code (AD-19).
+    Today's numbers are placeholders, not calibrated (OQ-2).
+    """
+
+    model_config = ConfigDict(frozen=True)
+
+    max_attempts: int = Field(ge=1)
+    backoff_base_seconds: float = Field(gt=0)
+    backoff_factor: float = Field(ge=1)
 
 
 class OrchestratorConfig(BaseModel):
@@ -34,6 +51,7 @@ class OrchestratorConfig(BaseModel):
 
     lease_seconds: int
     renew_after_seconds: int
+    retry: RetryBudget
 
     @model_validator(mode="after")
     def _timings_are_usable(self) -> "OrchestratorConfig":
@@ -49,6 +67,12 @@ class OrchestratorConfig(BaseModel):
 def load_orchestrator_config(
     path: Path = ORCHESTRATOR_CONFIG_PATH,
 ) -> OrchestratorConfig:
-    """Read the one orchestrator config file; no timing literal lives in code."""
+    """Read the one orchestrator config file; no timing literal lives in code.
+
+    A missing `retry` section is a load-time `ValidationError` (the budget is
+    mandatory since story 2.8), not a silent default.
+    """
     raw = yaml.safe_load(path.read_text(encoding="utf-8"))
-    return OrchestratorConfig.model_validate(raw["lease"])
+    return OrchestratorConfig.model_validate(
+        {**raw["lease"], "retry": raw.get("retry")}
+    )

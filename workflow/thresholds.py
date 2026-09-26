@@ -33,6 +33,17 @@ class DistillerLimits(BaseModel):
     max_bytes: PositiveInt
 
 
+class EvidenceLimits(BaseModel):
+    """Bounds on the evidence pack (AD-19, AD-20): the distilled-log byte cap
+    plus the most history rows served, so a chronically recurring failure
+    cannot grow every agent's context without limit."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    distiller: DistillerLimits
+    max_history_rows: PositiveInt
+
+
 class Thresholds(BaseModel):
     """Values read from `guardrails/thresholds.yaml` (AD-19 single source)."""
 
@@ -42,15 +53,18 @@ class Thresholds(BaseModel):
     workflow_path_glob: str
     confidence: ConfidenceCutoffs
     distiller: DistillerLimits
+    evidence: EvidenceLimits
 
 
 def load_thresholds(path: Path = THRESHOLDS_PATH) -> Thresholds:
     """Read the one thresholds file; no threshold literal lives in code."""
     raw = yaml.safe_load(path.read_text(encoding="utf-8"))
     review = raw["review"]
+    distiller = DistillerLimits.model_validate(raw["distiller"])
     return Thresholds(
         review_max_rounds=int(review["max_rounds"]),
         workflow_path_glob=str(raw["workflow_path_glob"]),
         confidence=ConfidenceCutoffs.model_validate(raw["confidence"]),
-        distiller=DistillerLimits.model_validate(raw["distiller"]),
+        distiller=distiller,
+        evidence=EvidenceLimits(distiller=distiller, **raw["evidence"]),
     )

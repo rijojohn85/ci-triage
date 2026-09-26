@@ -15,6 +15,7 @@ import re
 import uuid
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Final
 
 import psycopg
@@ -86,6 +87,18 @@ class InsertRaisesConnection(FakeConnection):
             self.calls.append((sql, params))
             raise self._error
         return super().execute(sql, params)
+
+
+class IdentityViolation(psycopg.errors.UniqueViolation):
+    """A UniqueViolation whose `diag` names a chosen constraint."""
+
+    def __init__(self, constraint_name: str) -> None:
+        super().__init__(f'duplicate key ... "{constraint_name}"')
+        self._constraint_name = constraint_name
+
+    @property
+    def diag(self) -> object:  # type: ignore[override]
+        return SimpleNamespace(constraint_name=self._constraint_name)
 
 
 class FakeLeaseStore:
@@ -326,9 +339,10 @@ class TestRecord:
     def test_duplicate_step_attempt_is_definitive_not_retryable(self) -> None:
         # The unique (run_id, step, attempt) index is the double-completion
         # backstop (AD-2): a duplicate is typed and never retryable (AD-22).
+        # The fake names the identity constraint, as the real index would.
         run_id = uuid.uuid4()
         connection = InsertRaisesConnection(
-            psycopg.errors.UniqueViolation("duplicate key")
+            IdentityViolation("uq_run_step_identity")
         )
         store, _ = recorder_against(connection)
 

@@ -16,8 +16,6 @@ from a2a.types.a2a_pb2 import AgentCapabilities, AgentCard
 from a2a.utils.errors import UnsupportedOperationError
 from starlette.applications import Starlette
 
-from contracts.enums import FailureClass
-from guardrails.confidence import ClassConfidence
 from workflow.task_store import ReadOnlyTaskStore, TaskReader
 from workflow.thresholds import load_thresholds
 
@@ -25,19 +23,6 @@ __all__ = ["RefusingExecutor", "create_app"]
 
 _RPC_URL = "/"
 _REFUSAL = "this endpoint serves task reads only (AD-4)"
-
-# 2.4 serves the AD-27 state rule (AWAITING_APPROVAL/REPORTING are blame-free).
-# The confidence-below-cutoff arm of the shared predicate is owned by 4.1 AC3,
-# so the server supplies a confidence that is never below the cutoff; the
-# predicate itself is reused, not re-implemented.
-#
-# TODO(story 4.1): supply the run's stored confidence instead of this
-# placeholder, so a finished low-confidence run is blame-free. Until then the
-# below-cutoff arm is NOT enforced here (tracked as a deferral in the 2.4 spec).
-_SERVING_CONFIDENCE = ClassConfidence(
-    failure_class=FailureClass.UNKNOWN,
-    confidence_jev=1.0,
-)
 
 
 class RefusingExecutor(AgentExecutor):
@@ -68,16 +53,13 @@ def _agent_card() -> AgentCard:
 def create_app(reader: TaskReader, repo_id: int) -> Starlette:
     """Build the Starlette app that serves `get_task`/`list_tasks` (AD-4, AD-5).
 
-    `reader` supplies stored runs/steps; `repo_id` is the tenant scope every
-    read is bound to (AD-15). The cut-offs come from the one thresholds file
-    (AD-19) and the serving confidence from the constant above.
+    `reader` supplies stored runs/steps and each run's serving confidence
+    (story 4.1); `repo_id` is the tenant scope every read is bound to (AD-15).
+    The cut-offs come from the one thresholds file (AD-19). A run whose
+    confidence is below the class cutoff — or cannot be read — is served
+    blame-free (AD-27).
     """
-    store = ReadOnlyTaskStore(
-        reader,
-        repo_id,
-        confidence=_SERVING_CONFIDENCE,
-        cutoffs=load_thresholds().confidence,
-    )
+    store = ReadOnlyTaskStore(reader, repo_id, cutoffs=load_thresholds().confidence)
     handler = DefaultRequestHandler(
         agent_executor=RefusingExecutor(),
         task_store=store,

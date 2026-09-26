@@ -12,6 +12,7 @@ separate adapter behind the small `TaskReader` protocol (SOLID-I/D). 2.1's
 `attribution_allowed()` owns the AD-27 blame-free rule — neither is re-listed
 here. Artifacts are read straight from completed `run_step` outputs; this
 story does not build or mutate an evidence pack (2.7 owns producing it).
+The AD-27 author-key walk lives once in `guardrails.attribution` (story 4.1).
 """
 
 import uuid
@@ -31,7 +32,7 @@ from a2a.types.a2a_pb2 import (
     TaskStatus,
 )
 
-from contracts.evidence import AUTHOR_ATTRIBUTION_FIELD
+from guardrails.attribution import strip_author_attribution
 from guardrails.confidence import ClassConfidence, ConfidenceCutoffs
 from workflow.attribution import attribution_allowed
 from workflow.projection import project
@@ -56,9 +57,9 @@ class RunRecord:
     """A stored `triage_run` read for projection (AD-1, AD-4).
 
     Pure read shape: the run's identity, its tenant scope, its state and when
-    it last moved. The run's `confidence` is not here because the AD-27
-    confidence-below-cutoff case is served elsewhere; the store injects the
-    serving confidence into `build_task`.
+    it last moved. The run's `confidence` is not here: the reader supplies it
+    per run (`TaskReader.get_confidence`), and an unreadable confidence is
+    served blame-free (AD-27 defensive default).
     """
 
     run_id: uuid.UUID
@@ -80,6 +81,10 @@ class TaskReader(Protocol):
 
     def list_runs(self, repo_id: int) -> Sequence[RunRecord]: ...
 
+    def get_confidence(
+        self, repo_id: int, run_id: uuid.UUID
+    ) -> ClassConfidence | None: ...
+
 
 class ReadOnlyTaskStoreError(Exception):
     """A write was attempted against the read-only task view (AD-4).
@@ -95,7 +100,7 @@ def build_task(
     run: RunRecord,
     steps: Sequence[StepRecord],
     *,
-    confidence: ClassConfidence,
+    confidence: ClassConfidence | None,
     cutoffs: ConfidenceCutoffs,
 ) -> Task:
     """Project one stored run and its steps into an A2A `Task` (AD-4).
@@ -103,9 +108,13 @@ def build_task(
     One function serves both `get` and `list` (DRY). Status and terminal state
     come from 2.1's mapping; blame is stripped using 2.2's predicate, so
     `AWAITING_APPROVAL`/`REPORTING` (and a below-cutoff run) carry no author.
+    An unknown/absent confidence is served blame-free (AD-27 defensive
+    default): without a number, no name is leaked.
     """
     task_state_name, terminal_state = project(run.state)
-    blame_free = not attribution_allowed(run.state, confidence, cutoffs)
+    blame_free = confidence is None or not attribution_allowed(
+        run.state, confidence, cutoffs
+    )
     return Task(
         id=str(run.run_id),
         context_id=str(run.run_id),
@@ -122,24 +131,11 @@ def build_task(
 
 
 def _artifact(record: StepRecord, *, blame_free: bool) -> Artifact:
-    output = _without_author_attribution(record.output) if blame_free else record.output
+    output = strip_author_attribution(record.output) if blame_free else record.output
     artifact_id = str(record.step_id)
     if isinstance(output, _DATA_OUTPUT_TYPES):
         return new_data_artifact(record.step, output, artifact_id=artifact_id)
     return new_text_artifact(record.step, str(output), artifact_id=artifact_id)
-
-
-def _without_author_attribution(value: object) -> object:
-    """Drop the AD-27 author key at any depth; everything else is untouched."""
-    if isinstance(value, Mapping):
-        return {
-            key: _without_author_attribution(item)
-            for key, item in value.items()
-            if key != AUTHOR_ATTRIBUTION_FIELD
-        }
-    if isinstance(value, (list, tuple)):
-        return [_without_author_attribution(item) for item in value]
-    return value
 
 
 def _as_run_id(task_id: str) -> uuid.UUID | None:
@@ -154,8 +150,9 @@ class ReadOnlyTaskStore(TaskStore):
     """The SDK `TaskStore` the orchestrator serves, backed by reads only (AD-4).
 
     `get` and `list` project stored runs; `save` and `delete` raise, so this
-    view can never become a second task-state owner. The serving confidence and
-    the thresholds are injected (SOLID-D), keeping the store free of config.
+    view can never become a second task-state owner. The thresholds are
+    injected (SOLID-D); each run's serving confidence comes from the reader
+    (story 4.1), so a below-cutoff run is served blame-free.
     """
 
     def __init__(
@@ -163,12 +160,10 @@ class ReadOnlyTaskStore(TaskStore):
         reader: TaskReader,
         repo_id: int,
         *,
-        confidence: ClassConfidence,
         cutoffs: ConfidenceCutoffs,
     ) -> None:
         self._reader = reader
         self._repo_id = repo_id
-        self._confidence = confidence
         self._cutoffs = cutoffs
 
     async def get(self, task_id: str, _context: ServerCallContext) -> Task | None:
@@ -201,5 +196,8 @@ class ReadOnlyTaskStore(TaskStore):
 
     def _project(self, run: RunRecord, steps: Sequence[StepRecord]) -> Task:
         return build_task(
-            run, steps, confidence=self._confidence, cutoffs=self._cutoffs
+            run,
+            steps,
+            confidence=self._reader.get_confidence(self._repo_id, run.run_id),
+            cutoffs=self._cutoffs,
         )

@@ -1,0 +1,44 @@
+# monitoring/prices.yaml — the one versioned price table (AD-18, AD-19).
+# Rates live only here, never in code; `monitoring.pricing.load_prices` is
+# the one reader. Every non-Jev model carries all five per-token-type rates
+# (USD per million tokens) plus provenance: where the rate came from and
+# when it was retrieved. Replacing or adding a rate is a YAML edit with a
+# fresh provenance entry — no code change.
+#
+# Claude rates verified against the official pricing docs at build time
+# (retrieved 2026-09-26). A conflicting older rate card (2026-07-24 PDF)
+# shows Sonnet 5 at $3/$15 in/out; the live docs page is treated as
+# authoritative and the discrepancy is recorded in the story 6.2 spec.
+
+table_version: 1
+
+models:
+  claude-haiku-4-5-20251001:
+    usd_per_mtok:
+      input: 1.0
+      output: 5.0
+      cache_read: 0.10
+      cache_write_5m: 1.25
+      cache_write_1h: 2.0
+    source_url: https://platform.claude.com/docs/en/about-claude/pricing
+    retrieved: 2026-09-26
+
+  claude-sonnet-5:
+    usd_per_mtok:
+      input: 2.0
+      output: 10.0
+      cache_read: 0.20
+      cache_write_5m: 2.50
+      cache_write_1h: 4.0
+    source_url: https://platform.claude.com/docs/en/about-claude/pricing
+    retrieved: 2026-09-26
+
+# OQ-3: Jev (system_one) pricing is unresolved — the rate stays NULL and
+# flagged, and no historical estimate may be substituted. Replacing the
+# rate later is a YAML edit plus a small wiring change in
+# monitoring/costs.py once the billing units are known (the calculator
+# does not read this entry yet).
+jev:
+  system_one:
+    rate: null
+    flagged: true

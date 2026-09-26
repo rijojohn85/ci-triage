@@ -70,7 +70,7 @@ class EvidencePack(BaseModel):
     repo_id: str = Field(min_length=1)
     last_green: Sha40
     distilled_log: list[DistilledLogLine] = Field(min_length=1)
-    commits: list[CommitRecord] = Field(min_length=1)
+    commits: list[CommitRecord]
     candidate_suspects: list[CandidateSuspect]
     history_rows: list[HistoryRow]
     metrics: dict[str, MetricValue]

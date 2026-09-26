@@ -124,9 +124,14 @@ class FakeReader:
         self,
         runs: Sequence[RunRecord] = (),
         steps: Sequence[StepRecord] = (),
+        *,
+        confidence: ClassConfidence | None = full_confidence(),
     ) -> None:
         self._runs = list(runs)
         self._steps = list(steps)
+        # Default is the top-of-range number the 2.4 tests injected; an
+        # explicit None means "confidence unknown" and serves blame-free.
+        self._confidence = confidence
         self.calls: list[tuple[str, int, uuid.UUID | None]] = []
 
     def get_run(self, repo_id: int, run_id: uuid.UUID) -> RunRecord | None:
@@ -152,14 +157,15 @@ class FakeReader:
         self.calls.append(("list_runs", repo_id, None))
         return [record for record in self._runs if record.repo_id == repo_id]
 
+    def get_confidence(
+        self, repo_id: int, run_id: uuid.UUID
+    ) -> ClassConfidence | None:
+        self.calls.append(("get_confidence", repo_id, run_id))
+        return self._confidence
+
 
 def store_for(reader: TaskReader) -> ReadOnlyTaskStore:
-    return ReadOnlyTaskStore(
-        reader,
-        REPO_ID,
-        confidence=full_confidence(),
-        cutoffs=FIXTURE_CUTOFFS,
-    )
+    return ReadOnlyTaskStore(reader, REPO_ID, cutoffs=FIXTURE_CUTOFFS)
 
 
 class TestAc1TaskIdentityAndContent:
@@ -397,6 +403,39 @@ class TestAc3ProjectionAndBlameFree:
             cutoffs=FIXTURE_CUTOFFS,
         )
 
+        commits = part_payload(task)["commits"]
+        assert all("author_login" not in commit for commit in commits)
+
+    def test_ac3_store_serves_the_readers_confidence_per_run(self) -> None:
+        # Story 4.1 wiring: the below-cutoff arm through the store — the
+        # reader's low confidence makes an ANALYZING run blame-free.
+        reader = FakeReader(
+            [run(RunState.ANALYZING)],
+            [step("evidence", evidence_output())],
+            confidence=low_confidence(),
+        )
+        store = store_for(reader)
+
+        task = asyncio.run(store.get(str(RUN_ID), ServerCallContext()))
+
+        assert task is not None
+        commits = part_payload(task)["commits"]
+        assert all("author_login" not in commit for commit in commits)
+        assert ("get_confidence", REPO_ID, RUN_ID) in reader.calls
+
+    def test_ac3_unknown_confidence_is_served_blame_free(self) -> None:
+        # A confidence the reader cannot supply is served blame-free: the
+        # defensive default never leaks a name on missing data (AD-27).
+        reader = FakeReader(
+            [run(RunState.ANALYZING)],
+            [step("evidence", evidence_output())],
+            confidence=None,
+        )
+        store = store_for(reader)
+
+        task = asyncio.run(store.get(str(RUN_ID), ServerCallContext()))
+
+        assert task is not None
         commits = part_payload(task)["commits"]
         assert all("author_login" not in commit for commit in commits)
 

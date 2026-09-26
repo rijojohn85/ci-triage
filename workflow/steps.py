@@ -25,14 +25,23 @@ from workflow.run_states import RunState
 from workflow.transitions import GuardInput
 
 __all__ = [
+    "IDENTITY_CONSTRAINT",
     "DuplicateStepError",
     "ResumeView",
     "StepCommit",
     "StepRecord",
     "StepRecorder",
     "StepStatus",
+    "StepTaskMismatchError",
     "StepWriteError",
+    "TaskRunIdentity",
+    "duplicate_step_error",
 ]
+
+IDENTITY_CONSTRAINT = "uq_run_step_identity"
+"""The `(run_id, step, attempt)` unique constraint: the duplicate backstop
+(AD-2). Only a violation of THIS constraint is a duplicate attempt — one
+source for every adapter that inserts a `run_step` row (DRY)."""
 
 
 class DuplicateStepError(Exception):
@@ -81,6 +90,22 @@ class StepStatus(str, Enum):
     FAILED = "failed"
 
 
+def duplicate_step_error(
+    exc: Exception, run_id: uuid.UUID, step: str, attempt: int
+) -> Exception:
+    """Translate a `run_step` insert failure into the domain error (AD-2).
+
+    Only a violation of `IDENTITY_CONSTRAINT` is a duplicate attempt
+    (`DuplicateStepError`, definitive — AD-22); any other failure surfaces
+    unchanged, never masked as a duplicate. One home for the translation,
+    shared by every `run_step`-inserting adapter (DRY).
+    """
+    constraint = getattr(getattr(exc, "diag", None), "constraint_name", None)
+    if constraint == IDENTITY_CONSTRAINT:
+        return DuplicateStepError(run_id, step, attempt)
+    return exc
+
+
 @dataclass(frozen=True)
 class StepRecord:
     """One persisted `run_step` row (AD-2). `output` is JSON-serializable."""
@@ -93,6 +118,23 @@ class StepRecord:
     status: StepStatus
     output: object
     created_at: datetime
+
+
+class StepTaskMismatchError(Exception):
+    """The leased run is not the task whose evidence was collected (AD-15)."""
+
+    retryable = False
+
+    def __init__(self, run_id: uuid.UUID) -> None:
+        super().__init__(f"task identity mismatch for run {run_id}")
+        self.run_id = run_id
+
+
+@dataclass(frozen=True)
+class TaskRunIdentity:
+    repo_id: int
+    workflow_run_id: int
+    run_attempt: int
 
 
 @dataclass(frozen=True)
@@ -110,6 +152,7 @@ class StepCommit:
     status: StepStatus = StepStatus.COMPLETED
     output: object = None
     guards: GuardInput = field(default_factory=GuardInput)
+    task_identity: TaskRunIdentity | None = None
 
 
 @dataclass(frozen=True)

@@ -24,3 +24,9 @@ confidence:
 # replaces it once calibration data exists (mirrors OQ-2).
 distiller:
   max_bytes: 65536  # ASSUMPTION — placeholder, not calibrated
+
+# Evidence-pack history bound (AD-19, AD-20): the most history rows (newest
+# first) served to agents for one fingerprint, so a chronically recurring
+# failure cannot grow the pack without limit. Placeholder, not calibrated.
+evidence:
+  max_history_rows: 20  # ASSUMPTION — placeholder, not calibrated

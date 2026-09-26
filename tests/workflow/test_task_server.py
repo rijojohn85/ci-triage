@@ -29,7 +29,6 @@ from contracts.jev import JevChoice
 from guardrails.confidence import ClassConfidence
 from tests.contracts.samples import FULL_SHA, RUN_ID
 from tests.fixtures.thresholds import FIXTURE_CUTOFFS
-from workflow import a2a_server
 from workflow.a2a_server import RefusingExecutor, create_app
 from workflow.run_states import RunState
 from workflow.steps import StepRecord, StepStatus
@@ -53,12 +52,30 @@ def full_confidence() -> ClassConfidence:
     )
 
 
+def low_confidence() -> ClassConfidence:
+    """Below the fixture class cutoff (0.75), so AD-27's cutoff arm bites."""
+    return ClassConfidence.from_jev(
+        JevChoice(
+            answer=FailureClass.CODE,
+            confidence=0.1,
+            probabilities={FailureClass.CODE: 0.1},
+        )
+    )
+
+
 class RecordingReader:
     """A minimal repo-scoped reader that records every call."""
 
-    def __init__(self, runs: list[RunRecord], steps: list[StepRecord]) -> None:
+    def __init__(
+        self,
+        runs: list[RunRecord],
+        steps: list[StepRecord],
+        *,
+        confidence: ClassConfidence | None = None,
+    ) -> None:
         self._runs = runs
         self._steps = steps
+        self._confidence = confidence
         self.calls: list[str] = []
 
     def get_run(self, repo_id: int, run_id: uuid.UUID) -> RunRecord | None:
@@ -83,6 +100,12 @@ class RecordingReader:
     def list_runs(self, repo_id: int) -> list[RunRecord]:
         self.calls.append("list_runs")
         return [record for record in self._runs if record.repo_id == repo_id]
+
+    def get_confidence(
+        self, repo_id: int, run_id: uuid.UUID
+    ) -> ClassConfidence | None:
+        self.calls.append("get_confidence")
+        return self._confidence
 
 
 class RecordingExecutor(RefusingExecutor):
@@ -134,15 +157,20 @@ def awaiting_run() -> RunRecord:
     )
 
 
+def analyzing_run() -> RunRecord:
+    """A state where attribution is allowed — only the cutoff can bite."""
+    return RunRecord(
+        run_id=RUN_ID,
+        repo_id=REPO_ID,
+        state=RunState.ANALYZING,
+        updated_at=NOW,
+    )
+
+
 def handler_with(
     reader: RecordingReader, executor: RecordingExecutor
 ) -> DefaultRequestHandler:
-    store = ReadOnlyTaskStore(
-        reader,
-        REPO_ID,
-        confidence=full_confidence(),
-        cutoffs=FIXTURE_CUTOFFS,
-    )
+    store = ReadOnlyTaskStore(reader, REPO_ID, cutoffs=FIXTURE_CUTOFFS)
     return DefaultRequestHandler(
         agent_executor=executor,
         task_store=store,
@@ -256,8 +284,8 @@ def test_ac2_get_task_writes_nothing_and_schedules_nothing() -> None:
 
     assert task is not None
     assert executor.executions == 0, "a read never schedules a worker (AD-4)"
-    assert set(reader.calls) <= {"get_run", "list_steps"}, (
-        "the read path only reads triage_run/run_step"
+    assert set(reader.calls) <= {"get_run", "list_steps", "get_confidence"}, (
+        "the read path only reads triage_run/run_step and the run's confidence"
     )
 
 
@@ -294,14 +322,82 @@ def test_refusing_executor_refuses_work() -> None:
         asyncio.run(executor.cancel(None, None))  # type: ignore[arg-type]
 
 
-def test_ac3_below_cutoff_blame_free_arm_is_a_tracked_placeholder_until_4_1() -> None:
-    # 2.4 cannot read a run's stored confidence yet, so `create_app` serves a
-    # confidence that is never below the cutoff and the below-cutoff arm of the
-    # AD-27 rule is NOT enforced on this endpoint. Story 4.1 must replace
-    # `_SERVING_CONFIDENCE` with the run's real confidence and delete this
-    # guard. If this test fails, the serving confidence changed: close the 2.4
-    # deferral and update story 4.1 with it.
-    assert a2a_server._SERVING_CONFIDENCE.confidence_jev == 1.0
-    assert not a2a_server._SERVING_CONFIDENCE.confidence_jev < min(
-        FIXTURE_CUTOFFS.no_route_cutoff, FIXTURE_CUTOFFS.class_cutoff
-    ), "the placeholder is deliberately above every cutoff"
+# --- Story 4.1 AC3: the below-cutoff arm is enforced on this endpoint
+
+
+def test_ac3_below_cutoff_run_is_served_blame_free() -> None:
+    # The run's stored confidence sits below the fixture class cutoff while
+    # its state (ANALYZING) would normally allow attribution: the cutoff arm
+    # of the AD-27 predicate must bite, over the 2.4 projection fixtures.
+    reader = RecordingReader(
+        [analyzing_run()], [evidence_step()], confidence=low_confidence()
+    )
+    app = create_app(reader, REPO_ID)
+
+    response = asyncio.run(
+        post(
+            app,
+            {
+                "jsonrpc": "2.0",
+                "id": 5,
+                "method": "GetTask",
+                "params": {"id": str(RUN_ID)},
+            },
+        )
+    )
+
+    result = response.json()["result"]
+    commits = result["artifacts"][0]["parts"][0]["data"]["commits"]
+    assert all("author_login" not in commit for commit in commits), (
+        "a below-cutoff run is blame-free (AD-27)"
+    )
+    assert commits[0]["sha"] == FULL_SHA, "the evidence itself is intact"
+    assert "get_confidence" in reader.calls, (
+        "the serving confidence comes from the reader, per run"
+    )
+
+
+def test_ac3_unknown_confidence_is_served_blame_free() -> None:
+    # A run whose confidence cannot be read is served blame-free: the
+    # defensive default never leaks a name on missing data (AD-27).
+    reader = RecordingReader([analyzing_run()], [evidence_step()], confidence=None)
+    app = create_app(reader, REPO_ID)
+
+    response = asyncio.run(
+        post(
+            app,
+            {
+                "jsonrpc": "2.0",
+                "id": 6,
+                "method": "GetTask",
+                "params": {"id": str(RUN_ID)},
+            },
+        )
+    )
+
+    result = response.json()["result"]
+    commits = result["artifacts"][0]["parts"][0]["data"]["commits"]
+    assert all("author_login" not in commit for commit in commits)
+
+
+def test_ac3_above_cutoff_run_keeps_attribution() -> None:
+    reader = RecordingReader(
+        [analyzing_run()], [evidence_step()], confidence=full_confidence()
+    )
+    app = create_app(reader, REPO_ID)
+
+    response = asyncio.run(
+        post(
+            app,
+            {
+                "jsonrpc": "2.0",
+                "id": 7,
+                "method": "GetTask",
+                "params": {"id": str(RUN_ID)},
+            },
+        )
+    )
+
+    result = response.json()["result"]
+    commits = result["artifacts"][0]["parts"][0]["data"]["commits"]
+    assert commits[0]["author_login"] == "someone"
