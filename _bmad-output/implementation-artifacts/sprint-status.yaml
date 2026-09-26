@@ -36,7 +36,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 # - Retrospective appends its action items to action_items; the status view surfaces open ones
 generated: 09-25-2026 03:29
-last_updated: 09-26-2026
+last_updated: 09-27-2026
 project: stage4
 project_key: NOKEY
 tracking_system: file-system
@@ -72,7 +72,7 @@ development_status:
 
   epic-3: in-progress
   3-1-serve-the-jev-classifier-and-batched-injection-screen: done
-  3-2-evaluate-jev-classification-before-connection: backlog
+  3-2-evaluate-jev-classification-before-connection: review
   3-3-serve-the-evidence-grounded-analyzer: backlog
   3-4-evaluate-analyzer-evidence-and-attribution: backlog
   3-5-serve-the-sole-author-fix-deflake-and-mock-proposer: backlog
