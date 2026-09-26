@@ -155,12 +155,13 @@ class TestPostgresAndMigrationGating:
 
 class TestNoSpeculativeSchema:
     def test_ac3_no_speculative_domain_tables_triage_run_allowlisted(self) -> None:
-        # Story 0.3 AC3 forbade speculative domain tables; stories 2.1 and 2.3
-        # legitimately add `triage_run` (0001) and `run_step` (0004). The
-        # remaining domain tables still arrive with their consuming stories.
+        # Story 0.3 AC3 forbade speculative domain tables; stories 2.1, 2.3
+        # and 2.6 legitimately add `triage_run` (0001), `run_step` (0004),
+        # `history` (0005) and `pr_feedback` (0006). The remaining domain
+        # tables still arrive with their consuming stories.
         sql_files = list(MIGRATIONS_DIR.glob("*.sql"))
         forbidden = re.compile(
-            r"\b(history|approval|a2a_db|a2a_db_"
+            r"\b(approval|a2a_db|a2a_db_"
             r"|DatabaseTaskStore)\b",
             re.IGNORECASE,
         )
@@ -174,6 +175,7 @@ class TestNoSpeculativeSchema:
             "0001_triage_run.sql",  # story 2.1 (AD-1, AD-17)
             "0003_triage_run_lease.sql",  # story 1.2: ALTER ... lease columns (AD-23)
             "0004_run_step.sql",  # story 2.3: `run_step` FK names it (AD-2, AD-4)
+            "0006_pr_feedback.sql",  # story 2.6: `pr_feedback` FK names it (AD-15)
         ]
         declared = sorted(
             f.name
@@ -188,9 +190,13 @@ class TestNoSpeculativeSchema:
                 r"\bCREATE\s+TABLE\s+(\w+)", f.read_text(encoding="utf-8"), re.IGNORECASE
             )
         }
-        assert created <= {"triage_run", "webhook_delivery", "run_step"}, (
-            "a new domain table must join the allowlist and its consuming story"
-        )
+        assert created <= {
+            "triage_run",
+            "webhook_delivery",
+            "run_step",
+            "history",
+            "pr_feedback",
+        }, "a new domain table must join the allowlist and its consuming story"
         # no a2a-db/taskstore service either
         compose = yaml.safe_load(COMPOSE.read_text(encoding="utf-8"))
         blob = str(compose)

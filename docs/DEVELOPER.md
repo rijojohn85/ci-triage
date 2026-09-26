@@ -32,6 +32,7 @@ Every message between orchestrator and agent is an A2A message whose data part i
 | 2.3 | Steps and resume: a finished step's row and the run's state move commit in one lease-guarded transaction, validated by the 2.1 transition table; a reclaimed run reads its current state and completed step names so it skips finished work, and a stale owner's step-commit writes nothing | `workflow/steps.py`, `workflow/step_store.py`, `deploy/migrations/0004_run_step.sql`, `tests/workflow/test_steps.py`, `tests/workflow/test_step_integration.py`, `tests/security/test_compose_secret_placement.py` |
 | 2.4 | Read-only A2A task view: `get_task`/`list_tasks` project a stored run and its steps onto an A2A `Task` (task id = run id), a paused run is `INPUT_REQUIRED` with a blame-free evidence pack and no worker is started, and every write to the view is refused — so no second task-state writer exists | `workflow/task_store.py`, `workflow/a2a_server.py`, `tests/workflow/test_task_store.py`, `tests/workflow/test_task_server.py` |
 | 2.5 | Deterministic CI-log distiller (AD-20): strips ANSI/control characters, keeps only error blocks, stack traces and JUnit failures, numbers the survivors, and clips them to the `distiller.max_bytes` bound — with no model, network or clock, so the same input always gives the same output | `workflow/distiller.py`, `workflow/thresholds.py`, `guardrails/thresholds.yaml`, `tests/security/test_distiller.py`, `tests/workflow/test_thresholds.py`, `tests/fixtures/thresholds.py` |
+| 2.6 | Structured tenant-scoped `history` (AD-15): sha256 fingerprint of normalized test_id + error_type + top stack frames, `write_terminal` accepts only terminal `RunState`s and is idempotent per `run_id`, every read/write binds `repo_id`, seed rows enter only via `history_import`, a separate `pr_feedback` table keeps human PR text out of `history` forever | `workflow/history.py`, `workflow/history_store.py`, `workflow/pr_feedback.py`, `workflow/pr_feedback_store.py`, `deploy/migrations/0005_history.sql`, `deploy/migrations/0006_pr_feedback.sql`, `scripts/history_import.py`, `tests/workflow/test_history.py`, `tests/workflow/test_history_integration.py`, `tests/scripts/test_history_import.py` |
 
 ## Where things live
 
@@ -42,8 +43,8 @@ Every message between orchestrator and agent is an A2A message whose data part i
 | `guardrails/thresholds.yaml` | built (2.1, 2.2, 2.5) | the one thresholds file (AD-19): `review.max_rounds`, `workflow_path_glob`, the `confidence` cut-offs (`class_cutoff`, `no_route_cutoff`, `injection_screen_cutoff`, `injection_screen_cap`) and `distiller.max_bytes`; consumed via `workflow.thresholds.load_thresholds` |
 | `guardrails/confidence.py` | built (2.2) | the AD-9 min rule as code: `ClassConfidence`, `RouteConfidence`, `apply_injection_screen`, `below_class_cutoff`, `class_escalation` |
 | `deploy/compose.yaml` | built (0.3, 1.1) | postgres:18 + one-shot `migrate` job + the real gateway (story 1.1) + orchestrator/agent placeholders, with AD-16 secret placement; see [deploy/README.md](../deploy/README.md) and [Compose and migrations](#compose-and-migrations-story-03) |
-| `deploy/migrations/` | built (0.3, 2.1, 1.1, 1.2, 2.3) | forward-only `.sql` files + naming rules; runner is `workflow/migrate.py`; `0001_triage_run.sql` owns run state, `0002_webhook_delivery.sql` records seen delivery ids for replay dedupe, `0003_triage_run_lease.sql` adds the AD-23 lease columns + claim index, `0004_run_step.sql` adds the AD-2 step record |
-| `scripts/` | built (0.1, 0.2, 0.4, 1.1, 2.1) | `bootstrap.sh`, `check_layer_contract.py`, `generate_schemas.py`, `verify_demo_repo.py`, `generate_state_diagram.py`; `ruleset-seed.json` payload for the demo-repo ruleset |
+| `deploy/migrations/` | built (0.3, 2.1, 1.1, 1.2, 2.3, 2.6) | forward-only `.sql` files + naming rules; runner is `workflow/migrate.py`; `0001_triage_run.sql` owns run state, `0002_webhook_delivery.sql` records seen delivery ids for replay dedupe, `0003_triage_run_lease.sql` adds the AD-23 lease columns + claim index, `0004_run_step.sql` adds the AD-2 step record, `0005_history.sql` adds the AD-15 structured-only history table, `0006_pr_feedback.sql` adds the separate post-terminal PR feedback table |
+| `scripts/` | built (0.1, 0.2, 0.4, 1.1, 2.1, 2.6) | `bootstrap.sh`, `check_layer_contract.py`, `generate_schemas.py`, `verify_demo_repo.py`, `generate_state_diagram.py`, `history_import.py`; `ruleset-seed.json` payload for the demo-repo ruleset |
 | `tests/scripts/` | built (0.4) | unit tests of the demo-repo read-back comparison logic against recorded API fixtures; live `gh` path is `@pytest.mark.integration` |
 | `test-data/` | built (0.4) | demo-repo evidence: `demo-repo-expected.json` (AD-16 set, one source for script + docs), `demo-repo.md` (live facts + scenario slots), `demo-repo-seed/` (pushed verbatim to the demo repo) |
 | `tests/contracts/` | built (0.2) | contract tests, named after the ACs they prove |
@@ -334,6 +335,60 @@ fake lease store; the real database path is the marked integration tests.
 (AD-25) plus the matching field on `StepRecord`/`StepCommit`. Resume works from
 the rows that exist, never from a stored list of steps, so adding one does not
 change how a run is resumed.
+
+## History & PR feedback (story 2.6)
+
+**What `history` stores.** A durable, tenant-scoped record of past triage
+outcomes ([AD-15](../_bmad-output/planning-artifacts/architecture/architecture-stage4-2026-09-25/ARCHITECTURE-SPINE.md)),
+so a later run can ask "have we seen this failure before?" without ever
+inventing an answer. Every row holds only enumerated/structured fields —
+`test_id`, `error_type`, `top_stack_frames` (an array of short location
+strings, never narrative), a sha256 `fingerprint` of those three normalized
+and joined, the `terminal_state` the run ended in, and an optional
+`human_verdict`. There is no free-text column, on purpose: this table feeds
+agent evidence packs later (story 2.7), and free text is exactly what AD-20
+keeps out of that path.
+
+**Who writes it.** Only the orchestrator, through `HistoryStore`, and only
+once a run is terminal. `write_terminal` refuses — before touching the
+database — any `RunState` outside `TERMINAL_RUN_STATES`
+(`workflow/run_states.py`), raising `NonTerminalWriteError`. Calling it twice
+for the same `run_id` is not an error: the database's `uq_history_run_id`
+unique constraint catches the second insert, and the store re-selects and
+returns the same row instead of writing a duplicate — no lease is needed
+here, because a terminal run can no longer be claimed
+(`CLAIMABLE_RUN_STATES` in `workflow/leases.py` already excludes
+`TERMINAL_RUN_STATES`). Agents never get a `HistoryStore` — there is no
+agent-facing writer, only the read-only `HistoryRow` subset served in the
+evidence pack (`contracts/evidence.py`).
+
+**Every read and write binds `repo_id`.** `lookup(repo_id, fingerprint)`
+never returns another tenant's row, even for a fingerprint that collides
+with one seeded under a different repo.
+
+**Seed history** enters through exactly one door: `scripts/history_import.py`,
+a CLI that reads a JSON array (file or stdin), builds one
+`workflow.history.ImportRecord` per row and calls `HistoryStore.import_seed`.
+`ImportRecord` is a frozen dataclass of enumerated fields only — a row with
+an extra key (e.g. `notes`) raises `TypeError` before any row is written, so
+a free-text seed can never slip in. Each seed row gets a fresh `run_id` via
+`workflow.ids.new_run_id()` (the same UUIDv7 scheme real runs use), since
+seed/backfilled history has no real `triage_run` behind it.
+
+**`pr_feedback` stays separate on purpose.** Human feedback left on an
+opened PR is free text by nature, so it lives in its own table
+(`workflow/pr_feedback.py` / `workflow/pr_feedback_store.py`), written by a
+different store with no shared code path into `history`. `feedback_text`
+can never become a `history` row.
+
+**Where the code lives.** `workflow/history.py` holds the pure domain:
+`normalize_fingerprint` (sha256 of the stripped fields, joined by `\x1f`, no
+I/O), `HumanVerdict`, `HistoryEntry` (the internal full-row type — distinct
+from the agent-facing `contracts.evidence.HistoryRow`), `ImportRecord`,
+`TerminalWrite` and `NonTerminalWriteError`. `workflow/history_store.py`
+holds the one Postgres adapter, `PostgresHistoryStore`, mirroring
+`workflow/step_store.py`'s injectable-`connect` pattern. Migrations:
+`deploy/migrations/0005_history.sql`, `deploy/migrations/0006_pr_feedback.sql`.
 
 ## The A2A task view (story 2.4)
 
