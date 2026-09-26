@@ -60,7 +60,7 @@ class ScopedRequests(Requests):
 
 def collector(requests: Requests) -> tuple[EvidenceCollector, Recorder]:
     recorder = Recorder()
-    return EvidenceCollector(GitHubEvidenceReader(requests), Tokens(), History(), recorder, load_thresholds().distiller), recorder
+    return EvidenceCollector(GitHubEvidenceReader(requests), Tokens(), History(), recorder, load_thresholds().evidence), recorder
 
 
 @pytest.mark.parametrize(
@@ -138,7 +138,7 @@ def test_ac1_ac2_public_collection_keeps_valid_later_run_commit_file_and_job_pag
                 response.body["url"] = f"https://api.github.com{ROOT}/commits/{SECOND}"
             else:
                 response = super().get(path, token)
-            if "/actions/runs?" in path:
+            if "/actions/workflows/9/runs?" in path:
                 if page == 1:
                     response.body["workflow_runs"][0].update({"head_sha": SECOND, "id": 9})
                 return GitHubResponse(response.body, has_next=page == 1)

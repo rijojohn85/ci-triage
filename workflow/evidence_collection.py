@@ -15,7 +15,7 @@ from workflow.history import HistoryEntry, normalize_fingerprint
 from workflow.leases import Claim
 from workflow.run_states import RunState
 from workflow.steps import StepCommit, StepRecord, TaskRunIdentity
-from workflow.thresholds import DistillerLimits
+from workflow.thresholds import EvidenceLimits
 
 _LOG = logging.getLogger(__name__)
 
@@ -29,7 +29,9 @@ class EvidenceReader(Protocol):
 
 
 class HistoryLookup(Protocol):
-    def lookup(self, repo_id: int, fingerprint: str) -> list[HistoryEntry]: ...
+    def lookup(
+        self, repo_id: int, fingerprint: str, limit: int
+    ) -> list[HistoryEntry]: ...
 
 
 class EvidenceRecorder(Protocol):
@@ -68,7 +70,7 @@ class EvidenceCollector:
         tokens: InstallationTokens,
         history: HistoryLookup,
         recorder: EvidenceRecorder,
-        limits: DistillerLimits,
+        limits: EvidenceLimits,
     ) -> None:
         self._reader = reader
         self._tokens = tokens
@@ -94,7 +96,9 @@ class EvidenceCollector:
         ):
             raise EvidenceReadError("collected evidence task mismatch")
         log = distill(
-            collected.raw_log.replace(token, "[redacted]"), None, self._limits
+            collected.raw_log.replace(token, "[redacted]"),
+            None,
+            self._limits.distiller,
         )
         pack = assemble_pack(
             identity.repo_id,
@@ -107,7 +111,9 @@ class EvidenceCollector:
         fingerprint = normalize_fingerprint(
             request.test_id, request.error_type, request.top_stack_frames
         )
-        history = self._history.lookup(identity.repo_id, fingerprint)
+        history = self._history.lookup(
+            identity.repo_id, fingerprint, self._limits.max_history_rows
+        )
         if any(
             row.repo_id != identity.repo_id or row.fingerprint != fingerprint
             for row in history

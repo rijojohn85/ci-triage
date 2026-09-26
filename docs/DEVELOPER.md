@@ -44,7 +44,7 @@ Every message between orchestrator and agent is an A2A message whose data part i
 | --- | --- | --- |
 | `contracts/` | built (0.2) | Pydantic v2 models for every inter-agent payload; see [contracts/README.md](../contracts/README.md) |
 | `guardrails/schemas/` | built (0.2) | JSON Schemas generated from `contracts/`; never edit by hand |
-| `guardrails/thresholds.yaml` | built (2.1, 2.2, 2.5) | the one thresholds file (AD-19): `review.max_rounds`, `workflow_path_glob`, the `confidence` cut-offs (`class_cutoff`, `no_route_cutoff`, `injection_screen_cutoff`, `injection_screen_cap`) and `distiller.max_bytes`; consumed via `workflow.thresholds.load_thresholds` |
+| `guardrails/thresholds.yaml` | built (2.1, 2.2, 2.5) | the one thresholds file (AD-19): `review.max_rounds`, `workflow_path_glob`, the `confidence` cut-offs (`class_cutoff`, `no_route_cutoff`, `injection_screen_cutoff`, `injection_screen_cap`), `distiller.max_bytes` and `evidence.max_history_rows`; consumed via `workflow.thresholds.load_thresholds` |
 | `guardrails/confidence.py` | built (2.2) | the AD-9 min rule as code: `ClassConfidence`, `RouteConfidence`, `apply_injection_screen`, `below_class_cutoff`, `class_escalation` |
 | `guardrails/citation_check.py` | built (4.1) | citation resolution against the evidence served this run (AD-7): `ServedEvidence` (pack + the run's Jev call), the closed per-kind resolution table, `ValidationIssue` (the one issue shape) |
 | `guardrails/validator.py` | built (4.1, 2.8) | the pure verdict validator (AD-6/7/8/9/27): `validate_verdict(payload, served, blame_free=…)` → `ValidationResult{verdict, issues}`; two layers (committed JSON schema + pydantic parse) plus the suspect/confidence/attribution checks; `validate_classification(payload)` (2.8, schema + parse only) is the CLASSIFYING surface; see [The guardrails validator](#the-guardrails-validator-story-41) |
@@ -378,7 +378,7 @@ here, because a terminal run can no longer be claimed
 agent-facing writer, only the read-only `HistoryRow` subset served in the
 evidence pack (`contracts/evidence.py`).
 
-**Every read and write binds `repo_id`.** `lookup(repo_id, fingerprint)`
+**Every read and write binds `repo_id`.** `lookup(repo_id, fingerprint, limit)`
 never returns another tenant's row, even for a fingerprint that collides
 with one seeded under a different repo.
 
@@ -665,7 +665,9 @@ rules are linked in the [architecture spine](../_bmad-output/planning-artifacts/
   overlapping files first, then full SHA to break ties.
 - `workflow/github_evidence.py::GitHubEvidenceReader` reads the task's repository
   and failed attempt, follows all pages, and compares against that attempt's
-  fixed head. It reads each commit's files, job logs and actual job durations.
+  fixed head. Past successful runs are listed for the failing workflow only
+  (`/actions/workflows/{workflow_id}/runs`), so a busy branch with many
+  workflows does not multiply GitHub reads. It reads each commit's files, job logs and actual job durations.
   Python test imports are resolved against files in that head's tree. Linux
   and Windows runner checkout paths are made relative to the task repository;
   traversal paths are refused. Comparison endpoints, job attempts and each
@@ -679,9 +681,12 @@ rules are linked in the [architecture spine](../_bmad-output/planning-artifacts/
   takes a `CollectionRequest` containing the accepted `RunIdentity`, worker
   claim and failure fields for history lookup. Inject the reader, a token
   issuer, `PostgresHistoryStore`, `PostgresStepRecorder` and
-  `load_thresholds().distiller`. The token issuer's `mint(installation_id,
+  `load_thresholds().evidence` (the log byte cap plus
+  `evidence.max_history_rows`). The token issuer's `mint(installation_id,
   repo_id)` is called once per collection. The collector trims and numbers
-  logs, looks up matching history in that repository, and saves the pack as
+  logs, looks up matching history in that repository (only the newest
+  `evidence.max_history_rows` rows, so a failure that keeps recurring cannot
+  grow every agent's context without limit), and saves the pack as
   the `distill` step while moving `DISTILLING` to `CLASSIFYING` through the
   existing guarded transaction. `StepCommit.task_identity` carries the task's
   repository, workflow run and attempt; the recorder checks these against the

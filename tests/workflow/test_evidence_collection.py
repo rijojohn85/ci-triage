@@ -43,10 +43,10 @@ class Reader:
 class History:
     def __init__(self, foreign: bool = False) -> None:
         self.foreign = foreign
-        self.calls: list[tuple[int, str]] = []
+        self.calls: list[tuple[int, str, int]] = []
 
-    def lookup(self, repo_id: int, fingerprint: str) -> list[HistoryEntry]:
-        self.calls.append((repo_id, fingerprint))
+    def lookup(self, repo_id: int, fingerprint: str, limit: int) -> list[HistoryEntry]:
+        self.calls.append((repo_id, fingerprint, limit))
         return [HistoryEntry(uuid.UUID(int=2), uuid.UUID(int=3), 2 if self.foreign else 1, "test_a", "ValueError", ("src/a.py:1",), fingerprint, RunState.DONE_REPORT, None, NOW)]
 
 
@@ -64,7 +64,7 @@ class Recorder:
 
 def test_ac1_complete_pack_history_metrics_and_single_atomic_record() -> None:
     tokens, history, recorder = Tokens(), History(), Recorder()
-    collector = EvidenceCollector(Reader(), tokens, history, recorder, load_thresholds().distiller)
+    collector = EvidenceCollector(Reader(), tokens, history, recorder, load_thresholds().evidence)
     pack = collector.collect_and_persist(REQUEST)
     assert pack.history_rows[0].row_id == str(uuid.UUID(int=2))
     assert pack.metrics == {"duration": 3.0}
@@ -74,11 +74,12 @@ def test_ac1_complete_pack_history_metrics_and_single_atomic_record() -> None:
     assert recorder.commits[0].output == pack.model_dump(mode="json")
     assert recorder.commits[0].task_identity == TaskRunIdentity(1, 20, 2)
     assert tokens.calls == [(4, 1)]
-    assert history.calls == [(1, normalize_fingerprint("test_a", "ValueError", REQUEST.top_stack_frames))]
+    # The configured cap bounds the history read (AD-20: bounded evidence).
+    assert history.calls == [(1, normalize_fingerprint("test_a", "ValueError", REQUEST.top_stack_frames), load_thresholds().evidence.max_history_rows)]
 
 
 def test_ac3_context_distilled_only_delimiter_safe_and_blame_free() -> None:
-    pack = EvidenceCollector(Reader(), Tokens(), History(), Recorder(), load_thresholds().distiller).collect_and_persist(REQUEST)
+    pack = EvidenceCollector(Reader(), Tokens(), History(), Recorder(), load_thresholds().evidence).collect_and_persist(REQUEST)
     context = agent_context(pack)
     assert "raw setup secret" not in context
     assert "private-token" not in context
@@ -90,13 +91,13 @@ def test_ac3_context_distilled_only_delimiter_safe_and_blame_free() -> None:
 def test_ac3_foreign_history_refused_without_persistence() -> None:
     recorder = Recorder()
     with pytest.raises(EvidenceReadError):
-        EvidenceCollector(Reader(), Tokens(), History(True), recorder, load_thresholds().distiller).collect_and_persist(REQUEST)
+        EvidenceCollector(Reader(), Tokens(), History(True), recorder, load_thresholds().evidence).collect_and_persist(REQUEST)
     assert recorder.commits == []
 
 
 def test_ac1_lost_lease_propagates_and_returns_no_pack() -> None:
     with pytest.raises(LeaseLost):
-        EvidenceCollector(Reader(), Tokens(), History(), Recorder(True), load_thresholds().distiller).collect_and_persist(REQUEST)
+        EvidenceCollector(Reader(), Tokens(), History(), Recorder(True), load_thresholds().evidence).collect_and_persist(REQUEST)
 
 
 def test_ac1_recorder_fake_honors_step_commit_fields() -> None:

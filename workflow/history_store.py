@@ -63,6 +63,8 @@ SELECT row_id, run_id, repo_id, test_id, error_type, top_stack_frames,
        fingerprint, terminal_state, human_verdict, created_at
 FROM history
 WHERE repo_id = %s AND fingerprint = %s
+ORDER BY created_at DESC, row_id
+LIMIT %s
 """
 
 
@@ -88,7 +90,9 @@ class HistoryStore(Protocol):
 
     def import_seed(self, records: Sequence[ImportRecord]) -> list[uuid.UUID]: ...
 
-    def lookup(self, repo_id: int, fingerprint: str) -> list[HistoryEntry]: ...
+    def lookup(
+        self, repo_id: int, fingerprint: str, limit: int
+    ) -> list[HistoryEntry]: ...
 
 
 class PostgresHistoryStore:
@@ -196,7 +200,8 @@ class PostgresHistoryStore:
                 row_ids.append(row_id)
         return row_ids
 
-    def lookup(self, repo_id: int, fingerprint: str) -> list[HistoryEntry]:
+    def lookup(self, repo_id: int, fingerprint: str, limit: int) -> list[HistoryEntry]:
+        """The newest `limit` rows for this repo + fingerprint (AD-15, AD-20)."""
         with self._connect(self._dsn) as conn:
-            rows = conn.execute(_LOOKUP_SQL, (repo_id, fingerprint)).fetchall()
+            rows = conn.execute(_LOOKUP_SQL, (repo_id, fingerprint, limit)).fetchall()
         return [_entry_from_row(row) for row in rows]

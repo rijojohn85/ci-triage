@@ -28,7 +28,7 @@ def collection(pg_dsn: str) -> tuple[EvidenceCollector, CollectionRequest]:
     history = PostgresHistoryStore(pg_dsn)
     history.import_seed([ImportRecord(1, REQUEST.test_id, REQUEST.error_type, REQUEST.top_stack_frames, RunState.DONE_REPORT)])
     request = CollectionRequest(REQUEST.identity, claim, REQUEST.test_id, REQUEST.error_type, REQUEST.top_stack_frames)
-    collector = EvidenceCollector(Reader(), Tokens(), history, PostgresStepRecorder(pg_dsn), load_thresholds().distiller)
+    collector = EvidenceCollector(Reader(), Tokens(), history, PostgresStepRecorder(pg_dsn), load_thresholds().evidence)
     return collector, request
 
 

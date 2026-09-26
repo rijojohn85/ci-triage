@@ -174,7 +174,9 @@ class FakeHistory:
     def import_seed(self, records: object) -> list[uuid.UUID]:
         raise NotImplementedError
 
-    def lookup(self, repo_id: int, fingerprint: str) -> list[HistoryEntry]:
+    def lookup(
+        self, repo_id: int, fingerprint: str, limit: int
+    ) -> list[HistoryEntry]:
         raise NotImplementedError
 
 

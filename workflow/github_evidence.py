@@ -181,7 +181,7 @@ class GitHubEvidenceReader:
             raise EvidenceReadError("task is not a failed workflow run")
         query = urlencode({"status": "success", "branch": failed.branch})
         runs = self._pages(
-            f"{root}/actions/runs?{query}",
+            f"{root}/actions/workflows/{failed.workflow_id}/runs?{query}",
             token,
             "workflow_runs",
         )

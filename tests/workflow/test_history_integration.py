@@ -20,7 +20,12 @@ import psycopg
 import pytest
 
 from workflow import migrate
-from workflow.history import HumanVerdict, NonTerminalWriteError, TerminalWrite
+from workflow.history import (
+    HumanVerdict,
+    ImportRecord,
+    NonTerminalWriteError,
+    TerminalWrite,
+)
 from workflow.history_store import PostgresHistoryStore
 from workflow.ids import new_run_id
 from workflow.pr_feedback_store import PostgresPRFeedbackStore
@@ -180,8 +185,8 @@ def test_ac3_rt03_foreign_repo_lookup_returns_nothing(pg_dsn: str) -> None:
         )
     )
 
-    own_repo = store.lookup(REPO_ID, entry.fingerprint)
-    foreign_repo = store.lookup(OTHER_REPO_ID, entry.fingerprint)
+    own_repo = store.lookup(REPO_ID, entry.fingerprint, 10)
+    foreign_repo = store.lookup(OTHER_REPO_ID, entry.fingerprint, 10)
 
     assert len(own_repo) == 1 and own_repo[0].row_id == entry.row_id
     assert foreign_repo == [], "another tenant's row must never surface (AD-15)"
@@ -261,3 +266,31 @@ def test_ac1_migrations_apply_and_pr_feedback_fk_enforced(pg_dsn: str) -> None:
                 "(gen_random_uuid(), gen_random_uuid(), %s, 1, 'x', 'y')",
                 (REPO_ID,),
             )
+
+
+def test_lookup_returns_only_the_newest_rows_up_to_the_limit(pg_dsn: str) -> None:
+    migrated(pg_dsn)
+    store = PostgresHistoryStore(pg_dsn)
+    record = ImportRecord(
+        repo_id=REPO_ID,
+        test_id="tests/test_x.py::test_bounded",
+        error_type="AssertionError",
+        top_stack_frames=("frame_bounded",),
+        terminal_state=RunState.DONE_REPORT,
+    )
+    row_ids = store.import_seed([record] * 4)
+    # Spread created_at so "newest" is unambiguous (one import shares now()).
+    for age_days, row_id in enumerate(row_ids):
+        query(
+            pg_dsn,
+            "UPDATE history SET created_at = now() - make_interval(days => %s) "
+            "WHERE row_id = %s RETURNING row_id",
+            (age_days, row_id),
+        )
+    [(fingerprint,)] = query(
+        pg_dsn, "SELECT fingerprint FROM history WHERE row_id = %s", (row_ids[0],)
+    )
+
+    rows = store.lookup(REPO_ID, str(fingerprint), 2)
+
+    assert {row.row_id for row in rows} == set(row_ids[:2])

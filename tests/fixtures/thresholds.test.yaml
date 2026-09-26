@@ -15,3 +15,6 @@ confidence:
 
 distiller:
   max_bytes: 4096
+
+evidence:
+  max_history_rows: 5

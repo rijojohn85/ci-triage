@@ -29,7 +29,7 @@ class Requests:
             return GitHubResponse(text='startup raw secret\nERROR failure\n  File "src/a.py", line 1')
         if "/actions/runs/20/attempts/2" in path:
             return GitHubResponse({"id": 20, "workflow_id": 9, "head_branch": "feature", "head_sha": HEAD, "created_at": "2026-09-26T00:00:01Z", "conclusion": "failure", "repository": REPO, "run_attempt": 2})
-        if "/actions/runs?" in path:
+        if "/actions/workflows/9/runs?" in path:
             run = {"id": 10, "workflow_id": 9, "head_branch": "feature", "head_sha": SHA, "created_at": "2026-09-25T00:00:00Z", "conclusion": "success", "repository": REPO}
             return GitHubResponse({"workflow_runs": [run]})
         if "/compare/" in path:
@@ -51,6 +51,15 @@ def test_ac1_ac2_compare_immutable_failed_head_and_real_metrics() -> None:
     assert evidence.metrics == {"job_5_duration_seconds": 3.0}
     assert evidence.evidence_files == ("src/a.py",)
     assert all("org/repo" in path or path == "/repositories/1" for path in requests.calls)
+
+
+def test_ac1_success_runs_are_listed_for_the_failed_workflow_only() -> None:
+    # Scope the listing server-side to the failing workflow, not every
+    # workflow on the branch (bounded GitHub reads).
+    requests = Requests()
+    GitHubEvidenceReader(requests).collect(IDENTITY, "private-token")
+    [listing] = [path for path in requests.calls if "/runs?" in path]
+    assert "/actions/workflows/9/runs?" in listing
 
 
 def test_ac3_foreign_repository_refused_before_other_reads() -> None:
@@ -76,7 +85,7 @@ def test_ac3_wrong_attempt_refused() -> None:
 def test_ac1_missing_success_uses_default_branch_head_empty_comparison() -> None:
     class DefaultHead(Requests):
         def get(self, path: str, token: str) -> GitHubResponse:
-            if "/actions/runs?" in path:
+            if "/actions/workflows/9/runs?" in path:
                 return GitHubResponse({"workflow_runs": []})
             if path.endswith("/commits/main"):
                 return GitHubResponse({"sha": HEAD})
@@ -98,7 +107,7 @@ def test_ac1_default_head_ahead_of_failed_head_yields_empty_comparison() -> None
 
     class DefaultHeadAhead(Requests):
         def get(self, path: str, token: str) -> GitHubResponse:
-            if "/actions/runs?" in path:
+            if "/actions/workflows/9/runs?" in path:
                 self.calls.append(path)
                 return GitHubResponse({"workflow_runs": []})
             if path.endswith("/commits/main"):
