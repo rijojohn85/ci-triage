@@ -16,6 +16,7 @@ registry-entry edit plus its fixtures.
 """
 
 import difflib
+import posixpath
 import re
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
@@ -39,6 +40,7 @@ __all__ = [
     "SECRET_TOUCHED",
     "TEST_DISABLED",
     "TIMEOUT_INCREASED",
+    "UNSAFE_PATH",
     "WORKFLOW_FILE_TOUCHED",
     "GateDecision",
     "GateInput",
@@ -75,6 +77,10 @@ REVIEWER_DANGEROUS = "reviewer_dangerous"
 
 PRIOR_CONTENT_MISSING = "prior_content_missing"
 """Rule code: a modification whose base content was not supplied — fail closed."""
+
+UNSAFE_PATH = "unsafe_path"
+"""Rule code: a path that is absolute, escapes the repo (`..` survives
+normalising) or names no file — fail closed before any glob is consulted."""
 
 
 class RiskGateConfig(BaseModel):
@@ -125,7 +131,14 @@ class GateInput(BaseModel):
 _SKIP_PATTERN: Final[re.Pattern[str]] = re.compile(
     r"pytest\.mark\.(?:skip|skipif|xfail)|pytest\.skip\("
     r"|pytest\.xfail\(|pytest\.importorskip\(|unittest\.skip"
+    r"|unittest\.SkipTest|self\.skipTest\("
+    r"|\bmark\.(?:skip|skipif|xfail)\b|pytest\.skip\.Exception"
 )
+"""Skip/disable spellings: the pytest markers and runtime calls, unittest's
+decorator and `SkipTest`, `self.skipTest(`, the bare `mark.*` forms (after
+`from pytest import mark`) and `pytest.skip.Exception`. `skip` inside an
+unrelated identifier (`skip_header_rows`) never matches — the patterns are
+anchored to the real call/marker shapes."""
 _RETRY_PATTERN: Final[re.Pattern[str]] = re.compile(
     r"(?i)\b[a-z_]*(?:retry|retries|rerun|reruns)\b"
     r"|\bon_exception\b|@backoff\.|\bflaky\b|\bstamina\b|\btenacity\b"
@@ -159,6 +172,21 @@ target. The line pattern is the deletion arm: a test file with net fewer
 assertion lines than its base is a loosening too (AD-13)."""
 _TEST_FILE_GLOBS: Final[tuple[str, ...]] = ("test_*.py", "*_test.py", "conftest.py")
 # Rule constant, not a tunable (AD-19): what counts as a test file IS the rule.
+
+
+def _canonical_path(path: str) -> str:
+    """The one path normalisation, applied before ANY path rule: backslashes
+    become separators, `.` segments and a leading `./` collapse — so
+    `./.github/workflows/ci.yml`, `src/../.github/workflows/ci.yml` and
+    `.github\\workflows\\ci.yml` all meet the globs in their canonical form."""
+    return posixpath.normpath(path.replace("\\", "/"))
+
+
+def _is_unsafe_path(canonical: str) -> bool:
+    """A path is unsafe when it is absolute, still carries `..` after
+    normalising, or names no file at all — fail closed (AD-13)."""
+    parts = PurePosixPath(canonical).parts
+    return canonical.startswith("/") or ".." in parts or canonical in ("", ".")
 
 
 def _glob_match(path: str, glob: str) -> bool:
@@ -196,7 +224,7 @@ def _added_lines(file: DiffFile, prior_contents: Mapping[str, str]) -> list[str]
         return []
     if file.op is DiffOperation.ADD:
         return file.new_content.splitlines()
-    prior = prior_contents.get(file.path)
+    prior = prior_contents.get(_canonical_path(file.path))
     if prior is None:
         return []
     return _changed_lines(prior, file.new_content, added=True)
@@ -207,7 +235,7 @@ def _removed_lines(file: DiffFile, prior_contents: Mapping[str, str]) -> list[st
     up on both sides); nothing without the base content."""
     if file.op is not DiffOperation.MODIFY:
         return []
-    prior = prior_contents.get(file.path)
+    prior = prior_contents.get(_canonical_path(file.path))
     if prior is None:
         return []
     return _changed_lines(prior, file.new_content, added=False)
@@ -269,7 +297,7 @@ def _check_test_disabled(gate: GateInput) -> tuple[GateReason, ...]:
             location=file.path,
         )
         for file in gate.diff.files
-        if file.op is DiffOperation.DELETE and _is_test_path(file.path)
+        if file.op is DiffOperation.DELETE and _is_test_path(_canonical_path(file.path))
     )
     return deletions + _added_line_hits(
         gate, _SKIP_PATTERN, TEST_DISABLED, _skip_message
@@ -305,7 +333,7 @@ def _check_timeout_increased(gate: GateInput) -> tuple[GateReason, ...]:
             continue
         if file.op is not DiffOperation.MODIFY:
             continue
-        prior = gate.prior_contents.get(file.path)
+        prior = gate.prior_contents.get(_canonical_path(file.path))
         if prior is None:
             continue
         removed = _timeout_values("\n".join(_removed_lines(file, gate.prior_contents)))
@@ -374,7 +402,7 @@ def _touched_paths(
     return tuple(
         GateReason(rule_code=code, message=f"{verb}: {file.path}", location=file.path)
         for file in gate.diff.files
-        if any(_glob_match(file.path, glob) for glob in globs)
+        if any(_glob_match(_canonical_path(file.path), glob) for glob in globs)
     )
 
 
@@ -415,6 +443,25 @@ def _check_reviewer_dangerous(gate: GateInput) -> tuple[GateReason, ...]:
     )
 
 
+def _check_unsafe_path(gate: GateInput) -> tuple[GateReason, ...]:
+    """Absolute, repo-escaping or empty paths fail closed before any glob is
+    consulted (AD-13): normalisation cannot be tricked into a protected path,
+    and a path that names no file is refused outright."""
+    if gate.diff is None:
+        return ()
+    return tuple(
+        GateReason(
+            rule_code=UNSAFE_PATH,
+            message=(
+                f"path is absolute, escapes the repo, or names no file: {file.path}"
+            ),
+            location=file.path,
+        )
+        for file in gate.diff.files
+        if _is_unsafe_path(_canonical_path(file.path))
+    )
+
+
 def _check_prior_content_missing(gate: GateInput) -> tuple[GateReason, ...]:
     """Fail closed (AD-13): a modification whose base content the caller did
     not supply blocks — and so does a path replaced by a DELETE + ADD pair,
@@ -434,7 +481,9 @@ def _check_prior_content_missing(gate: GateInput) -> tuple[GateReason, ...]:
             location=file.path,
         )
         for file in gate.diff.files
-        if file.op is DiffOperation.MODIFY and file.path not in gate.prior_contents
+        if file.op is DiffOperation.MODIFY
+        and _canonical_path(file.path)
+        not in {_canonical_path(path) for path in gate.prior_contents}
     ) + tuple(
         GateReason(
             rule_code=PRIOR_CONTENT_MISSING,
@@ -458,6 +507,7 @@ class RiskRule:
 
 
 RISK_RULES: Final[tuple[RiskRule, ...]] = (
+    RiskRule(code=UNSAFE_PATH, check=_check_unsafe_path),
     RiskRule(code=TEST_DISABLED, check=_check_test_disabled),
     RiskRule(code=RETRY_ADDED, check=_check_retry_added),
     RiskRule(code=TIMEOUT_INCREASED, check=_check_timeout_increased),

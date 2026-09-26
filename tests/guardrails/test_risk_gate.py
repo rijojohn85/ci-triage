@@ -68,6 +68,9 @@ def rule_codes(reasons: tuple[GateReason, ...]) -> set[str]:
 # One positive and one negative fixture per registry rule (RT-07). A registry
 # entry without a fixture fails the test, so a new rule cannot land unproven.
 POSITIVE_FIXTURES = {
+    "unsafe_path": lambda: gate_input(
+        diff_of(DiffFile(path="/etc/passwd", op=DiffOperation.ADD, new_content=""))
+    ),
     "test_disabled": lambda: gate_input(
         diff_of(
             DiffFile(
@@ -155,6 +158,16 @@ POSITIVE_FIXTURES = {
 }
 
 NEGATIVE_FIXTURES = {
+    "unsafe_path": lambda: gate_input(
+        diff_of(
+            DiffFile(
+                path="./src/pay.py",
+                op=DiffOperation.MODIFY,
+                new_content="def pay():\n    return 2\n",
+            )
+        ),
+        prior={"src/pay.py": "def pay():\n    return 1\n"},
+    ),
     "test_disabled": lambda: gate_input(
         diff_of(
             DiffFile(
@@ -747,6 +760,128 @@ def test_ac1_assertion_moved_or_strengthened_is_normal() -> None:
 
     assert moved.risk_tier is RiskTier.NORMAL and moved.reasons == ()
     assert strengthened.risk_tier is RiskTier.NORMAL and strengthened.reasons == ()
+
+
+# --- AC1 (F5): path spellings cannot evade the path rules
+
+
+@pytest.mark.parametrize(
+    "path",
+    [
+        "./.github/workflows/ci.yml",
+        "src/../.github/workflows/ci.yml",
+        ".github\\workflows\\ci.yml",
+    ],
+    ids=["dot-slash", "dotdot", "backslash"],
+)
+def test_ac1_path_spellings_cannot_evade_the_workflow_rule(path: str) -> None:
+    decision = evaluate_risk(
+        gate_input(
+            diff_of(
+                DiffFile(path=path, op=DiffOperation.ADD, new_content="name: ci\n")
+            )
+        )
+    )
+
+    assert decision.risk_tier is RiskTier.BLOCKED
+    assert rule_codes(decision.reasons) == {"workflow_file_touched"}
+
+
+def test_ac1_absolute_path_fails_closed_as_unsafe_path() -> None:
+    decision = evaluate_risk(
+        gate_input(
+            diff_of(
+                DiffFile(
+                    path="/.github/workflows/ci.yml",
+                    op=DiffOperation.ADD,
+                    new_content="name: ci\n",
+                )
+            )
+        )
+    )
+
+    assert decision.risk_tier is RiskTier.BLOCKED
+    assert rule_codes(decision.reasons) == {"unsafe_path"}
+
+
+def test_ac1_absolute_or_escaping_paths_fail_closed_as_unsafe_path() -> None:
+    decision = evaluate_risk(
+        gate_input(
+            diff_of(
+                DiffFile(path="/etc/passwd", op=DiffOperation.ADD, new_content=""),
+                DiffFile(path="a/../../etc/hosts", op=DiffOperation.ADD, new_content=""),
+            )
+        )
+    )
+
+    assert decision.risk_tier is RiskTier.BLOCKED
+    assert rule_codes(decision.reasons) == {"unsafe_path"}
+
+
+def test_ac2_dot_prefixed_safe_path_is_normal() -> None:
+    decision = evaluate_risk(
+        gate_input(
+            diff_of(
+                DiffFile(
+                    path="./src/pay.py",
+                    op=DiffOperation.MODIFY,
+                    new_content="def pay():\n    return 2\n",
+                )
+            ),
+            prior={"src/pay.py": "def pay():\n    return 1\n"},
+        )
+    )
+
+    assert decision.risk_tier is RiskTier.NORMAL
+    assert decision.reasons == ()
+
+
+# --- AC1 (F6): more skip spellings are caught too
+
+
+@pytest.mark.parametrize(
+    "line",
+    [
+        "self.skipTest('not today')",
+        "raise unittest.SkipTest('not today')",
+        "raise pytest.skip.Exception('not today')",
+        "mark.skip(reason='not today')",
+        "mark.xfail(reason='not today')",
+    ],
+)
+def test_ac1_more_skip_spellings_are_blocked(line: str) -> None:
+    decision = evaluate_risk(
+        gate_input(
+            diff_of(
+                DiffFile(
+                    path="tests/test_pay.py",
+                    op=DiffOperation.ADD,
+                    new_content=f"def test_pay():\n    {line}\n",
+                )
+            )
+        )
+    )
+
+    assert decision.risk_tier is RiskTier.BLOCKED, f"{line} must block"
+    assert rule_codes(decision.reasons) == {"test_disabled"}
+
+
+def test_ac1_skip_in_an_unrelated_identifier_is_not_a_hit() -> None:
+    decision = evaluate_risk(
+        gate_input(
+            diff_of(
+                DiffFile(
+                    path="src/pay.py",
+                    op=DiffOperation.MODIFY,
+                    new_content="def pay(skip_header_rows=False):\n    return 2\n",
+                )
+            ),
+            prior={"src/pay.py": "def pay():\n    return 1\n"},
+        )
+    )
+
+    assert decision.risk_tier is RiskTier.NORMAL
+    assert decision.reasons == ()
 
 
 # --- AC1: the S5 timeout-bump fixture (the only-obvious-fix case)
