@@ -15,6 +15,7 @@ PY_PINS=(
   "anthropic 1.8.0"
   "pydantic 2.13.5"
   "psycopg 3.3.6"
+  "jsonschema 4.25.1"
   "uvicorn 0.54.0"
 )
 NPM_PINS=(

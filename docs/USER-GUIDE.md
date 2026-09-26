@@ -127,6 +127,18 @@ code change or downtime — only a config edit and a restart, in three steps:
 No admin endpoint exists for this and none is planned — rotation is always
 a `.env` edit plus a restart (AD-25).
 
+## When a run is shown without names (story 4.1)
+
+The read-only task view (the A2A endpoint that shows a run's saved artifacts)
+never shows who wrote a suspect commit while the tool is not sure enough:
+everything it serves is **blame-free** — no `author_login` anywhere — when the
+run is waiting for a human, when it is writing its report, when its confidence
+sits below the tool's own "how sure is sure enough" line, or when that
+confidence cannot be read at all. The evidence itself (commit ids, messages,
+log lines) is untouched; only the person's name is held back. Once a run is
+sure enough and not in a human-facing state, the author names on the served
+commits are shown again, because blame then has cited evidence behind it.
+
 ## Sections
 
 | Section | Available after |
@@ -134,6 +146,7 @@ a `.env` edit plus a restart (AD-25).
 | Run it locally (Compose) | done (story 0.3) |
 | Install the GitHub App on a repository | done (story 0.4); intake around it lands with story 1.1 |
 | Rotating the webhook secret | done (story 1.3) |
+| When a run is shown without names | done (story 4.1) |
 | Reading a draft PR or infra report | story 2.11 |
 | Approving or rejecting a paused triage | Epic 5 |
 | Configuration | to be decided by the stories that add settings |

@@ -7,6 +7,7 @@ from typing import Protocol
 
 from contracts.evidence import EvidencePack, HistoryRow
 from gateway.events import RunIdentity
+from guardrails.attribution import strip_author_attribution
 from workflow.distiller import distill
 from workflow.evidence import assemble_pack
 from workflow.github_evidence import CollectedEvidence, EvidenceReadError
@@ -14,7 +15,6 @@ from workflow.history import HistoryEntry, normalize_fingerprint
 from workflow.leases import Claim
 from workflow.run_states import RunState
 from workflow.steps import StepCommit, StepRecord, TaskRunIdentity
-from workflow.task_store import without_author_attribution
 from workflow.thresholds import DistillerLimits
 
 _LOG = logging.getLogger(__name__)
@@ -52,7 +52,7 @@ def agent_context(pack: EvidencePack) -> str:
     Caller instructions must live outside this data block.
     """
     content = json.dumps(
-        without_author_attribution(pack.model_dump(mode="json")), sort_keys=True
+        strip_author_attribution(pack.model_dump(mode="json")), sort_keys=True
     )
     for character, escaped in (("<", "\\u003c"), (">", "\\u003e"), ("&", "\\u0026")):
         content = content.replace(character, escaped)

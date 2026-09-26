@@ -33,6 +33,7 @@ Every message between orchestrator and agent is an A2A message whose data part i
 | 2.4 | Read-only A2A task view: `get_task`/`list_tasks` project a stored run and its steps onto an A2A `Task` (task id = run id), a paused run is `INPUT_REQUIRED` with a blame-free evidence pack and no worker is started, and every write to the view is refused — so no second task-state writer exists | `workflow/task_store.py`, `workflow/a2a_server.py`, `tests/workflow/test_task_store.py`, `tests/workflow/test_task_server.py` |
 | 2.5 | Deterministic CI-log distiller (AD-20): strips ANSI/control characters, keeps only error blocks, stack traces and JUnit failures, numbers the survivors, and clips them to the `distiller.max_bytes` bound — with no model, network or clock, so the same input always gives the same output | `workflow/distiller.py`, `workflow/thresholds.py`, `guardrails/thresholds.yaml`, `tests/security/test_distiller.py`, `tests/workflow/test_thresholds.py`, `tests/fixtures/thresholds.py` |
 | 2.6 | Structured tenant-scoped `history` (AD-15): sha256 fingerprint of normalized test_id + error_type + top stack frames, `write_terminal` accepts only terminal `RunState`s and is idempotent per `run_id`, every read/write binds `repo_id`, seed rows enter only via `history_import`, a separate `pr_feedback` table keeps human PR text out of `history` forever | `workflow/history.py`, `workflow/history_store.py`, `workflow/pr_feedback.py`, `workflow/pr_feedback_store.py`, `deploy/migrations/0005_history.sql`, `deploy/migrations/0006_pr_feedback.sql`, `scripts/history_import.py`, `tests/workflow/test_history.py`, `tests/workflow/test_history_integration.py`, `tests/scripts/test_history_import.py` |
+| 4.1 | The pure guardrails validator (AD-6/7/8/9/24/27): agent payloads are checked against the committed generated `TriageVerdict` schema, every citation resolves against the evidence served this run, suspects come only from the served candidates, `confidence_jev` must be this run's Jev number, and blame-free output carries no author key — all as collected structured issues, never raised; the A2A task view now serves each run's real confidence (unknown → blame-free) | `guardrails/validator.py`, `guardrails/citation_check.py`, `guardrails/attribution.py`, `workflow/task_store.py`, `workflow/a2a_server.py`, `workflow/evidence_collection.py`, `pyproject.toml` (pinned `jsonschema`), `tests/guardrails/`, `tests/workflow/test_task_store.py`, `tests/workflow/test_task_server.py` |
 
 ## Where things live
 
@@ -42,6 +43,9 @@ Every message between orchestrator and agent is an A2A message whose data part i
 | `guardrails/schemas/` | built (0.2) | JSON Schemas generated from `contracts/`; never edit by hand |
 | `guardrails/thresholds.yaml` | built (2.1, 2.2, 2.5) | the one thresholds file (AD-19): `review.max_rounds`, `workflow_path_glob`, the `confidence` cut-offs (`class_cutoff`, `no_route_cutoff`, `injection_screen_cutoff`, `injection_screen_cap`) and `distiller.max_bytes`; consumed via `workflow.thresholds.load_thresholds` |
 | `guardrails/confidence.py` | built (2.2) | the AD-9 min rule as code: `ClassConfidence`, `RouteConfidence`, `apply_injection_screen`, `below_class_cutoff`, `class_escalation` |
+| `guardrails/citation_check.py` | built (4.1) | citation resolution against the evidence served this run (AD-7): `ServedEvidence` (pack + the run's Jev call), the closed per-kind resolution table, `ValidationIssue` (the one issue shape) |
+| `guardrails/validator.py` | built (4.1) | the pure verdict validator (AD-6/7/8/9/27): `validate_verdict(payload, served, blame_free=…)` → `ValidationResult{verdict, issues}`; two layers (committed JSON schema + pydantic parse) plus the suspect/confidence/attribution checks; see [The guardrails validator](#the-guardrails-validator-story-41) |
+| `guardrails/attribution.py` | built (4.1) | the deep `author_login` walk (AD-27), moved from `workflow/task_store.py` (DRY): `strip_author_attribution`, `contains_author_attribution`, `attribution_location` |
 | `deploy/compose.yaml` | built (0.3, 1.1) | postgres:18 + one-shot `migrate` job + the real gateway (story 1.1) + orchestrator/agent placeholders, with AD-16 secret placement; see [deploy/README.md](../deploy/README.md) and [Compose and migrations](#compose-and-migrations-story-03) |
 | `deploy/migrations/` | built (0.3, 2.1, 1.1, 1.2, 2.3, 2.6) | forward-only `.sql` files + naming rules; runner is `workflow/migrate.py`; `0001_triage_run.sql` owns run state, `0002_webhook_delivery.sql` records seen delivery ids for replay dedupe, `0003_triage_run_lease.sql` adds the AD-23 lease columns + claim index, `0004_run_step.sql` adds the AD-2 step record, `0005_history.sql` adds the AD-15 structured-only history table, `0006_pr_feedback.sql` adds the separate post-terminal PR feedback table |
 | `scripts/` | built (0.1, 0.2, 0.4, 1.1, 2.1, 2.6) | `bootstrap.sh`, `check_layer_contract.py`, `generate_schemas.py`, `verify_demo_repo.py`, `generate_state_diagram.py`, `history_import.py`; `ruleset-seed.json` payload for the demo-repo ruleset |
@@ -56,17 +60,17 @@ Every message between orchestrator and agent is an A2A message whose data part i
 | `workflow/orchestrator_config.py` | built (1.2) | loader plus sanity checks for the one orchestrator settings file (AD-19); the worker loop that will read it arrives with stories 2.3/2.8 |
 | `workflow/steps.py` | built (2.3) | the pure step domain (AD-2, no SQL): `StepStatus`, `StepRecord`, `StepCommit`, `ResumeView` and the small `StepRecorder` protocol |
 | `workflow/step_store.py` | built (2.3) | the one Postgres adapter for steps: `PostgresStepRecorder` composes 1.2's lease guard, inserts the step and moves the state in that one transaction (SOLID-S) |
-| `workflow/task_store.py` | built (2.4) | the read-only A2A task view: `RunRecord`, the small `TaskReader` protocol, `build_task` (2.1's `project` + 2.2's `attribution_allowed`) and `ReadOnlyTaskStore`, whose `save`/`delete` refuse (AD-4, SOLID-S/I) |
-| `workflow/a2a_server.py` | built (2.4) | the A2A transport wiring: `RefusingExecutor` plus `create_app`, which serves `get_task`/`list_tasks` through a2a-sdk 1.1.5's JSON-RPC routes (AD-4, AD-5) |
+| `workflow/task_store.py` | built (2.4, 4.1) | the read-only A2A task view: `RunRecord`, the small `TaskReader` protocol (now including `get_confidence`), `build_task` (2.1's `project` + 2.2's `attribution_allowed`; an unknown confidence is served blame-free) and `ReadOnlyTaskStore`, whose `save`/`delete` refuse (AD-4, SOLID-S/I) |
+| `workflow/a2a_server.py` | built (2.4, 4.1) | the A2A transport wiring: `RefusingExecutor` plus `create_app`, which serves `get_task`/`list_tasks` through a2a-sdk 1.1.5's JSON-RPC routes (AD-4, AD-5); each run's serving confidence comes from the reader |
 | `workflow/distiller.py` | built (2.5) | the pure AD-20 log distiller: `distill(ci_log, junit_xml, limits) -> list[DistilledLogLine]`, the ordered `ERROR_MARKERS` registry, ANSI/control stripping, JUnit evidence and the UTF-8-safe byte clip; no I/O, model, network or clock (SOLID-S) |
 | `config/gateway.yaml` | built (1.1) | per-installation rate limit and per-repo queue-depth cap (AD-19); consumed via `gateway.settings.load_gateway_limits` |
 | `config/orchestrator.yaml` | built (1.2) | `lease_seconds` / `renew_after_seconds` (AD-19); `workflow.orchestrator_config.load_orchestrator_config` reads it for the worker loop that will consume it |
 | `config/runtime.yaml` | placeholder | model IDs and per-skill `step_timeout` (AD-19) |
 | `deploy/` | partially built (0.3, 1.1) | Compose, gateway image, k8s manifests, migrations (0.3+); k8s manifests + `registry.<env>.yaml` still placeholders |
-| `workflow/` (rest), `agents/`, `guardrails/` (validator, citation_check, risk_gate), `punch-out/`, `monitoring/` | placeholder | filled by Epics 2–6; each folder's README says what belongs there |
+| `workflow/` (rest), `agents/`, `guardrails/` (risk_gate), `punch-out/`, `monitoring/` | placeholder | filled by Epics 2–6; each folder's README says what belongs there |
 | `prompts/`, `*.test.yaml` | placeholder | agent prompts and their promptfoo evals (Epic 3) |
 
-Layer rules (enforced by `scripts/check_layer_contract.py`): `contracts/` imports only stdlib and pydantic; `guardrails/` imports only `contracts/`; agents hold no GitHub or Postgres clients; model IDs and timeouts live in YAML; secrets come from environment variables.
+Layer rules (enforced by `scripts/check_layer_contract.py`): `contracts/` imports only stdlib and pydantic; `guardrails/` imports only `contracts/` (+ pydantic and the pinned `jsonschema` that checks payloads against the committed schemas — still no I/O, no GitHub, no Postgres); agents hold no GitHub or Postgres clients; model IDs and timeouts live in YAML; secrets come from environment variables.
 
 ## Running things
 
@@ -570,6 +574,73 @@ The orchestrator runs every triage as a life of exactly one record, `triage_run`
 
 **To add a new reason to trust Jev less:** build a `Cap` with its evidence and add it with `ClassConfidence.with_cap(...)`. Never add a new score field, and never write your own "smallest of" code. **To add a new line:** add it to `guardrails/thresholds.yaml` and to `ConfidenceCutoffs`, never as a number in code.
 
+## The guardrails validator (story 4.1)
+
+Before anything an agent says is believed, it is checked against the facts
+this run actually served. The checker is pure code — no database, no network,
+no model — in three small modules under `guardrails/` (rules: AD-6, AD-7,
+AD-8, AD-9, AD-24, AD-27 of the [architecture spine](../_bmad-output/planning-artifacts/architecture/architecture-stage4-2026-09-25/ARCHITECTURE-SPINE.md)).
+
+**What is checked, in plain words:**
+
+- **The shape is right.** The raw payload must match the committed, generated
+  JSON schema for a verdict (`guardrails/schemas/TriageVerdict.json` — never
+  hand-edited; regenerate it from the contract). A verdict claiming a suspect
+  with a shortened commit id, an unknown field, or a made-up failure class
+  fails here.
+- **Every proof points at evidence this run was shown.** A citation may point
+  at a line of the numbered distilled log, a commit between the baseline and
+  the failed head, a collected timing metric, a served history row, or one of
+  the two answers of this run's Jev call. Anything else — evidence from
+  another run or repository — is refused. The facts live in one bag,
+  `ServedEvidence` (`guardrails/citation_check.py`): the evidence pack plus
+  that run's Jev answer.
+- **Blame is only allowed for served suspects.** A named suspect must be one
+  of the candidate commits the pack ranked, and must carry both a commit
+  citation and a log-line citation.
+- **The confidence number is honest.** `confidence_jev` must be exactly this
+  run's Jev score — Jev's per-class probabilities are kept for the record
+  only and can never be smuggled in as the score. Caps can only pull the
+  number down; a verdict whose number doesn't match the smallest-of rule is
+  refused (that rule lives in the contract itself, `contracts/verdict.py`).
+- **Blame-free output stays name-free.** When the caller says this output is
+  blame-free (waiting for a human, writing a report, or the confidence is
+  below the line), any `author_login` key anywhere inside the payload is an
+  error. The deep scan/strip walk lives once in `guardrails/attribution.py`
+  and is shared with the task view.
+
+**What comes back.** `validate_verdict(payload, served, blame_free=…)` never
+raises and never stops at the first problem: it returns a `ValidationResult`
+with the parsed verdict (or `None`) and **every** issue found, each one a
+small structured record — a short `code` (`schema`, `citation_unresolvable`,
+`suspect_not_candidate`, `confidence_mismatch`, `attribution_present`), a
+human-readable `message`, and a `location` saying exactly where in the
+payload the problem is (e.g. `suspects[0].citations[0]`). Two checking layers
+feed the same issue shape: the JSON schema layer (shape, enums, patterns) and
+the contract parse layer (the rules JSON Schema cannot express, like the
+smallest-of rule and the blame-citation rule).
+
+**Who uses it.** The validator only answers questions; it runs no workflow.
+Story 2.8's shared step runner will call it after each agent step and decide
+what happens next (one retry with the issues fed back, then a pause) — that
+policy is deliberately not here (AD-8). The read-only A2A task view now also
+serves each run's real confidence, read per run through the small
+`TaskReader.get_confidence` protocol method; a run whose confidence cannot be
+read is served blame-free, never with names.
+
+**To extend it:** a new citation kind is a new case in the closed resolution
+table in `guardrails/citation_check.py` plus its contract model — never a new
+`if` scattered elsewhere. A new check is a new pure function in
+`guardrails/validator.py` returning the same issue shape. Tests live in
+`tests/guardrails/` and name the AC they prove.
+
+Run the focused checks:
+
+```bash
+.venv/bin/pytest tests/guardrails tests/workflow/test_task_store.py tests/workflow/test_task_server.py -q
+.venv/bin/python scripts/check_layer_contract.py
+```
+
 ## Deterministic evidence collection (story 2.7)
 
 The worker can now build and save one pack of facts for a failed run. The
@@ -607,8 +678,9 @@ rules are linked in the [architecture spine](../_bmad-output/planning-artifacts/
   failed write returns no pack.
 - `agent_context(pack)` puts the saved facts inside an escaped
   `<untrusted_evidence>` block. Instructions belong outside it. It reuses
-  `workflow/task_store.py::without_author_attribution`; the task view continues
-  to apply the existing rule about when authors may be shown.
+  `guardrails/attribution.py::strip_author_attribution` (the one deep
+  author-key walk, shared with the task view and the validator); the task view
+  continues to apply the existing rule about when authors may be shown.
 
 The callable collection entrypoint is available for worker wiring. There is
 no new command, background worker, live token issuer or specialist-agent
