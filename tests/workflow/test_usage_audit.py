@@ -250,6 +250,19 @@ def test_ac2_wrapper_refuses_non_positive_attempt() -> None:
     assert store.attempts == []
 
 
+def test_ac2_wrapper_refuses_an_empty_model() -> None:
+    # An empty model id would crash the cost reader's ModelUsage validation
+    # later (story 6.2): refused at the wrapper, same style as the step name.
+    store = FakeUsageAuditStore()
+
+    with pytest.raises(ValueError):
+        audit_model_call(
+            store, IDENTITY, step_name="call:system_one", attempt=1, model="   "
+        )
+
+    assert store.attempts == []
+
+
 def test_ac3_every_log_line_carries_run_id_task_id_step(
     caplog: pytest.LogCaptureFixture,
 ) -> None:

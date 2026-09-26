@@ -35,6 +35,7 @@ Every message between orchestrator and agent is an A2A message whose data part i
 | 2.6 | Structured tenant-scoped `history` (AD-15): sha256 fingerprint of normalized test_id + error_type + top stack frames, `write_terminal` accepts only terminal `RunState`s and is idempotent per `run_id`, every read/write binds `repo_id`, seed rows enter only via `history_import`, a separate `pr_feedback` table keeps human PR text out of `history` forever | `workflow/history.py`, `workflow/history_store.py`, `workflow/pr_feedback.py`, `workflow/pr_feedback_store.py`, `deploy/migrations/0005_history.sql`, `deploy/migrations/0006_pr_feedback.sql`, `scripts/history_import.py`, `tests/workflow/test_history.py`, `tests/workflow/test_history_integration.py`, `tests/scripts/test_history_import.py` |
 | 4.1 | The pure guardrails validator (AD-6/7/8/9/24/27): agent payloads are checked against the committed generated `TriageVerdict` schema, every citation resolves against the evidence served this run, suspects come only from the served candidates, `confidence_jev` must be this run's Jev number, and blame-free output carries no author key — all as collected structured issues, never raised; the A2A task view now serves each run's real confidence (unknown → blame-free) | `guardrails/validator.py`, `guardrails/citation_check.py`, `guardrails/attribution.py`, `workflow/task_store.py`, `workflow/a2a_server.py`, `workflow/evidence_collection.py`, `pyproject.toml` (pinned `jsonschema`), `tests/guardrails/`, `tests/workflow/test_task_store.py`, `tests/workflow/test_task_server.py` |
 | 6.1 | Central model-call audit (AD-18): every model/Jev invocation becomes its own attempt-level `run_step` row with the model, its token counters (NULL when the provider did not report them, never 0), status and a closed outcome; usage returned by a failed call is still saved, a crash saves nothing (nothing is invented), attempt rows never move run state, and every invocation logs one structured, secret-free JSON line | `contracts/usage.py`, `workflow/usage_audit.py`, `workflow/service_log.py`, `deploy/migrations/0007_run_step_audit.sql`, `tests/contracts/test_usage.py`, `tests/workflow/test_usage_audit.py`, `tests/workflow/test_service_log.py`, `tests/workflow/test_usage_audit_integration.py`; see [Model-call audit](#model-call-audit-story-61) |
+| 6.2 | Versioned NULL-aware model costs (AD-18): one provenance-carrying price table (`table_version`, per-model five-type rates each with source URL + retrieved date, the Jev rate NULL + flagged per OQ-3), a pure NULL-aware calculator (an unreported counter, an unpriced model or a Jev-billed call yields a NULL cost plus a flag, never 0; a run total with any incomplete part is NULL with the reasons listed), and the orchestrator-side reader that rolls 6.1's audit rows into per-run costs — computed, never stored | `monitoring/prices.yaml`, `monitoring/pricing.py`, `monitoring/costs.py`, `workflow/usage_costs.py`, `tests/monitoring/`, `tests/workflow/test_usage_costs.py`, `tests/workflow/test_usage_costs_integration.py`; see [Model costs](#model-costs-story-62) |
 
 ## Where things live
 
@@ -64,6 +65,10 @@ Every message between orchestrator and agent is an A2A message whose data part i
 | `contracts/usage.py` | built (6.1) | the pure usage contract (AD-18): `ModelUsage` (model + token counters, NULL = "provider did not report", never 0) and the closed `CallOutcome` set |
 | `workflow/usage_audit.py` | built (6.1) | the central model-call audit recorder: `audit_model_call` (the one wrapper around every model call), `ModelCallAttempt`/`ModelCallError`/`ModelCallResult`, the `UsageAuditStore` protocol and `PostgresUsageAuditStore` (insert-only, repo-bound, `call:` step namespace); see [Model-call audit](#model-call-audit-story-61) |
 | `workflow/service_log.py` | built (6.1) | the structured invocation-log helper (AD-25): one allowlisted JSON line per invocation, run_id/task_id/step on every line, no channel for tokens, secrets or raw logs |
+| `monitoring/prices.yaml` | built (6.2) | the one versioned price table (AD-18, AD-19): `table_version`, per-model five-type `usd_per_mtok` + `source_url` + `retrieved` for both allowed Claude models, and the Jev (`system_one`) rate NULL + flagged (OQ-3) |
+| `monitoring/pricing.py` | built (6.2) | the table's one loader: frozen `PriceTable`/`ModelRates`/`JevRate` + `TokenType`, `load_prices()` with sanity checks (version present, all five rates + provenance per model, an unpriced Jev entry stays flagged) |
+| `monitoring/costs.py` | built (6.2) | the pure NULL-aware calculator (AD-18, no I/O): `TokenCosts`, `RunCostSummary`, `cost_of_usage(usage, table, *, jev)` and `summarize_costs(...)` — a missing fact is NULL + flag, never 0 |
+| `workflow/usage_costs.py` | built (6.2) | the orchestrator-side rollup: the `UsageAuditReader` protocol + `PostgresUsageAuditReader` (repo-bound read of 6.1's `call:` rows) and `run_cost_summary(...)`, which marks `call:system_one` rows Jev-billed and computes via the pure calculator |
 | `workflow/task_store.py` | built (2.4, 4.1) | the read-only A2A task view: `RunRecord`, the small `TaskReader` protocol (now including `get_confidence`), `build_task` (2.1's `project` + 2.2's `attribution_allowed`; an unknown confidence is served blame-free) and `ReadOnlyTaskStore`, whose `save`/`delete` refuse (AD-4, SOLID-S/I) |
 | `workflow/a2a_server.py` | built (2.4, 4.1) | the A2A transport wiring: `RefusingExecutor` plus `create_app`, which serves `get_task`/`list_tasks` through a2a-sdk 1.1.5's JSON-RPC routes (AD-4, AD-5); each run's serving confidence comes from the reader |
 | `workflow/distiller.py` | built (2.5) | the pure AD-20 log distiller: `distill(ci_log, junit_xml, limits) -> list[DistilledLogLine]`, the ordered `ERROR_MARKERS` registry, ANSI/control stripping, JUnit evidence and the UTF-8-safe byte clip; no I/O, model, network or clock (SOLID-S) |
@@ -71,7 +76,7 @@ Every message between orchestrator and agent is an A2A message whose data part i
 | `config/orchestrator.yaml` | built (1.2) | `lease_seconds` / `renew_after_seconds` (AD-19); `workflow.orchestrator_config.load_orchestrator_config` reads it for the worker loop that will consume it |
 | `config/runtime.yaml` | placeholder | model IDs and per-skill `step_timeout` (AD-19) |
 | `deploy/` | partially built (0.3, 1.1) | Compose, gateway image, k8s manifests, migrations (0.3+); k8s manifests + `registry.<env>.yaml` still placeholders |
-| `workflow/` (rest), `agents/`, `guardrails/` (risk_gate), `punch-out/`, `monitoring/` | placeholder | filled by Epics 2–6; each folder's README says what belongs there |
+| `workflow/` (rest), `agents/`, `guardrails/` (risk_gate), `punch-out/` | placeholder | filled by Epics 2–6; each folder's README says what belongs there |
 | `prompts/`, `*.test.yaml` | placeholder | agent prompts and their promptfoo evals (Epic 3) |
 
 Layer rules (enforced by `scripts/check_layer_contract.py`): `contracts/` imports only stdlib and pydantic; `guardrails/` imports only `contracts/` (+ pydantic and the pinned `jsonschema` that checks payloads against the committed schemas — still no I/O, no GitHub, no Postgres); agents hold no GitHub or Postgres clients; model IDs and timeouts live in YAML; secrets come from environment variables.
@@ -772,3 +777,61 @@ They prove migration 0007 applies and adds only the audit columns, a full
 usage fixture lands as a row with every counter, unreported counters stay
 NULL, a failed call keeps the usage it did return, a duplicate attempt is
 refused, and an audit row never moves the run's state.
+
+## Model costs (story 6.2)
+
+Story 6.1 records what every model call consumed; this story turns those
+token counters into money amounts — and it does so honestly: anything
+unknown stays visibly unknown instead of quietly becoming a zero. The
+rules are linked in the
+[architecture spine](../_bmad-output/planning-artifacts/architecture/architecture-stage4-2026-09-25/ARCHITECTURE-SPINE.md)
+(AD-9, AD-18, AD-19).
+
+- `monitoring/prices.yaml` is the one price table. It carries a version
+  number, and every priced model lists five separate rates — regular
+  input, output, cache reads, 5-minute cache writes and 1-hour cache
+  writes (USD per million tokens) — plus where the rate came from
+  (`source_url`) and when it was looked up (`retrieved`). The Jev
+  (`system_one`) entry has no rate yet: it is explicitly empty and flagged
+  (OQ-3), and nothing may stand in for it.
+- `monitoring/pricing.py::load_prices` is the only code that reads the
+  table. It refuses a table that is unversioned, missing a rate type, or
+  missing provenance — a bad price file is a startup error, never a
+  silent zero.
+- `monitoring/costs.py` is the pure calculator (no I/O). `cost_of_usage`
+  prices one call, each token type at its own rate; a counter the
+  provider did not report, an unpriced model, or a Jev-billed call yields
+  an empty cost plus a flag — never 0. `summarize_costs` rolls a run's
+  calls up: the run total is the sum of its parts only when every part is
+  known; otherwise every total is empty and the reasons are listed.
+- `workflow/usage_costs.py` is the orchestrator-side reader: it reads
+  story 6.1's attempt rows through a small protocol (`UsageAuditReader`,
+  Postgres adapter included), treats `call:system_one` rows as
+  Jev-billed, and produces the per-run summary. Costs are computed, never
+  stored — there are no cost columns and no migration.
+
+To add or reprice a model: edit `monitoring/prices.yaml` (bump
+`table_version`, add the five rates and fresh provenance) — no code
+change. To replace the Jev rate once a real price exists (OQ-3): a YAML
+edit plus a small wiring change in `monitoring/costs.py`, once the
+billing units are known — the calculator does not read the Jev entry yet.
+
+Two different guards, by design: the loader refuses a model that is in
+the table but unsourced at load time; a model missing from the table is
+flagged `model_unpriced` when its usage is costed. Nothing in production
+consumes this yet — no startup wiring calls `load_prices()`, and nothing
+calls `run_cost_summary`; the dashboards and exports of later epic
+stories will.
+
+Run the focused checks:
+
+```bash
+.venv/bin/pytest tests/monitoring tests/workflow/test_usage_costs.py -q
+.venv/bin/pytest -m integration tests/workflow/test_usage_costs_integration.py -q
+make check
+```
+
+The marked checks use real Postgres 18 through disposable Docker
+containers. They prove the reader reads 6.1's real audit rows with NULL
+counters preserved, a Jev-billed or incomplete run carries a NULL, flagged
+total, a complete run sums cleanly, and the read is repo-bound.

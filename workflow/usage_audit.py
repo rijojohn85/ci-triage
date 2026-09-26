@@ -163,6 +163,12 @@ def _validate_step_name(step: str) -> None:
         )
 
 
+def _validate_model(model: str) -> None:
+    """A non-empty model id: the cost reader's `ModelUsage` requires one."""
+    if not model.strip():
+        raise ValueError("audit model must be a non-empty model id (AD-18)")
+
+
 def audit_model_call(
     store: UsageAuditStore,
     identity: AuditIdentity,
@@ -180,6 +186,7 @@ def audit_model_call(
     usage stays explicitly incomplete (AD-18).
     """
     _validate_step_name(step_name)
+    _validate_model(model)
     if attempt < 1:
         raise ValueError(f"attempt must be >= 1, got {attempt}")
     context = _CallContext(
@@ -279,6 +286,7 @@ class PostgresUsageAuditStore:
 
     def record_attempt(self, attempt: ModelCallAttempt) -> None:
         _validate_step_name(attempt.step)
+        _validate_model(attempt.model)
         counters = _counter_columns(attempt.usage)
         with self._connect(self._dsn) as conn:
             try:
