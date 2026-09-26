@@ -89,6 +89,36 @@ def test_ac1_missing_success_uses_default_branch_head_empty_comparison() -> None
     assert not any("/compare/" in path for path in requests.calls)
 
 
+def test_ac1_default_head_ahead_of_failed_head_yields_empty_comparison() -> None:
+    # A failure on the default branch with no prior success: the branch head
+    # has since moved past the failed HEAD, so GitHub reports the failed HEAD
+    # as "behind" with no commits. Same outcome as an identical head — no
+    # known-good point means no range to blame (spec 2.7 baseline rule).
+    newer = "c" * 40
+
+    class DefaultHeadAhead(Requests):
+        def get(self, path: str, token: str) -> GitHubResponse:
+            if "/actions/runs?" in path:
+                self.calls.append(path)
+                return GitHubResponse({"workflow_runs": []})
+            if path.endswith("/commits/main"):
+                self.calls.append(path)
+                return GitHubResponse({"sha": newer})
+            if "/compare/" in path:
+                self.calls.append(path)
+                assert f"{newer}...{HEAD}" in path
+                return GitHubResponse({"status": "behind", "commits": [], "total_commits": 0,
+                    "url": f"https://api.github.com/repos/org/repo/compare/{newer}...{HEAD}",
+                    "base_commit": {"sha": newer, "url": f"https://api.github.com/repos/org/repo/commits/{newer}"}})
+            return super().get(path, token)
+
+    requests = DefaultHeadAhead()
+    evidence = GitHubEvidenceReader(requests).collect(IDENTITY, "private-token")
+    assert evidence.last_green == newer
+    assert evidence.commits == ()
+    assert any("/compare/" in path for path in requests.calls)
+
+
 def test_ac1_commit_file_pagination_refuses_foreign_second_page() -> None:
     class ForeignPage(Requests):
         def get(self, path: str, token: str) -> GitHubResponse:
