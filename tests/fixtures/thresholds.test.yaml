@@ -8,14 +8,30 @@ review:
 workflow_path_glob: ".github/workflows/**"
 
 risk_gate:
-  secret_path_globs: [".env", ".env.*", "*/.env", "*/.env.*", "*.pem", "*.key", "*secrets/*"]
+  secret_path_globs:
+    - ".env"
+    - ".env.*"
+    - "*/.env"
+    - "*/.env.*"
+    - "*.pem"
+    - "*.key"
+    - "*secrets/*"
+    - "*secret*"
+    - "*credentials*"
+    - "*id_rsa*"
+    - "*id_ed25519*"
+    - "*.npmrc"
   infra_path_globs:
     - "*Dockerfile*"
     - "*docker-compose*.y*ml"
+    - "*compose*.y*ml"
     - "*.tf"
     - "*.tfvars"
     - "*k8s/*"
     - "*kubernetes/*"
+    - "*charts/*"
+    - "*helm/*"
+    - "*deploy/*"
 
 confidence:
   class_cutoff: 0.75
