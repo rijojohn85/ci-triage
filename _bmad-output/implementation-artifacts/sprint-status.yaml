@@ -63,7 +63,7 @@ development_status:
   2-5-distill-ci-logs-deterministically: done
   2-6-maintain-structured-tenant-scoped-history: review
   2-7-build-and-persist-the-deterministic-evidence-pack: review
-  2-8-shared-step-runner-ad-8-validation-retry-ad-22-transient-ret: backlog
+  2-8-shared-step-runner-ad-8-validation-retry-ad-22-transient-ret: review
   2-9-integrate-evaluated-classification-and-analysis-with-pauses: backlog
   2-10-integrate-proposal-review-revisions-and-risk-gating: backlog
   2-11-deliver-idempotent-drafts-quarantine-metadata-and-reports: backlog
