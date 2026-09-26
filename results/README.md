@@ -16,5 +16,11 @@ results/ — final verdicts/artifacts per run.
   Produced by `make eval-jev` (`scripts/run_jev_eval.py`); see
   [docs/DEVELOPER.md](../docs/DEVELOPER.md) "The Jev eval (story 3.2)".
 
+  **Superseded.** `jev-eval/2026-09-27-typesafe-jev-1.13/` is the story 3.2
+  baseline. It is kept unchanged as historical evidence, but it was produced
+  before story 3.11 guarded the case generator — it carries no
+  evidence-retention count and its `unknown` cases shared a runner-provisioner
+  block — so the next run supersedes it.
+
 Other run artifacts are written at runtime by later stories and stay ignored
 (only READMEs and the Jev eval receipts are committed).

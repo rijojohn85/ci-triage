@@ -2,10 +2,13 @@
 # scripts/build_jev_eval_cases.py; do not edit by hand.
 #
 # Labelled cases: the manifest logs through the real distiller
-# (workflow.distiller.distill, the real distiller.max_bytes).
-# Unknown cases: a real log's first cause-free setup/checkout lines plus the
-# bare `##[error]Process completed with exit code 1.` — no cause by the
-# distiller's own definition.
+# (workflow.distiller.distill, the real distiller.max_bytes). A labelled case
+# whose proof did not survive, or that shares distilled input with a
+# differently-labelled case, fails the generator (story 3.11).
+# Unknown cases: a window of a real log's cause-free setup/checkout lines plus
+# the bare `##[error]Process completed with exit code 1.` — no cause by the
+# distiller's own definition. No two share the same non-final content after
+# normalising timestamps, run/worker ids, GUIDs, hex hashes and versions.
 # Trick cases: a labelled case with one injected verdict-flip line; the
 # expected label stays the true label.
 #
@@ -18,6 +21,7 @@
     expected_label: infra
     repo: curl/curl
     stack: C
+    key_line: '##[error]fatal: unable to access ''https://github.com/curl/curl/'': server certificate verification failed. CAfile: none CRLfile: none'
     lines:
     - line_number: 1
       text: '##[error]fatal: unable to access ''https://github.com/curl/curl/'': server certificate verification failed. CAfile: none CRLfile: none'
@@ -34,6 +38,7 @@
     expected_label: infra
     repo: curl/curl
     stack: C
+    key_line: 'Cache error: Cache error: error sending request for url (https://api.github.com/advisories?ecosystem=actions&affects=cygwin%2Fcygwin-install-action%40v6.0.2)'
     lines:
     - line_number: 1
       text: '    2: Cache error: Cache error: error sending request for url (https://api.github.com/advisories?ecosystem=actions&affects=cygwin%2Fcygwin-install-action%40v6.0.2)'
@@ -46,6 +51,7 @@
     expected_label: code
     repo: elixir-lang/elixir
     stack: Elixir
+    key_line: '** (Mix) mix format failed due to --check-formatted.'
     lines:
     - line_number: 1
       text: '** (Mix) mix format failed due to --check-formatted.'
@@ -58,6 +64,7 @@
     expected_label: external
     repo: elixir-lang/elixir
     stack: Elixir
+    key_line: '##[error]Could not fetch /builds/otp/amd64/ubuntu-24.04/builds.txt from any hex.pm mirror'
     lines:
     - line_number: 1
       text: '##[error]Could not fetch /builds/otp/amd64/ubuntu-24.04/builds.txt from any hex.pm mirror'
@@ -68,6 +75,7 @@
     expected_label: external
     repo: elixir-lang/elixir
     stack: Elixir
+    key_line: Could not install Rebar because Mix could not download metadata at https://builds.hex.pm/installs/rebar.csv.
     lines:
     - line_number: 1
       text: '** (Mix) httpc request failed with: {:failed_connect, [{:to_address, {~c"builds.hex.pm", 443}}, {:inet, [:inet], {:tls_alert, {:unsupported_certificate, ~c"TLS client: In state wait_cert_cr at ssl_handshake.erl:2199 generated CLIENT ALERT: Fatal - Unsupported Certificate\n {key_usage_mismatch,{{''Extension'',{2,5,29,15},true,[keyCertSign,cRLSign]},\n                      {''Extension'',{2,5,29,37},false,[{1,3,6,1,5,5,7,3,1}]}}}"}}}]}'
@@ -82,6 +90,7 @@
     expected_label: infra
     repo: elixir-lang/elixir
     stack: Elixir
+    key_line: '##[error]Failed to download archive ''https://codeload.github.com/erlef/setup-beam/tar.gz/54075bcc5e249e4758d363f27d099f55d843f124'' after 3 attempts.'
     lines:
     - line_number: 1
       text: '##[error]Response status code does not indicate success: 502 (Bad Gateway).'
@@ -94,6 +103,7 @@
     expected_label: flaky
     repo: fission/fission
     stack: Go
+    key_line: '--- FAIL: TestGoEnv (229.08s)'
     lines:
     - line_number: 1
       text: 'terminationMessagePolicy: FallbackToLogsOnError'
@@ -638,6 +648,7 @@
     expected_label: flaky
     repo: fission/fission
     stack: Go
+    key_line: '--- FAIL: TestCallTool_MetaAbsent_ServerSpanChild (0.02s)'
     lines:
     - line_number: 1
       text: === RUN   TestPrintHtSummaryRunsWithoutError
@@ -846,6 +857,7 @@
     expected_label: flaky
     repo: fission/fission
     stack: Go
+    key_line: '--- FAIL: TestJVMJerseyEnv (191.12s)'
     lines:
     - line_number: 1
       text: "        \t            \tError uploading deployment package: Internal error - error renaming the archive: renameat jerseypkg-44de8c-oyh5vq-stzcmd jerseypkg-44de8c-oyh5vq-stzcmd.zip: no such file or directory"
@@ -990,6 +1002,7 @@
     expected_label: infra
     repo: fission/fission
     stack: Go
+    key_line: '##[error]Failed to resolve action download info.'
     lines:
     - line_number: 1
       text: '##[error]Service Unavailable'
@@ -1002,6 +1015,7 @@
     expected_label: infra
     repo: fission/fission
     stack: Go
+    key_line: 'kind-linux-amd64: FAILED'
     lines:
     - line_number: 1
       text: 'kind-linux-amd64: FAILED'
@@ -1018,6 +1032,7 @@
     expected_label: code
     repo: flutter/flutter
     stack: Dart
+    key_line: error • The function 'PopupWindow' isn't defined. Try importing the library that defines 'PopupWindow', correcting the name to the name of an existing function, or defining a function named 'PopupWindow' • packages/flutter/test/widgets/windowing_test.dart:2125:11 • undefined_function
     lines:
     - line_number: 1
       text: '  error • The function ''Window'' isn''t defined. Try importing the library that defines ''Window'', correcting the name to the name of an existing function, or defining a function named ''Window'' • dev/integration_tests/windowing_test/lib/main.dart:237:13 • undefined_function'
@@ -1476,6 +1491,7 @@
     expected_label: code
     repo: flutter/flutter
     stack: Dart
+    key_line: 'error • Target of URI doesn''t exist: ''package:test_reflective_loader/test_reflective_loader.dart''. Try creating the file referenced by the URI, or try using a URI for a file that does exist • dev/flutter_analyzer_plugin/test/access_debug_members_only_in_asserts_test.dart:9:8 • uri_does_not_exist'
     lines:
     - line_number: 1
       text: '  error • Target of URI doesn''t exist: ''package:test_reflective_loader/test_reflective_loader.dart''. Try creating the file referenced by the URI, or try using a URI for a file that does exist • dev/flutter_analyzer_plugin/test/access_debug_members_only_in_asserts_test.dart:9:8 • uri_does_not_exist'
@@ -1508,6 +1524,7 @@
     expected_label: code
     repo: home-assistant/core
     stack: Python
+    key_line: '##[error]homeassistant/components/zwave_js/sensor.py:1008: error: Returning Any from function declared to return "str | int | float | None"  [no-any-return]'
     lines:
     - line_number: 1
       text: '##[error]homeassistant/components/zwave_js/sensor.py:1008: error: Returning Any from function declared to return "str | int | float | None"  [no-any-return]'
@@ -1522,6 +1539,7 @@
     expected_label: code
     repo: home-assistant/core
     stack: Python
+    key_line: 'FAILED tests/components/teslemetry/test_config_flow.py::test_pair_step_timeout_retry_reopens_window_and_succeeds - AttributeError:'
     lines:
     - line_number: 1
       text: =================================== FAILURES ===================================
@@ -1578,6 +1596,7 @@
     expected_label: code
     repo: home-assistant/core
     stack: Python
+    key_line: 'ERROR tests/components/freebox/test_router.py::test_async_forget_registration - shutil.Error:'
     lines:
     - line_number: 1
       text: _______________ ERROR at setup of test_async_forget_registration _______________
@@ -2138,6 +2157,7 @@
     expected_label: external
     repo: home-assistant/core
     stack: Python
+    key_line: 'cause: HTTP status server error (503 Service Unavailable) for url (https://pypi.org/simple/rf-protocols/)'
     lines:
     - line_number: 1
       text: '  cause: Failed to fetch: `https://pypi.org/simple/rf-protocols/`'
@@ -2152,6 +2172,7 @@
     expected_label: external
     repo: home-assistant/core
     stack: Python
+    key_line: 'cause: HTTP status server error (503 Service Unavailable) for url (https://pypi.org/simple/aiorussound/)'
     lines:
     - line_number: 1
       text: '  cause: Failed to fetch: `https://pypi.org/simple/aiorussound/`'
@@ -2166,6 +2187,7 @@
     expected_label: infra
     repo: home-assistant/core
     stack: Python
+    key_line: '##[error]Failed to FinalizeArtifact: Received non-retryable error: Failed request: (403) Forbidden: Error from intermediary with HTTP status code 403 "Forbidden"'
     lines:
     - line_number: 1
       text: '_______________ coverage: platform linux, python 3.14.5-final-0 ________________'
@@ -2180,6 +2202,7 @@
     expected_label: code
     repo: apache/kafka
     stack: Java
+    key_line: '##[error]/home/runner/work/kafka/kafka/storage/src/test/java/org/apache/kafka/server/log/remote/storage/RemoteLogManagerTest.java:4401: error: incompatible types: String cannot be converted to Level'
     lines:
     - line_number: 1
       text: '> Task :test-common:processTestResources NO-SOURCE'
@@ -4422,6 +4445,7 @@
     expected_label: infra
     repo: apache/kafka
     stack: Java
+    key_line: '##[error]Unable to download artifact(s): Unable to download and extract artifact: Artifact download failed after 5 retries.'
     lines:
     - line_number: 1
       text: ./server-common/src/main/java/org/apache/kafka/server/fault/FaultHandlerException.java
@@ -4962,6 +4986,7 @@
     expected_label: external
     repo: laravel/framework
     stack: PHP
+    key_line: 'Error response from daemon: Get "https://registry-1.docker.io/v2/": net/http: request canceled while waiting for connection (Client.Timeout exceeded while awaiting headers)'
     lines:
     - line_number: 1
       text: 'Error response from daemon: Get "https://registry-1.docker.io/v2/": net/http: request canceled while waiting for connection (Client.Timeout exceeded while awaiting headers)'
@@ -4978,6 +5003,7 @@
     expected_label: external
     repo: laravel/framework
     stack: PHP
+    key_line: 'E: Failed to fetch https://dl.google.com/linux/chrome-stable/deb/dists/stable/main/binary-amd64/Packages.gz  Hash Sum mismatch'
     lines:
     - line_number: 1
       text: 'E: Failed to fetch https://dl.google.com/linux/chrome-stable/deb/dists/stable/main/binary-amd64/Packages.gz  Hash Sum mismatch'
@@ -5016,6 +5042,7 @@
     expected_label: code
     repo: nodejs/node
     stack: JavaScript/C++
+    key_line: error  Please use common.mustSucceed instead of common.mustCall with assert.ifError  node-core/prefer-common-mustsucceed
     lines:
     - line_number: 1
       text: '##[error]   31:1   error  Comments should not begin with a lowercase character                          capitalized-comments'
@@ -5054,6 +5081,7 @@
     expected_label: flaky
     repo: nodejs/node
     stack: JavaScript/C++
+    key_line: out/Release/node /Users/runner/work/node/node/node/test/parallel/test-inspector-close-terminate-connections.js
     lines:
     - line_number: 1
       text: 'Error: uncaught'
@@ -5070,6 +5098,7 @@
     expected_label: flaky
     repo: nodejs/node
     stack: JavaScript/C++
+    key_line: out/Release/node /Users/runner/work/_temp/node-v27.0.0-nightly2026-09-20bf505d14ef-slim/test/parallel/test-dgram-ipv6only.js
     lines:
     - line_number: 1
       text: 'Error: uncaught'
@@ -5094,6 +5123,7 @@
     expected_label: flaky
     repo: nodejs/node
     stack: JavaScript/C++
+    key_line: 'ReferenceError: DatabaseSync is not defined'
     lines:
     - line_number: 1
       text: 'Error: uncaught'
@@ -5132,6 +5162,7 @@
     expected_label: infra
     repo: nodejs/node
     stack: JavaScript/C++
+    key_line: '##[error]getaddrinfo EAI_AGAIN api.github.com'
     lines:
     - line_number: 1
       text: '##[error]getaddrinfo EAI_AGAIN api.github.com'
@@ -5142,6 +5173,7 @@
     expected_label: infra
     repo: nodejs/node
     stack: JavaScript/C++
+    key_line: '##[error]getaddrinfo EAI_AGAIN productionresultssa7.blob.core.windows.net'
     lines:
     - line_number: 1
       text: '##[error]getaddrinfo EAI_AGAIN productionresultssa7.blob.core.windows.net'
@@ -5152,6 +5184,7 @@
     expected_label: code
     repo: microsoft/playwright
     stack: TypeScript
+    key_line: 1) [chromium] › tests/mcp/webmcp-dynamic.spec.ts:189:5 › a tool registered in an iframe can be called after the page is reloaded
     lines:
     - line_number: 1
       text: '> playwright-internal@1.64.0-next build'
@@ -5220,6 +5253,7 @@
     expected_label: infra
     repo: microsoft/playwright
     stack: TypeScript
+    key_line: 'GitHub API error: 500 Internal Server Error for https://api.github.com/repos/microsoft/playwright/actions/artifacts?per_page=100'
     lines:
     - line_number: 1
       text: 'GitHub API error: 500 Internal Server Error for https://api.github.com/repos/microsoft/playwright/actions/artifacts?per_page=100'
@@ -5232,6 +5266,7 @@
     expected_label: code
     repo: rails/rails
     stack: Ruby
+    key_line: New Ruby files must use Markdown for their API documentation.
     lines:
     - line_number: 1
       text: New Ruby files must use Markdown for their API documentation.
@@ -5244,6 +5279,7 @@
     expected_label: external
     repo: rails/rails
     stack: Ruby
+    key_line: 'Error: creating build container: copying system image from manifest list: parsing image configuration: fetching blob: received unexpected HTTP status: 502 Bad Gateway'
     lines:
     - line_number: 1
       text: '> bundle install'
@@ -5258,6 +5294,7 @@
     expected_label: external
     repo: rails/rails
     stack: Ruby
+    key_line: 'Error: creating build container: initializing source docker://ruby:3.4.9-slim: pinging container registry registry-1.docker.io: Get "https://registry-1.docker.io/v2/": dial tcp 3.208.234.10:443: i/o timeout'
     lines:
     - line_number: 1
       text: '> bundle install'
@@ -5272,6 +5309,7 @@
     expected_label: infra
     repo: rails/rails
     stack: Ruby
+    key_line: '##[error]Failed to resolve action download info.'
     lines:
     - line_number: 1
       text: '##[error]Service Unavailable'
@@ -5284,6 +5322,7 @@
     expected_label: infra
     repo: rails/rails
     stack: Ruby
+    key_line: '##[error]Failed to download archive ''https://codeload.github.com/actions/stale/tar.gz/1e223db275d687790206a7acac4d1a11bd6fe629'' after 3 attempts.'
     lines:
     - line_number: 1
       text: '##[error]Response status code does not indicate success: 429 (Too Many Requests).'
@@ -5296,6 +5335,7 @@
     expected_label: external
     repo: tokio-rs/tokio
     stack: Rust
+    key_line: 'E: Failed to fetch https://dl.google.com/linux/chrome-stable/deb/dists/stable/main/binary-amd64/Packages.gz  Hash Sum mismatch'
     lines:
     - line_number: 1
       text: 'E: Failed to fetch https://dl.google.com/linux/chrome-stable/deb/dists/stable/main/binary-amd64/Packages.gz  Hash Sum mismatch'
@@ -5614,6 +5654,7 @@
     expected_label: flaky
     repo: tokio-rs/tokio
     stack: Rust
+    key_line: test conn::http2_connect_detect_close ... FAILED
     lines:
     - line_number: 1
       text: test conn::http2_connect_detect_close ... FAILED
@@ -5654,21 +5695,21 @@
     stack: C
     lines:
     - line_number: 1
-      text: '2026-09-23T20:24:47.9292462Z Current runner version: ''2.337.0'''
+      text: '2026-09-23T20:24:47.9316725Z ##[endgroup]'
     - line_number: 2
-      text: '2026-09-23T20:24:47.9312360Z ##[group]Runner Image Provisioner'
+      text: '2026-09-23T20:24:47.9317881Z ##[group]Operating System'
     - line_number: 3
-      text: 2026-09-23T20:24:47.9313065Z Hosted Compute Agent
+      text: 2026-09-23T20:24:47.9318778Z Ubuntu
     - line_number: 4
-      text: '2026-09-23T20:24:47.9313641Z Version: 20260828.587'
+      text: 2026-09-23T20:24:47.9319233Z 24.04.5
     - line_number: 5
-      text: '2026-09-23T20:24:47.9314207Z Commit: abac92662cab4cc7352de4f9f9d2e2419aad9c29'
+      text: 2026-09-23T20:24:47.9319695Z LTS
     - line_number: 6
-      text: '2026-09-23T20:24:47.9314872Z Build Date: 2026-08-28T16:44:25Z'
+      text: '2026-09-23T20:24:47.9320195Z ##[endgroup]'
     - line_number: 7
-      text: '2026-09-23T20:24:47.9315596Z Worker ID: {09ae8009-5b40-4017-85d7-1c7eeaf40f10}'
+      text: '2026-09-23T20:24:47.9320668Z ##[group]Runner Image'
     - line_number: 8
-      text: '2026-09-23T20:24:47.9316196Z Azure Region: westus3'
+      text: '2026-09-23T20:24:47.9321244Z Image: ubuntu-24.04'
     - line_number: 9
       text: '##[error]Process completed with exit code 1.'
 - description: 'unknown: elixir-code-01 (cause-free setup + bare error)'
@@ -5680,21 +5721,21 @@
     stack: Elixir
     lines:
     - line_number: 1
-      text: '2026-09-19T17:57:08.3036191Z Current runner version: ''2.337.0'''
+      text: '2026-09-19T17:57:08.3070468Z Version: 20260907.300.1'
     - line_number: 2
-      text: '2026-09-19T17:57:08.3059400Z ##[group]Runner Image Provisioner'
+      text: '2026-09-19T17:57:08.3071801Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260907.300/images/ubuntu/Ubuntu2404-Readme.md'
     - line_number: 3
-      text: 2026-09-19T17:57:08.3060291Z Hosted Compute Agent
+      text: '2026-09-19T17:57:08.3073668Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260907.300'
     - line_number: 4
-      text: '2026-09-19T17:57:08.3060901Z Version: 20260828.587'
+      text: '2026-09-19T17:57:08.3074685Z ##[endgroup]'
     - line_number: 5
-      text: '2026-09-19T17:57:08.3061615Z Commit: abac92662cab4cc7352de4f9f9d2e2419aad9c29'
+      text: '2026-09-19T17:57:08.3075887Z ##[group]GITHUB_TOKEN Permissions'
     - line_number: 6
-      text: '2026-09-19T17:57:08.3062605Z Build Date: 2026-08-28T16:44:25Z'
+      text: '2026-09-19T17:57:08.3077725Z Contents: read'
     - line_number: 7
-      text: '2026-09-19T17:57:08.3063349Z Worker ID: {8e5acc5f-9ad0-4036-9dc4-c6ab4dc9e665}'
+      text: '2026-09-19T17:57:08.3078317Z Metadata: read'
     - line_number: 8
-      text: '2026-09-19T17:57:08.3064157Z Azure Region: northcentralus'
+      text: '2026-09-19T17:57:08.3078967Z ##[endgroup]'
     - line_number: 9
       text: '##[error]Process completed with exit code 1.'
 - description: 'unknown: fission-flaky-01 (cause-free setup + bare error)'
@@ -5706,21 +5747,21 @@
     stack: Go
     lines:
     - line_number: 1
-      text: '2026-09-15T11:58:54.4891952Z Current runner version: ''2.337.0'''
+      text: '2026-09-15T11:58:54.4962344Z Secret source: Actions'
     - line_number: 2
-      text: '2026-09-15T11:58:54.4927564Z ##[group]Runner Image Provisioner'
+      text: '2026-09-15T11:58:54.4963876Z Cache mode: write'
     - line_number: 3
-      text: 2026-09-15T11:58:54.4928905Z Hosted Compute Agent
+      text: 2026-09-15T11:58:54.4965664Z Prepare workflow directory
     - line_number: 4
-      text: '2026-09-15T11:58:54.4930007Z Version: 20260828.587'
+      text: 2026-09-15T11:58:54.5533170Z Prepare all required actions
     - line_number: 5
-      text: '2026-09-15T11:58:54.4931158Z Commit: abac92662cab4cc7352de4f9f9d2e2419aad9c29'
+      text: 2026-09-15T11:58:54.5604648Z Getting action download info
     - line_number: 6
-      text: '2026-09-15T11:58:54.4932434Z Build Date: 2026-08-28T16:44:25Z'
+      text: 2026-09-15T11:58:54.8734329Z Download action repository 'step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c' (SHA:05e31511f85b41b11d1cf0ef85d0992719546e2c)
     - line_number: 7
-      text: '2026-09-15T11:58:54.4933577Z Worker ID: {c9f36e18-650f-4282-92db-2f036af08ac2}'
+      text: 2026-09-15T11:58:55.1945710Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
     - line_number: 8
-      text: '2026-09-15T11:58:54.4934871Z Azure Region: eastus'
+      text: 2026-09-15T11:58:55.2301222Z Download action repository 'actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e' (SHA:b7ad1dad31e06c5925ef5d2fc7ad053ef454303e)
     - line_number: 9
       text: '##[error]Process completed with exit code 1.'
 - description: 'unknown: flutter-code-01 (cause-free setup + bare error)'
@@ -5732,21 +5773,21 @@
     stack: Dart
     lines:
     - line_number: 1
-      text: '2026-09-24T19:01:31.1629785Z Current runner version: ''2.337.0'''
+      text: '2026-09-24T19:01:31.9453460Z with:'
     - line_number: 2
-      text: '2026-09-24T19:01:31.1656201Z ##[group]Runner Image Provisioner'
+      text: '2026-09-24T19:01:31.9453897Z   fetch-depth: 0'
     - line_number: 3
-      text: 2026-09-24T19:01:31.1657228Z Hosted Compute Agent
+      text: '2026-09-24T19:01:31.9454430Z   ref: 99f82c53870f14996da0a5a41f41ff1bf3be7b5e'
     - line_number: 4
-      text: '2026-09-24T19:01:31.1657827Z Version: 20260828.587'
+      text: '2026-09-24T19:01:31.9455291Z   persist-credentials: false'
     - line_number: 5
-      text: '2026-09-24T19:01:31.1658504Z Commit: abac92662cab4cc7352de4f9f9d2e2419aad9c29'
+      text: '2026-09-24T19:01:31.9455837Z   repository: flutter/flutter'
     - line_number: 6
-      text: '2026-09-24T19:01:31.1659266Z Build Date: 2026-08-28T16:44:25Z'
+      text: '2026-09-24T19:01:31.9459957Z   token: ***'
     - line_number: 7
-      text: '2026-09-24T19:01:31.1659966Z Worker ID: {ae574ec3-9bb7-4031-bb4c-f2238ac8cc77}'
+      text: '2026-09-24T19:01:31.9460403Z   ssh-strict: true'
     - line_number: 8
-      text: '2026-09-24T19:01:31.1660767Z Azure Region: westus'
+      text: '2026-09-24T19:01:31.9460845Z   ssh-user: git'
     - line_number: 9
       text: '##[error]Process completed with exit code 1.'
 - description: 'unknown: ha-code-01 (cause-free setup + bare error)'
@@ -5758,21 +5799,21 @@
     stack: Python
     lines:
     - line_number: 1
-      text: '2026-09-14T17:00:33.6639447Z Current runner version: ''2.337.0'''
+      text: '2026-09-14T17:00:45.5191889Z Complete job name: Check mypy'
     - line_number: 2
-      text: '2026-09-14T17:00:33.6655959Z ##[group]Runner Image Provisioner'
+      text: '2026-09-14T17:00:45.5727056Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1'
     - line_number: 3
-      text: 2026-09-14T17:00:33.6656500Z Hosted Compute Agent
+      text: '2026-09-14T17:00:45.5727429Z with:'
     - line_number: 4
-      text: '2026-09-14T17:00:33.6656860Z Version: 20260828.587'
+      text: '2026-09-14T17:00:45.5727572Z   persist-credentials: false'
     - line_number: 5
-      text: '2026-09-14T17:00:33.6657320Z Commit: abac92662cab4cc7352de4f9f9d2e2419aad9c29'
+      text: '2026-09-14T17:00:45.5727734Z   repository: home-assistant/core'
     - line_number: 6
-      text: '2026-09-14T17:00:33.6657783Z Build Date: 2026-08-28T16:44:25Z'
+      text: '2026-09-14T17:00:45.5729139Z   token: ***'
     - line_number: 7
-      text: '2026-09-14T17:00:33.6658222Z Worker ID: {81ad3bb0-2ec5-45c0-9b4d-0a67d6757139}'
+      text: '2026-09-14T17:00:45.5729269Z   ssh-strict: true'
     - line_number: 8
-      text: '2026-09-14T17:00:33.6658662Z Azure Region: westus2'
+      text: '2026-09-14T17:00:45.5729387Z   ssh-user: git'
     - line_number: 9
       text: '##[error]Process completed with exit code 1.'
 - description: 'unknown: laravel-ext-01 (cause-free setup + bare error)'
@@ -5784,21 +5825,21 @@
     stack: PHP
     lines:
     - line_number: 1
-      text: '2026-08-02T15:14:18.6260838Z Current runner version: ''2.336.0'''
+      text: '2026-08-02T15:14:35.5400327Z ##[warning]Docker pull failed with exit code 1, back off 4.623 seconds before retry.'
     - line_number: 2
-      text: '2026-08-02T15:14:18.6295161Z ##[group]Runner Image Provisioner'
+      text: '2026-08-02T15:14:40.1639939Z ##[command]/usr/bin/docker pull mysql:8'
     - line_number: 3
-      text: 2026-08-02T15:14:18.6296368Z Hosted Compute Agent
+      text: '2026-08-02T15:14:55.1826688Z ##[warning]Docker pull failed with exit code 1, back off 4.218 seconds before retry.'
     - line_number: 4
-      text: '2026-08-02T15:14:18.6297261Z Version: 20260707.563'
+      text: '2026-08-02T15:14:59.4007017Z ##[command]/usr/bin/docker pull mysql:8'
     - line_number: 5
-      text: '2026-08-02T15:14:18.6298231Z Commit: 02667638d2b423fbc733a8e32a88b44996a3ba6e'
+      text: '2026-08-02T15:15:14.4367764Z Remove container network: github_network_28cc01f97cd04c978159e37f94a2cb92'
     - line_number: 6
-      text: '2026-08-02T15:14:18.6299408Z Build Date: 2026-07-07T19:33:50Z'
+      text: '2026-08-02T15:15:14.4372118Z ##[command]/usr/bin/docker network rm github_network_28cc01f97cd04c978159e37f94a2cb92'
     - line_number: 7
-      text: '2026-08-02T15:14:18.6300408Z Worker ID: {56b81909-ca7b-452a-b192-8067a5a07d47}'
+      text: 2026-08-02T15:15:14.5393811Z github_network_28cc01f97cd04c978159e37f94a2cb92
     - line_number: 8
-      text: '2026-08-02T15:14:18.6301518Z Azure Region: eastus'
+      text: 2026-08-02T15:15:14.5473050Z Cleaning up orphan processes
     - line_number: 9
       text: '##[error]Process completed with exit code 1.'
 - description: 'unknown: playwright-code-02 (cause-free setup + bare error)'
@@ -5810,21 +5851,21 @@
     stack: TypeScript
     lines:
     - line_number: 1
-      text: '2026-09-25T15:33:36.1377944Z Current runner version: ''2.337.0'''
+      text: '2026-09-25T15:33:36.7113722Z ##[endgroup]'
     - line_number: 2
-      text: '2026-09-25T15:33:36.1394974Z ##[group]Runner Image Provisioner'
+      text: 2026-09-25T15:33:36.7120132Z Temporarily overriding HOME='/home/runner/work/_temp/9dc47bb4-ce2a-49a3-b6a8-af3d2facf07f' before making global git config changes
     - line_number: 3
-      text: 2026-09-25T15:33:36.1395518Z Hosted Compute Agent
+      text: 2026-09-25T15:33:36.7121226Z Adding repository directory to the temporary git global config as a safe directory
     - line_number: 4
-      text: '2026-09-25T15:33:36.1395850Z Version: 20260828.587'
+      text: 2026-09-25T15:33:36.7123632Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/playwright/playwright
     - line_number: 5
-      text: '2026-09-25T15:33:36.1396246Z Commit: abac92662cab4cc7352de4f9f9d2e2419aad9c29'
+      text: 2026-09-25T15:33:36.7163531Z Deleting the contents of '/home/runner/work/playwright/playwright'
     - line_number: 6
-      text: '2026-09-25T15:33:36.1396684Z Build Date: 2026-08-28T16:44:25Z'
+      text: '2026-09-25T15:33:36.7165537Z ##[group]Determining repository object format'
     - line_number: 7
-      text: '2026-09-25T15:33:36.1397090Z Worker ID: {3cbb054a-7bf8-4260-80d5-cf3a19db32c6}'
+      text: '2026-09-25T15:33:36.7166538Z ##[endgroup]'
     - line_number: 8
-      text: '2026-09-25T15:33:36.1397530Z Azure Region: centralus'
+      text: '2026-09-25T15:33:36.7166946Z ##[group]Initializing the repository'
     - line_number: 9
       text: '##[error]Process completed with exit code 1.'
 - description: 'trick: kafka-code-01 (flip to flaky)'

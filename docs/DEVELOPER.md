@@ -1203,14 +1203,28 @@ the committed `test-data/jev-eval/cases.generated.yaml` is the drift gate):
 - **38 labelled** — each manifest log is put through the **real distiller**
   (`workflow.distiller.distill`, the real `distiller.max_bytes`), so the eval
   feeds the classifier exactly what the workflow would. The expected answer is
-  the manifest label.
-- **8 unknown** — constructed, not distilled: a real log's first cause-free
-  setup/checkout lines plus a bare
+  the manifest label. Each case also carries a `key_line` var — the manifest
+  proof line, prefix-stripped like the emitted lines — so the receipt can check
+  the proof reached the classifier; it is never sent to the model.
+- **The guard (story 3.11)** — the generator refuses input Jev cannot answer:
+  it exits non-zero, naming each case, when a labelled case's `key_line` did
+  not survive distillation, when two differently-labelled cases distil to
+  identical lines, or when an unknown source has no unique window. Manifest ids
+  committed in
+  [distiller-exceptions.yaml](../test-data/jev-eval/distiller-exceptions.yaml)
+  (the story 2.13 escape hatch) are excluded from the generated cases and
+  printed, never special-cased in code.
+- **8 unknown** — constructed, not distilled: a window of a real log's
+  cause-free setup/checkout lines plus a bare
   `##[error]Process completed with exit code 1.`, one log per repo (so the
-  eight spread across eight repos). The distiller drops every unmarked line, so
-  a distilled unknown case would lose exactly the lines this rule keeps (the
-  reasoning is recorded in the data README). A test asserts no non-final line
-  matches a distiller `ERROR_MARKER`.
+  eight spread across eight repos). The hard rule is uniqueness: no two cases
+  carry the same non-final content after normalising timestamps, run/worker
+  ids, GUIDs, hex hashes and version numbers. A source draws its window from a
+  different part of its log (`start = rank * count`) where a unique window
+  exists; when none does the generator refuses, naming the source. The
+  distiller drops every unmarked line, so a distilled unknown case would lose
+  exactly the lines this rule keeps (the reasoning is recorded in the data
+  README). A test asserts no non-final line matches a distiller `ERROR_MARKER`.
 - **6 trick** — a labelled case with one injected **verdict-flip** line. The
   six cover all four real classes (code/flaky/infra/external) across six
   different repos, one injection style each, in the order the run's invocation
@@ -1268,7 +1282,12 @@ effective confidence after the injection cap (reusing
 `guardrails.confidence.apply_injection_screen`, the one AD-9 path — never
 reimplemented) with the caps shown; the confident-wrong attempts; cases that
 differ across repeats; the call/usage totals with the `calls == attempts`
-assertion; and NULL-not-0 token totals.
+assertion; and NULL-not-0 token totals. It also records the
+**evidence-retention count** (`evidence_retained`/`evidence_total` in
+`summary.json`, `evidence retention:` in `summary.md`): the distinct labelled
+cases whose proof line reached the classifier, over every labelled case the run
+scored (38/38 today) — so a run that scored Jev on cases it could not answer is
+visible in the receipt.
 
 **How the bar is scored.** The pass bar is the OQ-1 threshold in
 `guardrails/thresholds.yaml` (`eval.jev`), loaded through `workflow.thresholds`;

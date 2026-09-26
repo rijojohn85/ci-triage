@@ -117,6 +117,8 @@ class Attempt(BaseModel):
     input_tokens: int | None = None
     output_tokens: int | None = None
     model: str | None = None
+    # Whether the case's proof `key_line` is in the numbered lines it sent (AC1).
+    proof_present: bool = False
 
 
 class CaseCount(BaseModel):
@@ -229,6 +231,8 @@ class EvalSummary(BaseModel):
     reported_models: tuple[str, ...]
     attempts_count: int = Field(ge=0)
     accuracy_population: int = Field(ge=0)
+    evidence_retained: int = Field(default=0, ge=0)
+    evidence_total: int = Field(default=0, ge=0)
     calls_made: int | None
     calls_unreported: int = Field(default=0, ge=0)
     case_counts: tuple[CaseCount, ...]
@@ -309,18 +313,21 @@ def build_attempt(
         stack=str(case_vars.get("stack", "")),
     )
     calls = _num_requests(result)
+    proof_present = _proof_present(case_vars)
     output = _output_of(result)
     if output is None:
-        return _errored(case, calls, _error_of(result))
+        return _errored(case, calls, _error_of(result), proof_present)
     payload, parse_error = _parse_output(output)
     if payload is None:
-        return _errored(case, calls, parse_error)
+        return _errored(case, calls, parse_error, proof_present)
     schema_error = _schema_error(payload)
     if schema_error is not None:
-        return _errored(case, calls, f"schema: {schema_error}")
+        return _errored(case, calls, f"schema: {schema_error}", proof_present)
     parsed = _parse_result(payload)
     if parsed is None:
-        return _errored(case, calls, "the provider output is not a JevResult")
+        return _errored(
+            case, calls, "the provider output is not a JevResult", proof_present
+        )
     classification = parsed.classification
     screened = apply_injection_screen(
         ClassConfidence.from_jev(classification.choice),
@@ -343,6 +350,7 @@ def build_attempt(
         input_tokens=parsed.usage.input_tokens,
         output_tokens=parsed.usage.output_tokens,
         model=parsed.usage.model,
+        proof_present=proof_present,
     )
 
 
@@ -373,6 +381,7 @@ def score_attempts(
     run = _scored_run(tuple(attempts), cutoffs)
     bars = () if limits is None else _bars(run, limits, meta)
     verdict = _verdict(bars, limits)
+    evidence_retained, evidence_total = _evidence_retention(run.attempts)
     tokens_reported = all(
         a.input_tokens is not None and a.output_tokens is not None for a in run.attempts
     )
@@ -388,6 +397,8 @@ def score_attempts(
         reported_models=_reported_models(run.attempts),
         attempts_count=len(run.attempts),
         accuracy_population=len(run.scored_attempts),
+        evidence_retained=evidence_retained,
+        evidence_total=evidence_total,
         calls_made=run.calls_made,
         calls_unreported=run.calls_unreported,
         case_counts=_case_counts(run.attempts),
@@ -456,6 +467,9 @@ def _header_lines(summary: EvalSummary) -> list[str]:
         f"calls == attempts: {calls_hold})",
         f"- accuracy population: {summary.accuracy_population} attempts "
         f"(labelled + unknown; trick cases are scored separately)",
+        f"- evidence retention: {summary.evidence_retained}/"
+        f"{summary.evidence_total} labelled cases (proof line reached the "
+        f"classifier)",
         f"- overall accuracy: {_pct(summary.overall_accuracy)}",
         f"- confident-wrong: {len(summary.confident_wrong)}",
         f"- injection (trick) cases resisted: "
@@ -606,7 +620,9 @@ def _consistency_lines(summary: EvalSummary) -> list[str]:
 # --- result parsing -----------------------------------------------------------
 
 
-def _errored(case: _Case, calls: int | None, error: str | None) -> Attempt:
+def _errored(
+    case: _Case, calls: int | None, error: str | None, proof_present: bool
+) -> Attempt:
     return Attempt(
         case_id=case.case_id,
         case_kind=case.case_kind,
@@ -621,7 +637,30 @@ def _errored(case: _Case, calls: int | None, error: str | None) -> Attempt:
         errored=True,
         error=error,
         calls=calls,
+        proof_present=proof_present,
     )
+
+
+def _proof_present(case_vars: Mapping[str, object]) -> bool:
+    """Whether the case's non-empty proof `key_line` is in the lines it sent (AC1).
+
+    The generator writes the prefix-stripped manifest `key_line` into the case
+    vars, so the scorer can check the proof reached the classifier without
+    reading the manifest. Only labelled cases carry a `key_line` var; an unknown
+    or trick case therefore never counts as proof-retained. An empty `key_line`
+    is never present (`"" in text` is always true). The comparison is a substring
+    match on the joined lines — the story 2.13 acceptance metric.
+    """
+    key_line = case_vars.get("key_line")
+    lines = case_vars.get("lines")
+    if not isinstance(key_line, str) or not key_line or not isinstance(lines, list):
+        return False
+    texts = [
+        str(line["text"])
+        for line in lines
+        if isinstance(line, Mapping) and "text" in line
+    ]
+    return key_line in "\n".join(texts)
 
 
 def _num_requests(result: Mapping[str, object]) -> int | None:
@@ -840,6 +879,19 @@ def _case_counts(attempts: Sequence[Attempt]) -> tuple[CaseCount, ...]:
         CaseCount(kind=kind, count=sum(1 for a in attempts if a.case_kind is kind))
         for kind in CaseKind
     )
+
+
+def _evidence_retention(attempts: Sequence[Attempt]) -> tuple[int, int]:
+    """Distinct labelled cases whose proof reached Jev, over all labelled (AC1).
+
+    The denominator is the labelled cases the run scores — the generated ones;
+    committed exceptions are excluded by the generator and reported, so the
+    count is the honest share of labelled cases Jev could answer.
+    """
+    labelled = [a for a in attempts if a.case_kind is CaseKind.LABELLED]
+    total = len({a.case_id for a in labelled})
+    retained = len({a.case_id for a in labelled if a.proof_present})
+    return retained, total
 
 
 def _inconsistent_cases(attempts: Sequence[Attempt]) -> tuple[str, ...]:

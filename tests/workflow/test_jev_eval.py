@@ -51,14 +51,22 @@ def _vars(
     expected: str = "code",
     repo: str = "curl/curl",
     stack: str = "C",
+    *,
+    key_line: str | None = None,
+    lines: list[dict[str, object]] | None = None,
 ) -> dict[str, object]:
-    return {
+    vars_: dict[str, object] = {
         "case_id": case_id,
         "case_kind": kind,
         "expected_label": expected,
         "repo": repo,
         "stack": stack,
     }
+    if key_line is not None:
+        vars_["key_line"] = key_line
+    if lines is not None:
+        vars_["lines"] = lines
+    return vars_
 
 
 def _result(
@@ -120,9 +128,17 @@ def _attempt(
     input_tokens: int | None = 10,
     output_tokens: int | None = 5,
     raw_output: str | None = None,
+    key_line: str | None = None,
+    lines: list[dict[str, object]] | None = None,
 ) -> Attempt:
     return build_attempt(
-        _vars(case_id=case_id, kind=kind, expected=expected),
+        _vars(
+            case_id=case_id,
+            kind=kind,
+            expected=expected,
+            key_line=key_line,
+            lines=lines,
+        ),
         _result(
             answer,
             confidence,
@@ -608,3 +624,111 @@ def test_ac2_summary_md_records_required_caveats() -> None:
         "~100 points."
     ) in text
     assert "Jev cost is NULL: OQ-3 (Jev price unsourced)." in text
+
+
+# --- Story 3.11 AC1: the receipt records the evidence-retention count ---------
+
+
+def _proof(key_line: str) -> list[dict[str, object]]:
+    """The numbered lines a case sends, with the proof line present."""
+    return [{"line_number": 1, "text": key_line}]
+
+
+def test_ac1_summary_records_evidence_retention() -> None:
+    summary = _score(
+        _repeats(
+            [
+                _attempt(
+                    case_id="labelled-proof",
+                    expected="code",
+                    answer="code",
+                    key_line="ValueError: boom",
+                    lines=_proof("ValueError: boom"),
+                )
+            ]
+        )
+    )
+    assert summary.evidence_retained == 1
+    assert summary.evidence_total == 1
+    assert "evidence retention: 1/1" in render_summary_md(summary)
+
+
+def test_ac1_evidence_retention_counts_only_labelled_cases() -> None:
+    summary = _score(
+        [
+            _attempt(
+                case_id="labelled-proof",
+                expected="code",
+                answer="code",
+                key_line="ValueError: boom",
+                lines=_proof("ValueError: boom"),
+            ),
+            _attempt(
+                case_id="unknown-proof",
+                kind="unknown",
+                expected="unknown",
+                answer="unknown",
+                key_line="ValueError: boom",
+                lines=_proof("ValueError: boom"),
+            ),
+            _attempt(
+                case_id="trick-proof",
+                kind="trick",
+                expected="code",
+                answer="code",
+                noul=0.9,
+                key_line="ValueError: boom",
+                lines=_proof("ValueError: boom"),
+            ),
+        ]
+    )
+    assert summary.evidence_total == 1  # only labelled cases are the denominator
+    assert summary.evidence_retained == 1
+
+
+def test_ac1_evidence_retention_drops_when_the_proof_is_missing() -> None:
+    summary = _score(
+        [
+            _attempt(
+                case_id="labelled-ok",
+                expected="code",
+                answer="code",
+                key_line="ValueError: boom",
+                lines=_proof("ValueError: boom"),
+            ),
+            _attempt(
+                case_id="labelled-missing",
+                expected="code",
+                answer="code",
+                key_line="ValueError: gone",
+                lines=_proof("ValueError: boom"),
+            ),
+        ]
+    )
+    assert summary.evidence_total == 2
+    assert summary.evidence_retained == 1
+
+
+def test_ac1_summary_md_records_evidence_retention() -> None:
+    summary = _score(
+        _repeats(
+            [
+                _attempt(
+                    case_id="labelled-ok",
+                    expected="code",
+                    answer="code",
+                    key_line="ValueError: boom",
+                    lines=_proof("ValueError: boom"),
+                ),
+                _attempt(
+                    case_id="labelled-missing",
+                    expected="code",
+                    answer="code",
+                    key_line="ValueError: gone",
+                    lines=_proof("ValueError: boom"),
+                ),
+            ]
+        )
+    )
+    text = render_summary_md(summary)
+    assert "evidence retention: 1/2 labelled cases" in text
