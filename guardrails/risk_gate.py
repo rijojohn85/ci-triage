@@ -258,24 +258,41 @@ def _check_retry_added(gate: GateInput) -> tuple[GateReason, ...]:
 
 
 def _check_timeout_increased(gate: GateInput) -> tuple[GateReason, ...]:
-    """The largest timeout in the new content may not exceed the largest in
-    the base content (AD-13); a missing base is `prior_content_missing`'s job."""
+    """Per-line timeout comparison over the changed lines (AD-13): a timeout
+    raised above the value it replaced, a brand-new timeout on an added line,
+    or any timeout in a newly added file — each blocks. A file-wide max
+    comparison would let a bump hide behind a larger unchanged timeout; the
+    difflib-derived changed lines keep that closed. A missing base is
+    `prior_content_missing`'s job."""
     if gate.diff is None:
         return ()
     reasons: list[GateReason] = []
     for file in gate.diff.files:
+        if file.op is DiffOperation.ADD:
+            added = _timeout_values(file.new_content)
+            if added:
+                reasons.append(
+                    GateReason(
+                        rule_code=TIMEOUT_INCREASED,
+                        message=(f"new file introduces a timeout ({max(added)})"),
+                        location=file.path,
+                    )
+                )
+            continue
         if file.op is not DiffOperation.MODIFY:
             continue
         prior = gate.prior_contents.get(file.path)
         if prior is None:
             continue
-        new_max = max(_timeout_values(file.new_content), default=0)
-        prior_max = max(_timeout_values(prior), default=0)
-        if new_max > prior_max:
+        removed = _timeout_values("\n".join(_removed_lines(file, gate.prior_contents)))
+        added = _timeout_values("\n".join(_added_lines(file, gate.prior_contents)))
+        if added and (not removed or max(added) > max(removed)):
             reasons.append(
                 GateReason(
                     rule_code=TIMEOUT_INCREASED,
-                    message=f"timeout raised from {prior_max} to {new_max}",
+                    message=(
+                        f"timeout raised from {max(removed, default=0)} to {max(added)}"
+                    ),
                     location=file.path,
                 )
             )

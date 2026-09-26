@@ -403,7 +403,7 @@ def test_ac1_delete_add_same_path_fails_closed() -> None:
                 DiffFile(
                     path="src/pay.py",
                     op=DiffOperation.ADD,
-                    new_content="timeout = 60\n",
+                    new_content="def pay():\n    return 2\n",
                 ),
             ),
             # Even with the base content supplied, the pair evades every
@@ -457,6 +457,74 @@ def test_ac1_model_asserted_tier_cannot_override() -> None:
 
     assert decision.risk_tier is RiskTier.BLOCKED
     assert rule_codes(decision.reasons) == {"test_disabled"}
+
+
+# --- AC1 (F1): a timeout raised beside a larger unchanged timeout is still a bump
+
+
+def test_ac1_timeout_raised_beside_larger_timeout_is_blocked() -> None:
+    prior = "def test_slow():\n    timeout = 5\n    deadline_timeout = 60\n"
+    raised = "def test_slow():\n    timeout = 30\n    deadline_timeout = 60\n"
+
+    decision = evaluate_risk(
+        gate_input(
+            diff_of(
+                DiffFile(
+                    path="tests/test_slow.py",
+                    op=DiffOperation.MODIFY,
+                    new_content=raised,
+                )
+            ),
+            prior={"tests/test_slow.py": prior},
+        )
+    )
+
+    assert decision.risk_tier is RiskTier.BLOCKED
+    assert rule_codes(decision.reasons) == {"timeout_increased"}
+
+
+# --- AC1 (F1): a timeout lowered beside an unchanged timeout stays normal
+
+
+def test_ac1_timeout_lowered_beside_unchanged_timeout_is_normal() -> None:
+    prior = "def test_slow():\n    timeout = 30\n    deadline_timeout = 60\n"
+    lowered = "def test_slow():\n    timeout = 5\n    deadline_timeout = 60\n"
+
+    decision = evaluate_risk(
+        gate_input(
+            diff_of(
+                DiffFile(
+                    path="tests/test_slow.py",
+                    op=DiffOperation.MODIFY,
+                    new_content=lowered,
+                )
+            ),
+            prior={"tests/test_slow.py": prior},
+        )
+    )
+
+    assert decision.risk_tier is RiskTier.NORMAL
+    assert decision.reasons == ()
+
+
+# --- AC1 (F1): a timeout in a newly added file is a new timeout — blocked
+
+
+def test_ac1_new_file_introducing_a_timeout_is_blocked() -> None:
+    decision = evaluate_risk(
+        gate_input(
+            diff_of(
+                DiffFile(
+                    path="pytest.ini",
+                    op=DiffOperation.ADD,
+                    new_content="[pytest]\ntimeout = 30\n",
+                )
+            )
+        )
+    )
+
+    assert decision.risk_tier is RiskTier.BLOCKED
+    assert rule_codes(decision.reasons) == {"timeout_increased"}
 
 
 # --- AC1: the S5 timeout-bump fixture (the only-obvious-fix case)
