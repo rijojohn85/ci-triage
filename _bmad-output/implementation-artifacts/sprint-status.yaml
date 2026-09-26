@@ -62,8 +62,8 @@ development_status:
   2-4-serve-a-read-only-a2a-task-projection: done
   2-5-distill-ci-logs-deterministically: done
   2-6-maintain-structured-tenant-scoped-history: review
-  2-7-build-and-persist-the-deterministic-evidence-pack: review
-  2-8-shared-step-runner-ad-8-validation-retry-ad-22-transient-ret: review
+  2-7-build-and-persist-the-deterministic-evidence-pack: done
+  2-8-shared-step-runner-ad-8-validation-retry-ad-22-transient-ret: done
   2-9-integrate-evaluated-classification-and-analysis-with-pauses: backlog
   2-10-integrate-proposal-review-revisions-and-risk-gating: backlog
   2-11-deliver-idempotent-drafts-quarantine-metadata-and-reports: backlog
@@ -83,8 +83,8 @@ development_status:
   3-10-prove-description-selection-and-no-route-pause: backlog
   epic-3-retrospective: optional
 
-  epic-4: backlog
-  4-1-validate-schemas-served-citations-and-attribution: review
+  epic-4: in-progress
+  4-1-validate-schemas-served-citations-and-attribution: done
   4-2-block-every-deterministic-risk-rule: backlog
   4-3-assert-real-least-privilege-and-data-boundaries: backlog
   4-4-expose-a-production-disabled-real-pipeline-dry-run: backlog
@@ -99,9 +99,9 @@ development_status:
   5-4-reject-a-paused-task-and-prove-bypass-resistance: backlog
   epic-5-retrospective: optional
 
-  epic-6: backlog
-  6-1-collect-every-model-call-and-attempt-centrally: review
-  6-2-compute-versioned-null-aware-model-costs: review
+  epic-6: in-progress
+  6-1-collect-every-model-call-and-attempt-centrally: done
+  6-2-compute-versioned-null-aware-model-costs: done
   6-3-calibrate-confidence-and-central-thresholds-on-labelled-data: backlog
   6-4-record-the-supplied-per-agent-quality-pass-decision: backlog
   6-5-verify-graded-operations-and-same-image-cluster-manifests: backlog
