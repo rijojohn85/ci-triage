@@ -6,5 +6,8 @@
   "devDependencies": {
     "promptfoo": "0.123.1",
     "smee-client": "5.0.0"
+  },
+  "engines": {
+    "node": ">=26.10.0 <27"
   }
 }

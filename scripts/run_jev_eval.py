@@ -2,8 +2,8 @@
 """The Jev eval harness (story 3.2, AC1/AC2): run the root suite, save a receipt.
 
 Owns every side effect (SOLID-S): resolves a node promptfoo 0.123.1 can run on
-(>= 22.22.0), runs `promptfoo eval` on the one root `jev.test.yaml` with the
-repeats count read from the OQ-1 bar, then hands the raw output to the pure
+(Node 26, minimum from .nvmrc), runs `promptfoo eval` on the root
+`jev.test.yaml` with repeats read from the OQ-1 bar, then hands raw output to the pure
 scorer (`workflow.jev_eval`) and writes `results/jev-eval/<date>-<model>/`
 (`promptfoo-output.json`, `summary.json`, `summary.md`). It prints the verdict
 as-is and never tunes the prompt, relabels a case, drops a hard case or moves
@@ -47,7 +47,10 @@ from workflow.thresholds import load_thresholds  # noqa: E402
 CONFIG: Final[Path] = ROOT / "jev.test.yaml"
 PROMPTFOO: Final[Path] = ROOT / "node_modules" / ".bin" / "promptfoo"
 RESULTS_DIR: Final[Path] = ROOT / "results" / "jev-eval"
-MIN_NODE: Final[tuple[int, int, int]] = (22, 22, 0)
+MIN_NODE: Final[tuple[int, ...]] = tuple(
+    int(part)
+    for part in (ROOT / ".nvmrc").read_text(encoding="utf-8").strip().split(".")
+)
 _VERSION_RE: Final[re.Pattern[str]] = re.compile(r"v?(\d+)\.(\d+)\.(\d+)")
 
 
@@ -62,7 +65,7 @@ def _node_version(binary: Path) -> tuple[int, int, int] | None:
         )
     except (OSError, subprocess.SubprocessError):
         return None
-    match = _VERSION_RE.match(done.stdout.strip())
+    match = _VERSION_RE.fullmatch(done.stdout.strip())
     if done.returncode != 0 or match is None:
         return None
     return (int(match.group(1)), int(match.group(2)), int(match.group(3)))
@@ -101,18 +104,19 @@ def _candidate_nodes() -> list[Path]:
 
 
 def resolve_node() -> Path:
-    """The first node >= 22.22.0, or a clear error naming what was tried."""
+    """The first supported Node 26, or a clear error naming what was tried."""
     tried: list[str] = []
     for candidate in _candidate_nodes():
         if not candidate.is_file():
             continue
         version = _node_version(candidate)
         tried.append(f"{candidate} ({version or 'not runnable'})")
-        if version is not None and version >= MIN_NODE:
+        if version is not None and version[0] == MIN_NODE[0] and version >= MIN_NODE:
             return candidate
     wanted = ".".join(str(part) for part in MIN_NODE)
     raise SystemExit(
-        f"no node >= {wanted} found for promptfoo 0.123.1; tried: "
+        f"no supported Node {MIN_NODE[0]} >= {wanted} found; "
+        "run `nvm install` and `nvm use` from the repository root; tried: "
         + ("; ".join(tried) or "nothing")
     )
 

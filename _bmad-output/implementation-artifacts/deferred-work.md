@@ -17,3 +17,7 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-2-8-shared-step-runner-ad-8-validation-retry-ad-22-transient-ret.md`
   summary: The A2A client (`workflow/a2a_client.py`) hard-codes `usage=None`, so agent token usage is never read: every agent call's audit row has NULL counters and every run cost is flagged incomplete. Story 2.9 must read the usage agents report into `ModelCallResult.usage`.
   evidence: Found in the 2.7-2.8 post-build review (2026-09-26). No contract carries usage in an agent reply yet; epics say agents "return usage for central accounting" (stories 3.2/3.4, AD-18), so the reply shape belongs to those stories and the read belongs to 2.9's wiring. Severity medium: silent, permanent cost incompleteness if forgotten.
+
+- source_spec: `spec-node-26-toolchain.md`
+  summary: Consider exposing successful npm installation warnings in bootstrap output.
+  evidence: Baseline bootstrap captures npm ci output and prints it only on failure; direct npm ci already exposes warnings, and this migration did not change that behavior.

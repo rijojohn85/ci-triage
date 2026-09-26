@@ -94,6 +94,28 @@ Layer rules (enforced by `scripts/check_layer_contract.py`): `contracts/` import
 
 ## Running things
 
+Use Node 26, at least the version in [`.nvmrc`](../.nvmrc). Newer Node 26
+patches and minors are accepted; other major versions are refused before
+bootstrap installs anything. From the repository root:
+
+```bash
+nvm install
+nvm use
+npm ci                         # clean reinstall after switching Node
+node_modules/.bin/promptfoo --version
+node_modules/.bin/smee --help
+```
+
+Bootstrap also checks that both local commands start, using a temporary
+promptfoo configuration directory so the check leaves your saved eval database
+alone. Use the project commands above rather than a global installation from a
+previous Node runtime. Package pins remain those in the
+[architecture spine](../_bmad-output/planning-artifacts/architecture/architecture-stage4-2026-09-25/ARCHITECTURE-SPINE.md).
+The optional sharp Windows 32-bit package does not support Node 26; that
+platform is unsupported. CLI startup checks do not verify optional model
+providers or backends; installation can warn about blocked optional build scripts.
+If a runtime check fails, run `nvm install`, `nvm use` and `npm ci` in this folder.
+
 ```bash
 bash scripts/bootstrap.sh          # create .venv, install pinned Python and npm tools, verify pins
 make check                         # every quality gate; must be green before a story is done
@@ -1197,9 +1219,10 @@ Regenerate with `make jev-eval-cases`; `--check` (also used in tests) exits
 non-zero if a hand edit diverges from regeneration.
 
 **How to run it.** `make eval-jev` runs the one root entrypoint
-(`jev.test.yaml`) once: it resolves a node promptfoo 0.123.1 can run on
-(≥ 22.22.0; it looks at `$PATH`, then nvm's installed versions, then the usual
-system paths, and errors clearly if none is suitable), runs `promptfoo eval`
+(`jev.test.yaml`) once: it reads the minimum Node 26 version from `.nvmrc`. It checks
+`PROMPTFOO_NODE` (or `NODE_BIN`), then `$PATH`, then nvm's installed versions,
+then the usual system paths, skipping unsuitable versions. It uses the chosen
+Node for child commands and lists attempted versions if none is suitable, runs `promptfoo eval`
 with the `repeats` count read from the bar, then scores and saves the receipt.
 It needs `TYPESAFE_API_KEY` (OpenRouter) in the environment — promptfoo loads
 `.env` itself. The target pins the worker's Python (`pythonExecutable:
