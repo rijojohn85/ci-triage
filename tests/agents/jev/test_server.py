@@ -267,3 +267,32 @@ def test_ac2_pack_in_a_later_data_part_is_accepted() -> None:
         "the executor scans later data parts before refusing"
     )
     assert len(provider.calls) == 1
+
+
+# --- F13: the incoming envelope's context_id must match the request's
+
+
+def other_run_data_part(payload: object) -> dict[str, object]:
+    other_run = "01900000-0000-7000-8000-000000000001"
+    return {"task_id": other_run, "context_id": other_run, "payload": payload}
+
+
+def test_ac2_envelope_context_mismatch_is_invalid_request_without_provider_call() -> None:
+    provider = FakeProvider(fixture_response())
+    response = post(
+        app_with(provider),
+        send_message(data_part(evidence_pack().model_dump(mode="json"))),
+    )
+    assert response.status_code == HTTP_OK  # sanity: the happy path works
+    calls_after_happy_path = len(provider.calls)
+
+    mismatched = data_part(evidence_pack().model_dump(mode="json"))
+    mismatched["context_id"] = "01900000-0000-7000-8000-000000000002"
+    mismatched["task_id"] = "01900000-0000-7000-8000-000000000002"
+    response = post(app_with(provider), send_message(mismatched))
+
+    body = response.json()
+    assert body["error"]["code"] == INVALID_PARAMS_CODE
+    assert len(provider.calls) == calls_after_happy_path, (
+        "an envelope/run mismatch never reaches the provider (AD-4)"
+    )

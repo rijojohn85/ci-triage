@@ -43,11 +43,13 @@ _UUID7: Any = TypeAdapter(UUID7)
 """The run-id convention root: contextId must be a UUIDv7 (AD-4)."""
 
 
-def _evidence_pack(context: RequestContext) -> EvidencePack:
+def _evidence_pack(context: RequestContext, run_id: UUID) -> EvidencePack:
     """The first data part that wraps an EvidencePack; refused otherwise.
 
     Parts that do not carry a valid `DataPart` envelope are skipped, not
-    fatal — the pack may arrive in a later part of the same message.
+    fatal — the pack may arrive in a later part of the same message. The
+    envelope's `context_id` must equal the request's contextId (the run id,
+    AD-4): an envelope/run mismatch is refused before any provider call.
     """
     message = context.message
     if message is None:
@@ -62,6 +64,13 @@ def _evidence_pack(context: RequestContext) -> EvidencePack:
         except ValidationError:
             continue
         if isinstance(data_part.payload, EvidencePack):
+            if data_part.context_id != run_id:
+                raise InvalidParamsError(
+                    message=(
+                        "the DataPart envelope's context_id does not match "
+                        "the request contextId (AD-4)"
+                    )
+                )
             return data_part.payload
     if not saw_data_part:
         raise InvalidParamsError(message="the message carries no data part")
@@ -92,8 +101,8 @@ class JevExecutor(AgentExecutor):
         self._classify = classify
 
     async def execute(self, context: RequestContext, event_queue: EventQueue) -> None:
-        pack = _evidence_pack(context)
         task_id, run_id = _request_ids(context)
+        pack = _evidence_pack(context, run_id)
         await event_queue.enqueue_event(
             Task(
                 id=task_id,
