@@ -70,8 +70,8 @@ development_status:
   2-12-prove-live-pipeline-recovery-and-retry-accounting: backlog
   epic-2-retrospective: optional
 
-  epic-3: backlog
-  3-1-serve-the-jev-classifier-and-batched-injection-screen: review
+  epic-3: in-progress
+  3-1-serve-the-jev-classifier-and-batched-injection-screen: done
   3-2-evaluate-jev-classification-before-connection: backlog
   3-3-serve-the-evidence-grounded-analyzer: backlog
   3-4-evaluate-analyzer-evidence-and-attribution: backlog
@@ -85,7 +85,7 @@ development_status:
 
   epic-4: in-progress
   4-1-validate-schemas-served-citations-and-attribution: done
-  4-2-block-every-deterministic-risk-rule: review
+  4-2-block-every-deterministic-risk-rule: done
   4-3-assert-real-least-privilege-and-data-boundaries: backlog
   4-4-expose-a-production-disabled-real-pipeline-dry-run: backlog
   4-5-wire-adopted-red-team-fixtures-and-verify-configuration: backlog
