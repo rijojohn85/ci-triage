@@ -85,7 +85,7 @@ development_status:
 
   epic-4: in-progress
   4-1-validate-schemas-served-citations-and-attribution: done
-  4-2-block-every-deterministic-risk-rule: backlog
+  4-2-block-every-deterministic-risk-rule: review
   4-3-assert-real-least-privilege-and-data-boundaries: backlog
   4-4-expose-a-production-disabled-real-pipeline-dry-run: backlog
   4-5-wire-adopted-red-team-fixtures-and-verify-configuration: backlog
