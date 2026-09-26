@@ -37,6 +37,7 @@ Every message between orchestrator and agent is an A2A message whose data part i
 | 6.1 | Central model-call audit (AD-18): every model/Jev invocation becomes its own attempt-level `run_step` row with the model, its token counters (NULL when the provider did not report them, never 0), status and a closed outcome; usage returned by a failed call is still saved, a crash saves nothing (nothing is invented), attempt rows never move run state, and every invocation logs one structured, secret-free JSON line | `contracts/usage.py`, `workflow/usage_audit.py`, `workflow/service_log.py`, `deploy/migrations/0007_run_step_audit.sql`, `tests/contracts/test_usage.py`, `tests/workflow/test_usage_audit.py`, `tests/workflow/test_service_log.py`, `tests/workflow/test_usage_audit_integration.py`; see [Model-call audit](#model-call-audit-story-61) |
 | 6.2 | Versioned NULL-aware model costs (AD-18): one provenance-carrying price table (`table_version`, per-model five-type rates each with source URL + retrieved date, the Jev rate NULL + flagged per OQ-3), a pure NULL-aware calculator (an unreported counter, an unpriced model or a Jev-billed call yields a NULL cost plus a flag, never 0; a run total with any incomplete part is NULL with the reasons listed), and the orchestrator-side reader that rolls 6.1's audit rows into per-run costs — computed, never stored | `monitoring/prices.yaml`, `monitoring/pricing.py`, `monitoring/costs.py`, `workflow/usage_costs.py`, `tests/monitoring/`, `tests/workflow/test_usage_costs.py`, `tests/workflow/test_usage_costs_integration.py`; see [Model costs](#model-costs-story-62) |
 | 2.8 | The shared step runner (AD-8, AD-22): one execution policy every agent step goes through — blocking non-streaming A2A `send_message` with `contextId = run_id` and a per-skill timeout, every attempted call audited centrally, one validation retry with the structured errors fed back (a second invalid output pauses with `validation_failed`), at most three transient attempts with config-driven backoff then a terminal `FAILED` with history written once, a definitive error failing without retry, every attempt its own `run_step` row, and the validated output + state move committed atomically under the lease guard | `workflow/step_runner.py`, `workflow/a2a_client.py`, `workflow/runtime_config.py`, `workflow/orchestrator_config.py` + `config/orchestrator.yaml` (retry budget), `guardrails/validator.py` (`validate_classification`), `tests/workflow/test_step_runner.py`, `tests/workflow/test_a2a_client.py`, `tests/workflow/test_runtime_config.py`, `tests/workflow/test_step_runner_integration.py`, `tests/guardrails/test_validator.py`; see [The shared step runner](#the-shared-step-runner-story-28) |
+| 4.2 | The deterministic risk gate (AD-13, AD-12, AD-21): one registry entry per rule — skip/disable/xfail a test (incl. test-file deletion), added retries, increased timeouts, loosened assertions, workflow/secret/infra paths, a `dangerous` Reviewer objection, missing base content (fail closed) — evaluated over the proposed diff, the base content of modified files and the Reviewer's objections; returns `normal | blocked | not_gated` with structured reasons, no I/O, no model, and no model-asserted tier can override it; the new path globs live in `guardrails/thresholds.yaml` | `guardrails/risk_gate.py`, `guardrails/thresholds.yaml` (`risk_gate:` globs), `workflow/thresholds.py`, `tests/guardrails/test_risk_gate.py`, `tests/workflow/test_thresholds.py`; see [The risk gate](#the-risk-gate-story-42) |
 
 ## Where things live
 
@@ -44,7 +45,7 @@ Every message between orchestrator and agent is an A2A message whose data part i
 | --- | --- | --- |
 | `contracts/` | built (0.2) | Pydantic v2 models for every inter-agent payload; see [contracts/README.md](../contracts/README.md) |
 | `guardrails/schemas/` | built (0.2) | JSON Schemas generated from `contracts/`; never edit by hand |
-| `guardrails/thresholds.yaml` | built (2.1, 2.2, 2.5) | the one thresholds file (AD-19): `review.max_rounds`, `workflow_path_glob`, the `confidence` cut-offs (`class_cutoff`, `no_route_cutoff`, `injection_screen_cutoff`, `injection_screen_cap`), `distiller.max_bytes` and `evidence.max_history_rows`; consumed via `workflow.thresholds.load_thresholds` |
+| `guardrails/thresholds.yaml` | built (2.1, 2.2, 2.5, 4.2) | the one thresholds file (AD-19): `review.max_rounds`, `workflow_path_glob`, the `confidence` cut-offs (`class_cutoff`, `no_route_cutoff`, `injection_screen_cutoff`, `injection_screen_cap`), `distiller.max_bytes`, `evidence.max_history_rows` and the `risk_gate` secret/infra path globs; consumed via `workflow.thresholds.load_thresholds` |
 | `guardrails/confidence.py` | built (2.2) | the AD-9 min rule as code: `ClassConfidence`, `RouteConfidence`, `apply_injection_screen`, `below_class_cutoff`, `class_escalation` |
 | `guardrails/citation_check.py` | built (4.1) | citation resolution against the evidence served this run (AD-7): `ServedEvidence` (pack + the run's Jev call), the closed per-kind resolution table, `ValidationIssue` (the one issue shape) |
 | `guardrails/validator.py` | built (4.1, 2.8) | the pure verdict validator (AD-6/7/8/9/27): `validate_verdict(payload, served, blame_free=…)` → `ValidationResult{verdict, issues}`; two layers (committed JSON schema + pydantic parse) plus the suspect/confidence/attribution checks; `validate_classification(payload)` (2.8, schema + parse only) is the CLASSIFYING surface; see [The guardrails validator](#the-guardrails-validator-story-41) |
@@ -79,7 +80,8 @@ Every message between orchestrator and agent is an A2A message whose data part i
 | `workflow/step_runner.py` | built (2.8) | the shared step runner: `run_step(...)` with the two independent retry budgets (AD-8 validation retry + AD-22 transient ≤3 with backoff), the typed `TransientCallError`/`DefinitiveCallError` pair, `FailedAttempt` + the `AttemptRecorder` protocol and `PostgresAttemptRecorder` (insert-only failed-attempt rows), and the typed `committed`/`paused`/`failed` outcomes; see [The shared step runner](#the-shared-step-runner-story-28) |
 | `workflow/a2a_client.py` | built (2.8) | the blocking non-streaming A2A transport adapter (`A2aSkillTransport`): `contextId = run_id`, per-call timeout, and the `AgentError.retryable` → typed-error classification the runner's budgets consume (AD-4, AD-5, AD-22) |
 | `deploy/` | partially built (0.3, 1.1) | Compose, gateway image, k8s manifests, migrations (0.3+); k8s manifests + `registry.<env>.yaml` still placeholders |
-| `workflow/` (rest), `agents/`, `guardrails/` (risk_gate), `punch-out/` | placeholder | filled by Epics 2–6; each folder's README says what belongs there |
+| `guardrails/risk_gate.py` | built (4.2) | the deterministic risk gate (AD-13): `evaluate_risk(GateInput)` → `GateDecision{risk_tier, reasons}`, the `RISK_RULES` registry (one frozen `RiskRule{code, check}` per rule), `RiskGateConfig` built by the caller from `guardrails/thresholds.yaml`; no I/O, no model; see [The risk gate](#the-risk-gate-story-42) |
+| `workflow/` (rest), `agents/`, `punch-out/` | placeholder | filled by Epics 2–6; each folder's README says what belongs there |
 | `prompts/`, `*.test.yaml` | placeholder | agent prompts and their promptfoo evals (Epic 3) |
 
 Layer rules (enforced by `scripts/check_layer_contract.py`): `contracts/` imports only stdlib and pydantic; `guardrails/` imports only `contracts/` (+ pydantic and the pinned `jsonschema` that checks payloads against the committed schemas — still no I/O, no GitHub, no Postgres); agents hold no GitHub or Postgres clients; model IDs and timeouts live in YAML; secrets come from environment variables.
@@ -650,6 +652,74 @@ Run the focused checks:
 
 ```bash
 .venv/bin/pytest tests/guardrails tests/workflow/test_task_store.py tests/workflow/test_task_server.py -q
+.venv/bin/python scripts/check_layer_contract.py
+```
+
+## The risk gate (story 4.2)
+
+Before a proposed fix reaches GitHub, one piece of pure code decides whether
+the change looks safe or looks like it is hiding a bug. It is deterministic:
+same input, same answer, every time — no model, no database, no network — in
+`guardrails/risk_gate.py` (rules: AD-13, AD-12, AD-21 of the
+[architecture spine](../_bmad-output/planning-artifacts/architecture/architecture-stage4-2026-09-25/ARCHITECTURE-SPINE.md)).
+
+**What it watches, in plain words.** The gate looks at the proposed diff
+(what files the fix would change and their new content), the current content
+of the files being changed, and any objection the Reviewer raised. A change
+is blocked when it:
+
+- **Disables a test.** A new `pytest.mark.skip`/`skipif`/`xfail`, a
+  `pytest.skip(...)` or a `unittest.skip` on a line the diff adds — or a
+  whole test file deleted.
+- **Adds retries.** Retry machinery (`retries`, `rerun`, `@retry`,
+  `tenacity`) on a line the diff adds. A retry that already existed before
+  the fix is not a new one.
+- **Raises a timeout.** The biggest `timeout=…`/`timeout(…)` number in the
+  new content of a changed file may not be bigger than the biggest one in
+  the file before the change. Lowering a timeout is fine.
+- **Weakens an assertion.** A strong check removed while a weak check on the
+  same target was added (`assertEqual(tok, …)` → `assertIn(tok, …)`,
+  `assert tok == …` → `assert tok in …`). Strengthening is fine.
+- **Touches protected paths.** Any file under the workflow glob
+  (`.github/workflows/**`), a secret path (`.env`, `.env.*`, `*.pem`,
+  `*.key`, `*secrets/*`) or an infra manifest (`Dockerfile`s, compose files,
+  Terraform, `k8s/`/`kubernetes/`) — the globs live only in
+  `guardrails/thresholds.yaml` (AD-19), never in code.
+- **Was called dangerous by the Reviewer.** One objection with severity
+  `dangerous` blocks even a change that trips no other rule (AD-12).
+- **Hides its starting point.** If a file is being changed but the caller
+  did not supply what the file looked like before, the change is blocked
+  (`prior_content_missing`) — gating must never be silently skipped. This
+  is the fail-closed rule.
+
+**What comes back.** `evaluate_risk(GateInput)` returns a `GateDecision`:
+`not_gated` when there is no diff to judge, `blocked` with **every** reason
+collected when any rule trips, `normal` otherwise. Each reason is a small
+structured record — the rule's `code`, a human-readable `message` and the
+`location` (the file path, or `objections[0]` for a Reviewer objection).
+The gate takes no model-asserted risk tier as input: it recomputes from the
+diff, so a verdict claiming `normal` cannot override it — that
+override-impossibility is structural (there is no input to lie through),
+not a check. Quarantine recommendations are metadata only and are never a
+gate input or a block reason (AD-21).
+
+**Who uses it.** The gate only answers questions; it runs no workflow. The
+actual `AWAITING_APPROVAL(gate_blocked)` pause lands with the workflow
+integration story; the transition guards
+(`workflow/transitions.py:gate_allows_pr`/`gate_blocks`) already consume the
+`risk_tier` the gate returns. The caller builds the `RiskGateConfig` (the
+path globs) from `guardrails/thresholds.yaml` via `workflow.thresholds` —
+guardrails itself does no config I/O.
+
+**To extend it:** a new rule is one new registry entry in `RISK_RULES` (a
+frozen `RiskRule{code, check}`) plus its positive and negative fixtures in
+`tests/guardrails/test_risk_gate.py` — the registry-driven tests fail if a
+rule lands without fixtures. Never a new `if/elif` scattered elsewhere.
+
+Run the focused checks:
+
+```bash
+.venv/bin/pytest tests/guardrails/test_risk_gate.py tests/workflow/test_thresholds.py -q
 .venv/bin/python scripts/check_layer_contract.py
 ```
 
