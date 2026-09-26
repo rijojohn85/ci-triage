@@ -12,6 +12,15 @@ context:
 warnings: []
 deferred:
   - summary: >-
+      The A2A client hard-codes `usage=None`, so every agent call's token
+      counters are NULL and every run cost is flagged incomplete until 2.9
+      reads the usage agents report into `ModelCallResult.usage`.
+    evidence: |-
+      workflow/a2a_client.py returns ModelCallResult(value=..., usage=None);
+      no contract yet carries usage in an agent reply (epics: 3.2/3.4 agents
+      "return usage for central accounting", AD-18). Added by the 2.7-2.8
+      post-build review (2026-09-26); owner 2.9 wiring.
+  - summary: >-
       The FAILED commit and the terminal history write are two separate
       writes; a crash between them leaves a FAILED run with no history row
       and nothing retries it. Detection/recovery belongs to story 2.12.
@@ -144,6 +153,7 @@ deferred:
   - `[low]` `[patch]` test-gap batch: `PostgresAttemptRecorder`'s SQL and duplicate mapping are exercised only by opted-in integration tests; `StepRunnerConfig`'s four guard branches are untested; the timeout test races a real socket server inside the unit suite (VG1, CC4, CC5, BH12, BH15, VG3) — patched: unit tests drive the recorder through the injectable `connect` fake (duplicate → `DuplicateStepError`, other errors surface), a parametrized config-guard test, and the timeout test now stubs the SDK transport and asserts the timeout value reaches `ClientCallContext` (the real-socket proof moves to the marked integration suite).
   - `[low]` `[patch]` docs: `A2aSkillTransport.call` uses `asyncio.run` (sync callers only; a running event loop would raise) and the per-call client construction — undocumented (BH3, EC8) — patched: docstring + DEVELOPER.md state the sync-caller requirement and that 2.9's worker wiring revisits it.
   - `[low]` `[defer]` the validation-retry feedback envelope (`{"request": …, "validation_issues": […]}`) is an ad-hoc dict, not a contracts model with a generated schema (BH10) — pinning it as a contract matters when 2.9's real agents must consume it; doing it now adds a contract + schema regen for a shape no consumer exists to validate. Deferred, severity low.
+  - `[medium]` `[defer]` (post-build review, 2026-09-26) the A2A client hard-codes `usage=None`: agent token usage is never read, so every agent call audits NULL counters and every run cost is incomplete; no reply contract carries usage yet (owned by 3.2/3.4) — 2.9 must read it into `ModelCallResult.usage` (AD-18). Deferred, severity medium.
   - `[low]` `[defer]` per-call `asyncio.run` + fresh HTTP client loses connection reuse and forbids async callers (BH3) — the sync-only requirement is now documented; restructuring the transport for the worker loop belongs to 2.9's wiring. Deferred, severity low.
   - `[low]` `[reject]` `run_step`'s 10-parameter signature + `noqa: PLR0913, PLR0917` (BH14a) — the inline exception with a cited reason is AGENTS.md's sanctioned mechanism, the spec's Design Notes fix the shape, and the private `_Edges` bag keeps every helper ≤ 5 params; reshaping now would churn the spec'd seam for no behavioural gain.
   - `[low]` `[reject]` multiple data parts in a reply: first part returned silently (EC4) — the contracted reply shape is one data part; a multi-part reply is outside the contract the fixtures and 2.9 will pin.

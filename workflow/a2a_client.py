@@ -97,6 +97,7 @@ class A2aSkillTransport:
                 raise TransientCallError(f"step_timeout: {error}") from error
             except A2AClientError as error:
                 raise _classify_http_error(error) from error
+        # TODO(2.9): read the usage agents report (3.2/3.4 reply shape) — AD-18.
         return ModelCallResult(value=_reply(response), usage=None)
 
     def _build_request(self, request: object) -> SendMessageRequest:
