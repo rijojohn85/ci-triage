@@ -16,106 +16,119 @@ Rules are checked in this order and the **first** one that applies wins:
 `external` → `infra` → `flaky` → `code`. If two classes fit, or none can be
 proved, the run is skipped.
 
-- **`external`** — the failing line is a request to a third-party host that
-  failed (HTTP 429/5xx, DNS failure, TLS/connection timeout to a registry or
-  package index, Docker Hub rate limit, remote test server). The host is named
-  in `key_line`. `evidence_kind: third_party_request_failed`.
-- **`infra`** — the log shows a runner/environment failure that is not the
-  product: the runner never started the job (action download info unresolved),
-  tool setup crashed, the artifact service rejected an upload, a service
-  container never initialized, or the checkout's TLS trust store was missing.
-  `evidence_kind: runner_or_setup_failure`.
-- **`flaky`** — the same job failed on attempt 1 and passed on attempt 2 of the
-  **same run** (same commit, no new commit), and the failing line is inside the
-  project's own tests/build. `evidence_kind: rerun_passed_same_sha`.
+- **`external`** — the failing line is a request to a third-party service the
+  project's build depends on that failed: Docker Hub or another container
+  registry, npm, PyPI, Maven Central, crates.io, hex.pm, RubyGems, Packagist,
+  apt/OS mirrors (e.g. `dl.google.com`), or a real remote API/server the tests
+  call. The host is named in `key_line`.
+  `evidence_kind: third_party_request_failed`.
+- **`infra`** — GitHub's own platform failing (it is part of the CI machine):
+  action download (`Failed to resolve action download info`, `codeload.github.com`
+  archives), artifact upload/download, cache service, `api.github.com` /
+  `raw.githubusercontent.com` / `*.blob.core.windows.net` results storage, runner
+  DNS failing for GitHub hosts; plus runner/environment failures that are not the
+  product (tool setup crashed, service container never initialized, checkout's TLS
+  trust store missing). `evidence_kind: runner_or_setup_failure`.
+- **`flaky`** — the failing line is inside the project's own tests/build and the
+  same job passed on the same commit in another run, either
+  - attempt 2 of the same run (same commit, no new commit) —
+    `evidence_kind: rerun_passed_same_sha`, or
+  - a different run of the same workflow on the exact same commit SHA (PR run
+    failed / push run passed, or a manual re-dispatch) —
+    `evidence_kind: same_sha_other_run_passed`. Both run URLs are recorded.
 - **`code`** — either a later commit on the same PR/branch changed source or
   test files and the same job then passed (`fixed_by_commit`), or a
   lint/typecheck/compile job failed on lines that PR changed
-  (`failure_in_pr_diff`).
+  (`failure_in_pr_diff`). Test-runtime failures (assertion/exception in a test
+  run) are only labelled `code` when the fixing commit changes non-test product
+  source.
 
 `unknown` is deliberately not collected here; it is built separately.
 
 ### GitHub-hosted services: how the boundary was drawn
 
-For a project whose CI runs on GitHub Actions, GitHub's own platform services
-are treated as **infra** when the *runner/setup* fails without naming a
-third-party dependency (e.g. "Failed to resolve action download info",
-artifact service 403), and as **external** when the failing line is a named-host
-request that failed (e.g. `codeload.github.com` returning 429, `EAI_AGAIN` for
-`api.github.com`, a 503 from `github.com` during checkout). Product
-dependencies (Docker Hub, apt indexes, npm/pypi/hex/crates/maven) are always
-`external`. The `key_line` in each entry shows exactly which line was used.
+GitHub's own platform is treated as **infra** — the runner failing to download
+actions (`codeload.github.com`), resolve action download info, upload/download
+artifacts (`*.blob.core.windows.net`), use the cache service, call
+`api.github.com` / `raw.githubusercontent.com`, or resolve GitHub hostnames is
+part of the CI machine. **external** is reserved for third-party services the
+project's build or tests depend on (registries, package indexes, OS mirrors,
+remote test servers). A GitHub host therefore appears in no `external` case.
+The `key_line` in each entry shows exactly which line was used.
 
 ## Counts (class × repo)
 
 | repo | code | flaky | infra | external | total |
 | --- | --- | --- | --- | --- | --- |
-| apache/kafka | 2 | 0 | 1 | 0 | 3 |
-| curl/curl | 0 | 0 | 1 | 1 | 2 |
-| elixir-lang/elixir | 1 | 0 | 0 | 1 | 2 |
-| fission/fission | 2 | 3 | 2 | 0 | 7 |
+| apache/kafka | 1 | 0 | 1 | 0 | 2 |
+| curl/curl | 0 | 0 | 2 | 0 | 2 |
+| elixir-lang/elixir | 1 | 1 | 1 | 2 | 5 |
+| fission/fission | 0 | 3 | 2 | 0 | 5 |
 | flutter/flutter | 2 | 0 | 0 | 0 | 2 |
-| home-assistant/core | 2 | 0 | 2 | 0 | 4 |
-| laravel/framework | 0 | 0 | 2 | 3 | 5 |
-| microsoft/playwright | 2 | 0 | 0 | 0 | 2 |
-| nodejs/node | 1 | 2 | 0 | 2 | 5 |
-| rails/rails | 1 | 0 | 3 | 3 | 7 |
-| tokio-rs/tokio | 2 | 1 | 0 | 2 | 5 |
-| **total** | **15** | **6** | **11** | **12** | **44** |
+| home-assistant/core | 3 | 0 | 1 | 2 | 6 |
+| laravel/framework | 0 | 0 | 0 | 2 | 2 |
+| microsoft/playwright | 1 | 0 | 1 | 0 | 2 |
+| nodejs/node | 1 | 3 | 2 | 0 | 6 |
+| rails/rails | 1 | 0 | 2 | 2 | 5 |
+| tokio-rs/tokio | 0 | 2 | 0 | 1 | 3 |
+| **total** | **10** | **9** | **12** | **9** | **40** |
 
-Balance rules from the task: every class uses at least 5 repos and no repo
-gives more than 3 cases to one class — held for `code`, `infra`, `external`.
-`flaky` could not be built from 5 repos (see below). Every source repo appears
-at least twice.
+Balance: no repo gives more than 3 cases to one class; every source repo appears
+at least twice. See the shortfalls below.
 
 Case mix by evidence kind:
 
-- `code` — 13 × `failure_in_pr_diff`, 2 × `fixed_by_commit`
-- `flaky` — 6 × `rerun_passed_same_sha`
-- `infra` — 11 × `runner_or_setup_failure`
-- `external` — 12 × `third_party_request_failed`
-
-Runs in the dataset were created between 2026-06-30 and 2026-09-26.
+- `code` — failure_in_pr_diff × 7
+- `code` — fixed_by_commit × 3
+- `external` — third_party_request_failed × 9
+- `flaky` — rerun_passed_same_sha × 6
+- `flaky` — same_sha_other_run_passed × 3
+- `infra` — runner_or_setup_failure × 12
 
 ## Skipped / could not prove
 
-Roughly 7,400 failed-job records from about 4,000 recent failed runs across the
-11 source repos were scanned (200–300 failed runs per repo, plus ~1,100 job
-logs read in full). What was skipped, and why:
+Roughly 8,000 failed-job records from about 4,000 recent failed runs across the
+11 source repos were scanned (200–600 failed runs per repo, plus several
+thousand job logs read in full), with host+error patterns for npm, PyPI, Maven,
+crates.io, hex.pm, RubyGems, Packagist, apt/OS mirrors, container registries and
+remote servers.
 
-- **`flaky` shortfall (6 instead of 12, from 3 repos instead of 5).** GitHub
-  only keeps the previous attempt's job records for some repositories. For
-  apache/kafka, elixir-lang/elixir, microsoft/playwright, home-assistant/core
-  and rails/rails, `…/runs/{id}/attempts/1/jobs` returns an empty list or 404
-  for every rerun checked, so the required proof (job failed on attempt 1,
-  passed on attempt 2, same commit) cannot be produced from those repos. For
-  those repos most attempt-2 successes are also `action_required` approval
-  reruns that never ran any job, which are not flakes. Only fission, nodejs and
-  tokio retained the needed attempt-1 records in the window.
-- **Hangs and timeouts** — `The action has timed out`, `has exceeded the
-  maximum execution time` (e.g. curl "linux-mingw" and "CM openssl torture"
-  jobs): a hang in the product and a slow runner look the same, so these were
-  not labelled.
-- **Bare exit codes** — jobs whose only error line is
-  `##[error]Process completed with exit code N` with nothing explaining it
-  (e.g. fission benchmark, elixir "Upload release").
-- **Missing images / 404s** — `manifest unknown` for a container tag (many
-  rails devcontainer runs, `ghcr.io/rails/devcontainer/images/ruby:*`): a
-  missing image is config, not a registry outage.
-- **Cancelled / concurrency-cancelled runs** — `The operation was canceled.`,
-  run conclusion `cancelled`, and jobs that only failed because a job they
-  depend on failed (e.g. the flutter "Mac_arm64_verify_binaries" guard, kafka
-  "CI checks completed").
-- **Ambiguous causes** — a kernel OOPS inside tokio's io_uring test VM (infra
-  or flake?), MariaDB runs whose container log shows a healthcheck credential
-  error (config or environment?), and the fission kind-cluster run where the
-  kind binary failed its checksum before any test ran (external download or
-  runner setup?).
-- **Unavailable logs** — expired/removed logs (e.g. tokio FreeBSD jobs return
-  `BlobNotFound`) were dropped, as were runs whose logs were empty.
-- **microsoft/playwright** needed the `fixed_by_commit` route (its PR runs are
-  test jobs, not lint jobs, and its reruns keep no attempt-1 records); two such
-  cases are included.
+- **`code` shortfall (10 of 12; 7 lint/compile + 3 test-runtime).** Only 3
+  test-runtime failures could be proved with a product-source fixing commit
+  (playwright, home-assistant ×2). The pattern was searched with two scanners
+  across all 11 repos' recent PR runs (job failed, later commit changed
+  non-test source, same job passed); laravel, curl, tokio, elixir, kafka,
+  rails, nodejs and fission yielded no qualifying test-runtime cases.
+- **`flaky` shortfall (9 of 10).** Only 4 source repos yield provable flaky cases. GitHub
+  keeps the previous attempt's job records only for some repositories (kafka,
+  playwright, home-assistant, rails, laravel return an empty list or 404 for
+  `…/attempts/1/jobs`), and the same-SHA-different-run pattern only exists where
+  the same workflow runs twice on one commit (in-repo branch pushes or manual
+  dispatch). Both proofs were applied; the rest were skipped rather than guessed.
+- **`external` shortfall (9 of 12).** npm, Maven/Gradle, crates.io, RubyGems,
+  Packagist and remote-test-server failures were **not present** in the
+  available logs of the 11 source repos: ~4,000 failed-job logs were scanned
+  with per-ecosystem host+error patterns (npm ERR!/E404/ETARGET, "Could not
+  resolve all files", "Could not transfer artifact", "spurious network error",
+  "failed to download from", Gem::RemoteFetcher, Bundler::Fetcher, packagist,
+  hex.pm, files.pythonhosted/pypi.org, registry.npmjs.org, repo.maven.apache.org,
+  static.crates.io, rubygems.org, storage.googleapis.com) and dependency
+  downloads are cached in these CIs, so registry outages rarely fail a job.
+  PyPI (home-assistant ×2) and hex.pm (elixir ×2) were found and are included;
+  the rest are honestly absent rather than padded.
+- Hangs and timeouts (`The action has timed out`, `maximum execution time`):
+  a hang in the product and a slow runner look the same.
+- Bare `##[error]Process completed with exit code N` with nothing explaining it.
+- `manifest unknown` / 404 container tags (missing image = config, not a
+  registry outage), including the rails devcontainer images.
+- Cancelled/concurrency-cancelled runs, and jobs that only failed because a job
+  they depend on failed.
+- Ambiguous causes: a kernel OOPS inside tokio's io_uring test VM, MariaDB
+  service-container healthcheck failures, the fission kind binary checksum
+  failure, and the docker "Initialize containers" failures.
+- Expired/unavailable logs (`BlobNotFound`), and empty logs.
+- Runs whose `attempt 1` was `action_required` (first-time-contributor approval)
+  — they never ran any job and are not flakes.
 
 ## Provenance and scrubbing
 
@@ -126,8 +139,8 @@ logs read in full). What was skipped, and why:
   ANSI escape codes stripped. GitHub's own masking (`***`) is left as-is.
   40-character hex commit SHAs are kept: they are public identifiers, and
   removing them would break the quoted evidence lines.
-- Five logs were larger than 1 MB and are kept as their last 1 MB
-  (`truncated: true` in the manifest).
-- `key_line` in every manifest entry is a verbatim substring of its log file.
+- Logs larger than 1 MB are kept as their last 1 MB (`truncated: true`).
+- `key_line` in every manifest entry is the error line itself and a verbatim
+  substring of its log file.
 
 Labels are proof-based; human spot-check pending.

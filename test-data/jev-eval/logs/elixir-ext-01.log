@@ -1,36 +1,199 @@
-﻿2026-08-17T15:07:26.9080352Z Current runner version: '2.336.0'
-2026-08-17T15:07:26.9103920Z ##[group]Runner Image Provisioner
-2026-08-17T15:07:26.9105198Z Hosted Compute Agent
-2026-08-17T15:07:26.9105798Z Version: 20260729.566
-2026-08-17T15:07:26.9106496Z Commit: cf7153fe6e25b664e8693c24944bf2b00355d109
-2026-08-17T15:07:26.9107307Z Build Date: 2026-07-29T19:17:02Z
-2026-08-17T15:07:26.9108011Z Worker ID: {c9acd6c0-ac73-42c1-b609-fa0786db87f8}
-2026-08-17T15:07:26.9108819Z Azure Region: westus
-2026-08-17T15:07:26.9109395Z ##[endgroup]
-2026-08-17T15:07:26.9111160Z ##[group]Operating System
-2026-08-17T15:07:26.9111940Z Ubuntu
-2026-08-17T15:07:26.9112460Z 24.04.4
-2026-08-17T15:07:26.9113036Z LTS
-2026-08-17T15:07:26.9113564Z ##[endgroup]
-2026-08-17T15:07:26.9114120Z ##[group]Runner Image
-2026-08-17T15:07:26.9114985Z Image: ubuntu-24.04
-2026-08-17T15:07:26.9115569Z Version: 20260810.271.1
-2026-08-17T15:07:26.9116919Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260810.271/images/ubuntu/Ubuntu2404-Readme.md
-2026-08-17T15:07:26.9118449Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260810.271
-2026-08-17T15:07:26.9119466Z ##[endgroup]
-2026-08-17T15:07:26.9120637Z ##[group]GITHUB_TOKEN Permissions
-2026-08-17T15:07:26.9122523Z Contents: read
-2026-08-17T15:07:26.9123171Z Metadata: read
-2026-08-17T15:07:26.9123734Z ##[endgroup]
-2026-08-17T15:07:26.9126000Z Secret source: None
-2026-08-17T15:07:26.9127115Z Prepare workflow directory
-2026-08-17T15:07:26.9517966Z Prepare all required actions
-2026-08-17T15:07:26.9566780Z Getting action download info
-2026-08-17T15:07:27.3408450Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
-2026-08-17T15:07:27.4863859Z Download action repository 'erlef/setup-beam@54075bcc5e249e4758d363f27d099f55d843f124' (SHA:54075bcc5e249e4758d363f27d099f55d843f124)
-2026-08-17T15:07:38.2472131Z ##[warning]Failed to download action 'https://codeload.github.com/erlef/setup-beam/tar.gz/54075bcc5e249e4758d363f27d099f55d843f124'. Error: Response status code does not indicate success: 429 (Too Many Requests). 6BC0:3C1A50:377E166:37B7ECC:6A8323AF
-2026-08-17T15:07:38.2489367Z ##[warning]Back off 28.809 seconds before retry.
-2026-08-17T15:08:25.8608012Z ##[warning]Failed to download action 'https://codeload.github.com/erlef/setup-beam/tar.gz/54075bcc5e249e4758d363f27d099f55d843f124'. Error: Response status code does not indicate success: 429 (Too Many Requests). 6BC0:2F9619:4457C6:47649B:6A8323D7
-2026-08-17T15:08:25.8610335Z ##[warning]Back off 28.942 seconds before retry.
-2026-08-17T15:09:03.1648155Z ##[error]Response status code does not indicate success: 502 (Bad Gateway).
-2026-08-17T15:09:03.1665796Z ##[error]Failed to download archive 'https://codeload.github.com/erlef/setup-beam/tar.gz/54075bcc5e249e4758d363f27d099f55d843f124' after 3 attempts.
+﻿2026-09-10T10:39:08.7006688Z Current runner version: '2.337.0'
+2026-09-10T10:39:08.7026057Z ##[group]Runner Image Provisioner
+2026-09-10T10:39:08.7026762Z Hosted Compute Agent
+2026-09-10T10:39:08.7027265Z Version: 20260828.587
+2026-09-10T10:39:08.7027765Z Commit: abac92662cab4cc7352de4f9f9d2e2419aad9c29
+2026-09-10T10:39:08.7028314Z Build Date: 2026-08-28T16:44:25Z
+2026-09-10T10:39:08.7028862Z Worker ID: {0a98afea-86ed-41a6-8197-433316ed6ffb}
+2026-09-10T10:39:08.7029609Z Azure Region: centralus
+2026-09-10T10:39:08.7030108Z ##[endgroup]
+2026-09-10T10:39:08.7031286Z ##[group]Operating System
+2026-09-10T10:39:08.7031785Z Ubuntu
+2026-09-10T10:39:08.7032226Z 24.04.5
+2026-09-10T10:39:08.7032671Z LTS
+2026-09-10T10:39:08.7033064Z ##[endgroup]
+2026-09-10T10:39:08.7033523Z ##[group]Runner Image
+2026-09-10T10:39:08.7033987Z Image: ubuntu-24.04
+2026-09-10T10:39:08.7034458Z Version: 20260907.300.1
+2026-09-10T10:39:08.7035451Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260907.300/images/ubuntu/Ubuntu2404-Readme.md
+2026-09-10T10:39:08.7036609Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260907.300
+2026-09-10T10:39:08.7037337Z ##[endgroup]
+2026-09-10T10:39:08.7038251Z ##[group]GITHUB_TOKEN Permissions
+2026-09-10T10:39:08.7040065Z Contents: read
+2026-09-10T10:39:08.7040559Z Metadata: read
+2026-09-10T10:39:08.7041039Z ##[endgroup]
+2026-09-10T10:39:08.7042686Z Secret source: None
+2026-09-10T10:39:08.7043466Z Cache mode: write
+2026-09-10T10:39:08.7044001Z Prepare workflow directory
+2026-09-10T10:39:08.7335934Z Prepare all required actions
+2026-09-10T10:39:08.7370957Z Getting action download info
+2026-09-10T10:39:09.0148990Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-09-10T10:39:09.2594382Z Download action repository 'erlef/setup-beam@54075bcc5e249e4758d363f27d099f55d843f124' (SHA:54075bcc5e249e4758d363f27d099f55d843f124)
+2026-09-10T10:39:09.6198141Z Download action repository 'actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a' (SHA:043fb46d1a93c77aae656e7c1c64a875d1fc6a0a)
+2026-09-10T10:39:09.7837807Z Complete job name: Ubuntu 24.04, OTP master
+2026-09-10T10:39:09.8361890Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+2026-09-10T10:39:09.8362581Z with:
+2026-09-10T10:39:09.8362980Z   persist-credentials: false
+2026-09-10T10:39:09.8363400Z   repository: elixir-lang/elixir
+2026-09-10T10:39:09.8366008Z   token: ***
+2026-09-10T10:39:09.8366390Z   ssh-strict: true
+2026-09-10T10:39:09.8366735Z   ssh-user: git
+2026-09-10T10:39:09.8367070Z   clean: true
+2026-09-10T10:39:09.8367436Z   sparse-checkout-cone-mode: true
+2026-09-10T10:39:09.8367835Z   fetch-depth: 1
+2026-09-10T10:39:09.8368226Z   fetch-tags: false
+2026-09-10T10:39:09.8368573Z   show-progress: true
+2026-09-10T10:39:09.8368917Z   lfs: false
+2026-09-10T10:39:09.8369419Z   submodules: false
+2026-09-10T10:39:09.8369792Z   set-safe-directory: true
+2026-09-10T10:39:09.8370213Z   allow-unsafe-pr-checkout: false
+2026-09-10T10:39:09.8370800Z env:
+2026-09-10T10:39:09.8371117Z   ELIXIR_ASSERT_TIMEOUT: 2000
+2026-09-10T10:39:09.8371550Z   ELIXIRC_OPTS: --warnings-as-errors
+2026-09-10T10:39:09.8372038Z   LANG: C.UTF-8
+2026-09-10T10:39:09.8372414Z   ERLC_OPTS: warnings_as_errors
+2026-09-10T10:39:09.8372794Z ##[endgroup]
+2026-09-10T10:39:09.9073681Z Syncing repository: elixir-lang/elixir
+2026-09-10T10:39:09.9075019Z ##[group]Getting Git version info
+2026-09-10T10:39:09.9075519Z Working directory is '/home/runner/work/elixir/elixir'
+2026-09-10T10:39:09.9076366Z [command]/usr/bin/git version
+2026-09-10T10:39:09.9165529Z git version 2.55.0
+2026-09-10T10:39:09.9177583Z ##[endgroup]
+2026-09-10T10:39:09.9184436Z Temporarily overriding HOME='/home/runner/work/_temp/22b27cbf-96af-4558-b4e7-de8fc26c4713' before making global git config changes
+2026-09-10T10:39:09.9185484Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-10T10:39:09.9188314Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/elixir/elixir
+2026-09-10T10:39:09.9224988Z Deleting the contents of '/home/runner/work/elixir/elixir'
+2026-09-10T10:39:09.9227287Z ##[group]Determining repository object format
+2026-09-10T10:39:09.9228250Z ##[endgroup]
+2026-09-10T10:39:09.9228839Z ##[group]Initializing the repository
+2026-09-10T10:39:09.9231087Z [command]/usr/bin/git init /home/runner/work/elixir/elixir
+2026-09-10T10:39:10.0558579Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-09-10T10:39:10.0559981Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-09-10T10:39:10.0560863Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-09-10T10:39:10.0561583Z hint: call:
+2026-09-10T10:39:10.0562103Z hint:
+2026-09-10T10:39:10.0562655Z hint: 	git config --global init.defaultBranch <name>
+2026-09-10T10:39:10.0563292Z hint:
+2026-09-10T10:39:10.0563861Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-09-10T10:39:10.0564764Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-09-10T10:39:10.0565542Z hint:
+2026-09-10T10:39:10.0565998Z hint: 	git branch -m <name>
+2026-09-10T10:39:10.0566568Z hint:
+2026-09-10T10:39:10.0567194Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-09-10T10:39:10.0568022Z Initialized empty Git repository in /home/runner/work/elixir/elixir/.git/
+2026-09-10T10:39:10.0569902Z [command]/usr/bin/git remote add origin https://github.com/elixir-lang/elixir
+2026-09-10T10:39:10.0944691Z ##[endgroup]
+2026-09-10T10:39:10.0945584Z ##[group]Disabling automatic garbage collection
+2026-09-10T10:39:10.0947492Z [command]/usr/bin/git config --local gc.auto 0
+2026-09-10T10:39:10.0969990Z ##[endgroup]
+2026-09-10T10:39:10.0970851Z ##[group]Setting up auth
+2026-09-10T10:39:10.0971429Z Removing SSH command configuration
+2026-09-10T10:39:10.0975229Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-10T10:39:10.0997534Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-10T10:39:10.1260171Z Removing HTTP extra header
+2026-09-10T10:39:10.1263151Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-10T10:39:10.1282887Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-10T10:39:10.1431828Z Removing includeIf entries pointing to credentials config files
+2026-09-10T10:39:10.1435761Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-10T10:39:10.1457108Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-10T10:39:10.1599605Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-4b44b360-bd86-4603-88b3-fed585f9fac0.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-09-10T10:39:10.1623324Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/elixir/elixir/.git.path /home/runner/work/_temp/git-credentials-4b44b360-bd86-4603-88b3-fed585f9fac0.config
+2026-09-10T10:39:10.1642509Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/elixir/elixir/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-4b44b360-bd86-4603-88b3-fed585f9fac0.config
+2026-09-10T10:39:10.1665822Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-4b44b360-bd86-4603-88b3-fed585f9fac0.config
+2026-09-10T10:39:10.1686187Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-4b44b360-bd86-4603-88b3-fed585f9fac0.config
+2026-09-10T10:39:10.1703365Z ##[endgroup]
+2026-09-10T10:39:10.1704199Z ##[group]Fetching the repository
+2026-09-10T10:39:10.1708596Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +44ba8884f2b8706d23c99b29a397518d469f1989:refs/remotes/pull/15877/merge
+2026-09-10T10:39:11.3919562Z From https://github.com/elixir-lang/elixir
+2026-09-10T10:39:11.3920596Z  * [new ref]         44ba8884f2b8706d23c99b29a397518d469f1989 -> pull/15877/merge
+2026-09-10T10:39:11.3923281Z ##[endgroup]
+2026-09-10T10:39:11.3923897Z ##[group]Determining the checkout info
+2026-09-10T10:39:11.3924475Z ##[endgroup]
+2026-09-10T10:39:11.3928576Z [command]/usr/bin/git sparse-checkout disable
+2026-09-10T10:39:11.3970886Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-09-10T10:39:11.3986000Z ##[group]Checking out the ref
+2026-09-10T10:39:11.3988964Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/15877/merge
+2026-09-10T10:39:11.4547587Z Note: switching to 'refs/remotes/pull/15877/merge'.
+2026-09-10T10:39:11.4548112Z 
+2026-09-10T10:39:11.4551921Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-09-10T10:39:11.4552408Z changes and commit them, and you can discard any commits you make in this
+2026-09-10T10:39:11.4552897Z state without impacting any branches by switching back to a branch.
+2026-09-10T10:39:11.4553151Z 
+2026-09-10T10:39:11.4553435Z If you want to create a new branch to retain commits you create, you may
+2026-09-10T10:39:11.4553990Z do so (now or later) by using -c with the switch command. Example:
+2026-09-10T10:39:11.4554312Z 
+2026-09-10T10:39:11.4554457Z   git switch -c <new-branch-name>
+2026-09-10T10:39:11.4554656Z 
+2026-09-10T10:39:11.4554794Z Or undo this operation with:
+2026-09-10T10:39:11.4554966Z 
+2026-09-10T10:39:11.4555112Z   git switch -
+2026-09-10T10:39:11.4555252Z 
+2026-09-10T10:39:11.4555466Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-09-10T10:39:11.4555708Z 
+2026-09-10T10:39:11.4556002Z HEAD is now at 44ba888 Merge 5e0ab4fbe0660e9fda911049e5938484373109ba into 2c6e6d16121528a776460269c40b3c2e0099a154
+2026-09-10T10:39:11.4557358Z ##[endgroup]
+2026-09-10T10:39:11.4583348Z [command]/usr/bin/git log -1 --format=%H
+2026-09-10T10:39:11.4599683Z 44ba8884f2b8706d23c99b29a397518d469f1989
+2026-09-10T10:39:11.4606503Z ##[group]Removing auth
+2026-09-10T10:39:11.4606978Z Removing SSH command configuration
+2026-09-10T10:39:11.4609881Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-10T10:39:11.4630274Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-10T10:39:11.4772313Z Removing HTTP extra header
+2026-09-10T10:39:11.4774996Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-10T10:39:11.4798490Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-10T10:39:11.4935603Z Removing includeIf entries pointing to credentials config files
+2026-09-10T10:39:11.4938083Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-10T10:39:11.5061409Z includeif.gitdir:/home/runner/work/elixir/elixir/.git.path
+2026-09-10T10:39:11.5062304Z includeif.gitdir:/home/runner/work/elixir/elixir/.git/worktrees/*.path
+2026-09-10T10:39:11.5063036Z includeif.gitdir:/github/workspace/.git.path
+2026-09-10T10:39:11.5063704Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-09-10T10:39:11.5067602Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/elixir/elixir/.git.path
+2026-09-10T10:39:11.5082844Z /home/runner/work/_temp/git-credentials-4b44b360-bd86-4603-88b3-fed585f9fac0.config
+2026-09-10T10:39:11.5090409Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/elixir/elixir/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-4b44b360\-bd86\-4603\-88b3\-fed585f9fac0\.config
+2026-09-10T10:39:11.5111085Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/elixir/elixir/.git/worktrees/*.path
+2026-09-10T10:39:11.5128655Z /home/runner/work/_temp/git-credentials-4b44b360-bd86-4603-88b3-fed585f9fac0.config
+2026-09-10T10:39:11.5133587Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/elixir/elixir/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-4b44b360\-bd86\-4603\-88b3\-fed585f9fac0\.config
+2026-09-10T10:39:11.5153418Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-09-10T10:39:11.5169082Z /github/runner_temp/git-credentials-4b44b360-bd86-4603-88b3-fed585f9fac0.config
+2026-09-10T10:39:11.5176763Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-4b44b360\-bd86\-4603\-88b3\-fed585f9fac0\.config
+2026-09-10T10:39:11.5197394Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-09-10T10:39:11.5212635Z /github/runner_temp/git-credentials-4b44b360-bd86-4603-88b3-fed585f9fac0.config
+2026-09-10T10:39:11.5244126Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-4b44b360\-bd86\-4603\-88b3\-fed585f9fac0\.config
+2026-09-10T10:39:11.5294581Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-10T10:39:11.5430695Z Removing credentials config '/home/runner/work/_temp/git-credentials-4b44b360-bd86-4603-88b3-fed585f9fac0.config'
+2026-09-10T10:39:11.5436676Z ##[endgroup]
+2026-09-10T10:39:11.5613289Z ##[group]Run erlef/setup-beam@54075bcc5e249e4758d363f27d099f55d843f124
+2026-09-10T10:39:11.5613693Z with:
+2026-09-10T10:39:11.5613970Z   otp-version: master
+2026-09-10T10:39:11.5615852Z   github-token: ***
+2026-09-10T10:39:11.5616144Z   otp-architecture: 64
+2026-09-10T10:39:11.5616424Z   install-hex: true
+2026-09-10T10:39:11.5616668Z   install-rebar: true
+2026-09-10T10:39:11.5616934Z   version-type: loose
+2026-09-10T10:39:11.5617201Z   disable_problem_matchers: false
+2026-09-10T10:39:11.5617501Z   hexpm-mirrors: https://builds.hex.pm
+
+2026-09-10T10:39:11.5617795Z env:
+2026-09-10T10:39:11.5618031Z   ELIXIR_ASSERT_TIMEOUT: 2000
+2026-09-10T10:39:11.5618318Z   ELIXIRC_OPTS: --warnings-as-errors
+2026-09-10T10:39:11.5618613Z   LANG: C.UTF-8
+2026-09-10T10:39:11.5618911Z   ERLC_OPTS: warnings_as_errors
+2026-09-10T10:39:11.5619182Z ##[endgroup]
+2026-09-10T10:39:23.7835865Z Action fetch /builds/otp/amd64/ubuntu-24.04/builds.txt failed for mirror https://builds.hex.pm, with Error: Gateway Error
+2026-09-10T10:39:23.7865961Z ##[error]Could not fetch /builds/otp/amd64/ubuntu-24.04/builds.txt from any hex.pm mirror
+2026-09-10T10:39:23.8309641Z Post job cleanup.
+2026-09-10T10:39:23.8907234Z [command]/usr/bin/git version
+2026-09-10T10:39:23.8938914Z git version 2.55.0
+2026-09-10T10:39:23.8961336Z Temporarily overriding HOME='/home/runner/work/_temp/09fce28b-04ad-4d90-8a60-183a2b619e8a' before making global git config changes
+2026-09-10T10:39:23.8962038Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-10T10:39:23.8965453Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/elixir/elixir
+2026-09-10T10:39:23.8987547Z Removing SSH command configuration
+2026-09-10T10:39:23.8991482Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-10T10:39:23.9013860Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-10T10:39:23.9158100Z Removing HTTP extra header
+2026-09-10T10:39:23.9161935Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-10T10:39:23.9182400Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-10T10:39:23.9318488Z Removing includeIf entries pointing to credentials config files
+2026-09-10T10:39:23.9322585Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-10T10:39:23.9342704Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-10T10:39:23.9581389Z Cleaning up orphan processes

@@ -1,0 +1,209 @@
+﻿2026-09-26T15:10:31.6080098Z Current runner version: '2.337.0'
+2026-09-26T15:10:31.6100986Z ##[group]Runner Image Provisioner
+2026-09-26T15:10:31.6101709Z Hosted Compute Agent
+2026-09-26T15:10:31.6102344Z Version: 20260828.587
+2026-09-26T15:10:31.6102962Z Commit: abac92662cab4cc7352de4f9f9d2e2419aad9c29
+2026-09-26T15:10:31.6103811Z Build Date: 2026-08-28T16:44:25Z
+2026-09-26T15:10:31.6104437Z Worker ID: {f7367a3b-46b9-4654-9844-869a85481db8}
+2026-09-26T15:10:31.6105065Z Azure Region: westcentralus
+2026-09-26T15:10:31.6105684Z ##[endgroup]
+2026-09-26T15:10:31.6106886Z ##[group]Operating System
+2026-09-26T15:10:31.6107412Z Ubuntu
+2026-09-26T15:10:31.6108005Z 22.04.5
+2026-09-26T15:10:31.6108451Z LTS
+2026-09-26T15:10:31.6108970Z ##[endgroup]
+2026-09-26T15:10:31.6109510Z ##[group]Runner Image
+2026-09-26T15:10:31.6110022Z Image: ubuntu-22.04
+2026-09-26T15:10:31.6110600Z Version: 20260920.303.1
+2026-09-26T15:10:31.6111672Z Included Software: https://github.com/actions/runner-images/blob/ubuntu22/20260920.303/images/ubuntu/Ubuntu2204-Readme.md
+2026-09-26T15:10:31.6113085Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu22%2F20260920.303
+2026-09-26T15:10:31.6114436Z ##[endgroup]
+2026-09-26T15:10:31.6115475Z ##[group]GITHUB_TOKEN Permissions
+2026-09-26T15:10:31.6117343Z Actions: read
+2026-09-26T15:10:31.6117898Z Contents: read
+2026-09-26T15:10:31.6118420Z Metadata: read
+2026-09-26T15:10:31.6118977Z ##[endgroup]
+2026-09-26T15:10:31.6120637Z Secret source: Actions
+2026-09-26T15:10:31.6121589Z Cache mode: write
+2026-09-26T15:10:31.6122202Z Prepare workflow directory
+2026-09-26T15:10:31.6394644Z Prepare all required actions
+2026-09-26T15:10:31.6434987Z Getting action download info
+2026-09-26T15:10:31.9342471Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-09-26T15:10:32.0107699Z Download action repository 'actions/setup-node@820762786026740c76f36085b0efc47a31fe5020' (SHA:820762786026740c76f36085b0efc47a31fe5020)
+2026-09-26T15:10:32.3559567Z Download action repository 'actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a' (SHA:043fb46d1a93c77aae656e7c1c64a875d1fc6a0a)
+2026-09-26T15:10:32.5485099Z Complete job name: Update DuckDB
+2026-09-26T15:10:32.6189905Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+2026-09-26T15:10:32.6191174Z with:
+2026-09-26T15:10:32.6191783Z   repository: microsoft/playwright
+2026-09-26T15:10:32.6198583Z   token: ***
+2026-09-26T15:10:32.6199183Z   ssh-strict: true
+2026-09-26T15:10:32.6199786Z   ssh-user: git
+2026-09-26T15:10:32.6200405Z   persist-credentials: true
+2026-09-26T15:10:32.6201081Z   clean: true
+2026-09-26T15:10:32.6201695Z   sparse-checkout-cone-mode: true
+2026-09-26T15:10:32.6202428Z   fetch-depth: 1
+2026-09-26T15:10:32.6203022Z   fetch-tags: false
+2026-09-26T15:10:32.6203728Z   show-progress: true
+2026-09-26T15:10:32.6204359Z   lfs: false
+2026-09-26T15:10:32.6204997Z   submodules: false
+2026-09-26T15:10:32.6205631Z   set-safe-directory: true
+2026-09-26T15:10:32.6206375Z   allow-unsafe-pr-checkout: false
+2026-09-26T15:10:32.6207328Z ##[endgroup]
+2026-09-26T15:10:32.7099590Z Syncing repository: microsoft/playwright
+2026-09-26T15:10:32.7101660Z ##[group]Getting Git version info
+2026-09-26T15:10:32.7102694Z Working directory is '/home/runner/work/playwright/playwright'
+2026-09-26T15:10:32.7104581Z [command]/usr/bin/git version
+2026-09-26T15:10:32.7122827Z git version 2.55.0
+2026-09-26T15:10:32.7139259Z ##[endgroup]
+2026-09-26T15:10:32.7147992Z Temporarily overriding HOME='/home/runner/work/_temp/d6a54bc8-6e4a-4b3e-ae9d-7148acb9c882' before making global git config changes
+2026-09-26T15:10:32.7151227Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-26T15:10:32.7154149Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/playwright/playwright
+2026-09-26T15:10:32.7182317Z Deleting the contents of '/home/runner/work/playwright/playwright'
+2026-09-26T15:10:32.7185747Z ##[group]Determining repository object format
+2026-09-26T15:10:32.7188119Z ##[endgroup]
+2026-09-26T15:10:32.7189726Z ##[group]Initializing the repository
+2026-09-26T15:10:32.7191391Z [command]/usr/bin/git init /home/runner/work/playwright/playwright
+2026-09-26T15:10:32.7425012Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-09-26T15:10:32.7427296Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-09-26T15:10:32.7429425Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-09-26T15:10:32.7431035Z hint: call:
+2026-09-26T15:10:32.7432003Z hint:
+2026-09-26T15:10:32.7433019Z hint: 	git config --global init.defaultBranch <name>
+2026-09-26T15:10:32.7434160Z hint:
+2026-09-26T15:10:32.7435197Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-09-26T15:10:32.7436566Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-09-26T15:10:32.7437627Z hint:
+2026-09-26T15:10:32.7438214Z hint: 	git branch -m <name>
+2026-09-26T15:10:32.7438914Z hint:
+2026-09-26T15:10:32.7439819Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-09-26T15:10:32.7441319Z Initialized empty Git repository in /home/runner/work/playwright/playwright/.git/
+2026-09-26T15:10:32.7443893Z [command]/usr/bin/git remote add origin https://github.com/microsoft/playwright
+2026-09-26T15:10:32.7466247Z ##[endgroup]
+2026-09-26T15:10:32.7467315Z ##[group]Disabling automatic garbage collection
+2026-09-26T15:10:32.7468656Z [command]/usr/bin/git config --local gc.auto 0
+2026-09-26T15:10:32.7497050Z ##[endgroup]
+2026-09-26T15:10:32.7498280Z ##[group]Setting up auth
+2026-09-26T15:10:32.7499172Z Removing SSH command configuration
+2026-09-26T15:10:32.7501202Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-26T15:10:32.7532525Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-26T15:10:32.7796769Z Removing HTTP extra header
+2026-09-26T15:10:32.7801405Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-26T15:10:32.7832445Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-26T15:10:32.8035610Z Removing includeIf entries pointing to credentials config files
+2026-09-26T15:10:32.8039432Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-26T15:10:32.8069253Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-26T15:10:32.8296775Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-8d1c27ac-2821-40e8-9219-4c665f2215d9.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-09-26T15:10:32.8329263Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/playwright/playwright/.git.path /home/runner/work/_temp/git-credentials-8d1c27ac-2821-40e8-9219-4c665f2215d9.config
+2026-09-26T15:10:32.8357961Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/playwright/playwright/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-8d1c27ac-2821-40e8-9219-4c665f2215d9.config
+2026-09-26T15:10:32.8387478Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-8d1c27ac-2821-40e8-9219-4c665f2215d9.config
+2026-09-26T15:10:32.8417539Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-8d1c27ac-2821-40e8-9219-4c665f2215d9.config
+2026-09-26T15:10:32.8444198Z ##[endgroup]
+2026-09-26T15:10:32.8445817Z ##[group]Fetching the repository
+2026-09-26T15:10:32.8451012Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +b9a34ac7783a1b6c2e1dfff0c08ac744c048fa59:refs/remotes/origin/main
+2026-09-26T15:10:35.0863380Z From https://github.com/microsoft/playwright
+2026-09-26T15:10:35.0865601Z  * [new ref]         b9a34ac7783a1b6c2e1dfff0c08ac744c048fa59 -> origin/main
+2026-09-26T15:10:35.0872011Z [command]/usr/bin/git branch --list --remote origin/main
+2026-09-26T15:10:35.0895536Z   origin/main
+2026-09-26T15:10:35.0902602Z [command]/usr/bin/git rev-parse refs/remotes/origin/main
+2026-09-26T15:10:35.0924073Z b9a34ac7783a1b6c2e1dfff0c08ac744c048fa59
+2026-09-26T15:10:35.0927604Z ##[endgroup]
+2026-09-26T15:10:35.0928147Z ##[group]Determining the checkout info
+2026-09-26T15:10:35.0928729Z ##[endgroup]
+2026-09-26T15:10:35.0931153Z [command]/usr/bin/git sparse-checkout disable
+2026-09-26T15:10:35.0967856Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-09-26T15:10:35.0994334Z ##[group]Checking out the ref
+2026-09-26T15:10:35.0996995Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2026-09-26T15:10:35.4173831Z Switched to a new branch 'main'
+2026-09-26T15:10:35.4190439Z branch 'main' set up to track 'origin/main'.
+2026-09-26T15:10:35.4215082Z ##[endgroup]
+2026-09-26T15:10:35.4235401Z [command]/usr/bin/git log -1 --format=%H
+2026-09-26T15:10:35.4259298Z b9a34ac7783a1b6c2e1dfff0c08ac744c048fa59
+2026-09-26T15:10:35.4485083Z ##[group]Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+2026-09-26T15:10:35.4485399Z with:
+2026-09-26T15:10:35.4485565Z   node-version: lts/*
+2026-09-26T15:10:35.4485746Z   check-latest: false
+2026-09-26T15:10:35.4487767Z   token: ***
+2026-09-26T15:10:35.4487951Z   package-manager-cache: true
+2026-09-26T15:10:35.4488150Z ##[endgroup]
+2026-09-26T15:10:35.5561549Z Attempt to resolve LTS alias from manifest...
+2026-09-26T15:10:36.4178475Z Found in cache @ /opt/hostedtoolcache/node/24.21.0/x64
+2026-09-26T15:10:36.4180318Z ##[group]Environment details
+2026-09-26T15:10:38.1759996Z node: v24.21.0
+2026-09-26T15:10:38.1761052Z npm: 11.19.0
+2026-09-26T15:10:38.1761321Z yarn: 1.22.22
+2026-09-26T15:10:38.1762205Z ##[endgroup]
+2026-09-26T15:10:38.1911724Z ##[group]Run npm ci
+2026-09-26T15:10:38.1911952Z npm ci
+2026-09-26T15:10:38.2511042Z shell: /usr/bin/bash -e {0}
+2026-09-26T15:10:38.2511301Z ##[endgroup]
+2026-09-26T15:10:47.0413039Z 
+2026-09-26T15:10:47.0420451Z added 629 packages, and audited 646 packages in 9s
+2026-09-26T15:10:47.0420719Z 
+2026-09-26T15:10:47.0420880Z 186 packages are looking for funding
+2026-09-26T15:10:47.0421160Z   run `npm fund` for details
+2026-09-26T15:10:47.0586748Z 
+2026-09-26T15:10:47.0587214Z 9 vulnerabilities (4 moderate, 5 high)
+2026-09-26T15:10:47.0587511Z 
+2026-09-26T15:10:47.0587791Z To address issues that do not require attention, run:
+2026-09-26T15:10:47.0588074Z   npm audit fix
+2026-09-26T15:10:47.0588187Z 
+2026-09-26T15:10:47.0588287Z To address all issues, run:
+2026-09-26T15:10:47.0588506Z   npm audit fix --force
+2026-09-26T15:10:47.0588616Z 
+2026-09-26T15:10:47.0588748Z Run `npm audit` for details.
+2026-09-26T15:10:47.0594955Z npm warn install-scripts 1 package has install scripts not yet covered by allowScripts:
+2026-09-26T15:10:47.0595501Z npm warn install-scripts   esbuild@0.28.1 (postinstall: node install.js)
+2026-09-26T15:10:47.0595816Z npm warn install-scripts
+2026-09-26T15:10:47.0596290Z npm warn install-scripts Run `npm install-scripts ls` to review, or `npm install-scripts approve <pkg>` to allow.
+2026-09-26T15:10:47.1181910Z ##[group]Run node utils/test-results-db/cli.ts download
+2026-09-26T15:10:47.1182273Z node utils/test-results-db/cli.ts download
+2026-09-26T15:10:47.1243048Z shell: /usr/bin/bash -e {0}
+2026-09-26T15:10:47.1243252Z env:
+2026-09-26T15:10:47.1245437Z   GITHUB_TOKEN: ***
+2026-09-26T15:10:47.1245616Z ##[endgroup]
+2026-09-26T15:10:47.8418981Z Downloading "test-results-db" artifact #10862398922 ...
+2026-09-26T15:12:09.6303619Z Downloaded database to /home/runner/work/playwright/playwright/utils/test-results-db/test-results.duckdb (3458.8 MB)
+2026-09-26T15:12:09.8820135Z ##[group]Run node utils/test-results-db/cli.ts update --lookback-days 7 --concurrency 32
+2026-09-26T15:12:09.8820679Z node utils/test-results-db/cli.ts update --lookback-days 7 --concurrency 32
+2026-09-26T15:12:09.8880850Z shell: /usr/bin/bash -e {0}
+2026-09-26T15:12:09.8881053Z env:
+2026-09-26T15:12:09.8883160Z   GITHUB_TOKEN: ***
+2026-09-26T15:12:09.8883387Z   NODE_OPTIONS: --max-old-space-size=8192
+2026-09-26T15:12:09.8883606Z ##[endgroup]
+2026-09-26T15:12:10.3213246Z Test results database
+2026-09-26T15:12:10.3243536Z   78656860 rows from 35898 artifacts
+2026-09-26T15:12:18.6988322Z GitHub API error: 500 Internal Server Error for https://api.github.com/repos/microsoft/playwright/actions/artifacts?per_page=100
+2026-09-26T15:12:18.7382179Z ##[error]Process completed with exit code 1.
+2026-09-26T15:12:18.8583864Z Post job cleanup.
+2026-09-26T15:12:18.9274131Z [command]/usr/bin/git version
+2026-09-26T15:12:18.9306715Z git version 2.55.0
+2026-09-26T15:12:18.9338784Z Temporarily overriding HOME='/home/runner/work/_temp/572cda97-04bc-4f46-a429-df0069d14684' before making global git config changes
+2026-09-26T15:12:18.9339554Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-26T15:12:18.9342134Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/playwright/playwright
+2026-09-26T15:12:18.9772262Z Removing SSH command configuration
+2026-09-26T15:12:18.9784674Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-26T15:12:18.9821360Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-26T15:12:19.0053431Z Removing HTTP extra header
+2026-09-26T15:12:19.0058488Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-26T15:12:19.0090520Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-26T15:12:19.0320896Z Removing includeIf entries pointing to credentials config files
+2026-09-26T15:12:19.0326416Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-26T15:12:19.0351136Z includeif.gitdir:/home/runner/work/playwright/playwright/.git.path
+2026-09-26T15:12:19.0353292Z includeif.gitdir:/home/runner/work/playwright/playwright/.git/worktrees/*.path
+2026-09-26T15:12:19.0354381Z includeif.gitdir:/github/workspace/.git.path
+2026-09-26T15:12:19.0354989Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-09-26T15:12:19.0360594Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/playwright/playwright/.git.path
+2026-09-26T15:12:19.0381955Z /home/runner/work/_temp/git-credentials-8d1c27ac-2821-40e8-9219-4c665f2215d9.config
+2026-09-26T15:12:19.0390564Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/playwright/playwright/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-8d1c27ac\-2821\-40e8\-9219\-4c665f2215d9\.config
+2026-09-26T15:12:19.0963120Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/playwright/playwright/.git/worktrees/*.path
+2026-09-26T15:12:19.0989263Z /home/runner/work/_temp/git-credentials-8d1c27ac-2821-40e8-9219-4c665f2215d9.config
+2026-09-26T15:12:19.0997538Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/playwright/playwright/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-8d1c27ac\-2821\-40e8\-9219\-4c665f2215d9\.config
+2026-09-26T15:12:19.2165513Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-09-26T15:12:19.2186325Z /github/runner_temp/git-credentials-8d1c27ac-2821-40e8-9219-4c665f2215d9.config
+2026-09-26T15:12:19.2191711Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-8d1c27ac\-2821\-40e8\-9219\-4c665f2215d9\.config
+2026-09-26T15:12:19.3352163Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-09-26T15:12:19.3379482Z /github/runner_temp/git-credentials-8d1c27ac-2821-40e8-9219-4c665f2215d9.config
+2026-09-26T15:12:19.3385928Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-8d1c27ac\-2821\-40e8\-9219\-4c665f2215d9\.config
+2026-09-26T15:12:19.4548227Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-26T15:12:19.4767088Z Removing credentials config '/home/runner/work/_temp/git-credentials-8d1c27ac-2821-40e8-9219-4c665f2215d9.config'
+2026-09-26T15:12:19.5568927Z Cleaning up orphan processes

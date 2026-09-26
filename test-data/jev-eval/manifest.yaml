@@ -1,22 +1,3 @@
-- id: curl-ext-01
-  repo: curl/curl
-  stack: C
-  label: external
-  evidence_kind: third_party_request_failed
-  evidence: "request to api.github.com (advisories API) failed inside zizmor, so the 'known-vulnerable-actions' audit could not run."
-  evidence_url: https://github.com/curl/curl/actions/runs/36190631557
-  run_url: https://github.com/curl/curl/actions/runs/36190631557
-  run_id: 36190631557
-  run_attempt: 1
-  job_id: 108254620232
-  job_name: "misc checks"
-  failing_step: "zizmor GHA;Wait for all background steps"
-  commit_sha: a5d6d2c0bc4a2f38b77b61b162c957d2ec47da9c
-  created_at: 2026-09-25T21:16:27Z
-  log_file: logs/curl-ext-01.log
-  log_bytes: 32135
-  truncated: false
-  key_line: "Cache error: Cache error: error sending request for url (https://api.github.com/advisories?ecosystem=actions&affects=cygwin%2Fcygwin-install-action%40v6.0.2)"
 - id: curl-infra-01
   repo: curl/curl
   stack: C
@@ -36,12 +17,31 @@
   log_bytes: 15071
   truncated: false
   key_line: "##[error]fatal: unable to access 'https://github.com/curl/curl/': server certificate verification failed. CAfile: none CRLfile: none"
+- id: curl-infra-02
+  repo: curl/curl
+  stack: C
+  label: infra
+  evidence_kind: runner_or_setup_failure
+  evidence: "relabelled: GitHub platform. A request to api.github.com (GitHub advisories API) failed inside zizmor, so the 'known-vulnerable-actions' audit could not run."
+  evidence_url: https://github.com/curl/curl/actions/runs/36190631557
+  run_url: https://github.com/curl/curl/actions/runs/36190631557
+  run_id: 36190631557
+  run_attempt: 1
+  job_id: 108254620232
+  job_name: "misc checks"
+  failing_step: "zizmor GHA;Wait for all background steps"
+  commit_sha: a5d6d2c0bc4a2f38b77b61b162c957d2ec47da9c
+  created_at: 2026-09-25T21:16:27Z
+  log_file: logs/curl-infra-02.log
+  log_bytes: 32135
+  truncated: false
+  key_line: "Cache error: Cache error: error sending request for url (https://api.github.com/advisories?ecosystem=actions&affects=cygwin%2Fcygwin-install-action%40v6.0.2)"
 - id: elixir-code-01
   repo: elixir-lang/elixir
   stack: Elixir
   label: code
   evidence_kind: failure_in_pr_diff
-  evidence: "PR #15912 changed lib/elixir/test/elixir/calendar/iso_test.exs; the 'Check format' step failed because that exact file is not formatted."
+  evidence: "PR #15912 changed lib/elixir/test/elixir/calendar/iso_test.exs; the 'Check format' step failed with 'mix format failed due to --check-formatted' and lists that exact file as unformatted."
   evidence_url: https://github.com/elixir-lang/elixir/pull/15912/files
   run_url: https://github.com/elixir-lang/elixir/actions/runs/35459610091
   run_id: 35459610091
@@ -54,13 +54,70 @@
   log_file: logs/elixir-code-01.log
   log_bytes: 26383
   truncated: false
-  key_line: "/home/runner/work/elixir/elixir/lib/elixir/test/elixir/calendar/iso_test.exs"
+  key_line: "** (Mix) mix format failed due to --check-formatted."
 - id: elixir-ext-01
   repo: elixir-lang/elixir
   stack: Elixir
   label: external
   evidence_kind: third_party_request_failed
-  evidence: "request to codeload.github.com failed with 429 (Too Many Requests) while downloading the erlef/setup-beam action."
+  evidence: "request to third-party host builds.hex.pm (hex.pm) failed with 'Gateway Error' while the setup-beam step fetched OTP builds."
+  evidence_url: https://github.com/elixir-lang/elixir/actions/runs/34417236893
+  run_url: https://github.com/elixir-lang/elixir/actions/runs/34417236893
+  run_id: 34417236893
+  run_attempt: 2
+  job_id: 102838335078
+  job_name: "Ubuntu 24.04, OTP master"
+  failing_step: "Run erlef/setup-beam@54075bcc5e249e4758d363f27d099f55d843f124"
+  commit_sha: 5e0ab4fbe0660e9fda911049e5938484373109ba
+  created_at: 2026-09-09T23:30:31Z
+  log_file: logs/elixir-ext-01.log
+  log_bytes: 17189
+  truncated: false
+  key_line: "##[error]Could not fetch /builds/otp/amd64/ubuntu-24.04/builds.txt from any hex.pm mirror"
+- id: elixir-ext-02
+  repo: elixir-lang/elixir
+  stack: Elixir
+  label: external
+  evidence_kind: third_party_request_failed
+  evidence: "request to third-party host builds.hex.pm (hex.pm) failed with a TLS certificate error while Mix downloaded Rebar metadata."
+  evidence_url: https://github.com/elixir-lang/elixir/actions/runs/33165907585
+  run_url: https://github.com/elixir-lang/elixir/actions/runs/33165907585
+  run_id: 33165907585
+  run_attempt: 1
+  job_id: 98831129698
+  job_name: "Ubuntu 24.04, Erlang/OTP 27.1"
+  failing_step: "Build docs (ExDoc main)"
+  commit_sha: dfe6612e546cec6557900e67651f7d21805472ef
+  created_at: 2026-08-28T11:06:39Z
+  log_file: logs/elixir-ext-02.log
+  log_bytes: 34445
+  truncated: false
+  key_line: "Could not install Rebar because Mix could not download metadata at https://builds.hex.pm/installs/rebar.csv."
+- id: elixir-flaky-01
+  repo: elixir-lang/elixir
+  stack: Elixir
+  label: flaky
+  evidence_kind: same_sha_other_run_passed
+  evidence: "job 'Ubuntu 24.04, OTP 27.0' of the 'CI' workflow failed at runtime on a project test (Assertion with == failed, test/elixir/kernel/expansion_test.exs:2546); a different run of the same workflow on the exact same commit passed the same job (run 34283160052)."
+  evidence_url: https://github.com/elixir-lang/elixir/actions/runs/34283160052
+  run_url: https://github.com/elixir-lang/elixir/actions/runs/34283162627
+  run_id: 34283162627
+  run_attempt: 1
+  job_id: 102252473709
+  job_name: "Ubuntu 24.04, OTP 27.0"
+  failing_step: "Elixir test suite"
+  commit_sha: fc5d35f780d27a066f9aad044a5f53106b3eb0dc
+  created_at: 2026-09-08T21:54:52Z
+  log_file: logs/elixir-flaky-01.log
+  log_bytes: 37308
+  truncated: false
+  key_line: "1) test bitstrings expands binary/bitstring specifiers (Kernel.ExpansionTest)"
+- id: elixir-infra-01
+  repo: elixir-lang/elixir
+  stack: Elixir
+  label: infra
+  evidence_kind: runner_or_setup_failure
+  evidence: "relabelled: GitHub platform. The runner could not download the erlef/setup-beam action from codeload.github.com (429 Too Many Requests) during 'Set up job'; no workflow step ran."
   evidence_url: https://github.com/elixir-lang/elixir/actions/runs/32041322304
   run_url: https://github.com/elixir-lang/elixir/actions/runs/32041322304
   run_id: 32041322304
@@ -70,48 +127,10 @@
   failing_step: "Set up job"
   commit_sha: d3f4cc824c6360cc71e120d4a8c8ad18b7225e56
   created_at: 2026-08-17T15:07:20Z
-  log_file: logs/elixir-ext-01.log
+  log_file: logs/elixir-infra-01.log
   log_bytes: 2947
   truncated: false
   key_line: "##[error]Failed to download archive 'https://codeload.github.com/erlef/setup-beam/tar.gz/54075bcc5e249e4758d363f27d099f55d843f124' after 3 attempts."
-- id: fission-code-01
-  repo: fission/fission
-  stack: Go
-  label: code
-  evidence_kind: failure_in_pr_diff
-  evidence: "PR #3722 changed pkg/statestore/httpapi/limits_test.go; golangci-lint failed on that file/line."
-  evidence_url: https://github.com/fission/fission/pull/3722/files
-  run_url: https://github.com/fission/fission/actions/runs/34610940264
-  run_id: 34610940264
-  run_attempt: 1
-  job_id: 103300979148
-  job_name: "lint"
-  failing_step: "Run golangci-lint"
-  commit_sha: 558b01ba139564c58a526aee9580d7679ffe25eb
-  created_at: 2026-09-11T14:34:33Z
-  log_file: logs/fission-code-01.log
-  log_bytes: 48734
-  truncated: false
-  key_line: "##[error]pkg/statestore/httpapi/limits_test.go:23:64: unnecessary conversion (unconvert)"
-- id: fission-code-02
-  repo: fission/fission
-  stack: Go
-  label: code
-  evidence_kind: failure_in_pr_diff
-  evidence: "PR #3678 changed pkg/fission-cli/cmd/package/create.go; golangci-lint failed on that file/line."
-  evidence_url: https://github.com/fission/fission/pull/3678/files
-  run_url: https://github.com/fission/fission/actions/runs/31419876193
-  run_id: 31419876193
-  run_attempt: 1
-  job_id: 93557757960
-  job_name: "lint"
-  failing_step: "Run golangci-lint"
-  commit_sha: 03de6a13cd424b1742fea975cca27256414f46b4
-  created_at: 2026-08-10T18:35:51Z
-  log_file: logs/fission-code-02.log
-  log_bytes: 53398
-  truncated: false
-  key_line: "##[error]pkg/fission-cli/cmd/package/create.go:196:16: ST1023: should omit type fv1.BuildStatus from declaration; it will be inferred from the right-hand side (staticcheck)"
 - id: fission-flaky-01
   repo: fission/fission
   stack: Go
@@ -264,25 +283,82 @@
   log_bytes: 44598
   truncated: false
   key_line: "##[error]homeassistant/components/zwave_js/sensor.py:1008: error: Returning Any from function declared to return \"str | int | float | None\"  [no-any-return]"
-- id: ha-code-02
+- id: ha-code-03
   repo: home-assistant/core
   stack: Python
   label: code
-  evidence_kind: failure_in_pr_diff
-  evidence: "PR #183087 changed homeassistant/components/unifi/switch.py; the pylint job failed on that file."
-  evidence_url: https://github.com/home-assistant/core/pull/183087/files
-  run_url: https://github.com/home-assistant/core/actions/runs/36141938070
-  run_id: 36141938070
+  evidence_kind: fixed_by_commit
+  evidence: "PR #183119: the 'Run tests Python 3.14.5 (4)' test job failed at runtime (AttributeError on tests/components/teslemetry/test_config_flow.py); the PR's later commit c28b71fa merged dev and changed product source (homeassistant/components/bosch_shc/*.py), and the same job passed on the head commit."
+  evidence_url: https://github.com/home-assistant/core/pull/183119/files
+  run_url: https://github.com/home-assistant/core/actions/runs/36263782776
+  run_id: 36263782776
   run_attempt: 1
-  job_id: 108094092602
-  job_name: "Check pylint"
-  failing_step: "Run pylint (partially)"
-  commit_sha: bae9f278b5da3b1625f509b379496162fb5efc66
-  created_at: 2026-09-25T13:35:39Z
-  log_file: logs/ha-code-02.log
-  log_bytes: 45342
+  job_id: 108465349663
+  job_name: "Run tests Python 3.14.5 (4)"
+  failing_step: "Run pytest"
+  commit_sha: 7f7e43391a6399ea1ce617385ea189a7d5c20c5d
+  created_at: 2026-09-26T18:47:24Z
+  log_file: logs/ha-code-03.log
+  log_bytes: 192004
   truncated: false
-  key_line: "##[error]homeassistant/components/unifi/switch.py:50:0: E0611: No name 'network' in module 'aiounifi' (no-name-in-module)"
+  key_line: "FAILED tests/components/teslemetry/test_config_flow.py::test_pair_step_timeout_retry_reopens_window_and_succeeds - AttributeError:"
+- id: ha-code-04
+  repo: home-assistant/core
+  stack: Python
+  label: code
+  evidence_kind: fixed_by_commit
+  evidence: "PR #182910: the 'Run tests Python 3.14.5 (8)' test job failed at runtime (shutil.Error while copying the test config for tests/components/freebox/test_router.py); the PR's later commit 2d6aa3da changed product source (homeassistant/components/matter/*.py, homeassistant/config_entries.py) and the same job passed on the head commit."
+  evidence_url: https://github.com/home-assistant/core/pull/182910/files
+  run_url: https://github.com/home-assistant/core/actions/runs/36227964396
+  run_id: 36227964396
+  run_attempt: 1
+  job_id: 108366120372
+  job_name: "Run tests Python 3.14.5 (8)"
+  failing_step: "Run pytest"
+  commit_sha: f077e909e9197fae8cab838c75808cefb6dafce3
+  created_at: 2026-09-26T07:49:45Z
+  log_file: logs/ha-code-04.log
+  log_bytes: 235656
+  truncated: false
+  key_line: "ERROR tests/components/freebox/test_router.py::test_async_forget_registration - shutil.Error:"
+- id: ha-ext-01
+  repo: home-assistant/core
+  stack: Python
+  label: external
+  evidence_kind: third_party_request_failed
+  evidence: "request to third-party package index pypi.org failed with 503 while resolving dependencies for the test venv ('Request failed after 3 retries in 8.2s')."
+  evidence_url: https://github.com/home-assistant/core/actions/runs/35852888164
+  run_url: https://github.com/home-assistant/core/actions/runs/35852888164
+  run_id: 35852888164
+  run_attempt: 1
+  job_id: 107154563774
+  job_name: "Prepare dependencies (3.14.5)"
+  failing_step: "Set up Python 3.14.5 and build venv"
+  commit_sha: b806f8e09581cb83d38d9b636c0a247560313af4
+  created_at: 2026-09-23T11:09:21Z
+  log_file: logs/ha-ext-01.log
+  log_bytes: 86103
+  truncated: false
+  key_line: "cause: HTTP status server error (503 Service Unavailable) for url (https://pypi.org/simple/rf-protocols/)"
+- id: ha-ext-02
+  repo: home-assistant/core
+  stack: Python
+  label: external
+  evidence_kind: third_party_request_failed
+  evidence: "request to third-party package index pypi.org failed with 503 while resolving dependencies for the test venv."
+  evidence_url: https://github.com/home-assistant/core/actions/runs/35852538163
+  run_url: https://github.com/home-assistant/core/actions/runs/35852538163
+  run_id: 35852538163
+  run_attempt: 1
+  job_id: 107153445136
+  job_name: "Prepare dependencies (3.14.5)"
+  failing_step: "Set up Python 3.14.5 and build venv"
+  commit_sha: e02f10285a7e49f7297f48bbd4b0b3ebd5446f44
+  created_at: 2026-09-23T11:05:43Z
+  log_file: logs/ha-ext-02.log
+  log_bytes: 91547
+  truncated: false
+  key_line: "cause: HTTP status server error (503 Service Unavailable) for url (https://pypi.org/simple/aiorussound/)"
 - id: ha-infra-01
   repo: home-assistant/core
   stack: Python
@@ -302,25 +378,6 @@
   log_bytes: 182609
   truncated: false
   key_line: "##[error]Failed to FinalizeArtifact: Received non-retryable error: Failed request: (403) Forbidden: Error from intermediary with HTTP status code 403 \"Forbidden\""
-- id: ha-infra-02
-  repo: home-assistant/core
-  stack: Python
-  label: infra
-  evidence_kind: runner_or_setup_failure
-  evidence: "runner setup action failed: the uv setup action could not fetch its version manifest ('Fetching manifest data from https://raw.githubusercontent.com/astral-sh/versions/main/v1/uv.ndjson ...' then 'fetch failed'), so no test step ran."
-  evidence_url: https://github.com/home-assistant/core/actions/runs/35638486917
-  run_url: https://github.com/home-assistant/core/actions/runs/35638486917
-  run_id: 35638486917
-  run_attempt: 1
-  job_id: 106461849377
-  job_name: "Prepare dependencies (3.14.5)"
-  failing_step: "Set up Python 3.14.5 and build venv"
-  commit_sha: 74f0e05955036a38e09cf27b3d2f2f656ac793ba
-  created_at: 2026-09-21T18:27:22Z
-  log_file: logs/ha-infra-02.log
-  log_bytes: 26839
-  truncated: false
-  key_line: "##[error]fetch failed"
 - id: kafka-code-01
   repo: apache/kafka
   stack: Java
@@ -340,25 +397,6 @@
   log_bytes: 1048554
   truncated: true
   key_line: "##[error]/home/runner/work/kafka/kafka/storage/src/test/java/org/apache/kafka/server/log/remote/storage/RemoteLogManagerTest.java:4401: error: incompatible types: String cannot be converted to Level"
-- id: kafka-code-02
-  repo: apache/kafka
-  stack: Java
-  label: code
-  evidence_kind: failure_in_pr_diff
-  evidence: "PR #23441 changed storage/src/main/java/org/apache/kafka/storage/internals/log/AbstractIndex.java; the compile job failed on that file/line."
-  evidence_url: https://github.com/apache/kafka/pull/23441/files
-  run_url: https://github.com/apache/kafka/actions/runs/35871724683
-  run_id: 35871724683
-  run_attempt: 2
-  job_id: 107217443688
-  job_name: "build / Compile and Check (Merge Ref)"
-  failing_step: "Compile and validate"
-  commit_sha: 625d48c687fdcf0fc9ac21543c5421dd283f1dac
-  created_at: 2026-09-23T14:06:10Z
-  log_file: logs/kafka-code-02.log
-  log_bytes: 949377
-  truncated: false
-  key_line: "##[error]/home/runner/work/kafka/kafka/storage/src/main/java/org/apache/kafka/storage/internals/log/AbstractIndex.java:249: error: cannot find symbol"
 - id: kafka-infra-01
   repo: apache/kafka
   stack: Java
@@ -397,25 +435,6 @@
   log_bytes: 4549
   truncated: false
   key_line: "Error response from daemon: Get \"https://registry-1.docker.io/v2/\": net/http: request canceled while waiting for connection (Client.Timeout exceeded while awaiting headers)"
-- id: laravel-ext-02
-  repo: laravel/framework
-  stack: PHP
-  label: external
-  evidence_kind: third_party_request_failed
-  evidence: "request to third-party host registry-1.docker.io (Docker Hub) timed out while the job pulled its container image."
-  evidence_url: https://github.com/laravel/framework/actions/runs/30754070079
-  run_url: https://github.com/laravel/framework/actions/runs/30754070079
-  run_id: 30754070079
-  run_attempt: 1
-  job_id: 91513088302
-  job_name: "PHP 8.5 - PHPUnit 12.5.8 - prefer-lowest"
-  failing_step: "Initialize containers"
-  commit_sha: c09de178a9db0822846bca1c6fafcf0cd1728df3
-  created_at: 2026-08-02T15:19:03Z
-  log_file: logs/laravel-ext-02.log
-  log_bytes: 4796
-  truncated: false
-  key_line: "Error response from daemon: Get \"https://registry-1.docker.io/v2/\": net/http: request canceled while waiting for connection (Client.Timeout exceeded while awaiting headers)"
 - id: laravel-ext-03
   repo: laravel/framework
   stack: PHP
@@ -435,50 +454,12 @@
   log_bytes: 61139
   truncated: false
   key_line: "E: Failed to fetch https://dl.google.com/linux/chrome-stable/deb/dists/stable/main/binary-amd64/Packages.gz  Hash Sum mismatch"
-- id: laravel-infra-01
-  repo: laravel/framework
-  stack: PHP
-  label: infra
-  evidence_kind: runner_or_setup_failure
-  evidence: "runner environment failed: the MySQL service container the job needs did not initialize ('One or more containers failed to start'), before any product test ran."
-  evidence_url: https://github.com/laravel/framework/actions/runs/33767262827
-  run_url: https://github.com/laravel/framework/actions/runs/33767262827
-  run_id: 33767262827
-  run_attempt: 1
-  job_id: 100688204808
-  job_name: "PHP 8.5 - PHPUnit 11.5.50 - prefer-lowest"
-  failing_step: "Initialize containers"
-  commit_sha: dfd76442aa3b7baaec58141a99871c7ec67d527a
-  created_at: 2026-09-03T14:30:37Z
-  log_file: logs/laravel-infra-01.log
-  log_bytes: 28713
-  truncated: false
-  key_line: "##[error]Failed to initialize container mysql:9.7"
-- id: laravel-infra-02
-  repo: laravel/framework
-  stack: PHP
-  label: infra
-  evidence_kind: runner_or_setup_failure
-  evidence: "runner environment failed: the MySQL service container the job needs did not initialize ('One or more containers failed to start'), before any product test ran."
-  evidence_url: https://github.com/laravel/framework/actions/runs/33758428336
-  run_url: https://github.com/laravel/framework/actions/runs/33758428336
-  run_id: 33758428336
-  run_attempt: 1
-  job_id: 100658437878
-  job_name: "PHP 8.5 - PHPUnit 13.0.3 - prefer-lowest"
-  failing_step: "Initialize containers"
-  commit_sha: 3e49d99d61cdec5c0745d38d7e5921335b3b921c
-  created_at: 2026-09-03T12:59:24Z
-  log_file: logs/laravel-infra-02.log
-  log_bytes: 29690
-  truncated: false
-  key_line: "##[error]Failed to initialize container mysql:9.7"
 - id: nodejs-code-01
   repo: nodejs/node
   stack: JavaScript/C++
   label: code
   evidence_kind: failure_in_pr_diff
-  evidence: "PR #66275 changed test/parallel/test-fastutf8stream-flush.js; the lint-js-and-md job reports eslint errors for that file."
+  evidence: "PR #66275 changed test/parallel/test-fastutf8stream-flush.js; the lint-js-and-md job reports eslint errors for that file (capitalized-comments, prefer-common-mustsucceed, no-restricted-syntax)."
   evidence_url: https://github.com/nodejs/node/pull/66275/files
   run_url: https://github.com/nodejs/node/actions/runs/36113658740
   run_id: 36113658740
@@ -491,45 +472,7 @@
   log_file: logs/nodejs-code-01.log
   log_bytes: 27245
   truncated: false
-  key_line: "/home/runner/work/node/node/test/parallel/test-fastutf8stream-flush.js"
-- id: nodejs-ext-01
-  repo: nodejs/node
-  stack: JavaScript/C++
-  label: external
-  evidence_kind: third_party_request_failed
-  evidence: "DNS lookup of api.github.com failed (EAI_AGAIN) during the actions/setup-node step, so the Node.js version list could not be fetched."
-  evidence_url: https://github.com/nodejs/node/actions/runs/35856998379
-  run_url: https://github.com/nodejs/node/actions/runs/35856998379
-  run_id: 35856998379
-  run_attempt: 1
-  job_id: 107167741634
-  job_name: "lint-commit-message"
-  failing_step: "Install Node.js"
-  commit_sha: 120d0dd86887259a7115f929dbd0f19df0557f89
-  created_at: 2026-09-23T11:51:46Z
-  log_file: logs/nodejs-ext-01.log
-  log_bytes: 2377
-  truncated: false
-  key_line: "##[error]getaddrinfo EAI_AGAIN api.github.com"
-- id: nodejs-ext-02
-  repo: nodejs/node
-  stack: JavaScript/C++
-  label: external
-  evidence_kind: third_party_request_failed
-  evidence: "DNS lookup of the artifact blob storage host productionresultssa7.blob.core.windows.net failed (EAI_AGAIN) during the artifact upload step."
-  evidence_url: https://github.com/nodejs/node/actions/runs/35180231360
-  run_url: https://github.com/nodejs/node/actions/runs/35180231360
-  run_id: 35180231360
-  run_attempt: 1
-  job_id: 105070584024
-  job_name: "build-tarball"
-  failing_step: "Upload tarball artifact"
-  commit_sha: e204ae8ce527f434ae5fe84f5a2568e2ae19a749
-  created_at: 2026-09-17T03:59:42Z
-  log_file: logs/nodejs-ext-02.log
-  log_bytes: 42484
-  truncated: false
-  key_line: "##[error]getaddrinfo EAI_AGAIN productionresultssa7.blob.core.windows.net"
+  key_line: "error  Please use common.mustSucceed instead of common.mustCall with assert.ifError  node-core/prefer-common-mustsucceed"
 - id: nodejs-flaky-01
   repo: nodejs/node
   stack: JavaScript/C++
@@ -568,31 +511,69 @@
   log_bytes: 1048576
   truncated: true
   key_line: "out/Release/node /Users/runner/work/_temp/node-v27.0.0-nightly2026-09-20bf505d14ef-slim/test/parallel/test-dgram-ipv6only.js"
-- id: playwright-code-01
-  repo: microsoft/playwright
-  stack: TypeScript
-  label: code
-  evidence_kind: fixed_by_commit
-  evidence: "PR #42922: the 'macos-latest - chrome' job failed on commit 19c9e7263 at tests/mcp/files.spec.ts:201; the PR's later commit 0a05fc1a2 changed tests/mcp/files.spec.ts and the same job passed on the head commit."
-  evidence_url: https://github.com/microsoft/playwright/commit/0a05fc1a269384cbf004a75ee43dcdc1d58d1755
-  run_url: https://github.com/microsoft/playwright/actions/runs/36069582811
-  run_id: 36069582811
+- id: nodejs-flaky-03
+  repo: nodejs/node
+  stack: JavaScript/C++
+  label: flaky
+  evidence_kind: same_sha_other_run_passed
+  evidence: "job 'test-linux (ubuntu-24.04)' of the 'Test Linux' workflow failed on commit 17c0d62b2f at runtime ('Test failure: closes the iterator when a filter is reapplied to the cursor', ReferenceError in test/parallel/test-sqlite-virtual-table.js:564); a later run of the same workflow on the exact same commit passed the same job (run 36231238392)."
+  evidence_url: https://github.com/nodejs/node/actions/runs/36231238392
+  run_url: https://github.com/nodejs/node/actions/runs/36213555405
+  run_id: 36213555405
   run_attempt: 1
-  job_id: 107867592688
-  job_name: "macos-latest - chrome"
-  failing_step: "Run ./.github/actions/run-test"
-  commit_sha: 19c9e7263d84e57fbc7687cd75509ea521d2d9fb
-  created_at: 2026-09-24T22:49:49Z
-  log_file: logs/playwright-code-01.log
-  log_bytes: 61958
+  job_id: 108324901874
+  job_name: "test-linux (ubuntu-24.04)"
+  failing_step: "Test"
+  commit_sha: 17c0d62b2f5453d79f9cbea31193e3104043faf6
+  created_at: 2026-09-26T03:02:20Z
+  log_file: logs/nodejs-flaky-03.log
+  log_bytes: 1048565
+  truncated: true
+  key_line: "ReferenceError: DatabaseSync is not defined"
+- id: nodejs-infra-01
+  repo: nodejs/node
+  stack: JavaScript/C++
+  label: infra
+  evidence_kind: runner_or_setup_failure
+  evidence: "relabelled: GitHub platform. The runner's DNS lookup of api.github.com failed (EAI_AGAIN) during the actions/setup-node step; the job died during setup."
+  evidence_url: https://github.com/nodejs/node/actions/runs/35856998379
+  run_url: https://github.com/nodejs/node/actions/runs/35856998379
+  run_id: 35856998379
+  run_attempt: 1
+  job_id: 107167741634
+  job_name: "lint-commit-message"
+  failing_step: "Install Node.js"
+  commit_sha: 120d0dd86887259a7115f929dbd0f19df0557f89
+  created_at: 2026-09-23T11:51:46Z
+  log_file: logs/nodejs-infra-01.log
+  log_bytes: 2377
   truncated: false
-  key_line: "1) [chrome] \u203a tests/mcp/files.spec.ts:201:5 \u203a closing browser during download does not crash the server"
+  key_line: "##[error]getaddrinfo EAI_AGAIN api.github.com"
+- id: nodejs-infra-02
+  repo: nodejs/node
+  stack: JavaScript/C++
+  label: infra
+  evidence_kind: runner_or_setup_failure
+  evidence: "relabelled: GitHub platform. The runner's DNS lookup of the Actions results storage host (productionresultssa7.blob.core.windows.net) failed during the artifact upload step."
+  evidence_url: https://github.com/nodejs/node/actions/runs/35180231360
+  run_url: https://github.com/nodejs/node/actions/runs/35180231360
+  run_id: 35180231360
+  run_attempt: 1
+  job_id: 105070584024
+  job_name: "build-tarball"
+  failing_step: "Upload tarball artifact"
+  commit_sha: e204ae8ce527f434ae5fe84f5a2568e2ae19a749
+  created_at: 2026-09-17T03:59:42Z
+  log_file: logs/nodejs-infra-02.log
+  log_bytes: 42484
+  truncated: false
+  key_line: "##[error]getaddrinfo EAI_AGAIN productionresultssa7.blob.core.windows.net"
 - id: playwright-code-02
   repo: microsoft/playwright
   stack: TypeScript
   label: code
   evidence_kind: fixed_by_commit
-  evidence: "PR #42904: the 'ubuntu-latest - chromium' job failed on commit d63c53c20 at tests/mcp/webmcp-dynamic.spec.ts:189; the PR's later commit 586dec2d8 changed playwright-core source files (packages/playwright-core/src/server/*) and the same job passed on that commit."
+  evidence: "PR #42904: the 'ubuntu-latest - chromium' test job failed at runtime (expect(received).toEqual(expected) in tests/mcp/webmcp-dynamic.spec.ts:189); the PR's later commit 586dec2d8 changed playwright-core product source (packages/playwright-core/src/server/*) and the same job passed on that commit."
   evidence_url: https://github.com/microsoft/playwright/commit/586dec2d80bc2d8b0df68366f39b537fed586dc8
   run_url: https://github.com/microsoft/playwright/actions/runs/36154975185
   run_id: 36154975185
@@ -606,12 +587,31 @@
   log_bytes: 180385
   truncated: false
   key_line: "1) [chromium] \u203a tests/mcp/webmcp-dynamic.spec.ts:189:5 \u203a a tool registered in an iframe can be called after the page is reloaded"
+- id: playwright-infra-01
+  repo: microsoft/playwright
+  stack: TypeScript
+  label: infra
+  evidence_kind: runner_or_setup_failure
+  evidence: "GitHub platform failed: the 'Update DuckDB' job could not list artifacts because api.github.com returned 500; the job exited 1."
+  evidence_url: https://github.com/microsoft/playwright/actions/runs/36251003547
+  run_url: https://github.com/microsoft/playwright/actions/runs/36251003547
+  run_id: 36251003547
+  run_attempt: 1
+  job_id: 108428894733
+  job_name: "Update DuckDB"
+  failing_step: "Ingest new test results"
+  commit_sha: b9a34ac7783a1b6c2e1dfff0c08ac744c048fa59
+  created_at: 2026-09-26T15:10:26Z
+  log_file: logs/playwright-infra-01.log
+  log_bytes: 17372
+  truncated: false
+  key_line: "GitHub API error: 500 Internal Server Error for https://api.github.com/repos/microsoft/playwright/actions/artifacts?per_page=100"
 - id: rails-code-01
   repo: rails/rails
   stack: Ruby
   label: code
   evidence_kind: failure_in_pr_diff
-  evidence: "PR #58842 added activesupport/lib/active_support/connection_pool.rb; the 'Check Markdown APIs in new files' job lists that exact file as missing '# :markup: markdown'."
+  evidence: "PR #58842 added activesupport/lib/active_support/connection_pool.rb; the 'Check Markdown APIs in new files' job fails with this message and lists that exact file."
   evidence_url: https://github.com/rails/rails/pull/58842/files
   run_url: https://github.com/rails/rails/actions/runs/35657573254
   run_id: 35657573254
@@ -624,7 +624,7 @@
   log_file: logs/rails-code-01.log
   log_bytes: 79100
   truncated: false
-  key_line: "activesupport/lib/active_support/connection_pool.rb"
+  key_line: "New Ruby files must use Markdown for their API documentation."
 - id: rails-ext-01
   repo: rails/rails
   stack: Ruby
@@ -663,25 +663,6 @@
   log_bytes: 75323
   truncated: false
   key_line: "Error: creating build container: initializing source docker://ruby:3.4.9-slim: pinging container registry registry-1.docker.io: Get \"https://registry-1.docker.io/v2/\": dial tcp 3.208.234.10:443: i/o timeout"
-- id: rails-ext-03
-  repo: rails/rails
-  stack: Ruby
-  label: external
-  evidence_kind: third_party_request_failed
-  evidence: "request to codeload.github.com failed with 503 then 429 (Too Many Requests) while downloading the actions/stale action."
-  evidence_url: https://github.com/rails/rails/actions/runs/32044305697
-  run_url: https://github.com/rails/rails/actions/runs/32044305697
-  run_id: 32044305697
-  run_attempt: 1
-  job_id: 95428920353
-  job_name: "stale"
-  failing_step: "Set up job"
-  commit_sha: 3471aa67ecf2940e3a8afe3e395271d2a9b46032
-  created_at: 2026-08-17T16:05:23Z
-  log_file: logs/rails-ext-03.log
-  log_bytes: 2791
-  truncated: false
-  key_line: "##[error]Failed to download archive 'https://codeload.github.com/actions/stale/tar.gz/1e223db275d687790206a7acac4d1a11bd6fe629' after 3 attempts."
 - id: rails-infra-01
   repo: rails/rails
   stack: Ruby
@@ -706,77 +687,20 @@
   stack: Ruby
   label: infra
   evidence_kind: runner_or_setup_failure
-  evidence: "runner setup step failed: the job never started because the runner could not resolve action download info from the Actions service; no workflow step ever ran."
-  evidence_url: https://github.com/rails/rails/actions/runs/31116733954
-  run_url: https://github.com/rails/rails/actions/runs/31116733954
-  run_id: 31116733954
+  evidence: "relabelled: GitHub platform. The runner could not download the actions/stale action from codeload.github.com (503 then 429) during 'Set up job'; no workflow step ran."
+  evidence_url: https://github.com/rails/rails/actions/runs/32044305697
+  run_url: https://github.com/rails/rails/actions/runs/32044305697
+  run_id: 32044305697
   run_attempt: 1
-  job_id: 92668112706
-  job_name: "Check Markdown APIs in new files"
-  failing_step: "Set up job"
-  commit_sha: c24af7134e2a9f510b2e26f911be6f02beca31cf
-  created_at: 2026-08-06T15:37:56Z
-  log_file: logs/rails-infra-02.log
-  log_bytes: 2067
-  truncated: false
-  key_line: "##[error]Failed to resolve action download info."
-- id: rails-infra-03
-  repo: rails/rails
-  stack: Ruby
-  label: infra
-  evidence_kind: runner_or_setup_failure
-  evidence: "runner setup step failed: the job never started because the runner could not resolve action download info from the Actions service; no workflow step ever ran."
-  evidence_url: https://github.com/rails/rails/actions/runs/31117351680
-  run_url: https://github.com/rails/rails/actions/runs/31117351680
-  run_id: 31117351680
-  run_attempt: 1
-  job_id: 92670176913
+  job_id: 95428920353
   job_name: "stale"
   failing_step: "Set up job"
-  commit_sha: 62a799ea8dc39c377031589014b96a9d767cd9f6
-  created_at: 2026-08-06T15:46:33Z
-  log_file: logs/rails-infra-03.log
-  log_bytes: 2112
+  commit_sha: 3471aa67ecf2940e3a8afe3e395271d2a9b46032
+  created_at: 2026-08-17T16:05:23Z
+  log_file: logs/rails-infra-02.log
+  log_bytes: 2791
   truncated: false
-  key_line: "##[error]Failed to resolve action download info."
-- id: tokio-code-01
-  repo: tokio-rs/tokio
-  stack: Rust
-  label: code
-  evidence_kind: failure_in_pr_diff
-  evidence: "PR #8515 changed tokio/src/signal/registry.rs; the clippy job failed on that file/line."
-  evidence_url: https://github.com/tokio-rs/tokio/pull/8515/files
-  run_url: https://github.com/tokio-rs/tokio/actions/runs/36241990521
-  run_id: 36241990521
-  run_attempt: 1
-  job_id: 108404117432
-  job_name: "clippy"
-  failing_step: "clippy --workspace --features full,test-util"
-  commit_sha: e7075bfe35134fa6bc5d9d18513eaece374b5076
-  created_at: 2026-09-26T12:27:47Z
-  log_file: logs/tokio-code-01.log
-  log_bytes: 57899
-  truncated: false
-  key_line: "--> tokio/src/signal/registry.rs:91:14"
-- id: tokio-code-02
-  repo: tokio-rs/tokio
-  stack: Rust
-  label: code
-  evidence_kind: failure_in_pr_diff
-  evidence: "PR #7479 changed tokio/tests/io_skip_until.rs; the clippy job failed on that file/line."
-  evidence_url: https://github.com/tokio-rs/tokio/pull/7479/files
-  run_url: https://github.com/tokio-rs/tokio/actions/runs/36237227902
-  run_id: 36237227902
-  run_attempt: 1
-  job_id: 108391100821
-  job_name: "clippy"
-  failing_step: "clippy --workspace --features full,test-util"
-  commit_sha: f7b7cb0ba54f6ad4df6e2c8ea16c4554f9e8e4d6
-  created_at: 2026-09-26T10:55:10Z
-  log_file: logs/tokio-code-02.log
-  log_bytes: 46206
-  truncated: false
-  key_line: "--> tokio/tests/io_skip_until.rs:47:21"
+  key_line: "##[error]Failed to download archive 'https://codeload.github.com/actions/stale/tar.gz/1e223db275d687790206a7acac4d1a11bd6fe629' after 3 attempts."
 - id: tokio-ext-01
   repo: tokio-rs/tokio
   stack: Rust
@@ -794,25 +718,6 @@
   created_at: 2026-09-09T17:51:06Z
   log_file: logs/tokio-ext-01.log
   log_bytes: 47554
-  truncated: false
-  key_line: "E: Failed to fetch https://dl.google.com/linux/chrome-stable/deb/dists/stable/main/binary-amd64/Packages.gz  Hash Sum mismatch"
-- id: tokio-ext-02
-  repo: tokio-rs/tokio
-  stack: Rust
-  label: external
-  evidence_kind: third_party_request_failed
-  evidence: "request to third-party apt package index dl.google.com failed (hash sum mismatch) during the Valgrind install step."
-  evidence_url: https://github.com/tokio-rs/tokio/actions/runs/34385436743
-  run_url: https://github.com/tokio-rs/tokio/actions/runs/34385436743
-  run_id: 34385436743
-  run_attempt: 1
-  job_id: 102581427063
-  job_name: "valgrind"
-  failing_step: "Install Valgrind"
-  commit_sha: 4446b6dc7f654f550ec77976704e5a9ff73a4d72
-  created_at: 2026-09-09T17:51:09Z
-  log_file: logs/tokio-ext-02.log
-  log_bytes: 56274
   truncated: false
   key_line: "E: Failed to fetch https://dl.google.com/linux/chrome-stable/deb/dists/stable/main/binary-amd64/Packages.gz  Hash Sum mismatch"
 - id: tokio-flaky-01
@@ -834,3 +739,22 @@
   log_bytes: 79653
   truncated: false
   key_line: "test conn::http2_connect_detect_close ... FAILED"
+- id: tokio-flaky-02
+  repo: tokio-rs/tokio
+  stack: Rust
+  label: flaky
+  evidence_kind: same_sha_other_run_passed
+  evidence: "job 'FreeBSD x86_64' of the 'CI' workflow failed at runtime on tokio's own tracing test (thread 'test_oneshot_creates_span' panicked, test result: FAILED in -p tokio --test tracing_sync) on commit 41e2e5c6; a different run of the same workflow on the exact same commit passed the same job (run 35222822622)."
+  evidence_url: https://github.com/tokio-rs/tokio/actions/runs/35222822622
+  run_url: https://github.com/tokio-rs/tokio/actions/runs/35221829195
+  run_id: 35221829195
+  run_attempt: 1
+  job_id: 105204305567
+  job_name: "FreeBSD x86_64"
+  failing_step: "Test in FreeBSD"
+  commit_sha: 41e2e5c62ee9af894ce591edf2d912578fa0bf5c
+  created_at: 2026-09-17T12:33:56Z
+  log_file: logs/tokio-flaky-02.log
+  log_bytes: 608042
+  truncated: false
+  key_line: "[test_oneshot_creates_span] expected event an event with target `runtime::resource::state_update`"
