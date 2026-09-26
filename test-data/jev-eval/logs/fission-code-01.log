@@ -1,0 +1,521 @@
+﻿2026-09-11T14:34:37.6084650Z Current runner version: '2.337.0'
+2026-09-11T14:34:37.6120283Z ##[group]Runner Image Provisioner
+2026-09-11T14:34:37.6120798Z Hosted Compute Agent
+2026-09-11T14:34:37.6121252Z Version: 20260828.587
+2026-09-11T14:34:37.6121623Z Commit: abac92662cab4cc7352de4f9f9d2e2419aad9c29
+2026-09-11T14:34:37.6122069Z Build Date: 2026-08-28T16:44:25Z
+2026-09-11T14:34:37.6122496Z Worker ID: {69772155-4a04-4119-931a-4ae47c2be535}
+2026-09-11T14:34:37.6122886Z Azure Region: westus2
+2026-09-11T14:34:37.6123300Z ##[endgroup]
+2026-09-11T14:34:37.6124043Z ##[group]Operating System
+2026-09-11T14:34:37.6124542Z Ubuntu
+2026-09-11T14:34:37.6124863Z 24.04.5
+2026-09-11T14:34:37.6125197Z LTS
+2026-09-11T14:34:37.6125574Z ##[endgroup]
+2026-09-11T14:34:37.6125898Z ##[group]Runner Image
+2026-09-11T14:34:37.6126282Z Image: ubuntu-24.04
+2026-09-11T14:34:37.6126632Z Version: 20260907.300.1
+2026-09-11T14:34:37.6127435Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260907.300/images/ubuntu/Ubuntu2404-Readme.md
+2026-09-11T14:34:37.6128272Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260907.300
+2026-09-11T14:34:37.6128832Z ##[endgroup]
+2026-09-11T14:34:37.6129543Z ##[group]GITHUB_TOKEN Permissions
+2026-09-11T14:34:37.6130817Z Contents: read
+2026-09-11T14:34:37.6131150Z Metadata: read
+2026-09-11T14:34:37.6131470Z PullRequests: read
+2026-09-11T14:34:37.6131848Z ##[endgroup]
+2026-09-11T14:34:37.6133119Z Secret source: Actions
+2026-09-11T14:34:37.6133731Z Cache mode: write
+2026-09-11T14:34:37.6134137Z Prepare workflow directory
+2026-09-11T14:34:37.6405171Z Prepare all required actions
+2026-09-11T14:34:37.6436318Z Getting action download info
+2026-09-11T14:34:38.0210156Z Download action repository 'step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c' (SHA:05e31511f85b41b11d1cf0ef85d0992719546e2c)
+2026-09-11T14:34:38.6037026Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-09-11T14:34:38.7116159Z Download action repository 'actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e' (SHA:b7ad1dad31e06c5925ef5d2fc7ad053ef454303e)
+2026-09-11T14:34:39.1712525Z Download action repository 'golangci/golangci-lint-action@ba0d7d2ec06a0ea1cb5fa41b2e4a3ab91d21278a' (SHA:ba0d7d2ec06a0ea1cb5fa41b2e4a3ab91d21278a)
+2026-09-11T14:34:39.4194839Z Download action repository 'codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f' (SHA:fb8b3582c8e4def4969c97caa2f19720cb33a72f)
+2026-09-11T14:34:39.7014728Z Getting action download info
+2026-09-11T14:34:39.8596664Z Download action repository 'actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd' (SHA:ed597411d8f924073f98dfc5c65a23a2325f34cd)
+2026-09-11T14:34:40.0783243Z Complete job name: lint
+2026-09-11T14:34:40.1242073Z ##[group]Run step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c
+2026-09-11T14:34:40.1242488Z with:
+2026-09-11T14:34:40.1242672Z   egress-policy: audit
+2026-09-11T14:34:40.1244059Z   token: ***
+2026-09-11T14:34:40.1244269Z   disable-telemetry: false
+2026-09-11T14:34:40.1244631Z   disable-sudo: false
+2026-09-11T14:34:40.1244832Z   disable-sudo-and-containers: false
+2026-09-11T14:34:40.1245054Z   disable-file-monitoring: false
+2026-09-11T14:34:40.1245275Z   use-policy-store: false
+2026-09-11T14:34:40.1245499Z   deploy-on-self-hosted-vm: false
+2026-09-11T14:34:40.1245792Z env:
+2026-09-11T14:34:40.1245968Z   GOLANGCI_LINT_VERSION: v2.13.1
+2026-09-11T14:34:40.1246174Z   GOLANGCI_LINT_TIMEOUT: 5m
+2026-09-11T14:34:40.1246367Z ##[endgroup]
+2026-09-11T14:34:40.2043431Z [harden-runner] pre-step
+2026-09-11T14:34:40.2043855Z [!] Current Configuration: 
+2026-09-11T14:34:40.2045407Z {"repo":"fission/fission","run_id":"34610940264","correlation_id":"25f50cc5-85ba-4b2e-baff-850ff7ba4990","working_directory":"/home/runner/work/fission/fission","api_url":"https://agent.api.stepsecurity.io/v1","telemetry_url":"https://prod.app-api.stepsecurity.io/v1","allowed_endpoints":"","denied_endpoints":"","egress_policy":"audit","disable_telemetry":false,"disable_sudo":false,"disable_sudo_and_containers":false,"disable_file_monitoring":false,"private":false,"is_github_hosted":true,"is_debug":false,"one_time_key":"","api_key":"","use_policy_store":false,"deploy_on_self_hosted_vm":false}
+2026-09-11T14:34:40.2046813Z 
+2026-09-11T14:34:40.2047178Z View security insights and recommended policy at:
+2026-09-11T14:34:40.2047503Z https://app.stepsecurity.io/github/fission/fission/actions/runs/34610940264
+2026-09-11T14:34:40.2047800Z RUNNER_NAME: GitHub Actions 1000016741
+2026-09-11T14:34:40.7613421Z Runner IP Address: 4.154.135.150
+2026-09-11T14:34:40.7613875Z Step Security Job Correlation ID: 25f50cc5-85ba-4b2e-baff-850ff7ba4990
+2026-09-11T14:34:40.7824863Z [!] Checking TLS_STATUS: fission
+2026-09-11T14:34:40.8602842Z [!] TLS_NOT_ENABLED: fission
+2026-09-11T14:34:41.1586488Z ✅ Checksum verification passed. checksum=4b14d8a3a5fbcef95af55e0c54d3bee6f44da802878c10289a4ca0b79b6d0237
+2026-09-11T14:34:41.1647685Z [command]/usr/bin/tar xz --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/1b2a92e5-ea7c-491f-adba-b9bbc19aa703 -f /home/runner/work/_temp/d62a5dcb-11dd-46aa-870b-95de3d0e2584
+2026-09-11T14:34:43.9799291Z Initialized
+2026-09-11T14:34:43.9972247Z ##[group]Run step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c
+2026-09-11T14:34:43.9972510Z with:
+2026-09-11T14:34:43.9972650Z   egress-policy: audit
+2026-09-11T14:34:43.9973976Z   token: ***
+2026-09-11T14:34:43.9974117Z   disable-telemetry: false
+2026-09-11T14:34:43.9974269Z   disable-sudo: false
+2026-09-11T14:34:43.9974526Z   disable-sudo-and-containers: false
+2026-09-11T14:34:43.9974705Z   disable-file-monitoring: false
+2026-09-11T14:34:43.9974884Z   use-policy-store: false
+2026-09-11T14:34:43.9975044Z   deploy-on-self-hosted-vm: false
+2026-09-11T14:34:43.9975206Z env:
+2026-09-11T14:34:43.9975339Z   GOLANGCI_LINT_VERSION: v2.13.1
+2026-09-11T14:34:43.9975502Z   GOLANGCI_LINT_TIMEOUT: 5m
+2026-09-11T14:34:43.9975664Z   STATE_disableSudo: false
+2026-09-11T14:34:43.9975863Z   STATE_disableSudoAndContainers: false
+2026-09-11T14:34:43.9976040Z   STATE_monitorStatusCode: 200
+2026-09-11T14:34:43.9976197Z   STATE_addSummary: true
+2026-09-11T14:34:43.9976406Z   STATE_correlation_id: 25f50cc5-85ba-4b2e-baff-850ff7ba4990
+2026-09-11T14:34:43.9976608Z   STATE_isTLS: false
+2026-09-11T14:34:43.9976750Z ##[endgroup]
+2026-09-11T14:34:44.0478292Z [harden-runner] main-step
+2026-09-11T14:34:44.0480520Z View security insights and recommended policy at:
+2026-09-11T14:34:44.0481005Z https://app.stepsecurity.io/github/fission/fission/actions/runs/34610940264
+2026-09-11T14:34:44.0633435Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+2026-09-11T14:34:44.0633669Z with:
+2026-09-11T14:34:44.0633810Z   repository: fission/fission
+2026-09-11T14:34:44.0635199Z   token: ***
+2026-09-11T14:34:44.0635336Z   ssh-strict: true
+2026-09-11T14:34:44.0635506Z   ssh-user: git
+2026-09-11T14:34:44.0635697Z   persist-credentials: true
+2026-09-11T14:34:44.0635853Z   clean: true
+2026-09-11T14:34:44.0636019Z   sparse-checkout-cone-mode: true
+2026-09-11T14:34:44.0636268Z   fetch-depth: 1
+2026-09-11T14:34:44.0636437Z   fetch-tags: false
+2026-09-11T14:34:44.0636578Z   show-progress: true
+2026-09-11T14:34:44.0636718Z   lfs: false
+2026-09-11T14:34:44.0636850Z   submodules: false
+2026-09-11T14:34:44.0636991Z   set-safe-directory: true
+2026-09-11T14:34:44.0637150Z   allow-unsafe-pr-checkout: false
+2026-09-11T14:34:44.0637308Z env:
+2026-09-11T14:34:44.0637443Z   GOLANGCI_LINT_VERSION: v2.13.1
+2026-09-11T14:34:44.0637619Z   GOLANGCI_LINT_TIMEOUT: 5m
+2026-09-11T14:34:44.0637794Z ##[endgroup]
+2026-09-11T14:34:44.1247217Z Syncing repository: fission/fission
+2026-09-11T14:34:44.1248394Z ##[group]Getting Git version info
+2026-09-11T14:34:44.1248637Z Working directory is '/home/runner/work/fission/fission'
+2026-09-11T14:34:44.1248982Z [command]/usr/bin/git version
+2026-09-11T14:34:44.1304009Z git version 2.55.0
+2026-09-11T14:34:44.1315854Z ##[endgroup]
+2026-09-11T14:34:44.1323030Z Temporarily overriding HOME='/home/runner/work/_temp/a54a51cc-103e-440b-ad88-678a9a0e4b13' before making global git config changes
+2026-09-11T14:34:44.1323961Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-11T14:34:44.1327133Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/fission/fission
+2026-09-11T14:34:44.1366977Z Deleting the contents of '/home/runner/work/fission/fission'
+2026-09-11T14:34:44.1369460Z ##[group]Determining repository object format
+2026-09-11T14:34:44.1370380Z ##[endgroup]
+2026-09-11T14:34:44.1370726Z ##[group]Initializing the repository
+2026-09-11T14:34:44.1372908Z [command]/usr/bin/git init /home/runner/work/fission/fission
+2026-09-11T14:34:44.1464818Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-09-11T14:34:44.1465368Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-09-11T14:34:44.1465797Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-09-11T14:34:44.1466203Z hint: call:
+2026-09-11T14:34:44.1466413Z hint:
+2026-09-11T14:34:44.1466714Z hint: 	git config --global init.defaultBranch <name>
+2026-09-11T14:34:44.1467025Z hint:
+2026-09-11T14:34:44.1467345Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-09-11T14:34:44.1467821Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-09-11T14:34:44.1468229Z hint:
+2026-09-11T14:34:44.1468474Z hint: 	git branch -m <name>
+2026-09-11T14:34:44.1468712Z hint:
+2026-09-11T14:34:44.1469061Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-09-11T14:34:44.1469595Z Initialized empty Git repository in /home/runner/work/fission/fission/.git/
+2026-09-11T14:34:44.1475688Z [command]/usr/bin/git remote add origin https://github.com/fission/fission
+2026-09-11T14:34:44.1517592Z ##[endgroup]
+2026-09-11T14:34:44.1518013Z ##[group]Disabling automatic garbage collection
+2026-09-11T14:34:44.1520365Z [command]/usr/bin/git config --local gc.auto 0
+2026-09-11T14:34:44.1544740Z ##[endgroup]
+2026-09-11T14:34:44.1545129Z ##[group]Setting up auth
+2026-09-11T14:34:44.1545416Z Removing SSH command configuration
+2026-09-11T14:34:44.1548958Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-11T14:34:44.1572963Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-11T14:34:44.1871696Z Removing HTTP extra header
+2026-09-11T14:34:44.1876292Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-11T14:34:44.1902699Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-11T14:34:44.2084143Z Removing includeIf entries pointing to credentials config files
+2026-09-11T14:34:44.2084805Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-11T14:34:44.2108553Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-11T14:34:44.2293215Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-f937ca7c-eb89-4377-98c4-1cd3f6c5939a.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-09-11T14:34:44.2322484Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/fission/fission/.git.path /home/runner/work/_temp/git-credentials-f937ca7c-eb89-4377-98c4-1cd3f6c5939a.config
+2026-09-11T14:34:44.2347982Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/fission/fission/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-f937ca7c-eb89-4377-98c4-1cd3f6c5939a.config
+2026-09-11T14:34:44.2372845Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-f937ca7c-eb89-4377-98c4-1cd3f6c5939a.config
+2026-09-11T14:34:44.2397925Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-f937ca7c-eb89-4377-98c4-1cd3f6c5939a.config
+2026-09-11T14:34:44.2421875Z ##[endgroup]
+2026-09-11T14:34:44.2422155Z ##[group]Fetching the repository
+2026-09-11T14:34:44.2427142Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +7861e7bd03219b04335a5780ee49d23b95f24afc:refs/remotes/pull/3722/merge
+2026-09-11T14:34:45.3444249Z From https://github.com/fission/fission
+2026-09-11T14:34:45.3444859Z  * [new ref]         7861e7bd03219b04335a5780ee49d23b95f24afc -> pull/3722/merge
+2026-09-11T14:34:45.3448568Z ##[endgroup]
+2026-09-11T14:34:45.3448804Z ##[group]Determining the checkout info
+2026-09-11T14:34:45.3449133Z ##[endgroup]
+2026-09-11T14:34:45.3452733Z [command]/usr/bin/git sparse-checkout disable
+2026-09-11T14:34:45.3489232Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-09-11T14:34:45.3512913Z ##[group]Checking out the ref
+2026-09-11T14:34:45.3515915Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/3722/merge
+2026-09-11T14:34:45.4882412Z Note: switching to 'refs/remotes/pull/3722/merge'.
+2026-09-11T14:34:45.4882668Z 
+2026-09-11T14:34:45.4882832Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-09-11T14:34:45.4883422Z changes and commit them, and you can discard any commits you make in this
+2026-09-11T14:34:45.4883840Z state without impacting any branches by switching back to a branch.
+2026-09-11T14:34:45.4884062Z 
+2026-09-11T14:34:45.4884209Z If you want to create a new branch to retain commits you create, you may
+2026-09-11T14:34:45.4885067Z do so (now or later) by using -c with the switch command. Example:
+2026-09-11T14:34:45.4885272Z 
+2026-09-11T14:34:45.4885365Z   git switch -c <new-branch-name>
+2026-09-11T14:34:45.4885520Z 
+2026-09-11T14:34:45.4885605Z Or undo this operation with:
+2026-09-11T14:34:45.4885737Z 
+2026-09-11T14:34:45.4885807Z   git switch -
+2026-09-11T14:34:45.4885934Z 
+2026-09-11T14:34:45.4886116Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-09-11T14:34:45.4886566Z 
+2026-09-11T14:34:45.4887025Z HEAD is now at 7861e7b Merge 558b01ba139564c58a526aee9580d7679ffe25eb into 05cfb4fd1619f10271697ef0de876247579e1822
+2026-09-11T14:34:45.4891469Z ##[endgroup]
+2026-09-11T14:34:45.4933275Z [command]/usr/bin/git log -1 --format=%H
+2026-09-11T14:34:45.4957615Z 7861e7bd03219b04335a5780ee49d23b95f24afc
+2026-09-11T14:34:45.5082550Z ##[group]Run actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e
+2026-09-11T14:34:45.5082761Z with:
+2026-09-11T14:34:45.5082878Z   go-version-file: go.mod
+2026-09-11T14:34:45.5083005Z   cache: true
+2026-09-11T14:34:45.5083116Z   check-latest: false
+2026-09-11T14:34:45.5084327Z   token: ***
+2026-09-11T14:34:45.5084619Z env:
+2026-09-11T14:34:45.5084749Z   GOLANGCI_LINT_VERSION: v2.13.1
+2026-09-11T14:34:45.5084902Z   GOLANGCI_LINT_TIMEOUT: 5m
+2026-09-11T14:34:45.5085030Z ##[endgroup]
+2026-09-11T14:34:45.5813502Z Setup go version spec 1.27.0
+2026-09-11T14:34:45.5818166Z Attempting to download 1.27.0...
+2026-09-11T14:34:46.2561489Z matching 1.27.0...
+2026-09-11T14:34:46.2563434Z Acquiring 1.27.0 from https://github.com/actions/go-versions/releases/download/1.27.0-32325163857/go-1.27.0-linux-x64.tar.gz
+2026-09-11T14:34:46.7007723Z Extracting Go...
+2026-09-11T14:34:46.7082870Z [command]/usr/bin/tar xz --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/d8b91b4c-d6de-4724-8cc1-6c7c3672fd1e -f /home/runner/work/_temp/f1b26ce2-71ee-44bf-8074-22576d04ff82
+2026-09-11T14:34:47.9407231Z Successfully extracted go to /home/runner/work/_temp/d8b91b4c-d6de-4724-8cc1-6c7c3672fd1e
+2026-09-11T14:34:47.9407654Z Adding to the cache ...
+2026-09-11T14:34:51.8930219Z Successfully cached go to /opt/hostedtoolcache/go/1.27.0/x64
+2026-09-11T14:34:51.8931715Z Added go to the path
+2026-09-11T14:34:51.8933465Z Successfully set up Go version 1.27.0
+2026-09-11T14:34:51.9096001Z [command]/opt/hostedtoolcache/go/1.27.0/x64/bin/go env GOMODCACHE
+2026-09-11T14:34:51.9125295Z [command]/opt/hostedtoolcache/go/1.27.0/x64/bin/go env GOCACHE
+2026-09-11T14:34:51.9158730Z /home/runner/go/pkg/mod
+2026-09-11T14:34:51.9181625Z /home/runner/.cache/go-build
+2026-09-11T14:34:52.2408041Z Cache hit for: setup-go-Linux-x64-ubuntu24-go-1.27.0-3a761120858dd9badd09104ed462648e7813a3aa5c8f935930f053e7d09baccc
+2026-09-11T14:34:53.5491210Z Received 0 of 758374505 (0.0%), 0.0 MBs/sec
+2026-09-11T14:34:54.5497812Z Received 130023424 of 758374505 (17.1%), 62.0 MBs/sec
+2026-09-11T14:34:55.5655778Z Received 268435456 of 758374505 (35.4%), 84.9 MBs/sec
+2026-09-11T14:34:56.5721923Z Received 402653184 of 758374505 (53.1%), 95.4 MBs/sec
+2026-09-11T14:34:57.5755499Z Received 528482304 of 758374505 (69.7%), 100.3 MBs/sec
+2026-09-11T14:34:58.5729515Z Received 637534208 of 758374505 (84.1%), 100.9 MBs/sec
+2026-09-11T14:34:59.5739532Z Received 729808896 of 758374505 (96.2%), 99.1 MBs/sec
+2026-09-11T14:34:59.7387653Z Received 758374505 of 758374505 (100.0%), 100.6 MBs/sec
+2026-09-11T14:34:59.7388004Z Cache Size: ~723 MB (758374505 B)
+2026-09-11T14:34:59.7463852Z [command]/usr/bin/tar -xf /home/runner/work/_temp/77b698a1-dad3-4f3b-b656-52835bba24dd/cache.tzst -P -C /home/runner/work/fission/fission --use-compress-program unzstd
+2026-09-11T14:35:03.2282257Z Cache restored successfully
+2026-09-11T14:35:03.2567245Z Cache restored from key: setup-go-Linux-x64-ubuntu24-go-1.27.0-3a761120858dd9badd09104ed462648e7813a3aa5c8f935930f053e7d09baccc
+2026-09-11T14:35:03.2589123Z go version go1.27.0 linux/amd64
+2026-09-11T14:35:03.2589333Z 
+2026-09-11T14:35:03.2589628Z ##[group]go env
+2026-09-11T14:35:03.2720443Z AR='ar'
+2026-09-11T14:35:03.2720640Z CC='gcc'
+2026-09-11T14:35:03.2720861Z CGO_CFLAGS='-O2 -g'
+2026-09-11T14:35:03.2721058Z CGO_CPPFLAGS=''
+2026-09-11T14:35:03.2721239Z CGO_CXXFLAGS='-O2 -g'
+2026-09-11T14:35:03.2721425Z CGO_ENABLED='1'
+2026-09-11T14:35:03.2721627Z CGO_FFLAGS='-O2 -g'
+2026-09-11T14:35:03.2721804Z CGO_LDFLAGS='-O2 -g'
+2026-09-11T14:35:03.2721978Z CXX='g++'
+2026-09-11T14:35:03.2722138Z GCCGO='gccgo'
+2026-09-11T14:35:03.2722301Z GO111MODULE=''
+2026-09-11T14:35:03.2722467Z GOAMD64='v1'
+2026-09-11T14:35:03.2722626Z GOARCH='amd64'
+2026-09-11T14:35:03.2722786Z GOAUTH='netrc'
+2026-09-11T14:35:03.2722972Z GOBIN='/home/runner/go/bin'
+2026-09-11T14:35:03.2723199Z GOCACHE='/home/runner/.cache/go-build'
+2026-09-11T14:35:03.2723429Z GOCACHEPROG=''
+2026-09-11T14:35:03.2723596Z GODEBUG=''
+2026-09-11T14:35:03.2724064Z GOENV='/home/runner/.config/go/env'
+2026-09-11T14:35:03.2724286Z GOEXE=''
+2026-09-11T14:35:03.2724564Z GOEXPERIMENT=''
+2026-09-11T14:35:03.2724737Z GOFIPS140='off'
+2026-09-11T14:35:03.2724906Z GOFLAGS=''
+2026-09-11T14:35:03.2725434Z GOGCCFLAGS='-fPIC -m64 -pthread -Wl,--no-gc-sections -fmessage-length=0 -ffile-prefix-map=/tmp/go-build4167608752=/tmp/go-build -gno-record-gcc-switches'
+2026-09-11T14:35:03.2725962Z GOHOSTARCH='amd64'
+2026-09-11T14:35:03.2726148Z GOHOSTOS='linux'
+2026-09-11T14:35:03.2726315Z GOINSECURE=''
+2026-09-11T14:35:03.2726516Z GOMOD='/home/runner/work/fission/fission/go.mod'
+2026-09-11T14:35:03.2726783Z GOMODCACHE='/home/runner/go/pkg/mod'
+2026-09-11T14:35:03.2726995Z GONOPROXY=''
+2026-09-11T14:35:03.2727156Z GONOSUMDB=''
+2026-09-11T14:35:03.2727317Z GOOS='linux'
+2026-09-11T14:35:03.2727504Z GOPACKAGESDRIVER=''
+2026-09-11T14:35:03.2727690Z GOPATH='/home/runner/go'
+2026-09-11T14:35:03.2727877Z GOPRIVATE=''
+2026-09-11T14:35:03.2728095Z GOPROXY='https://proxy.golang.org,direct'
+2026-09-11T14:35:03.2728370Z GOROOT='/opt/hostedtoolcache/go/1.27.0/x64'
+2026-09-11T14:35:03.2728610Z GOSUMDB='sum.golang.org'
+2026-09-11T14:35:03.2728804Z GOTELEMETRY='local'
+2026-09-11T14:35:03.2729023Z GOTELEMETRYDIR='/home/runner/.config/go/telemetry'
+2026-09-11T14:35:03.2729269Z GOTMPDIR=''
+2026-09-11T14:35:03.2729434Z GOTOOLCHAIN='local'
+2026-09-11T14:35:03.2729695Z GOTOOLDIR='/opt/hostedtoolcache/go/1.27.0/x64/pkg/tool/linux_amd64'
+2026-09-11T14:35:03.2730207Z GOVCS=''
+2026-09-11T14:35:03.2730372Z GOVERSION='go1.27.0'
+2026-09-11T14:35:03.2730546Z GOWORK=''
+2026-09-11T14:35:03.2730713Z PKG_CONFIG='pkg-config'
+2026-09-11T14:35:03.2730833Z 
+2026-09-11T14:35:03.2731120Z ##[endgroup]
+2026-09-11T14:35:03.2917304Z ##[group]Run go mod verify
+2026-09-11T14:35:03.2917512Z go mod verify
+2026-09-11T14:35:03.2917644Z go mod download
+2026-09-11T14:35:03.2917775Z make verify-gomod
+2026-09-11T14:35:03.2950514Z shell: /usr/bin/bash -e {0}
+2026-09-11T14:35:03.2950663Z env:
+2026-09-11T14:35:03.2950781Z   GOLANGCI_LINT_VERSION: v2.13.1
+2026-09-11T14:35:03.2950921Z   GOLANGCI_LINT_TIMEOUT: 5m
+2026-09-11T14:35:03.2951048Z   GOTOOLCHAIN: local
+2026-09-11T14:35:03.2951170Z ##[endgroup]
+2026-09-11T14:35:05.6456317Z all modules verified
+2026-09-11T14:35:15.0222934Z OK: go.mod keeps direct and indirect requirements in separate blocks.
+2026-09-11T14:35:15.0250211Z ##[group]Run make license-check
+2026-09-11T14:35:15.0250393Z make license-check
+2026-09-11T14:35:15.0278578Z shell: /usr/bin/bash -e {0}
+2026-09-11T14:35:15.0278711Z env:
+2026-09-11T14:35:15.0278825Z   GOLANGCI_LINT_VERSION: v2.13.1
+2026-09-11T14:35:15.0278964Z   GOLANGCI_LINT_TIMEOUT: 5m
+2026-09-11T14:35:15.0279096Z   GOTOOLCHAIN: local
+2026-09-11T14:35:15.0279214Z ##[endgroup]
+2026-09-11T14:35:18.6028523Z ##[group]Run golangci/golangci-lint-action@ba0d7d2ec06a0ea1cb5fa41b2e4a3ab91d21278a
+2026-09-11T14:35:18.6028773Z with:
+2026-09-11T14:35:18.6028888Z   skip-cache: true
+2026-09-11T14:35:18.6029003Z   version: v2.13.1
+2026-09-11T14:35:18.6029125Z   args: --timeout=5m
+2026-09-11T14:35:18.6029251Z   install-mode: binary
+2026-09-11T14:35:18.6029371Z   install-only: false
+2026-09-11T14:35:18.6030587Z   github-token: ***
+2026-09-11T14:35:18.6030700Z   verify: true
+2026-09-11T14:35:18.6030818Z   only-new-issues: false
+2026-09-11T14:35:18.6030946Z   skip-save-cache: false
+2026-09-11T14:35:18.6031082Z   cache-invalidation-interval: 7
+2026-09-11T14:35:18.6031230Z   problem-matchers: false
+2026-09-11T14:35:18.6031371Z env:
+2026-09-11T14:35:18.6031482Z   GOLANGCI_LINT_VERSION: v2.13.1
+2026-09-11T14:35:18.6031621Z   GOLANGCI_LINT_TIMEOUT: 5m
+2026-09-11T14:35:18.6031752Z   GOTOOLCHAIN: local
+2026-09-11T14:35:18.6031869Z ##[endgroup]
+2026-09-11T14:35:18.6944176Z ##[group]Restore cache
+2026-09-11T14:35:18.6945630Z Skipping cache restoration
+2026-09-11T14:35:18.6946208Z ##[endgroup]
+2026-09-11T14:35:18.6946990Z ##[group]Install
+2026-09-11T14:35:18.6947779Z Finding needed golangci-lint version...
+2026-09-11T14:35:18.6949902Z Installation mode: binary
+2026-09-11T14:35:18.6950304Z Installing golangci-lint binary v2.13.1...
+2026-09-11T14:35:18.6950935Z Downloading binary https://github.com/golangci/golangci-lint/releases/download/v2.13.1/golangci-lint-2.13.1-linux-amd64.tar.gz ...
+2026-09-11T14:35:18.8772328Z [command]/usr/bin/tar xz --overwrite --warning=no-unknown-keyword --overwrite -C /home/runner -f /home/runner/work/_temp/41b57fc4-f76a-4c1d-8091-d4ee609b1eea
+2026-09-11T14:35:19.0742320Z Installed golangci-lint into /home/runner/golangci-lint-2.13.1-linux-amd64/golangci-lint in 379ms
+2026-09-11T14:35:19.0744917Z ##[endgroup]
+2026-09-11T14:35:19.0748044Z ##[group]run golangci-lint
+2026-09-11T14:35:19.0751352Z Running [/home/runner/golangci-lint-2.13.1-linux-amd64/golangci-lint config path] in [/home/runner/work/fission/fission] ...
+2026-09-11T14:35:19.1215842Z Running [/home/runner/golangci-lint-2.13.1-linux-amd64/golangci-lint config verify] in [/home/runner/work/fission/fission] ...
+2026-09-11T14:35:19.1747288Z Running [/home/runner/golangci-lint-2.13.1-linux-amd64/golangci-lint run  --timeout=5m] in [/home/runner/work/fission/fission] ...
+2026-09-11T14:37:19.0319282Z ##[error]pkg/statestore/httpapi/limits_test.go:23:64: unnecessary conversion (unconvert)
+2026-09-11T14:37:19.0325483Z 	assert.GreaterOrEqual(t, int64(httpapi.MaxRequestBytes), int64(stateapi.MaxRequestBodyBytes))
+2026-09-11T14:37:19.0326026Z 	                                                              ^
+2026-09-11T14:37:19.0326610Z 1 issues:
+2026-09-11T14:37:19.0326732Z * unconvert: 1
+2026-09-11T14:37:19.0326804Z 
+2026-09-11T14:37:19.0333943Z ##[error]issues found
+2026-09-11T14:37:19.0334857Z Ran golangci-lint in 119855ms
+2026-09-11T14:37:19.0335264Z ##[endgroup]
+2026-09-11T14:37:19.0409696Z ##[group]Run if [[ $(git diff --stat) != '' ]]; then
+2026-09-11T14:37:19.0409920Z if [[ $(git diff --stat) != '' ]]; then
+2026-09-11T14:37:19.0410120Z   echo -e '❌ \033[0;31m. Fix lint changes.\033[0m'
+2026-09-11T14:37:19.0410298Z   git diff --color
+2026-09-11T14:37:19.0410424Z   exit 1
+2026-09-11T14:37:19.0410530Z else
+2026-09-11T14:37:19.0410674Z   echo '✔ No issues detected. Have a nice day :-)'
+2026-09-11T14:37:19.0410860Z fi
+2026-09-11T14:37:19.0438527Z shell: /usr/bin/bash -e {0}
+2026-09-11T14:37:19.0438663Z env:
+2026-09-11T14:37:19.0438776Z   GOLANGCI_LINT_VERSION: v2.13.1
+2026-09-11T14:37:19.0438918Z   GOLANGCI_LINT_TIMEOUT: 5m
+2026-09-11T14:37:19.0439061Z   GOTOOLCHAIN: local
+2026-09-11T14:37:19.0439178Z ##[endgroup]
+2026-09-11T14:37:19.0894790Z ✔ No issues detected. Have a nice day :-)
+2026-09-11T14:37:19.0956508Z Post job cleanup.
+2026-09-11T14:37:19.1908344Z Skipping cache saving
+2026-09-11T14:37:19.2037402Z Post job cleanup.
+2026-09-11T14:37:19.2557950Z [command]/usr/bin/git version
+2026-09-11T14:37:19.2586665Z git version 2.55.0
+2026-09-11T14:37:19.2607609Z Temporarily overriding HOME='/home/runner/work/_temp/fb86f928-534c-4e4b-867a-e723b69f6463' before making global git config changes
+2026-09-11T14:37:19.2608234Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-11T14:37:19.2610549Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/fission/fission
+2026-09-11T14:37:19.2636312Z Removing SSH command configuration
+2026-09-11T14:37:19.2639825Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-11T14:37:19.2689799Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-11T14:37:19.2878866Z Removing HTTP extra header
+2026-09-11T14:37:19.2882284Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-11T14:37:19.2909446Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-11T14:37:19.3099576Z Removing includeIf entries pointing to credentials config files
+2026-09-11T14:37:19.3105202Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-11T14:37:19.3127893Z includeif.gitdir:/home/runner/work/fission/fission/.git.path
+2026-09-11T14:37:19.3128314Z includeif.gitdir:/home/runner/work/fission/fission/.git/worktrees/*.path
+2026-09-11T14:37:19.3128641Z includeif.gitdir:/github/workspace/.git.path
+2026-09-11T14:37:19.3128871Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-09-11T14:37:19.3134538Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/fission/fission/.git.path
+2026-09-11T14:37:19.3153511Z /home/runner/work/_temp/git-credentials-f937ca7c-eb89-4377-98c4-1cd3f6c5939a.config
+2026-09-11T14:37:19.3160579Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/fission/fission/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-f937ca7c\-eb89\-4377\-98c4\-1cd3f6c5939a\.config
+2026-09-11T14:37:19.3194858Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/fission/fission/.git/worktrees/*.path
+2026-09-11T14:37:19.3213054Z /home/runner/work/_temp/git-credentials-f937ca7c-eb89-4377-98c4-1cd3f6c5939a.config
+2026-09-11T14:37:19.3218990Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/fission/fission/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-f937ca7c\-eb89\-4377\-98c4\-1cd3f6c5939a\.config
+2026-09-11T14:37:19.3244587Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-09-11T14:37:19.3262869Z /github/runner_temp/git-credentials-f937ca7c-eb89-4377-98c4-1cd3f6c5939a.config
+2026-09-11T14:37:19.3268463Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-f937ca7c\-eb89\-4377\-98c4\-1cd3f6c5939a\.config
+2026-09-11T14:37:19.3294063Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-09-11T14:37:19.3311253Z /github/runner_temp/git-credentials-f937ca7c-eb89-4377-98c4-1cd3f6c5939a.config
+2026-09-11T14:37:19.3316970Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-f937ca7c\-eb89\-4377\-98c4\-1cd3f6c5939a\.config
+2026-09-11T14:37:19.3343614Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-11T14:37:19.3523134Z Removing credentials config '/home/runner/work/_temp/git-credentials-f937ca7c-eb89-4377-98c4-1cd3f6c5939a.config'
+2026-09-11T14:37:19.3622307Z Post job cleanup.
+2026-09-11T14:37:19.4086888Z [harden-runner] post-step
+2026-09-11T14:37:20.4105428Z log:
+2026-09-11T14:37:20.4106171Z Fri, 11 Sep 2026 14:34:42 GMT:[buildInfo] tag=v0.16.2 commit=45e1b8427d286d8a0386981ae7e8a9f54632db0c branch=HEAD 
+2026-09-11T14:37:20.4106530Z 
+2026-09-11T14:37:20.4106638Z Fri, 11 Sep 2026 14:34:42 GMT:read config 
+2026-09-11T14:37:20.4107906Z  &{Repo:fission/fission CorrelationId:25f50cc5-85ba-4b2e-baff-850ff7ba4990 RunId:34610940264 WorkingDirectory:/home/runner/work/fission/fission APIURL:https://agent.api.stepsecurity.io/v1 TelemetryURL:https://prod.app-api.stepsecurity.io/v1 OneTimeKey: Endpoints:map[] EgressPolicy:audit DisableTelemetry:false DisableSudo:false DisableSudoAndContainers:false DisableFileMonitoring:false Private:false}
+2026-09-11T14:37:20.4109117Z 
+2026-09-11T14:37:20.4109352Z Fri, 11 Sep 2026 14:34:42 GMT:Step Security Job Correlation ID: 25f50cc5-85ba-4b2e-baff-850ff7ba4990
+2026-09-11T14:37:20.4109551Z 
+2026-09-11T14:37:20.4109837Z Fri, 11 Sep 2026 14:34:42 GMT:Global feature flags: {AgentType:agent-oss EnableArmour:true EnableCustomDetectionRules:true DisableKillEnforcement:false}
+2026-09-11T14:37:20.4110209Z Fri, 11 Sep 2026 14:34:42 GMT:initialized global feature flags
+2026-09-11T14:37:20.4110339Z 
+2026-09-11T14:37:20.4114246Z Fri, 11 Sep 2026 14:34:42 GMT:initialized global blocklist: &{ipAddresses:map[142.11.206.73:COMPROMISED_AXIOS_C2_IP 216.126.225.129:MEGALODON_EXFIL_IP 23.254.164.123:COMPROMISED_MASTRA_C2_DOMAIN 23.254.164.92:COMPROMISED_MASTRA_C2_DOMAIN 23.254.165.112:COMPROMISED_ARRAYREF_C2_IP 37.27.122.124:COMPROMISED_JSCRAMBLER_C2_IP 57.128.246.79:COMPROMISED_JSCRAMBLER_C2_IP 83.142.209.194:COMPROMISED_MISTRAL_PYPI_C2_IP 85.137.53.71:COMPROMISED_ASYNCAPI_GENERATOR_MIASMA_RAT_C2] domains:map[api.masscan.cloud.:COMPROMISED_TANSTACK_EXFIL archive.torproject.org.:COMPROMISED_JSCRAMBLER_C2_DOMAIN audit.checkmarx.cx.:COMPROMISED_BITWARDEN_CLI_C2_DOMAIN check.git-service.com.:COMPROMISED_DURABLETASK_C2_DOMAIN check.torproject.org.:COMPROMISED_JSCRAMBLER_C2_DOMAIN cjn37-uyaaa-aaaac-qgnva-cai.raw.icp0.io.:COMPROMISED_PGSERVE_EXFIL_CANISTER dht.transmissionbt.com.:COMPROMISED_ASYNCAPI_GENERATOR_MIASMA_RAT_C2 evil.invalid.:GLOBAL_BLOCK_TEST_DOMAIN filev2.getsession.org.:COMPROMISED_TANSTACK_EXFIL flipboxstudio.info.:COMPROMISED_PACKAGIST_C2_DOMAIN git-tanstack.com.:COMPROMISED_TANSTACK_EXFIL igotnofriendsonlineorirl-imgonnakmslmao.skyhanni.cloud.:COMPROMISED_ELEMENTARY_DATA_EXFIL js-mirror.com.:COMPROMISED_CHAINDROP_NPM_EXFIL metrics.femboy.energy.:COMPROMISED_MRMUSTARD_PYPI_C2_DOMAIN npm-cache.com.:COMPROMISED_CHAINDROP_NPM_EXFIL pypi-get.com.:COMPROMISED_CHAINDROP_NPM_EXFIL relay.damus.io.:COMPROMISED_ASYNCAPI_GENERATOR_MIASMA_RAT_C2 relay.nostr.com.:COMPROMISED_ASYNCAPI_GENERATOR_MIASMA_RAT_C2 router.bittorrent.com.:COMPROMISED_ASYNCAPI_GENERATOR_MIASMA_RAT_C2 scan.aquasecurtiy.org.:COMPROMISED_TRIVY_C2_DOMAIN seed1.getsession.org.:COMPROMISED_TANSTACK_EXFIL sfrclak.com.:COMPROMISED_AXIOS_C2_DOMAIN sh.azurestaticprovider.net.:COMPROMISED_NODE_IPC_NPM_C2 t.m-kosche.com.:COMPROMISED_ACTIONSCOOL_EXFIL telemetry.api-monitor.com.:COMPROMISED_PGSERVE_EXFIL_DOMAIN whereisitat.lucyatemysuperbox.space.:COMPROMISED_XINFERENCE_C2_DOMAIN zero.masscan.cloud.:COMPROMISED_MINI_SHAI_HULUD_2] wildcardDomains:map[]}
+2026-09-11T14:37:20.4118423Z 
+2026-09-11T14:37:20.4118512Z Fri, 11 Sep 2026 14:34:42 GMT:started process monitor
+2026-09-11T14:37:20.4118634Z 
+2026-09-11T14:37:20.4118712Z Fri, 11 Sep 2026 14:34:42 GMT:Monitor Processes called
+2026-09-11T14:37:20.4118903Z Fri, 11 Sep 2026 14:34:42 GMT:NewAuditClient created
+2026-09-11T14:37:20.4119082Z Fri, 11 Sep 2026 14:34:42 GMT:Status is enabled
+2026-09-11T14:37:20.4119251Z Fri, 11 Sep 2026 14:34:42 GMT:Rules deleted
+2026-09-11T14:37:20.4119474Z Fri, 11 Sep 2026 14:34:42 GMT:File monitor added for /home/runner/work/fission/fission
+2026-09-11T14:37:20.4119709Z Fri, 11 Sep 2026 14:34:42 GMT:Agent file monitor added
+2026-09-11T14:37:20.4120167Z Fri, 11 Sep 2026 14:34:42 GMT:Docker's daemon.json file monitor added
+2026-09-11T14:37:20.4120532Z Fri, 11 Sep 2026 14:34:42 GMT:Systemd's resolved.conf file monitor added
+2026-09-11T14:37:20.4120954Z Fri, 11 Sep 2026 14:34:42 GMT:Net monitor added for TCP (connect)
+2026-09-11T14:37:20.4121430Z Fri, 11 Sep 2026 14:34:42 GMT:Net monitor added for UDP (sendto & sendmsg)
+2026-09-11T14:37:20.4121776Z Fri, 11 Sep 2026 14:34:42 GMT:Process monitor added
+2026-09-11T14:37:20.4122030Z Fri, 11 Sep 2026 14:34:42 GMT:receive called
+2026-09-11T14:37:20.4122134Z 
+2026-09-11T14:37:20.4122137Z 
+2026-09-11T14:37:20.4122205Z Fri, 11 Sep 2026 14:34:42 GMT:updated resolved
+2026-09-11T14:37:20.4122310Z 
+2026-09-11T14:37:20.4122377Z Fri, 11 Sep 2026 14:34:43 GMT:set docker config
+2026-09-11T14:37:20.4122481Z 
+2026-09-11T14:37:20.4122558Z Fri, 11 Sep 2026 14:34:43 GMT:before audit rules
+2026-09-11T14:37:20.4122731Z Fri, 11 Sep 2026 14:34:43 GMT:added audit rules
+2026-09-11T14:37:20.4122901Z Fri, 11 Sep 2026 14:34:43 GMT:Armour is enabled
+2026-09-11T14:37:20.4123095Z Fri, 11 Sep 2026 14:34:43 GMT:[armour] Runner.Worker PID: 1943
+2026-09-11T14:37:20.4123282Z Fri, 11 Sep 2026 14:34:43 GMT:Armour attached
+2026-09-11T14:37:20.4123478Z Fri, 11 Sep 2026 14:34:43 GMT:[armour] Custom detection rules enabled
+2026-09-11T14:37:20.4123669Z Fri, 11 Sep 2026 14:34:43 GMT:done
+2026-09-11T14:37:20.4124179Z Fri, 11 Sep 2026 14:34:44 GMT:[Source code overwritten] file: /home/runner/work/fission/fission/.git/config.lock syscall: openat by exe: /usr/bin/git [d4d2ba562243015206d4248edfec871a74786499292d00ed072dbca2f5ae8073] Timestamp: 2026-09-11T14:34:44.15Z
+2026-09-11T14:37:20.4125153Z Fri, 11 Sep 2026 14:34:44 GMT:[Source code overwritten] file: /home/runner/work/fission/fission/.git/config syscall: rename by exe: /usr/bin/git [d4d2ba562243015206d4248edfec871a74786499292d00ed072dbca2f5ae8073] Timestamp: 2026-09-11T14:34:44.15Z
+2026-09-11T14:37:20.4125989Z Fri, 11 Sep 2026 14:34:44 GMT:[Source code overwritten] file: /home/runner/work/fission/fission/.git/config.lock syscall: openat by exe: /usr/bin/git [d4d2ba562243015206d4248edfec871a74786499292d00ed072dbca2f5ae8073] Timestamp: 2026-09-11T14:34:44.15Z
+2026-09-11T14:37:20.4126545Z Fri, 11 Sep 2026 14:34:44 GMT:domain resolved: github.com., ip address: 140.82.116.4, TTL: 60
+2026-09-11T14:37:20.4126894Z Fri, 11 Sep 2026 14:34:44 GMT:domain resolved: prod.app-api.stepsecurity.io., ip address: 32.184.179.178, TTL: 58
+2026-09-11T14:37:20.4128822Z Fri, 11 Sep 2026 14:34:44 GMT:domain resolved: results-receiver.actions.githubusercontent.com., ip address: 140.82.114.21, TTL: 30
+2026-09-11T14:37:20.4129512Z Fri, 11 Sep 2026 14:34:44 GMT:endpoint called ip address:port 140.82.116.4:443, domain: github.com., pid: 2578, process: git-remote-http
+2026-09-11T14:37:20.4130092Z Fri, 11 Sep 2026 14:34:45 GMT:domain resolved: api.github.com., ip address: 140.82.116.5, TTL: 60
+2026-09-11T14:37:20.4130942Z Fri, 11 Sep 2026 14:34:45 GMT:endpoint called ip address:port 140.82.116.5:443, domain: api.github.com., pid: 2591, process: node
+2026-09-11T14:37:20.4131350Z Fri, 11 Sep 2026 14:34:46 GMT:endpoint called ip address:port 140.82.116.4:443, domain: github.com., pid: 2591, process: node
+2026-09-11T14:37:20.4131754Z Fri, 11 Sep 2026 14:34:46 GMT:domain resolved: release-assets.githubusercontent.com., ip address: 185.199.108.133, TTL: 91
+2026-09-11T14:37:20.4132224Z Fri, 11 Sep 2026 14:34:46 GMT:endpoint called ip address:port 185.199.108.133:443, domain: release-assets.githubusercontent.com., pid: 2591, process: node
+2026-09-11T14:37:20.4132753Z Fri, 11 Sep 2026 14:34:52 GMT:endpoint called ip address:port 140.82.114.21:443, domain: results-receiver.actions.githubusercontent.com., pid: 2591, process: node
+2026-09-11T14:37:20.4133297Z Fri, 11 Sep 2026 14:34:52 GMT:domain resolved: productionresultssa2.blob.core.windows.net., ip address: 57.150.87.97, TTL: 51
+2026-09-11T14:37:20.4133892Z Fri, 11 Sep 2026 14:34:52 GMT:endpoint called ip address:port 57.150.87.97:443, domain: productionresultssa2.blob.core.windows.net., pid: 2591, process: node
+2026-09-11T14:37:20.4134764Z Fri, 11 Sep 2026 14:35:00 GMT:domain resolved: hosted-compute-watchdog-prod-eus-01.githubapp.com., ip address: 20.75.202.224, TTL: 2644
+2026-09-11T14:37:20.4135413Z Fri, 11 Sep 2026 14:35:05 GMT:domain resolved: proxy.golang.org., ip address: 173.194.202.141, TTL: 300
+2026-09-11T14:37:20.4135998Z Fri, 11 Sep 2026 14:35:05 GMT:endpoint called ip address:port 173.194.202.141:443, domain: proxy.golang.org., pid: 2663, process: go
+2026-09-11T14:37:20.4136716Z Fri, 11 Sep 2026 14:35:15 GMT:domain resolved: results-receiver.actions.githubusercontent.com., ip address: 140.82.112.22, TTL: 42
+2026-09-11T14:37:20.4137330Z Fri, 11 Sep 2026 14:35:18 GMT:endpoint called ip address:port 140.82.116.4:443, domain: github.com., pid: 3427, process: node
+2026-09-11T14:37:20.4137783Z Fri, 11 Sep 2026 14:35:18 GMT:endpoint called ip address:port 185.199.108.133:443, domain: release-assets.githubusercontent.com., pid: 3427, process: node
+2026-09-11T14:37:20.4138311Z Fri, 11 Sep 2026 14:36:05 GMT:domain resolved: hosted-compute-request-orchestrator-prod-eus-01.githubapp.com., ip address: 20.75.202.224, TTL: 2561
+2026-09-11T14:37:20.4138763Z Fri, 11 Sep 2026 14:37:09 GMT:domain resolved: prod.app-api.stepsecurity.io., ip address: 32.184.179.178, TTL: 47
+2026-09-11T14:37:20.4139164Z Fri, 11 Sep 2026 14:37:09 GMT:endpoint called ip address:port 173.194.202.141:443, domain: proxy.golang.org., pid: 15732, process: go
+2026-09-11T14:37:20.4139593Z Fri, 11 Sep 2026 14:37:19 GMT:domain resolved: results-receiver.actions.githubusercontent.com., ip address: 140.82.113.21, TTL: 57
+2026-09-11T14:37:20.4139837Z 
+2026-09-11T14:37:20.4139910Z Fri, 11 Sep 2026 14:37:19 GMT:post_event called
+2026-09-11T14:37:20.4140215Z Fri, 11 Sep 2026 14:37:20 GMT:domain resolved: productionresultssa2.blob.core.windows.net., ip address: 57.150.86.161, TTL: 30
+2026-09-11T14:37:20.4140726Z Fri, 11 Sep 2026 14:37:20 GMT:endpoint called ip address:port 140.82.113.21:443, domain: results-receiver.actions.githubusercontent.com., pid: 1943, process: Runner.Worker
+2026-09-11T14:37:20.4141292Z Fri, 11 Sep 2026 14:37:20 GMT:endpoint called ip address:port 57.150.86.161:443, domain: productionresultssa2.blob.core.windows.net., pid: 1943, process: Runner.Worker
+2026-09-11T14:37:20.4141586Z 
+2026-09-11T14:37:20.4141637Z status:
+2026-09-11T14:37:20.4141744Z Initialized
+2026-09-11T14:37:20.4229104Z agent.service log:
+2026-09-11T14:37:20.4229869Z Sep 11 14:34:42 runnervmlun5p systemd[1]: /etc/systemd/system/agent.service:9: Standard output type syslog is obsolete, automatically updating to journal. Please update your unit file, and consider removing the setting altogether.
+2026-09-11T14:37:20.4231135Z Sep 11 14:34:42 runnervmlun5p systemd[1]: /etc/systemd/system/agent.service:10: Standard output type syslog is obsolete, automatically updating to journal. Please update your unit file, and consider removing the setting altogether.
+2026-09-11T14:37:20.4232111Z Sep 11 14:34:42 runnervmlun5p systemd[1]: Started agent.service - Agent.
+2026-09-11T14:37:20.4232733Z Sep 11 14:34:42 runnervmlun5p sudo[2083]:     root : *** ; USER=root ; COMMAND=/usr/bin/systemctl stop systemd-resolved
+2026-09-11T14:37:20.4233121Z Sep 11 14:34:42 runnervmlun5p sudo[2083]: pam_unix(sudo:session): session opened for user root(uid=0) by (uid=0)
+2026-09-11T14:37:20.4233463Z Sep 11 14:34:42 runnervmlun5p sudo[2083]: pam_unix(sudo:session): session closed for user root
+2026-09-11T14:37:20.4233860Z Sep 11 14:34:42 runnervmlun5p sudo[2089]:     root : *** ; USER=root ; COMMAND=/usr/bin/systemctl restart systemd-resolved
+2026-09-11T14:37:20.4234232Z Sep 11 14:34:42 runnervmlun5p sudo[2089]: pam_unix(sudo:session): session opened for user root(uid=0) by (uid=0)
+2026-09-11T14:37:20.4234755Z Sep 11 14:34:42 runnervmlun5p sudo[2089]: pam_unix(sudo:session): session closed for user root
+2026-09-11T14:37:20.4235116Z Sep 11 14:34:42 runnervmlun5p sudo[2094]:     root : *** ; USER=root ; COMMAND=/usr/bin/resolvectl flush-caches
+2026-09-11T14:37:20.4235572Z Sep 11 14:34:42 runnervmlun5p sudo[2094]: pam_unix(sudo:session): session opened for user root(uid=0) by (uid=0)
+2026-09-11T14:37:20.4235907Z Sep 11 14:34:42 runnervmlun5p sudo[2094]: pam_unix(sudo:session): session closed for user root
+2026-09-11T14:37:20.4236264Z Sep 11 14:34:42 runnervmlun5p sudo[2097]:     root : *** ; USER=root ; COMMAND=/usr/bin/systemctl reload docker
+2026-09-11T14:37:20.4236611Z Sep 11 14:34:42 runnervmlun5p sudo[2097]: pam_unix(sudo:session): session opened for user root(uid=0) by (uid=0)
+2026-09-11T14:37:20.4236942Z Sep 11 14:34:42 runnervmlun5p sudo[2097]: pam_unix(sudo:session): session closed for user root
+2026-09-11T14:37:20.4237304Z Sep 11 14:34:42 runnervmlun5p sudo[2105]:     root : *** ; USER=root ; COMMAND=/usr/bin/systemctl daemon-reload
+2026-09-11T14:37:20.4237650Z Sep 11 14:34:42 runnervmlun5p sudo[2105]: pam_unix(sudo:session): session opened for user root(uid=0) by (uid=0)
+2026-09-11T14:37:20.4238237Z Sep 11 14:34:42 runnervmlun5p systemd[1]: /etc/systemd/system/agent.service:9: Standard output type syslog is obsolete, automatically updating to journal. Please update your unit file, and consider removing the setting altogether.
+2026-09-11T14:37:20.4239002Z Sep 11 14:34:42 runnervmlun5p systemd[1]: /etc/systemd/system/agent.service:10: Standard output type syslog is obsolete, automatically updating to journal. Please update your unit file, and consider removing the setting altogether.
+2026-09-11T14:37:20.4239530Z Sep 11 14:34:42 runnervmlun5p sudo[2105]: pam_unix(sudo:session): session closed for user root
+2026-09-11T14:37:20.4239887Z Sep 11 14:34:42 runnervmlun5p sudo[2175]:     root : *** ; USER=root ; COMMAND=/usr/bin/systemctl restart docker
+2026-09-11T14:37:20.4240241Z Sep 11 14:34:42 runnervmlun5p sudo[2175]: pam_unix(sudo:session): session opened for user root(uid=0) by (uid=0)
+2026-09-11T14:37:20.4240568Z Sep 11 14:34:43 runnervmlun5p sudo[2175]: pam_unix(sudo:session): session closed for user root
+2026-09-11T14:37:20.4241071Z Sep 11 14:34:43 runnervmlun5p agentservice[2069]: 2026/09/11 14:34:43 INFO Fetching custom detection rules module=armour api_url=https://agent.api.stepsecurity.io/v1 repo=fission/fission
+2026-09-11T14:37:20.4241596Z Sep 11 14:34:43 runnervmlun5p agentservice[2069]: 2026/09/11 14:34:43 INFO Custom detection rules evaluator initialized module=armour
+2026-09-11T14:37:20.4242055Z Sep 11 14:34:43 runnervmlun5p agentservice[2069]: 2026/09/11 14:34:43 INFO Detection manager started module=detection-manager workers=4 buffer_size=1000
+2026-09-11T14:37:20.4242508Z Sep 11 14:34:43 runnervmlun5p agentservice[2069]: 2026/09/11 14:34:43 INFO Selected Armour variant module=armour variant=fmod_ret
+2026-09-11T14:37:20.4242886Z Sep 11 14:34:43 runnervmlun5p agentservice[2069]: 2026/09/11 14:34:43 INFO Config module=armour AGENT_PID=2069
+2026-09-11T14:37:20.4243254Z Sep 11 14:34:43 runnervmlun5p agentservice[2069]: 2026/09/11 14:34:43 INFO Config module=armour ENFORCE_READ_BLOCK=false
+2026-09-11T14:37:20.4243727Z Sep 11 14:34:43 runnervmlun5p agentservice[2069]: 2026/09/11 14:34:43 INFO Config module=armour ENFORCE_WRITE_BLOCK=false
+2026-09-11T14:37:20.4244110Z Sep 11 14:34:43 runnervmlun5p agentservice[2069]: 2026/09/11 14:34:43 INFO Config module=armour ENFORCE_KILL_BLOCK=true
+2026-09-11T14:37:20.4244647Z Sep 11 14:34:43 runnervmlun5p agentservice[2069]: 2026/09/11 14:34:43 INFO Map size module=armour protected_pids=1
+2026-09-11T14:37:20.4245040Z Sep 11 14:34:43 runnervmlun5p agentservice[2069]: 2026/09/11 14:34:43 INFO Map size module=armour protected_pid_inodes=1
+2026-09-11T14:37:20.4245417Z Sep 11 14:34:43 runnervmlun5p agentservice[2069]: 2026/09/11 14:34:43 INFO Map size module=armour protected_bpf_ids=9
+2026-09-11T14:37:20.4245807Z Sep 11 14:34:43 runnervmlun5p agentservice[2069]: 2026/09/11 14:34:43 INFO Map size module=armour protected_fs_inodes=6
+2026-09-11T14:37:20.4246189Z Sep 11 14:34:43 runnervmlun5p agentservice[2069]: 2026/09/11 14:34:43 INFO Map size module=armour protected_proc_fs_inodes=2
+2026-09-11T14:37:20.4246598Z Sep 11 14:34:43 runnervmlun5p agentservice[2069]: 2026/09/11 14:34:43 INFO Map size module=armour events=16384
+2026-09-11T14:37:20.4247304Z Sep 11 14:34:43 runnervmlun5p agentservice[2069]: 2026/09/11 14:34:43 INFO ProtectedPids module=armour pids=map[2070:2069]
+2026-09-11T14:37:20.4247939Z Sep 11 14:34:43 runnervmlun5p agentservice[2069]: 2026/09/11 14:34:43 INFO ProtectedBPFIDs module=armour ids="[18 16 12 19 17]"
+2026-09-11T14:37:20.4248634Z Sep 11 14:34:43 runnervmlun5p agentservice[2069]: 2026/09/11 14:34:43 INFO File Info module=armour inoKey="{Device:24 Inode:14045}" path=/proc/1943/mem
+2026-09-11T14:37:20.4249383Z Sep 11 14:34:43 runnervmlun5p agentservice[2069]: 2026/09/11 14:34:43 INFO File Info module=armour inoKey="{Device:24 Inode:14046}" path=/proc/1922/mem
+2026-09-11T14:37:20.4250146Z Sep 11 14:34:43 runnervmlun5p agentservice[2069]: 2026/09/11 14:34:43 INFO File Info module=armour inoKey="{Device:769 Inode:91162}" path=/etc/sudoers.d/runner
+2026-09-11T14:37:20.4250921Z Sep 11 14:34:43 runnervmlun5p agentservice[2069]: 2026/09/11 14:34:43 INFO File Info module=armour inoKey="{Device:28 Inode:923}" path=/etc/resolv.conf
+2026-09-11T14:37:20.4251684Z Sep 11 14:34:43 runnervmlun5p agentservice[2069]: 2026/09/11 14:34:43 INFO File Info module=armour inoKey="{Device:769 Inode:508}" path=/etc/systemd/resolved.conf
+2026-09-11T14:37:20.4252196Z Sep 11 14:34:43 runnervmlun5p agentservice[2069]: 2026/09/11 14:34:43 INFO File Info module=armour inoKey="{Device:769 Inode:327830}" path=/etc/docker/daemon.json
+2026-09-11T14:37:20.4252634Z Sep 11 14:34:43 runnervmlun5p agentservice[2069]: 2026/09/11 14:34:43 INFO Protection maps populated module=armour
+2026-09-11T14:37:20.4253003Z Sep 11 14:34:43 runnervmlun5p agentservice[2069]: 2026/09/11 14:34:43 INFO Protection maps are freezed module=armour
+2026-09-11T14:37:20.4253364Z Sep 11 14:34:43 runnervmlun5p agentservice[2069]: 2026/09/11 14:34:43 INFO Linking completed module=armour
+2026-09-11T14:37:20.4253707Z Sep 11 14:34:43 runnervmlun5p agentservice[2069]: 2026/09/11 14:34:43 INFO Armour engaged module=armour
+2026-09-11T14:37:20.4254065Z Sep 11 14:34:43 runnervmlun5p agentservice[2069]: 2026/09/11 14:34:43 INFO RingBuffer created module=armour size=16384
+2026-09-11T14:37:20.4254580Z Sep 11 14:34:43 runnervmlun5p agentservice[2069]: 2026/09/11 14:34:43 INFO Listening for events module=armour
+2026-09-11T14:37:20.4254974Z Sep 11 14:34:43 runnervmlun5p agentservice[2069]: 2026/09/11 14:34:43 INFO [LOCKDOWN] Runner.Worker PID set module=armour pid=1943
+2026-09-11T14:37:20.4255201Z 
+2026-09-11T14:37:20.5484569Z Cleaning up orphan processes

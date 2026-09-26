@@ -1,0 +1,330 @@
+﻿2026-09-03T14:30:42.0446517Z Current runner version: '2.337.0'
+2026-09-03T14:30:42.0464488Z ##[group]Runner Image Provisioner
+2026-09-03T14:30:42.0465219Z Hosted Compute Agent
+2026-09-03T14:30:42.0465630Z Version: 20260819.586
+2026-09-03T14:30:42.0466059Z Commit: 3cc4a88dfa507ef76119ad1bb3eccc6378bb2b76
+2026-09-03T14:30:42.0466579Z Build Date: 2026-08-18T23:20:18Z
+2026-09-03T14:30:42.0467039Z Worker ID: {dabf8214-a4cd-455c-ae2a-3121e956687e}
+2026-09-03T14:30:42.0467585Z Azure Region: centralus
+2026-09-03T14:30:42.0468050Z ##[endgroup]
+2026-09-03T14:30:42.0468964Z ##[group]Operating System
+2026-09-03T14:30:42.0469408Z Ubuntu
+2026-09-03T14:30:42.0469762Z 24.04.4
+2026-09-03T14:30:42.0470140Z LTS
+2026-09-03T14:30:42.0470504Z ##[endgroup]
+2026-09-03T14:30:42.0470871Z ##[group]Runner Image
+2026-09-03T14:30:42.0471292Z Image: ubuntu-24.04
+2026-09-03T14:30:42.0471680Z Version: 20260823.283.1
+2026-09-03T14:30:42.0472598Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260823.283/images/ubuntu/Ubuntu2404-Readme.md
+2026-09-03T14:30:42.0474011Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260823.283
+2026-09-03T14:30:42.0474683Z ##[endgroup]
+2026-09-03T14:30:42.0475515Z ##[group]GITHUB_TOKEN Permissions
+2026-09-03T14:30:42.0477065Z Contents: read
+2026-09-03T14:30:42.0477485Z Metadata: read
+2026-09-03T14:30:42.0477871Z ##[endgroup]
+2026-09-03T14:30:42.0479294Z Secret source: Actions
+2026-09-03T14:30:42.0479979Z Prepare workflow directory
+2026-09-03T14:30:42.0816937Z Prepare all required actions
+2026-09-03T14:30:42.0852934Z Getting action download info
+2026-09-03T14:30:42.3267955Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-09-03T14:30:43.1708074Z Download action repository 'actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a' (SHA:043fb46d1a93c77aae656e7c1c64a875d1fc6a0a)
+2026-09-03T14:30:43.4855708Z Complete job name: PHP 8.5 - PHPUnit 11.5.50 - prefer-lowest
+2026-09-03T14:30:43.5262587Z ##[group]Checking docker version
+2026-09-03T14:30:43.5272249Z ##[command]/usr/bin/docker version --format '{{.Server.APIVersion}}'
+2026-09-03T14:30:45.9694104Z '1.48'
+2026-09-03T14:30:45.9706061Z Docker daemon API version: '1.48'
+2026-09-03T14:30:45.9706671Z ##[command]/usr/bin/docker version --format '{{.Client.APIVersion}}'
+2026-09-03T14:30:45.9856582Z '1.48'
+2026-09-03T14:30:45.9863847Z Docker client API version: '1.48'
+2026-09-03T14:30:45.9868578Z ##[endgroup]
+2026-09-03T14:30:45.9870222Z ##[group]Clean up resources from previous jobs
+2026-09-03T14:30:45.9874802Z ##[command]/usr/bin/docker ps --all --quiet --no-trunc --filter "label=accd51"
+2026-09-03T14:30:45.9989697Z ##[command]/usr/bin/docker network prune --force --filter "label=accd51"
+2026-09-03T14:30:46.0094144Z ##[endgroup]
+2026-09-03T14:30:46.0094485Z ##[group]Create local container network
+2026-09-03T14:30:46.0101429Z ##[command]/usr/bin/docker network create --label accd51 github_network_8ae0566fc7fa49439d7d456561bfe3b3
+2026-09-03T14:30:46.0672957Z 44c3ff811fb466fdd5c255b9aa87a7dcf1d21acc3045512ffc774d168e2c2b1c
+2026-09-03T14:30:46.0684183Z ##[endgroup]
+2026-09-03T14:30:46.0705237Z ##[group]Starting memcached service container
+2026-09-03T14:30:46.0721645Z ##[command]/usr/bin/docker pull memcached:1.6-alpine
+2026-09-03T14:30:47.2205271Z 1.6-alpine: Pulling from library/memcached
+2026-09-03T14:30:47.8547423Z 55afa1ecc21d: Already exists
+2026-09-03T14:30:47.8677827Z b30537f894be: Pulling fs layer
+2026-09-03T14:30:47.8678473Z 9d21aa1f5d5e: Pulling fs layer
+2026-09-03T14:30:47.8679361Z 9c78e5fe3586: Pulling fs layer
+2026-09-03T14:30:47.8680117Z 4c5169cfbcf8: Pulling fs layer
+2026-09-03T14:30:47.8680574Z 2867a9b9bc08: Pulling fs layer
+2026-09-03T14:30:47.8681210Z 4c5169cfbcf8: Waiting
+2026-09-03T14:30:47.8681592Z 2867a9b9bc08: Waiting
+2026-09-03T14:30:48.0083616Z b30537f894be: Verifying Checksum
+2026-09-03T14:30:48.0744900Z 9d21aa1f5d5e: Download complete
+2026-09-03T14:30:48.2242863Z 2867a9b9bc08: Verifying Checksum
+2026-09-03T14:30:48.2243681Z 4c5169cfbcf8: Verifying Checksum
+2026-09-03T14:30:48.2244394Z 4c5169cfbcf8: Download complete
+2026-09-03T14:30:48.2244867Z 2867a9b9bc08: Download complete
+2026-09-03T14:30:48.4586133Z 9c78e5fe3586: Verifying Checksum
+2026-09-03T14:30:48.4586864Z 9c78e5fe3586: Download complete
+2026-09-03T14:30:48.8985885Z b30537f894be: Pull complete
+2026-09-03T14:30:49.6564309Z 9d21aa1f5d5e: Pull complete
+2026-09-03T14:30:50.7929828Z 9c78e5fe3586: Pull complete
+2026-09-03T14:30:51.2220268Z 4c5169cfbcf8: Pull complete
+2026-09-03T14:30:51.5023802Z 2867a9b9bc08: Pull complete
+2026-09-03T14:30:51.5110968Z Digest: sha256:c29847751abb41f4c268c84fb3087fee05d4edcbda44409ccb5086e26148e8a7
+2026-09-03T14:30:51.5129985Z Status: Downloaded newer image for memcached:1.6-alpine
+2026-09-03T14:30:51.5144162Z docker.io/library/memcached:1.6-alpine
+2026-09-03T14:30:51.5172636Z ##[command]/usr/bin/docker create --name 374b33170aa941cb8b86132b1cb289c3_memcached16alpine_96c0ee --label accd51 --network github_network_8ae0566fc7fa49439d7d456561bfe3b3 --network-alias memcached -p 11211:11211  -e GITHUB_ACTIONS=true -e CI=true memcached:1.6-alpine
+2026-09-03T14:30:52.0397205Z 4657c0c50eca5c1026c9234f91916c716d09f9fe256c0b493e86bc75c89a51e9
+2026-09-03T14:30:52.0416356Z ##[command]/usr/bin/docker start 4657c0c50eca5c1026c9234f91916c716d09f9fe256c0b493e86bc75c89a51e9
+2026-09-03T14:30:53.9886316Z 4657c0c50eca5c1026c9234f91916c716d09f9fe256c0b493e86bc75c89a51e9
+2026-09-03T14:30:53.9898525Z ##[command]/usr/bin/docker ps --all --filter id=4657c0c50eca5c1026c9234f91916c716d09f9fe256c0b493e86bc75c89a51e9 --filter status=running --no-trunc --format "{{.ID}} {{.Status}}"
+2026-09-03T14:30:54.0007870Z 4657c0c50eca5c1026c9234f91916c716d09f9fe256c0b493e86bc75c89a51e9 Up 1 second
+2026-09-03T14:30:54.0020082Z ##[command]/usr/bin/docker port 4657c0c50eca5c1026c9234f91916c716d09f9fe256c0b493e86bc75c89a51e9
+2026-09-03T14:30:54.0121454Z 11211/tcp -> 0.0.0.0:11211
+2026-09-03T14:30:54.0121924Z 11211/tcp -> [::]:11211
+2026-09-03T14:30:54.0152818Z ##[endgroup]
+2026-09-03T14:30:54.0154428Z ##[group]Starting mysql service container
+2026-09-03T14:30:54.0155431Z ##[command]/usr/bin/docker pull mysql:9.7
+2026-09-03T14:30:54.7860156Z 9.7: Pulling from library/mysql
+2026-09-03T14:30:54.9398738Z 30627cea5424: Pulling fs layer
+2026-09-03T14:30:54.9399958Z dc9bff174e15: Pulling fs layer
+2026-09-03T14:30:54.9400688Z c6923c6c729f: Pulling fs layer
+2026-09-03T14:30:54.9401077Z 48af77f83ce2: Pulling fs layer
+2026-09-03T14:30:54.9401426Z 95d83715477f: Pulling fs layer
+2026-09-03T14:30:54.9401753Z fefbd8135359: Pulling fs layer
+2026-09-03T14:30:54.9402005Z e9a1438654dd: Pulling fs layer
+2026-09-03T14:30:54.9402306Z 39577f2d64ca: Pulling fs layer
+2026-09-03T14:30:54.9402699Z 47fffd23e43d: Pulling fs layer
+2026-09-03T14:30:54.9402996Z e62c147ead06: Pulling fs layer
+2026-09-03T14:30:54.9403570Z e9a1438654dd: Waiting
+2026-09-03T14:30:54.9403846Z 39577f2d64ca: Waiting
+2026-09-03T14:30:54.9404559Z 48af77f83ce2: Waiting
+2026-09-03T14:30:54.9405072Z 47fffd23e43d: Waiting
+2026-09-03T14:30:54.9405507Z e62c147ead06: Waiting
+2026-09-03T14:30:54.9406603Z 95d83715477f: Waiting
+2026-09-03T14:30:54.9406973Z fefbd8135359: Waiting
+2026-09-03T14:30:55.0877429Z dc9bff174e15: Verifying Checksum
+2026-09-03T14:30:55.0877841Z dc9bff174e15: Download complete
+2026-09-03T14:30:55.1458180Z c6923c6c729f: Verifying Checksum
+2026-09-03T14:30:55.1459053Z c6923c6c729f: Download complete
+2026-09-03T14:30:55.3210761Z 95d83715477f: Verifying Checksum
+2026-09-03T14:30:55.3211670Z 95d83715477f: Download complete
+2026-09-03T14:30:55.3252452Z 30627cea5424: Verifying Checksum
+2026-09-03T14:30:55.3253503Z 30627cea5424: Download complete
+2026-09-03T14:30:55.3987539Z 48af77f83ce2: Verifying Checksum
+2026-09-03T14:30:55.3988567Z 48af77f83ce2: Download complete
+2026-09-03T14:30:55.4512037Z fefbd8135359: Download complete
+2026-09-03T14:30:55.5284664Z 39577f2d64ca: Verifying Checksum
+2026-09-03T14:30:55.5286181Z 39577f2d64ca: Download complete
+2026-09-03T14:30:55.6744935Z e62c147ead06: Verifying Checksum
+2026-09-03T14:30:55.6746248Z e62c147ead06: Download complete
+2026-09-03T14:30:55.7605033Z e9a1438654dd: Verifying Checksum
+2026-09-03T14:30:55.7605527Z e9a1438654dd: Download complete
+2026-09-03T14:30:56.1283392Z 47fffd23e43d: Verifying Checksum
+2026-09-03T14:30:56.1283835Z 47fffd23e43d: Download complete
+2026-09-03T14:30:56.5536042Z 30627cea5424: Pull complete
+2026-09-03T14:30:58.6112234Z dc9bff174e15: Pull complete
+2026-09-03T14:30:58.7235020Z c6923c6c729f: Pull complete
+2026-09-03T14:30:59.8876338Z 48af77f83ce2: Pull complete
+2026-09-03T14:30:59.9139231Z 95d83715477f: Pull complete
+2026-09-03T14:31:00.5141966Z fefbd8135359: Pull complete
+2026-09-03T14:31:02.8008476Z e9a1438654dd: Pull complete
+2026-09-03T14:31:03.0829414Z 39577f2d64ca: Pull complete
+2026-09-03T14:31:13.6173720Z 47fffd23e43d: Pull complete
+2026-09-03T14:31:13.8135600Z e62c147ead06: Pull complete
+2026-09-03T14:31:13.8202099Z Digest: sha256:257388edf9c84dbc04c763625446d5f3fa6ed60d1b0873bc552c614ba0a7ab4e
+2026-09-03T14:31:13.8218970Z Status: Downloaded newer image for mysql:9.7
+2026-09-03T14:31:13.8229930Z docker.io/library/mysql:9.7
+2026-09-03T14:31:13.8266917Z ##[command]/usr/bin/docker create --name 100831e37cff48829cc062d781009e41_mysql97_28f462 --label accd51 --network github_network_8ae0566fc7fa49439d7d456561bfe3b3 --network-alias mysql -p 3306 --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3 -e "MYSQL_ALLOW_EMPTY_PASSWORD=yes" -e "MYSQL_DATABASE=forge" -e GITHUB_ACTIONS=true -e CI=true mysql:9.7
+2026-09-03T14:31:14.3132236Z f6ff072d2d265a29d503276dea53d1f8417f94d676510c7b04f1f3b531936856
+2026-09-03T14:31:14.3144219Z ##[command]/usr/bin/docker start f6ff072d2d265a29d503276dea53d1f8417f94d676510c7b04f1f3b531936856
+2026-09-03T14:31:14.5731392Z f6ff072d2d265a29d503276dea53d1f8417f94d676510c7b04f1f3b531936856
+2026-09-03T14:31:14.5741976Z ##[command]/usr/bin/docker ps --all --filter id=f6ff072d2d265a29d503276dea53d1f8417f94d676510c7b04f1f3b531936856 --filter status=running --no-trunc --format "{{.ID}} {{.Status}}"
+2026-09-03T14:31:14.5856266Z f6ff072d2d265a29d503276dea53d1f8417f94d676510c7b04f1f3b531936856 Up Less than a second (health: starting)
+2026-09-03T14:31:14.5865720Z ##[command]/usr/bin/docker port f6ff072d2d265a29d503276dea53d1f8417f94d676510c7b04f1f3b531936856
+2026-09-03T14:31:14.5986862Z 3306/tcp -> 0.0.0.0:32768
+2026-09-03T14:31:14.5987341Z 3306/tcp -> [::]:32768
+2026-09-03T14:31:14.5995010Z ##[endgroup]
+2026-09-03T14:31:14.5995960Z ##[group]Starting redis service container
+2026-09-03T14:31:14.5996769Z ##[command]/usr/bin/docker pull redis:7.0
+2026-09-03T14:31:15.1474517Z 7.0: Pulling from library/redis
+2026-09-03T14:31:15.6130939Z a2318d6c47ec: Pulling fs layer
+2026-09-03T14:31:15.6131458Z b59068c7715f: Pulling fs layer
+2026-09-03T14:31:15.6132129Z 96796a2514ff: Pulling fs layer
+2026-09-03T14:31:15.6132455Z b8c430d0189b: Pulling fs layer
+2026-09-03T14:31:15.6132890Z fcf1b4feeffd: Pulling fs layer
+2026-09-03T14:31:15.6133439Z bcec16c47e35: Pulling fs layer
+2026-09-03T14:31:15.6133784Z 4f4fb700ef54: Pulling fs layer
+2026-09-03T14:31:15.6134225Z 73586727588c: Pulling fs layer
+2026-09-03T14:31:15.6134562Z b8c430d0189b: Waiting
+2026-09-03T14:31:15.6134845Z fcf1b4feeffd: Waiting
+2026-09-03T14:31:15.6135191Z bcec16c47e35: Waiting
+2026-09-03T14:31:15.6135454Z 4f4fb700ef54: Waiting
+2026-09-03T14:31:15.6135847Z 73586727588c: Waiting
+2026-09-03T14:31:15.7659733Z 96796a2514ff: Verifying Checksum
+2026-09-03T14:31:15.7660474Z 96796a2514ff: Download complete
+2026-09-03T14:31:15.7852851Z b59068c7715f: Verifying Checksum
+2026-09-03T14:31:15.7853408Z b59068c7715f: Download complete
+2026-09-03T14:31:15.9370205Z a2318d6c47ec: Download complete
+2026-09-03T14:31:16.0202954Z b8c430d0189b: Verifying Checksum
+2026-09-03T14:31:16.0203833Z b8c430d0189b: Download complete
+2026-09-03T14:31:16.1031424Z bcec16c47e35: Download complete
+2026-09-03T14:31:16.1688397Z 4f4fb700ef54: Verifying Checksum
+2026-09-03T14:31:16.1689201Z 4f4fb700ef54: Download complete
+2026-09-03T14:31:16.2416197Z 73586727588c: Verifying Checksum
+2026-09-03T14:31:16.2416973Z 73586727588c: Download complete
+2026-09-03T14:31:16.4009920Z fcf1b4feeffd: Verifying Checksum
+2026-09-03T14:31:16.4010400Z fcf1b4feeffd: Download complete
+2026-09-03T14:31:17.2201424Z a2318d6c47ec: Pull complete
+2026-09-03T14:31:18.5043593Z b59068c7715f: Pull complete
+2026-09-03T14:31:18.5389265Z 96796a2514ff: Pull complete
+2026-09-03T14:31:19.8497633Z b8c430d0189b: Pull complete
+2026-09-03T14:31:21.0722713Z fcf1b4feeffd: Pull complete
+2026-09-03T14:31:21.5942256Z bcec16c47e35: Pull complete
+2026-09-03T14:31:22.2305997Z 4f4fb700ef54: Pull complete
+2026-09-03T14:31:22.4259564Z 73586727588c: Pull complete
+2026-09-03T14:31:22.4334981Z Digest: sha256:352c1fdadc91926edda08f45aeb3f27f37194c2f14101229c0523a11195c96e3
+2026-09-03T14:31:22.4388026Z Status: Downloaded newer image for redis:7.0
+2026-09-03T14:31:22.4412275Z docker.io/library/redis:7.0
+2026-09-03T14:31:22.4425105Z ##[command]/usr/bin/docker create --name 5cb2b16288c54a8ebf2ef7f2e732724c_redis70_083a87 --label accd51 --network github_network_8ae0566fc7fa49439d7d456561bfe3b3 --network-alias redis -p 6379:6379 --entrypoint redis-server -e GITHUB_ACTIONS=true -e CI=true redis:7.0
+2026-09-03T14:31:22.6627819Z a0d3ed9c84b6f3d7190da36db4ee569a91d455c82c57444805799659f6295ab8
+2026-09-03T14:31:22.6635815Z ##[command]/usr/bin/docker start a0d3ed9c84b6f3d7190da36db4ee569a91d455c82c57444805799659f6295ab8
+2026-09-03T14:31:23.6307060Z a0d3ed9c84b6f3d7190da36db4ee569a91d455c82c57444805799659f6295ab8
+2026-09-03T14:31:23.6318462Z ##[command]/usr/bin/docker ps --all --filter id=a0d3ed9c84b6f3d7190da36db4ee569a91d455c82c57444805799659f6295ab8 --filter status=running --no-trunc --format "{{.ID}} {{.Status}}"
+2026-09-03T14:31:23.6427364Z a0d3ed9c84b6f3d7190da36db4ee569a91d455c82c57444805799659f6295ab8 Up Less than a second
+2026-09-03T14:31:23.7846885Z ##[command]/usr/bin/docker port a0d3ed9c84b6f3d7190da36db4ee569a91d455c82c57444805799659f6295ab8
+2026-09-03T14:31:23.7959854Z 6379/tcp -> 0.0.0.0:6379
+2026-09-03T14:31:23.7960254Z 6379/tcp -> [::]:6379
+2026-09-03T14:31:23.7970071Z ##[endgroup]
+2026-09-03T14:31:23.7970939Z ##[group]Starting dynamodb service container
+2026-09-03T14:31:23.7971679Z ##[command]/usr/bin/docker pull amazon/dynamodb-local:2.0.0
+2026-09-03T14:31:24.8206237Z 2.0.0: Pulling from amazon/dynamodb-local
+2026-09-03T14:31:25.0422173Z a802d1401e24: Pulling fs layer
+2026-09-03T14:31:25.0422619Z 7382b77c9847: Pulling fs layer
+2026-09-03T14:31:25.0423239Z 4f4fb700ef54: Pulling fs layer
+2026-09-03T14:31:25.0423563Z 25b940a420fa: Pulling fs layer
+2026-09-03T14:31:25.0423880Z 25b940a420fa: Waiting
+2026-09-03T14:31:25.1760261Z 4f4fb700ef54: Verifying Checksum
+2026-09-03T14:31:25.1760889Z 4f4fb700ef54: Download complete
+2026-09-03T14:31:25.5151097Z a802d1401e24: Verifying Checksum
+2026-09-03T14:31:25.5164457Z a802d1401e24: Download complete
+2026-09-03T14:31:25.6042947Z 25b940a420fa: Verifying Checksum
+2026-09-03T14:31:25.6043769Z 25b940a420fa: Download complete
+2026-09-03T14:31:25.7315726Z 7382b77c9847: Verifying Checksum
+2026-09-03T14:31:25.7316402Z 7382b77c9847: Download complete
+2026-09-03T14:31:27.6522315Z a802d1401e24: Pull complete
+2026-09-03T14:31:37.3123515Z 7382b77c9847: Pull complete
+2026-09-03T14:31:37.3288636Z 4f4fb700ef54: Pull complete
+2026-09-03T14:31:38.2724446Z 25b940a420fa: Pull complete
+2026-09-03T14:31:38.5446455Z Digest: sha256:c8702bde709520b90930c20ee430d4123cd731da8e544cc4ccae0e2a78ee4fce
+2026-09-03T14:31:38.6383507Z Status: Downloaded newer image for amazon/dynamodb-local:2.0.0
+2026-09-03T14:31:38.6394480Z docker.io/amazon/dynamodb-local:2.0.0
+2026-09-03T14:31:38.6407023Z ##[command]/usr/bin/docker create --name a9bbf0cd42974a14bc7c7eccc7922419_amazondynamodblocal200_749b27 --label accd51 --network github_network_8ae0566fc7fa49439d7d456561bfe3b3 --network-alias dynamodb -p 8888:8000  -e GITHUB_ACTIONS=true -e CI=true amazon/dynamodb-local:2.0.0
+2026-09-03T14:31:38.9610623Z 6d03b5a683a5f52c03205aa9fc6435ef2939af2d33dc3d150437138610315ee7
+2026-09-03T14:31:38.9618853Z ##[command]/usr/bin/docker start 6d03b5a683a5f52c03205aa9fc6435ef2939af2d33dc3d150437138610315ee7
+2026-09-03T14:31:39.4244048Z 6d03b5a683a5f52c03205aa9fc6435ef2939af2d33dc3d150437138610315ee7
+2026-09-03T14:31:39.4263760Z ##[command]/usr/bin/docker ps --all --filter id=6d03b5a683a5f52c03205aa9fc6435ef2939af2d33dc3d150437138610315ee7 --filter status=running --no-trunc --format "{{.ID}} {{.Status}}"
+2026-09-03T14:31:39.4371922Z 6d03b5a683a5f52c03205aa9fc6435ef2939af2d33dc3d150437138610315ee7 Up Less than a second
+2026-09-03T14:31:39.4381600Z ##[command]/usr/bin/docker port 6d03b5a683a5f52c03205aa9fc6435ef2939af2d33dc3d150437138610315ee7
+2026-09-03T14:31:39.4500867Z 8000/tcp -> 0.0.0.0:8888
+2026-09-03T14:31:39.4501543Z 8000/tcp -> [::]:8888
+2026-09-03T14:31:39.4509205Z ##[endgroup]
+2026-09-03T14:31:39.4520904Z ##[group]Waiting for all services to be ready
+2026-09-03T14:31:39.4536707Z ##[command]/usr/bin/docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" 4657c0c50eca5c1026c9234f91916c716d09f9fe256c0b493e86bc75c89a51e9
+2026-09-03T14:31:39.4668241Z memcached service is healthy.
+2026-09-03T14:31:39.4669514Z ##[command]/usr/bin/docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" f6ff072d2d265a29d503276dea53d1f8417f94d676510c7b04f1f3b531936856
+2026-09-03T14:31:39.4770275Z starting
+2026-09-03T14:31:39.4777703Z mysql service is starting, waiting 2 seconds before checking again.
+2026-09-03T14:31:41.4775192Z ##[command]/usr/bin/docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" f6ff072d2d265a29d503276dea53d1f8417f94d676510c7b04f1f3b531936856
+2026-09-03T14:31:41.4891747Z starting
+2026-09-03T14:31:41.4898271Z mysql service is starting, waiting 4 seconds before checking again.
+2026-09-03T14:31:45.6897560Z ##[command]/usr/bin/docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" f6ff072d2d265a29d503276dea53d1f8417f94d676510c7b04f1f3b531936856
+2026-09-03T14:31:45.7015617Z unhealthy
+2026-09-03T14:31:45.7026854Z ##[command]/usr/bin/docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" a0d3ed9c84b6f3d7190da36db4ee569a91d455c82c57444805799659f6295ab8
+2026-09-03T14:31:45.7140285Z redis service is healthy.
+2026-09-03T14:31:45.7141132Z ##[command]/usr/bin/docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" 6d03b5a683a5f52c03205aa9fc6435ef2939af2d33dc3d150437138610315ee7
+2026-09-03T14:31:45.7247193Z dynamodb service is healthy.
+2026-09-03T14:31:45.7247794Z ##[endgroup]
+2026-09-03T14:31:45.7248019Z ##[group]Service container mysql failed.
+2026-09-03T14:31:45.7251837Z ##[command]/usr/bin/docker logs --details f6ff072d2d265a29d503276dea53d1f8417f94d676510c7b04f1f3b531936856
+2026-09-03T14:31:45.9850239Z  2026-09-03T14:31:14.876622Z 0 [System] [MY-015017] [Server] MySQL Server Initialization - start.
+2026-09-03T14:31:45.9850846Z  2026-09-03 14:31:14+00:00 [Note] [Entrypoint]: Entrypoint script for MySQL Server 9.7.2-1.el9 started.
+2026-09-03T14:31:45.9851477Z  2026-09-03T14:31:14.877626Z 0 [System] [MY-013169] [Server] /usr/sbin/mysqld (mysqld 9.7.2) initializing of server in progress as process 81
+2026-09-03T14:31:45.9851997Z  2026-09-03T14:31:14.881884Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.
+2026-09-03T14:31:45.9852452Z  2026-09-03T14:31:17.594670Z 1 [System] [MY-013577] [InnoDB] InnoDB initialization has ended.
+2026-09-03T14:31:45.9853039Z  2026-09-03T14:31:25.611300Z 6 [Warning] [MY-010453] [Server] root@localhost is created with an empty password ! Please consider switching off the --initialize-insecure option.
+2026-09-03T14:31:45.9853946Z  2026-09-03T14:31:34.399969Z 0 [System] [MY-015018] [Server] MySQL Server Initialization - end.
+2026-09-03T14:31:45.9854424Z  2026-09-03T14:31:34.436602Z 0 [System] [MY-015015] [Server] MySQL Server - start.
+2026-09-03T14:31:45.9854858Z  2026-09-03T14:31:34.630577Z 0 [System] [MY-010116] [Server] /usr/sbin/mysqld (mysqld 9.7.2) starting as process 124
+2026-09-03T14:31:45.9855342Z  2026-09-03T14:31:34.630595Z 0 [System] [MY-015603] [Server] MySQL Server has access to 4 logical CPUs.
+2026-09-03T14:31:45.9856089Z  2026-09-03T14:31:34.630606Z 0 [System] [MY-015603] [Server] MySQL Server has access to 16765374464 bytes of physical memory.
+2026-09-03T14:31:45.9856576Z  2026-09-03T14:31:34.784694Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.
+2026-09-03T14:31:45.9856986Z  2026-09-03T14:31:38.957148Z 1 [System] [MY-013577] [InnoDB] InnoDB initialization has ended.
+2026-09-03T14:31:45.9857405Z  2026-09-03T14:31:39.945584Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2026-09-03T14:31:45.9857990Z  2026-09-03T14:31:39.945809Z 0 [System] [MY-013602] [Server] Channel mysql_main configured to support TLS. Encrypted connections are now supported for this channel.
+2026-09-03T14:31:45.9858763Z  2026-09-03T14:31:39.947418Z 0 [Warning] [MY-011810] [Server] Insecure configuration for --pid-file: Location '/var/run/mysqld' in the path is accessible to all OS users. Consider choosing a different directory.
+2026-09-03T14:31:45.9859541Z  2026-09-03T14:31:40.087406Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Socket: /var/run/mysqld/mysqlx.sock
+2026-09-03T14:31:45.9860214Z  2026-09-03T14:31:40.087415Z 0 [System] [MY-010931] [Server] /usr/sbin/mysqld: ready for connections. Version: '9.7.2'  socket: '/var/run/mysqld/mysqld.sock'  port: 0  MySQL Community Server - GPL.
+2026-09-03T14:31:45.9860901Z  2026-09-03T14:31:41.667356Z 12 [System] [MY-013172] [Server] Received SHUTDOWN from user root. Shutting down mysqld (Version: 9.7.2).
+2026-09-03T14:31:45.9861499Z  2026-09-03T14:31:43.279590Z 0 [System] [MY-010910] [Server] /usr/sbin/mysqld: Shutdown complete (mysqld 9.7.2)  MySQL Community Server - GPL.
+2026-09-03T14:31:45.9861980Z  2026-09-03T14:31:43.279609Z 0 [System] [MY-015016] [Server] MySQL Server - end.
+2026-09-03T14:31:45.9862382Z  2026-09-03T14:31:43.682146Z 0 [System] [MY-015015] [Server] MySQL Server - start.
+2026-09-03T14:31:45.9862893Z  2026-09-03T14:31:43.871528Z 0 [System] [MY-010116] [Server] /usr/sbin/mysqld (mysqld 9.7.2) starting as process 1
+2026-09-03T14:31:45.9863526Z  2026-09-03T14:31:43.871542Z 0 [System] [MY-015603] [Server] MySQL Server has access to 4 logical CPUs.
+2026-09-03T14:31:45.9864040Z  2026-09-03T14:31:43.871552Z 0 [System] [MY-015603] [Server] MySQL Server has access to 16765374464 bytes of physical memory.
+2026-09-03T14:31:45.9864509Z  2026-09-03T14:31:43.875703Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.
+2026-09-03T14:31:45.9864910Z  2026-09-03T14:31:44.525145Z 1 [System] [MY-013577] [InnoDB] InnoDB initialization has ended.
+2026-09-03T14:31:45.9865349Z  2026-09-03 14:31:14+00:00 [Note] [Entrypoint]: Switching to dedicated user 'mysql'
+2026-09-03T14:31:45.9865779Z  2026-09-03 14:31:14+00:00 [Note] [Entrypoint]: Entrypoint script for MySQL Server 9.7.2-1.el9 started.
+2026-09-03T14:31:45.9866201Z  2026-09-03 14:31:14+00:00 [Note] [Entrypoint]: Initializing database files
+2026-09-03T14:31:45.9866589Z  2026-09-03 14:31:34+00:00 [Note] [Entrypoint]: Database files initialized
+2026-09-03T14:31:45.9866970Z  2026-09-03 14:31:34+00:00 [Note] [Entrypoint]: Starting temporary server
+2026-09-03T14:31:45.9867408Z  2026-09-03 14:31:40+00:00 [Note] [Entrypoint]: Temporary server started.
+2026-09-03T14:31:45.9867912Z  '/var/lib/mysql/mysql.sock' -> '/var/run/mysqld/mysqld.sock'
+2026-09-03T14:31:45.9868424Z  2026-09-03 14:31:41+00:00 [Note] [Entrypoint]: Creating database forge
+2026-09-03T14:31:45.9868711Z  
+2026-09-03T14:31:45.9876256Z  2026-09-03 14:31:41+00:00 [Note] [Entrypoint]: Stopping temporary server
+2026-09-03T14:31:45.9876763Z  2026-09-03 14:31:43+00:00 [Note] [Entrypoint]: Temporary server stopped
+2026-09-03T14:31:45.9877139Z  
+2026-09-03T14:31:45.9877479Z  2026-09-03 14:31:43+00:00 [Note] [Entrypoint]: MySQL init process done. Ready for start up.
+2026-09-03T14:31:45.9877848Z  
+2026-09-03T14:31:45.9889312Z ##[error]Failed to initialize container mysql:9.7
+2026-09-03T14:31:45.9896286Z ##[endgroup]
+2026-09-03T14:31:45.9964982Z ##[error]One or more containers failed to start.
+2026-09-03T14:31:46.0072057Z Print service container logs: 374b33170aa941cb8b86132b1cb289c3_memcached16alpine_96c0ee
+2026-09-03T14:31:46.0073072Z ##[command]/usr/bin/docker logs --details 4657c0c50eca5c1026c9234f91916c716d09f9fe256c0b493e86bc75c89a51e9
+2026-09-03T14:31:46.0231166Z Stop and remove container: 374b33170aa941cb8b86132b1cb289c3_memcached16alpine_96c0ee
+2026-09-03T14:31:46.0234748Z ##[command]/usr/bin/docker rm --force 4657c0c50eca5c1026c9234f91916c716d09f9fe256c0b493e86bc75c89a51e9
+2026-09-03T14:31:46.4391140Z 4657c0c50eca5c1026c9234f91916c716d09f9fe256c0b493e86bc75c89a51e9
+2026-09-03T14:31:46.4404077Z Stop and remove container: 100831e37cff48829cc062d781009e41_mysql97_28f462
+2026-09-03T14:31:46.4404808Z ##[command]/usr/bin/docker rm --force f6ff072d2d265a29d503276dea53d1f8417f94d676510c7b04f1f3b531936856
+2026-09-03T14:31:46.7518800Z f6ff072d2d265a29d503276dea53d1f8417f94d676510c7b04f1f3b531936856
+2026-09-03T14:31:46.7528176Z Print service container logs: 5cb2b16288c54a8ebf2ef7f2e732724c_redis70_083a87
+2026-09-03T14:31:46.7528737Z ##[command]/usr/bin/docker logs --details a0d3ed9c84b6f3d7190da36db4ee569a91d455c82c57444805799659f6295ab8
+2026-09-03T14:31:46.7636113Z  1:C 03 Sep 2026 14:31:23.630 # oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+2026-09-03T14:31:46.7636897Z  1:C 03 Sep 2026 14:31:23.630 # Redis version=7.0.15, bits=64, commit=00000000, modified=0, pid=1, just started
+2026-09-03T14:31:46.7637658Z  1:C 03 Sep 2026 14:31:23.630 # Warning: no config file specified, using the default config. In order to specify a config file use redis-server /path/to/redis.conf
+2026-09-03T14:31:46.7638175Z  1:M 03 Sep 2026 14:31:23.631 * monotonic clock: POSIX clock_gettime
+2026-09-03T14:31:46.7638541Z  1:M 03 Sep 2026 14:31:23.631 * Running mode=standalone, port=6379.
+2026-09-03T14:31:46.7638846Z  1:M 03 Sep 2026 14:31:23.631 # Server initialized
+2026-09-03T14:31:46.7639951Z  1:M 03 Sep 2026 14:31:23.631 # WARNING Memory overcommit must be enabled! Without it, a background save or replication may fail under low memory condition. Being disabled, it can can also cause failures without low memory condition, see https://github.com/jemalloc/jemalloc/issues/1328. To fix this issue add 'vm.overcommit_memory = 1' to /etc/sysctl.conf and then reboot or run the command 'sysctl vm.overcommit_memory=1' for this to take effect.
+2026-09-03T14:31:46.7641033Z  1:M 03 Sep 2026 14:31:23.632 * Ready to accept connections
+2026-09-03T14:31:46.7648694Z Stop and remove container: 5cb2b16288c54a8ebf2ef7f2e732724c_redis70_083a87
+2026-09-03T14:31:46.7649241Z ##[command]/usr/bin/docker rm --force a0d3ed9c84b6f3d7190da36db4ee569a91d455c82c57444805799659f6295ab8
+2026-09-03T14:31:46.9063424Z a0d3ed9c84b6f3d7190da36db4ee569a91d455c82c57444805799659f6295ab8
+2026-09-03T14:31:46.9070977Z Print service container logs: a9bbf0cd42974a14bc7c7eccc7922419_amazondynamodblocal200_749b27
+2026-09-03T14:31:46.9071751Z ##[command]/usr/bin/docker logs --details 6d03b5a683a5f52c03205aa9fc6435ef2939af2d33dc3d150437138610315ee7
+2026-09-03T14:31:46.9176980Z  Initializing DynamoDB Local with the following configuration:
+2026-09-03T14:31:46.9177716Z  Port:	8000
+2026-09-03T14:31:46.9178139Z  InMemory:	true
+2026-09-03T14:31:46.9178423Z  DbPath:	null
+2026-09-03T14:31:46.9178736Z  SharedDb:	false
+2026-09-03T14:31:46.9179084Z  shouldDelayTransientStatuses:	false
+2026-09-03T14:31:46.9179416Z  CorsParams:	null
+2026-09-03T14:31:46.9179698Z  
+2026-09-03T14:31:46.9184054Z Stop and remove container: a9bbf0cd42974a14bc7c7eccc7922419_amazondynamodblocal200_749b27
+2026-09-03T14:31:46.9184707Z ##[command]/usr/bin/docker rm --force 6d03b5a683a5f52c03205aa9fc6435ef2939af2d33dc3d150437138610315ee7
+2026-09-03T14:31:47.0269195Z 6d03b5a683a5f52c03205aa9fc6435ef2939af2d33dc3d150437138610315ee7
+2026-09-03T14:31:47.0287083Z Remove container network: github_network_8ae0566fc7fa49439d7d456561bfe3b3
+2026-09-03T14:31:47.0290290Z ##[command]/usr/bin/docker network rm github_network_8ae0566fc7fa49439d7d456561bfe3b3
+2026-09-03T14:31:47.4065363Z github_network_8ae0566fc7fa49439d7d456561bfe3b3
+2026-09-03T14:31:47.4129932Z Cleaning up orphan processes

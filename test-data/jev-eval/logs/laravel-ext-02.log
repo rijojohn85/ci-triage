@@ -1,0 +1,61 @@
+﻿2026-08-02T15:19:12.1977590Z Current runner version: '2.336.0'
+2026-08-02T15:19:12.2001512Z ##[group]Runner Image Provisioner
+2026-08-02T15:19:12.2002340Z Hosted Compute Agent
+2026-08-02T15:19:12.2002870Z Version: 20260707.563
+2026-08-02T15:19:12.2003430Z Commit: 02667638d2b423fbc733a8e32a88b44996a3ba6e
+2026-08-02T15:19:12.2004175Z Build Date: 2026-07-07T19:33:50Z
+2026-08-02T15:19:12.2004801Z Worker ID: {07945d2a-97c7-402b-8393-bc5e6e7a8b77}
+2026-08-02T15:19:12.2005434Z Azure Region: westus3
+2026-08-02T15:19:12.2005949Z ##[endgroup]
+2026-08-02T15:19:12.2007276Z ##[group]Operating System
+2026-08-02T15:19:12.2007863Z Ubuntu
+2026-08-02T15:19:12.2008335Z 24.04.4
+2026-08-02T15:19:12.2008769Z LTS
+2026-08-02T15:19:12.2009243Z ##[endgroup]
+2026-08-02T15:19:12.2009719Z ##[group]Runner Image
+2026-08-02T15:19:12.2010258Z Image: ubuntu-24.04
+2026-08-02T15:19:12.2010937Z Version: 20260720.247.2
+2026-08-02T15:19:12.2012022Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260720.247/images/ubuntu/Ubuntu2404-Readme.md
+2026-08-02T15:19:12.2013416Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260720.247
+2026-08-02T15:19:12.2014238Z ##[endgroup]
+2026-08-02T15:19:12.2015260Z ##[group]GITHUB_TOKEN Permissions
+2026-08-02T15:19:12.2017071Z Contents: read
+2026-08-02T15:19:12.2017631Z Metadata: read
+2026-08-02T15:19:12.2018121Z ##[endgroup]
+2026-08-02T15:19:12.2020089Z Secret source: None
+2026-08-02T15:19:12.2021186Z Prepare workflow directory
+2026-08-02T15:19:12.2518059Z Prepare all required actions
+2026-08-02T15:19:12.2566724Z Getting action download info
+2026-08-02T15:19:12.5586580Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-08-02T15:19:13.2290714Z Download action repository 'actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a' (SHA:043fb46d1a93c77aae656e7c1c64a875d1fc6a0a)
+2026-08-02T15:19:13.4530162Z Complete job name: PHP 8.5 - PHPUnit 12.5.8 - prefer-lowest
+2026-08-02T15:19:13.4998351Z ##[group]Checking docker version
+2026-08-02T15:19:13.5012079Z ##[command]/usr/bin/docker version --format '{{.Server.APIVersion}}'
+2026-08-02T15:19:13.6067810Z '1.48'
+2026-08-02T15:19:13.6078618Z Docker daemon API version: '1.48'
+2026-08-02T15:19:13.6080236Z ##[command]/usr/bin/docker version --format '{{.Client.APIVersion}}'
+2026-08-02T15:19:13.6235978Z '1.48'
+2026-08-02T15:19:13.6245507Z Docker client API version: '1.48'
+2026-08-02T15:19:13.6251709Z ##[endgroup]
+2026-08-02T15:19:13.6255161Z ##[group]Clean up resources from previous jobs
+2026-08-02T15:19:13.6260616Z ##[command]/usr/bin/docker ps --all --quiet --no-trunc --filter "label=e29232"
+2026-08-02T15:19:13.6395018Z ##[command]/usr/bin/docker network prune --force --filter "label=e29232"
+2026-08-02T15:19:13.6621917Z ##[endgroup]
+2026-08-02T15:19:13.6622680Z ##[group]Create local container network
+2026-08-02T15:19:13.6634734Z ##[command]/usr/bin/docker network create --label e29232 github_network_a7e0d344156c48b9ac89543e7cbafa7d
+2026-08-02T15:19:13.7111580Z 09d6fc9fe8252be7b0563c1551ffa5a43c093470954a813d403375c4aff9f0b4
+2026-08-02T15:19:13.7127479Z ##[endgroup]
+2026-08-02T15:19:13.7154285Z ##[group]Starting memcached service container
+2026-08-02T15:19:13.7176019Z ##[command]/usr/bin/docker pull memcached:1.6-alpine
+2026-08-02T15:19:28.7444758Z Error response from daemon: Get "https://registry-1.docker.io/v2/": net/http: request canceled while waiting for connection (Client.Timeout exceeded while awaiting headers)
+2026-08-02T15:19:28.7468864Z ##[warning]Docker pull failed with exit code 1, back off 6.942 seconds before retry.
+2026-08-02T15:19:35.6899345Z ##[command]/usr/bin/docker pull memcached:1.6-alpine
+2026-08-02T15:19:50.7062263Z Error response from daemon: Get "https://registry-1.docker.io/v2/": net/http: request canceled while waiting for connection (Client.Timeout exceeded while awaiting headers)
+2026-08-02T15:19:50.7074387Z ##[warning]Docker pull failed with exit code 1, back off 9.771 seconds before retry.
+2026-08-02T15:20:00.4786166Z ##[command]/usr/bin/docker pull memcached:1.6-alpine
+2026-08-02T15:20:15.4934159Z Error response from daemon: Get "https://registry-1.docker.io/v2/": net/http: request canceled while waiting for connection (Client.Timeout exceeded while awaiting headers)
+2026-08-02T15:20:15.5027444Z ##[error]Docker pull failed with exit code 1
+2026-08-02T15:20:15.5161023Z Remove container network: github_network_a7e0d344156c48b9ac89543e7cbafa7d
+2026-08-02T15:20:15.5165150Z ##[command]/usr/bin/docker network rm github_network_a7e0d344156c48b9ac89543e7cbafa7d
+2026-08-02T15:20:15.6103455Z github_network_a7e0d344156c48b9ac89543e7cbafa7d
+2026-08-02T15:20:15.6182021Z Cleaning up orphan processes

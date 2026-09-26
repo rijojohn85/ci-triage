@@ -1,0 +1,625 @@
+﻿2026-09-26T10:56:37.5983795Z Current runner version: '2.337.0'
+2026-09-26T10:56:37.6007864Z ##[group]Runner Image Provisioner
+2026-09-26T10:56:37.6008834Z Hosted Compute Agent
+2026-09-26T10:56:37.6009459Z Version: 20260828.587
+2026-09-26T10:56:37.6010173Z Commit: abac92662cab4cc7352de4f9f9d2e2419aad9c29
+2026-09-26T10:56:37.6010923Z Build Date: 2026-08-28T16:44:25Z
+2026-09-26T10:56:37.6011624Z Worker ID: {852d76ac-81a1-4a75-bd22-3ca4551809da}
+2026-09-26T10:56:37.6012414Z Azure Region: westus
+2026-09-26T10:56:37.6013226Z ##[endgroup]
+2026-09-26T10:56:37.6014697Z ##[group]Operating System
+2026-09-26T10:56:37.6015433Z Ubuntu
+2026-09-26T10:56:37.6015944Z 24.04.5
+2026-09-26T10:56:37.6016481Z LTS
+2026-09-26T10:56:37.6017037Z ##[endgroup]
+2026-09-26T10:56:37.6017604Z ##[group]Runner Image
+2026-09-26T10:56:37.6018270Z Image: ubuntu-24.04
+2026-09-26T10:56:37.6018832Z Version: 20260920.314.1
+2026-09-26T10:56:37.6020139Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260920.314/images/ubuntu/Ubuntu2404-Readme.md
+2026-09-26T10:56:37.6021740Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260920.314
+2026-09-26T10:56:37.6022981Z ##[endgroup]
+2026-09-26T10:56:37.6024079Z ##[group]GITHUB_TOKEN Permissions
+2026-09-26T10:56:37.6026065Z Contents: read
+2026-09-26T10:56:37.6026690Z Metadata: read
+2026-09-26T10:56:37.6027309Z ##[endgroup]
+2026-09-26T10:56:37.6029715Z Secret source: None
+2026-09-26T10:56:37.6030713Z Cache mode: write
+2026-09-26T10:56:37.6031613Z Prepare workflow directory
+2026-09-26T10:56:37.6481180Z Prepare all required actions
+2026-09-26T10:56:37.6528609Z Getting action download info
+2026-09-26T10:56:37.9974469Z Download action repository 'actions/checkout@v7' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-09-26T10:56:38.0918495Z Download action repository 'dtolnay/rust-toolchain@stable' (SHA:6bed0761d98439e5a578e2877258200ad565ba87)
+2026-09-26T10:56:38.2956683Z Download action repository 'Swatinem/rust-cache@v2' (SHA:6323deb102c322ba6fcbdcafc7e3dddab59af2b6)
+2026-09-26T10:56:38.8514421Z Complete job name: clippy
+2026-09-26T10:56:38.9317189Z ##[group]Run actions/checkout@v7
+2026-09-26T10:56:38.9318176Z with:
+2026-09-26T10:56:38.9318664Z   repository: tokio-rs/tokio
+2026-09-26T10:56:38.9322613Z   token: ***
+2026-09-26T10:56:38.9323327Z   ssh-strict: true
+2026-09-26T10:56:38.9323822Z   ssh-user: git
+2026-09-26T10:56:38.9324313Z   persist-credentials: true
+2026-09-26T10:56:38.9324850Z   clean: true
+2026-09-26T10:56:38.9325345Z   sparse-checkout-cone-mode: true
+2026-09-26T10:56:38.9325920Z   fetch-depth: 1
+2026-09-26T10:56:38.9326392Z   fetch-tags: false
+2026-09-26T10:56:38.9326883Z   show-progress: true
+2026-09-26T10:56:38.9327381Z   lfs: false
+2026-09-26T10:56:38.9327844Z   submodules: false
+2026-09-26T10:56:38.9328351Z   set-safe-directory: true
+2026-09-26T10:56:38.9328908Z   allow-unsafe-pr-checkout: false
+2026-09-26T10:56:38.9329771Z env:
+2026-09-26T10:56:38.9330238Z   RUSTFLAGS: -Dwarnings
+2026-09-26T10:56:38.9330765Z   RUST_BACKTRACE: 1
+2026-09-26T10:56:38.9331278Z   RUSTUP_WINDOWS_PATH_ADD_BIN: 1
+2026-09-26T10:56:38.9331883Z   rust_stable: stable
+2026-09-26T10:56:38.9332413Z   rust_nightly: nightly-2025-10-12
+2026-09-26T10:56:38.9333374Z   rust_miri_nightly: nightly-2026-06-29
+2026-09-26T10:56:38.9334018Z   rust_emscripten_nightly: nightly-2026-08-17
+2026-09-26T10:56:38.9334652Z   emsdk_version: 6.0.8
+2026-09-26T10:56:38.9335154Z   rust_clippy: 1.88
+2026-09-26T10:56:38.9335634Z   rust_min: 1.85
+2026-09-26T10:56:38.9336135Z   TOKIO_STABLE_FEATURES: full,test-util
+2026-09-26T10:56:38.9336723Z ##[endgroup]
+2026-09-26T10:56:39.0339707Z Syncing repository: tokio-rs/tokio
+2026-09-26T10:56:39.0341610Z ##[group]Getting Git version info
+2026-09-26T10:56:39.0342364Z Working directory is '/home/runner/work/tokio/tokio'
+2026-09-26T10:56:39.0344261Z [command]/usr/bin/git version
+2026-09-26T10:56:39.0446817Z git version 2.55.0
+2026-09-26T10:56:39.0467674Z ##[endgroup]
+2026-09-26T10:56:39.0478173Z Temporarily overriding HOME='/home/runner/work/_temp/29e400a6-7fc7-4104-9c72-93aee5af2f3b' before making global git config changes
+2026-09-26T10:56:39.0481068Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-26T10:56:39.0484104Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/tokio/tokio
+2026-09-26T10:56:39.0535391Z Deleting the contents of '/home/runner/work/tokio/tokio'
+2026-09-26T10:56:39.0538968Z ##[group]Determining repository object format
+2026-09-26T10:56:39.0540308Z ##[endgroup]
+2026-09-26T10:56:39.0541196Z ##[group]Initializing the repository
+2026-09-26T10:56:39.0544597Z [command]/usr/bin/git init /home/runner/work/tokio/tokio
+2026-09-26T10:56:39.0666421Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-09-26T10:56:39.0668481Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-09-26T10:56:39.0671251Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-09-26T10:56:39.0673917Z hint: call:
+2026-09-26T10:56:39.0675263Z hint:
+2026-09-26T10:56:39.0676611Z hint: 	git config --global init.defaultBranch <name>
+2026-09-26T10:56:39.0677959Z hint:
+2026-09-26T10:56:39.0679171Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-09-26T10:56:39.0681066Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-09-26T10:56:39.0682686Z hint:
+2026-09-26T10:56:39.0683936Z hint: 	git branch -m <name>
+2026-09-26T10:56:39.0684857Z hint:
+2026-09-26T10:56:39.0685644Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-09-26T10:56:39.0686832Z Initialized empty Git repository in /home/runner/work/tokio/tokio/.git/
+2026-09-26T10:56:39.0688811Z [command]/usr/bin/git remote add origin https://github.com/tokio-rs/tokio
+2026-09-26T10:56:39.0736527Z ##[endgroup]
+2026-09-26T10:56:39.0737591Z ##[group]Disabling automatic garbage collection
+2026-09-26T10:56:39.0739383Z [command]/usr/bin/git config --local gc.auto 0
+2026-09-26T10:56:39.0771276Z ##[endgroup]
+2026-09-26T10:56:39.0772309Z ##[group]Setting up auth
+2026-09-26T10:56:39.0773898Z Removing SSH command configuration
+2026-09-26T10:56:39.0778059Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-26T10:56:39.0808238Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-26T10:56:39.1161355Z Removing HTTP extra header
+2026-09-26T10:56:39.1167134Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-26T10:56:39.1198118Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-26T10:56:39.1413762Z Removing includeIf entries pointing to credentials config files
+2026-09-26T10:56:39.1415378Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-26T10:56:39.1445100Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-26T10:56:39.1663054Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-85eb40ab-812a-4677-948d-a7ee11054c85.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-09-26T10:56:39.1699271Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/tokio/tokio/.git.path /home/runner/work/_temp/git-credentials-85eb40ab-812a-4677-948d-a7ee11054c85.config
+2026-09-26T10:56:39.1731352Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/tokio/tokio/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-85eb40ab-812a-4677-948d-a7ee11054c85.config
+2026-09-26T10:56:39.1766301Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-85eb40ab-812a-4677-948d-a7ee11054c85.config
+2026-09-26T10:56:39.1798156Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-85eb40ab-812a-4677-948d-a7ee11054c85.config
+2026-09-26T10:56:39.1896506Z ##[endgroup]
+2026-09-26T10:56:39.1898270Z ##[group]Fetching the repository
+2026-09-26T10:56:39.1899951Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +e1f5eb266534b0e088dd1e5c3fa7f1343b658ec1:refs/remotes/pull/7479/merge
+2026-09-26T10:56:39.8794652Z From https://github.com/tokio-rs/tokio
+2026-09-26T10:56:39.8796241Z  * [new ref]         e1f5eb266534b0e088dd1e5c3fa7f1343b658ec1 -> pull/7479/merge
+2026-09-26T10:56:39.8800830Z ##[endgroup]
+2026-09-26T10:56:39.8802493Z ##[group]Determining the checkout info
+2026-09-26T10:56:39.8804643Z ##[endgroup]
+2026-09-26T10:56:39.8807604Z [command]/usr/bin/git sparse-checkout disable
+2026-09-26T10:56:39.8861836Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-09-26T10:56:39.8893184Z ##[group]Checking out the ref
+2026-09-26T10:56:39.8896329Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/7479/merge
+2026-09-26T10:56:39.9475077Z Note: switching to 'refs/remotes/pull/7479/merge'.
+2026-09-26T10:56:39.9476052Z 
+2026-09-26T10:56:39.9476745Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-09-26T10:56:39.9478511Z changes and commit them, and you can discard any commits you make in this
+2026-09-26T10:56:39.9480252Z state without impacting any branches by switching back to a branch.
+2026-09-26T10:56:39.9481347Z 
+2026-09-26T10:56:39.9482118Z If you want to create a new branch to retain commits you create, you may
+2026-09-26T10:56:39.9484485Z do so (now or later) by using -c with the switch command. Example:
+2026-09-26T10:56:39.9485674Z 
+2026-09-26T10:56:39.9486273Z   git switch -c <new-branch-name>
+2026-09-26T10:56:39.9487444Z 
+2026-09-26T10:56:39.9487936Z Or undo this operation with:
+2026-09-26T10:56:39.9488721Z 
+2026-09-26T10:56:39.9489195Z   git switch -
+2026-09-26T10:56:39.9490000Z 
+2026-09-26T10:56:39.9491078Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-09-26T10:56:39.9492533Z 
+2026-09-26T10:56:39.9494596Z HEAD is now at e1f5eb2 Merge f7b7cb0ba54f6ad4df6e2c8ea16c4554f9e8e4d6 into 950af5e0031b941073085ada3e4d608babc2f470
+2026-09-26T10:56:39.9499705Z ##[endgroup]
+2026-09-26T10:56:39.9534327Z [command]/usr/bin/git log -1 --format=%H
+2026-09-26T10:56:39.9559737Z e1f5eb266534b0e088dd1e5c3fa7f1343b658ec1
+2026-09-26T10:56:40.0268479Z ##[group]Run dtolnay/rust-toolchain@stable
+2026-09-26T10:56:40.0269655Z with:
+2026-09-26T10:56:40.0270416Z   toolchain: 1.88
+2026-09-26T10:56:40.0271241Z   components: clippy
+2026-09-26T10:56:40.0272058Z env:
+2026-09-26T10:56:40.0273087Z   RUSTFLAGS: -Dwarnings
+2026-09-26T10:56:40.0273982Z   RUST_BACKTRACE: 1
+2026-09-26T10:56:40.0274849Z   RUSTUP_WINDOWS_PATH_ADD_BIN: 1
+2026-09-26T10:56:40.0275829Z   rust_stable: stable
+2026-09-26T10:56:40.0276712Z   rust_nightly: nightly-2025-10-12
+2026-09-26T10:56:40.0277771Z   rust_miri_nightly: nightly-2026-06-29
+2026-09-26T10:56:40.0278903Z   rust_emscripten_nightly: nightly-2026-08-17
+2026-09-26T10:56:40.0279993Z   emsdk_version: 6.0.8
+2026-09-26T10:56:40.0280843Z   rust_clippy: 1.88
+2026-09-26T10:56:40.0281658Z   rust_min: 1.85
+2026-09-26T10:56:40.0282506Z   TOKIO_STABLE_FEATURES: full,test-util
+2026-09-26T10:56:40.0283667Z ##[endgroup]
+2026-09-26T10:56:40.0366458Z ##[start-action display=Parse toolchain version;id=__dtolnay_rust-toolchain.parse]
+2026-09-26T10:56:40.0429739Z ##[group]Run if [[ -z $toolchain ]]; then
+2026-09-26T10:56:40.0430961Z if [[ -z $toolchain ]]; then
+2026-09-26T10:56:40.0433055Z   # GitHub does not enforce `required: true` inputs itself. https://github.com/actions/runner/issues/1070
+2026-09-26T10:56:40.0435074Z   echo "'toolchain' is a required input" >&2
+2026-09-26T10:56:40.0436214Z   exit 1
+2026-09-26T10:56:40.0437458Z elif [[ $toolchain =~ ^stable' '[0-9]+' '(year|month|week|day)s?' 'ago$ ]]; then
+2026-09-26T10:56:40.0439209Z   if [[ Linux == macOS ]]; then
+2026-09-26T10:56:40.0441106Z     echo "toolchain=1.$((($(date -v-$(sed 's/stable \([0-9]*\) \(.\).*/\1\2/' <<< $toolchain) +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT
+2026-09-26T10:56:40.0443120Z   else
+2026-09-26T10:56:40.0444599Z     echo "toolchain=1.$((($(date --date "${toolchain#stable }" +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT
+2026-09-26T10:56:40.0446320Z   fi
+2026-09-26T10:56:40.0447434Z elif [[ $toolchain =~ ^stable' 'minus' '[0-9]+' 'releases?$ ]]; then
+2026-09-26T10:56:40.0449364Z   echo "toolchain=1.$((($(date +%s)/60/60/24-16569)/7/6-${toolchain//[^0-9]/}))" >> $GITHUB_OUTPUT
+2026-09-26T10:56:40.0451062Z elif [[ $toolchain =~ ^1\.[0-9]+$ ]]; then
+2026-09-26T10:56:40.0453087Z   echo "toolchain=1.$((i=${toolchain#1.}, c=($(date +%s)/60/60/24-16569)/7/6, i+9*i*(10*i<=c)+90*i*(100*i<=c)))" >> $GITHUB_OUTPUT
+2026-09-26T10:56:40.0454939Z else
+2026-09-26T10:56:40.0455869Z   echo "toolchain=$toolchain" >> $GITHUB_OUTPUT
+2026-09-26T10:56:40.0456999Z fi
+2026-09-26T10:56:40.0773164Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-09-26T10:56:40.0774721Z env:
+2026-09-26T10:56:40.0775575Z   RUSTFLAGS: -Dwarnings
+2026-09-26T10:56:40.0776546Z   RUST_BACKTRACE: 1
+2026-09-26T10:56:40.0777496Z   RUSTUP_WINDOWS_PATH_ADD_BIN: 1
+2026-09-26T10:56:40.0778602Z   rust_stable: stable
+2026-09-26T10:56:40.0779563Z   rust_nightly: nightly-2025-10-12
+2026-09-26T10:56:40.0780699Z   rust_miri_nightly: nightly-2026-06-29
+2026-09-26T10:56:40.0781930Z   rust_emscripten_nightly: nightly-2026-08-17
+2026-09-26T10:56:40.0783272Z   emsdk_version: 6.0.8
+2026-09-26T10:56:40.0784195Z   rust_clippy: 1.88
+2026-09-26T10:56:40.0785090Z   rust_min: 1.85
+2026-09-26T10:56:40.0785917Z   TOKIO_STABLE_FEATURES: full,test-util
+2026-09-26T10:56:40.0786901Z   toolchain: 1.88
+2026-09-26T10:56:40.0787662Z ##[endgroup]
+2026-09-26T10:56:40.0953943Z ##[end-action id=__dtolnay_rust-toolchain.parse;outcome=success;conclusion=success;duration_ms=58]
+2026-09-26T10:56:40.0972052Z ##[start-action display=Construct rustup command line;id=__dtolnay_rust-toolchain.flags]
+2026-09-26T10:56:40.1026724Z ##[group]Run echo "targets=$(for t in ${targets//,/ }; do echo -n ' --target' $t; done)" >> $GITHUB_OUTPUT
+2026-09-26T10:56:40.1029154Z echo "targets=$(for t in ${targets//,/ }; do echo -n ' --target' $t; done)" >> $GITHUB_OUTPUT
+2026-09-26T10:56:40.1031402Z echo "components=$(for c in ${components//,/ }; do echo -n ' --component' $c; done)" >> $GITHUB_OUTPUT
+2026-09-26T10:56:40.1033361Z echo "downgrade=" >> $GITHUB_OUTPUT
+2026-09-26T10:56:40.1094664Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-09-26T10:56:40.1095868Z env:
+2026-09-26T10:56:40.1096590Z   RUSTFLAGS: -Dwarnings
+2026-09-26T10:56:40.1097411Z   RUST_BACKTRACE: 1
+2026-09-26T10:56:40.1098234Z   RUSTUP_WINDOWS_PATH_ADD_BIN: 1
+2026-09-26T10:56:40.1099190Z   rust_stable: stable
+2026-09-26T10:56:40.1100028Z   rust_nightly: nightly-2025-10-12
+2026-09-26T10:56:40.1101024Z   rust_miri_nightly: nightly-2026-06-29
+2026-09-26T10:56:40.1102097Z   rust_emscripten_nightly: nightly-2026-08-17
+2026-09-26T10:56:40.1103363Z   emsdk_version: 6.0.8
+2026-09-26T10:56:40.1104184Z   rust_clippy: 1.88
+2026-09-26T10:56:40.1104964Z   rust_min: 1.85
+2026-09-26T10:56:40.1105785Z   TOKIO_STABLE_FEATURES: full,test-util
+2026-09-26T10:56:40.1106785Z   targets: 
+2026-09-26T10:56:40.1107522Z   components: clippy
+2026-09-26T10:56:40.1108323Z ##[endgroup]
+2026-09-26T10:56:40.1218354Z ##[end-action id=__dtolnay_rust-toolchain.flags;outcome=success;conclusion=success;duration_ms=24]
+2026-09-26T10:56:40.1224698Z ##[start-action display=Set $CARGO_HOME;id=__dtolnay_rust-toolchain.__run]
+2026-09-26T10:56:40.1268100Z ##[group]Run echo CARGO_HOME=${CARGO_HOME:-"$HOME/.cargo"} >> $GITHUB_ENV
+2026-09-26T10:56:40.1269723Z echo CARGO_HOME=${CARGO_HOME:-"$HOME/.cargo"} >> $GITHUB_ENV
+2026-09-26T10:56:40.1329594Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-09-26T10:56:40.1330812Z env:
+2026-09-26T10:56:40.1331537Z   RUSTFLAGS: -Dwarnings
+2026-09-26T10:56:40.1332373Z   RUST_BACKTRACE: 1
+2026-09-26T10:56:40.1333497Z   RUSTUP_WINDOWS_PATH_ADD_BIN: 1
+2026-09-26T10:56:40.1334449Z   rust_stable: stable
+2026-09-26T10:56:40.1335302Z   rust_nightly: nightly-2025-10-12
+2026-09-26T10:56:40.1336305Z   rust_miri_nightly: nightly-2026-06-29
+2026-09-26T10:56:40.1337412Z   rust_emscripten_nightly: nightly-2026-08-17
+2026-09-26T10:56:40.1338491Z   emsdk_version: 6.0.8
+2026-09-26T10:56:40.1339313Z   rust_clippy: 1.88
+2026-09-26T10:56:40.1340100Z   rust_min: 1.85
+2026-09-26T10:56:40.1340914Z   TOKIO_STABLE_FEATURES: full,test-util
+2026-09-26T10:56:40.1341883Z ##[endgroup]
+2026-09-26T10:56:40.1442538Z ##[end-action id=__dtolnay_rust-toolchain.__run;outcome=success;conclusion=success;duration_ms=21]
+2026-09-26T10:56:40.1448929Z ##[start-action display=Install rustup if needed;id=__dtolnay_rust-toolchain.__run_2]
+2026-09-26T10:56:40.1501083Z ##[group]Run if ! command -v rustup &>/dev/null; then
+2026-09-26T10:56:40.1502323Z if ! command -v rustup &>/dev/null; then
+2026-09-26T10:56:40.1505219Z   curl --proto '=https' --tlsv1.2 --retry 10 --retry-connrefused --location --silent --show-error --fail https://sh.rustup.rs | sh -s -- --default-toolchain none -y
+2026-09-26T10:56:40.1507718Z   echo "$CARGO_HOME/bin" >> $GITHUB_PATH
+2026-09-26T10:56:40.1508767Z fi
+2026-09-26T10:56:40.1565806Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-09-26T10:56:40.1566998Z env:
+2026-09-26T10:56:40.1567692Z   RUSTFLAGS: -Dwarnings
+2026-09-26T10:56:40.1568517Z   RUST_BACKTRACE: 1
+2026-09-26T10:56:40.1569316Z   RUSTUP_WINDOWS_PATH_ADD_BIN: 1
+2026-09-26T10:56:40.1570222Z   rust_stable: stable
+2026-09-26T10:56:40.1571046Z   rust_nightly: nightly-2025-10-12
+2026-09-26T10:56:40.1572015Z   rust_miri_nightly: nightly-2026-06-29
+2026-09-26T10:56:40.1573265Z   rust_emscripten_nightly: nightly-2026-08-17
+2026-09-26T10:56:40.1574289Z   emsdk_version: 6.0.8
+2026-09-26T10:56:40.1575089Z   rust_clippy: 1.88
+2026-09-26T10:56:40.1575841Z   rust_min: 1.85
+2026-09-26T10:56:40.1576630Z   TOKIO_STABLE_FEATURES: full,test-util
+2026-09-26T10:56:40.1577630Z   CARGO_HOME: /home/runner/.cargo
+2026-09-26T10:56:40.1578514Z ##[endgroup]
+2026-09-26T10:56:40.1674339Z ##[end-action id=__dtolnay_rust-toolchain.__run_2;outcome=success;conclusion=success;duration_ms=22]
+2026-09-26T10:56:40.1680681Z ##[start-action display=Install rustup if needed on windows;id=__dtolnay_rust-toolchain.__run_3]
+2026-09-26T10:56:40.1694265Z ##[end-action id=__dtolnay_rust-toolchain.__run_3;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-09-26T10:56:40.1701821Z ##[start-action display=rustup toolchain install 1.88;id=__dtolnay_rust-toolchain.__run_4]
+2026-09-26T10:56:40.1746646Z ##[group]Run rustup toolchain install 1.88 --component clippy --profile minimal --no-self-update
+2026-09-26T10:56:40.1748848Z rustup toolchain install 1.88 --component clippy --profile minimal --no-self-update
+2026-09-26T10:56:40.1807009Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-09-26T10:56:40.1808181Z env:
+2026-09-26T10:56:40.1808887Z   RUSTFLAGS: -Dwarnings
+2026-09-26T10:56:40.1809707Z   RUST_BACKTRACE: 1
+2026-09-26T10:56:40.1810509Z   RUSTUP_WINDOWS_PATH_ADD_BIN: 1
+2026-09-26T10:56:40.1811414Z   rust_stable: stable
+2026-09-26T10:56:40.1812251Z   rust_nightly: nightly-2025-10-12
+2026-09-26T10:56:40.1813510Z   rust_miri_nightly: nightly-2026-06-29
+2026-09-26T10:56:40.1814561Z   rust_emscripten_nightly: nightly-2026-08-17
+2026-09-26T10:56:40.1841328Z   emsdk_version: 6.0.8
+2026-09-26T10:56:40.1842178Z   rust_clippy: 1.88
+2026-09-26T10:56:40.1843231Z   rust_min: 1.85
+2026-09-26T10:56:40.1844049Z   TOKIO_STABLE_FEATURES: full,test-util
+2026-09-26T10:56:40.1845066Z   CARGO_HOME: /home/runner/.cargo
+2026-09-26T10:56:40.1846016Z   RUSTUP_PERMIT_COPY_RENAME: 1
+2026-09-26T10:56:40.1847142Z ##[endgroup]
+2026-09-26T10:56:40.2808255Z info: syncing channel updates for 1.88-x86_64-unknown-linux-gnu
+2026-09-26T10:56:40.4083121Z info: latest update on 2025-06-26 for version 1.88.0 (6b00bc388 2025-06-23)
+2026-09-26T10:56:40.4085649Z info: downloading 4 components
+2026-09-26T10:56:47.9773673Z 
+2026-09-26T10:56:47.9855352Z   1.88-x86_64-unknown-linux-gnu installed - rustc 1.88.0 (6b00bc388 2025-06-23)
+2026-09-26T10:56:47.9856254Z 
+2026-09-26T10:56:47.9921724Z ##[end-action id=__dtolnay_rust-toolchain.__run_4;outcome=success;conclusion=success;duration_ms=7821]
+2026-09-26T10:56:47.9931221Z ##[start-action display=rustup default 1.88;id=__dtolnay_rust-toolchain.__run_5]
+2026-09-26T10:56:47.9966196Z ##[group]Run rustup default 1.88
+2026-09-26T10:56:47.9966556Z rustup default 1.88
+2026-09-26T10:56:48.0031952Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-09-26T10:56:48.0032367Z env:
+2026-09-26T10:56:48.0032633Z   RUSTFLAGS: -Dwarnings
+2026-09-26T10:56:48.0033166Z   RUST_BACKTRACE: 1
+2026-09-26T10:56:48.0033462Z   RUSTUP_WINDOWS_PATH_ADD_BIN: 1
+2026-09-26T10:56:48.0033791Z   rust_stable: stable
+2026-09-26T10:56:48.0034110Z   rust_nightly: nightly-2025-10-12
+2026-09-26T10:56:48.0034493Z   rust_miri_nightly: nightly-2026-06-29
+2026-09-26T10:56:48.0034889Z   rust_emscripten_nightly: nightly-2026-08-17
+2026-09-26T10:56:48.0035257Z   emsdk_version: 6.0.8
+2026-09-26T10:56:48.0035545Z   rust_clippy: 1.88
+2026-09-26T10:56:48.0035825Z   rust_min: 1.85
+2026-09-26T10:56:48.0036129Z   TOKIO_STABLE_FEATURES: full,test-util
+2026-09-26T10:56:48.0036485Z   CARGO_HOME: /home/runner/.cargo
+2026-09-26T10:56:48.0036813Z ##[endgroup]
+2026-09-26T10:56:48.0163649Z info: using existing install for 1.88-x86_64-unknown-linux-gnu
+2026-09-26T10:56:48.0171216Z info: default toolchain set to 1.88-x86_64-unknown-linux-gnu
+2026-09-26T10:56:48.0171656Z 
+2026-09-26T10:56:48.0243797Z   1.88-x86_64-unknown-linux-gnu unchanged - rustc 1.88.0 (6b00bc388 2025-06-23)
+2026-09-26T10:56:48.0244369Z 
+2026-09-26T10:56:48.0264115Z ##[end-action id=__dtolnay_rust-toolchain.__run_5;outcome=success;conclusion=success;duration_ms=33]
+2026-09-26T10:56:48.0267851Z ##[start-action display=Create cachekey;id=__dtolnay_rust-toolchain.rustc-version]
+2026-09-26T10:56:48.0301599Z ##[group]Run DATE=$(rustc +1.88 --version --verbose | sed -ne 's/^commit-date: \(20[0-9][0-9]\)-\([01][0-9]\)-\([0-3][0-9]\)$/\1\2\3/p')
+2026-09-26T10:56:48.0303012Z DATE=$(rustc +1.88 --version --verbose | sed -ne 's/^commit-date: \(20[0-9][0-9]\)-\([01][0-9]\)-\([0-3][0-9]\)$/\1\2\3/p')
+2026-09-26T10:56:48.0303794Z HASH=$(rustc +1.88 --version --verbose | sed -ne 's/^commit-hash: //p')
+2026-09-26T10:56:48.0304369Z echo "cachekey=$(echo $DATE$HASH | head -c12)" >> $GITHUB_OUTPUT
+2026-09-26T10:56:48.0367996Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-09-26T10:56:48.0368448Z env:
+2026-09-26T10:56:48.0368700Z   RUSTFLAGS: -Dwarnings
+2026-09-26T10:56:48.0368979Z   RUST_BACKTRACE: 1
+2026-09-26T10:56:48.0369267Z   RUSTUP_WINDOWS_PATH_ADD_BIN: 1
+2026-09-26T10:56:48.0369573Z   rust_stable: stable
+2026-09-26T10:56:48.0369856Z   rust_nightly: nightly-2025-10-12
+2026-09-26T10:56:48.0370185Z   rust_miri_nightly: nightly-2026-06-29
+2026-09-26T10:56:48.0370542Z   rust_emscripten_nightly: nightly-2026-08-17
+2026-09-26T10:56:48.0370897Z   emsdk_version: 6.0.8
+2026-09-26T10:56:48.0371171Z   rust_clippy: 1.88
+2026-09-26T10:56:48.0371429Z   rust_min: 1.85
+2026-09-26T10:56:48.0371704Z   TOKIO_STABLE_FEATURES: full,test-util
+2026-09-26T10:56:48.0372055Z   CARGO_HOME: /home/runner/.cargo
+2026-09-26T10:56:48.0372359Z ##[endgroup]
+2026-09-26T10:56:48.0727476Z ##[end-action id=__dtolnay_rust-toolchain.rustc-version;outcome=success;conclusion=success;duration_ms=45]
+2026-09-26T10:56:48.0730772Z ##[start-action display=Disable incremental compilation;id=__dtolnay_rust-toolchain.__run_6]
+2026-09-26T10:56:48.0763229Z ##[group]Run if [ -z "${CARGO_INCREMENTAL+set}" ]; then
+2026-09-26T10:56:48.0763685Z if [ -z "${CARGO_INCREMENTAL+set}" ]; then
+2026-09-26T10:56:48.0764281Z   echo CARGO_INCREMENTAL=0 >> $GITHUB_ENV
+2026-09-26T10:56:48.0764624Z fi
+2026-09-26T10:56:48.0832146Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-09-26T10:56:48.0832575Z env:
+2026-09-26T10:56:48.0833115Z   RUSTFLAGS: -Dwarnings
+2026-09-26T10:56:48.0833421Z   RUST_BACKTRACE: 1
+2026-09-26T10:56:48.0833728Z   RUSTUP_WINDOWS_PATH_ADD_BIN: 1
+2026-09-26T10:56:48.0834060Z   rust_stable: stable
+2026-09-26T10:56:48.0834388Z   rust_nightly: nightly-2025-10-12
+2026-09-26T10:56:48.0834742Z   rust_miri_nightly: nightly-2026-06-29
+2026-09-26T10:56:48.0835127Z   rust_emscripten_nightly: nightly-2026-08-17
+2026-09-26T10:56:48.0835511Z   emsdk_version: 6.0.8
+2026-09-26T10:56:48.0835807Z   rust_clippy: 1.88
+2026-09-26T10:56:48.0836082Z   rust_min: 1.85
+2026-09-26T10:56:48.0836374Z   TOKIO_STABLE_FEATURES: full,test-util
+2026-09-26T10:56:48.0836742Z   CARGO_HOME: /home/runner/.cargo
+2026-09-26T10:56:48.0837072Z ##[endgroup]
+2026-09-26T10:56:48.0927305Z ##[end-action id=__dtolnay_rust-toolchain.__run_6;outcome=success;conclusion=success;duration_ms=19]
+2026-09-26T10:56:48.0930075Z ##[start-action display=Enable colors in Cargo output;id=__dtolnay_rust-toolchain.__run_7]
+2026-09-26T10:56:48.0960316Z ##[group]Run if [ -z "${CARGO_TERM_COLOR+set}" ]; then
+2026-09-26T10:56:48.0960731Z if [ -z "${CARGO_TERM_COLOR+set}" ]; then
+2026-09-26T10:56:48.0961121Z   echo CARGO_TERM_COLOR=always >> $GITHUB_ENV
+2026-09-26T10:56:48.0961472Z fi
+2026-09-26T10:56:48.1021254Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-09-26T10:56:48.1021658Z env:
+2026-09-26T10:56:48.1021903Z   RUSTFLAGS: -Dwarnings
+2026-09-26T10:56:48.1022183Z   RUST_BACKTRACE: 1
+2026-09-26T10:56:48.1022460Z   RUSTUP_WINDOWS_PATH_ADD_BIN: 1
+2026-09-26T10:56:48.1023042Z   rust_stable: stable
+2026-09-26T10:56:48.1023410Z   rust_nightly: nightly-2025-10-12
+2026-09-26T10:56:48.1023733Z   rust_miri_nightly: nightly-2026-06-29
+2026-09-26T10:56:48.1024111Z   rust_emscripten_nightly: nightly-2026-08-17
+2026-09-26T10:56:48.1024460Z   emsdk_version: 6.0.8
+2026-09-26T10:56:48.1024722Z   rust_clippy: 1.88
+2026-09-26T10:56:48.1024976Z   rust_min: 1.85
+2026-09-26T10:56:48.1025236Z   TOKIO_STABLE_FEATURES: full,test-util
+2026-09-26T10:56:48.1025553Z   CARGO_HOME: /home/runner/.cargo
+2026-09-26T10:56:48.1025848Z   CARGO_INCREMENTAL: 0
+2026-09-26T10:56:48.1026105Z ##[endgroup]
+2026-09-26T10:56:48.1112471Z ##[end-action id=__dtolnay_rust-toolchain.__run_7;outcome=success;conclusion=success;duration_ms=18]
+2026-09-26T10:56:48.1115367Z ##[start-action display=Enable Cargo sparse registry;id=__dtolnay_rust-toolchain.__run_8]
+2026-09-26T10:56:48.1146653Z ##[group]Run # implemented in 1.66, stabilized in 1.68, made default in 1.70
+2026-09-26T10:56:48.1147226Z # implemented in 1.66, stabilized in 1.68, made default in 1.70
+2026-09-26T10:56:48.1147992Z if [ -z "${CARGO_REGISTRIES_CRATES_IO_PROTOCOL+set}" -o -f "/home/runner/work/_temp"/.implicit_cargo_registries_crates_io_protocol ]; then
+2026-09-26T10:56:48.1148768Z   if rustc +1.88 --version --verbose | grep -q '^release: 1\.6[89]\.'; then
+2026-09-26T10:56:48.1149381Z     touch "/home/runner/work/_temp"/.implicit_cargo_registries_crates_io_protocol || true
+2026-09-26T10:56:48.1149974Z     echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse >> $GITHUB_ENV
+2026-09-26T10:56:48.1150507Z   elif rustc +1.88 --version --verbose | grep -q '^release: 1\.6[67]\.'; then
+2026-09-26T10:56:48.1151112Z     touch "/home/runner/work/_temp"/.implicit_cargo_registries_crates_io_protocol || true
+2026-09-26T10:56:48.1151681Z     echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=git >> $GITHUB_ENV
+2026-09-26T10:56:48.1152072Z   fi
+2026-09-26T10:56:48.1152311Z fi
+2026-09-26T10:56:48.1213003Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-09-26T10:56:48.1213464Z env:
+2026-09-26T10:56:48.1213708Z   RUSTFLAGS: -Dwarnings
+2026-09-26T10:56:48.1214165Z   RUST_BACKTRACE: 1
+2026-09-26T10:56:48.1214440Z   RUSTUP_WINDOWS_PATH_ADD_BIN: 1
+2026-09-26T10:56:48.1214727Z   rust_stable: stable
+2026-09-26T10:56:48.1214995Z   rust_nightly: nightly-2025-10-12
+2026-09-26T10:56:48.1215310Z   rust_miri_nightly: nightly-2026-06-29
+2026-09-26T10:56:48.1215651Z   rust_emscripten_nightly: nightly-2026-08-17
+2026-09-26T10:56:48.1215983Z   emsdk_version: 6.0.8
+2026-09-26T10:56:48.1216240Z   rust_clippy: 1.88
+2026-09-26T10:56:48.1216485Z   rust_min: 1.85
+2026-09-26T10:56:48.1216755Z   TOKIO_STABLE_FEATURES: full,test-util
+2026-09-26T10:56:48.1217077Z   CARGO_HOME: /home/runner/.cargo
+2026-09-26T10:56:48.1217379Z   CARGO_INCREMENTAL: 0
+2026-09-26T10:56:48.1217641Z   CARGO_TERM_COLOR: always
+2026-09-26T10:56:48.1217909Z ##[endgroup]
+2026-09-26T10:56:48.1549466Z ##[end-action id=__dtolnay_rust-toolchain.__run_8;outcome=success;conclusion=success;duration_ms=43]
+2026-09-26T10:56:48.1553602Z ##[start-action display=Work around spurious network errors in curl 8.0;id=__dtolnay_rust-toolchain.__run_9]
+2026-09-26T10:56:48.1587361Z ##[group]Run # https://rust-lang.zulipchat.com/#narrow/stream/246057-t-cargo/topic/timeout.20investigation
+2026-09-26T10:56:48.1588186Z # https://rust-lang.zulipchat.com/#narrow/stream/246057-t-cargo/topic/timeout.20investigation
+2026-09-26T10:56:48.1588856Z if rustc +1.88 --version --verbose | grep -q '^release: 1\.7[01]\.'; then
+2026-09-26T10:56:48.1589385Z   echo CARGO_HTTP_MULTIPLEXING=false >> $GITHUB_ENV
+2026-09-26T10:56:48.1589764Z fi
+2026-09-26T10:56:48.1657392Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-09-26T10:56:48.1657801Z env:
+2026-09-26T10:56:48.1658065Z   RUSTFLAGS: -Dwarnings
+2026-09-26T10:56:48.1658350Z   RUST_BACKTRACE: 1
+2026-09-26T10:56:48.1658633Z   RUSTUP_WINDOWS_PATH_ADD_BIN: 1
+2026-09-26T10:56:48.1658971Z   rust_stable: stable
+2026-09-26T10:56:48.1659322Z   rust_nightly: nightly-2025-10-12
+2026-09-26T10:56:48.1659658Z   rust_miri_nightly: nightly-2026-06-29
+2026-09-26T10:56:48.1660027Z   rust_emscripten_nightly: nightly-2026-08-17
+2026-09-26T10:56:48.1660379Z   emsdk_version: 6.0.8
+2026-09-26T10:56:48.1660652Z   rust_clippy: 1.88
+2026-09-26T10:56:48.1660910Z   rust_min: 1.85
+2026-09-26T10:56:48.1661182Z   TOKIO_STABLE_FEATURES: full,test-util
+2026-09-26T10:56:48.1661523Z   CARGO_HOME: /home/runner/.cargo
+2026-09-26T10:56:48.1661835Z   CARGO_INCREMENTAL: 0
+2026-09-26T10:56:48.1662110Z   CARGO_TERM_COLOR: always
+2026-09-26T10:56:48.1662398Z ##[endgroup]
+2026-09-26T10:56:48.1874253Z ##[end-action id=__dtolnay_rust-toolchain.__run_9;outcome=success;conclusion=success;duration_ms=31]
+2026-09-26T10:56:48.1879196Z ##[start-action display=rustc +1.88 --version --verbose;id=__dtolnay_rust-toolchain.__run_10]
+2026-09-26T10:56:48.1910971Z ##[group]Run rustc +1.88 --version --verbose
+2026-09-26T10:56:48.1911364Z rustc +1.88 --version --verbose
+2026-09-26T10:56:48.1977277Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-09-26T10:56:48.1977683Z env:
+2026-09-26T10:56:48.1977950Z   RUSTFLAGS: -Dwarnings
+2026-09-26T10:56:48.1978219Z   RUST_BACKTRACE: 1
+2026-09-26T10:56:48.1978497Z   RUSTUP_WINDOWS_PATH_ADD_BIN: 1
+2026-09-26T10:56:48.1978787Z   rust_stable: stable
+2026-09-26T10:56:48.1979055Z   rust_nightly: nightly-2025-10-12
+2026-09-26T10:56:48.1979372Z   rust_miri_nightly: nightly-2026-06-29
+2026-09-26T10:56:48.1979711Z   rust_emscripten_nightly: nightly-2026-08-17
+2026-09-26T10:56:48.1980046Z   emsdk_version: 6.0.8
+2026-09-26T10:56:48.1980304Z   rust_clippy: 1.88
+2026-09-26T10:56:48.1980560Z   rust_min: 1.85
+2026-09-26T10:56:48.1980819Z   TOKIO_STABLE_FEATURES: full,test-util
+2026-09-26T10:56:48.1981264Z   CARGO_HOME: /home/runner/.cargo
+2026-09-26T10:56:48.1981672Z   CARGO_INCREMENTAL: 0
+2026-09-26T10:56:48.1982005Z   CARGO_TERM_COLOR: always
+2026-09-26T10:56:48.1982536Z ##[endgroup]
+2026-09-26T10:56:48.2201097Z rustc 1.88.0 (6b00bc388 2025-06-23)
+2026-09-26T10:56:48.2201831Z binary: rustc
+2026-09-26T10:56:48.2202413Z commit-hash: 6b00bc3880198600130e1cf62b8f8a93494488cc
+2026-09-26T10:56:48.2203990Z commit-date: 2025-06-23
+2026-09-26T10:56:48.2204307Z host: x86_64-unknown-linux-gnu
+2026-09-26T10:56:48.2204650Z release: 1.88.0
+2026-09-26T10:56:48.2204951Z LLVM version: 20.1.5
+2026-09-26T10:56:48.2221606Z ##[end-action id=__dtolnay_rust-toolchain.__run_10;outcome=success;conclusion=success;duration_ms=34]
+2026-09-26T10:56:48.2352700Z ##[group]Run Swatinem/rust-cache@v2
+2026-09-26T10:56:48.2353280Z with:
+2026-09-26T10:56:48.2353532Z   prefix-key: v0-rust
+2026-09-26T10:56:48.2353802Z   add-job-id-key: true
+2026-09-26T10:56:48.2354099Z   add-rust-environment-hash-key: true
+2026-09-26T10:56:48.2354418Z   cache-targets: true
+2026-09-26T10:56:48.2354688Z   cache-all-crates: false
+2026-09-26T10:56:48.2354983Z   cache-workspace-crates: false
+2026-09-26T10:56:48.2355272Z   save-if: true
+2026-09-26T10:56:48.2355523Z   cache-provider: github
+2026-09-26T10:56:48.2355789Z   cache-bin: true
+2026-09-26T10:56:48.2356037Z   lookup-only: false
+2026-09-26T10:56:48.2356285Z   cmd-format: {0}
+2026-09-26T10:56:48.2356542Z env:
+2026-09-26T10:56:48.2356774Z   RUSTFLAGS: -Dwarnings
+2026-09-26T10:56:48.2357031Z   RUST_BACKTRACE: 1
+2026-09-26T10:56:48.2357300Z   RUSTUP_WINDOWS_PATH_ADD_BIN: 1
+2026-09-26T10:56:48.2357585Z   rust_stable: stable
+2026-09-26T10:56:48.2357854Z   rust_nightly: nightly-2025-10-12
+2026-09-26T10:56:48.2358203Z   rust_miri_nightly: nightly-2026-06-29
+2026-09-26T10:56:48.2358538Z   rust_emscripten_nightly: nightly-2026-08-17
+2026-09-26T10:56:48.2358866Z   emsdk_version: 6.0.8
+2026-09-26T10:56:48.2359135Z   rust_clippy: 1.88
+2026-09-26T10:56:48.2359389Z   rust_min: 1.85
+2026-09-26T10:56:48.2359649Z   TOKIO_STABLE_FEATURES: full,test-util
+2026-09-26T10:56:48.2359971Z   CARGO_HOME: /home/runner/.cargo
+2026-09-26T10:56:48.2360269Z   CARGO_INCREMENTAL: 0
+2026-09-26T10:56:48.2360537Z   CARGO_TERM_COLOR: always
+2026-09-26T10:56:48.2360804Z ##[endgroup]
+2026-09-26T10:56:48.6739633Z ##[group]Cache Configuration
+2026-09-26T10:56:48.6740220Z Cache Provider:
+2026-09-26T10:56:48.6740654Z     github
+2026-09-26T10:56:48.6741009Z Workspaces:
+2026-09-26T10:56:48.6741389Z     /home/runner/work/tokio/tokio
+2026-09-26T10:56:48.6741861Z Cache Paths:
+2026-09-26T10:56:48.6742232Z     /home/runner/.cargo/bin
+2026-09-26T10:56:48.6742672Z     /home/runner/.cargo/.crates.toml
+2026-09-26T10:56:48.6743547Z     /home/runner/.cargo/.crates2.json
+2026-09-26T10:56:48.6744091Z     /home/runner/.cargo/registry
+2026-09-26T10:56:48.6744582Z     /home/runner/.cargo/git
+2026-09-26T10:56:48.6745047Z     /home/runner/work/tokio/tokio/target
+2026-09-26T10:56:48.6745512Z Restore Key:
+2026-09-26T10:56:48.6745917Z     v0-rust-clippy-Linux-x64-459e2344
+2026-09-26T10:56:48.6746416Z Cache Key:
+2026-09-26T10:56:48.6746852Z     v0-rust-clippy-Linux-x64-459e2344-a8a4bdab
+2026-09-26T10:56:48.6747495Z .. Prefix:
+2026-09-26T10:56:48.6747920Z   - v0-rust-clippy-Linux-x64
+2026-09-26T10:56:48.6748412Z .. Environment considered:
+2026-09-26T10:56:48.6748854Z   - Rust Versions:
+2026-09-26T10:56:48.6749469Z     - 1.88.0 x86_64-unknown-linux-gnu 6b00bc3880198600130e1cf62b8f8a93494488cc
+2026-09-26T10:56:48.6750430Z     - 1.98.1 x86_64-unknown-linux-gnu 48a229ceaefd4985c50990b14116b6d856af0985
+2026-09-26T10:56:48.6751162Z   - CARGO_HOME
+2026-09-26T10:56:48.6751541Z   - CARGO_INCREMENTAL
+2026-09-26T10:56:48.6751909Z   - CARGO_TERM_COLOR
+2026-09-26T10:56:48.6752278Z   - RUST_BACKTRACE
+2026-09-26T10:56:48.6752628Z   - RUSTFLAGS
+2026-09-26T10:56:48.6753248Z   - RUSTUP_WINDOWS_PATH_ADD_BIN
+2026-09-26T10:56:48.6753692Z .. Lockfiles considered:
+2026-09-26T10:56:48.6754202Z   - /home/runner/work/tokio/tokio/benches/Cargo.toml
+2026-09-26T10:56:48.6754891Z   - /home/runner/work/tokio/tokio/examples/Cargo.toml
+2026-09-26T10:56:48.6755600Z   - /home/runner/work/tokio/tokio/stress-test/Cargo.toml
+2026-09-26T10:56:48.6756309Z   - /home/runner/work/tokio/tokio/tests-build/Cargo.toml
+2026-09-26T10:56:48.6757118Z   - /home/runner/work/tokio/tokio/tests-integration/Cargo.toml
+2026-09-26T10:56:48.6757884Z   - /home/runner/work/tokio/tokio/tokio-macros/Cargo.toml
+2026-09-26T10:56:48.6758940Z   - /home/runner/work/tokio/tokio/tokio-stream/Cargo.toml
+2026-09-26T10:56:48.6759342Z   - /home/runner/work/tokio/tokio/tokio-test/Cargo.toml
+2026-09-26T10:56:48.6759707Z   - /home/runner/work/tokio/tokio/tokio-util/Cargo.toml
+2026-09-26T10:56:48.6760053Z   - /home/runner/work/tokio/tokio/tokio/Cargo.toml
+2026-09-26T10:56:48.6760851Z ##[endgroup]
+2026-09-26T10:56:48.6760984Z 
+2026-09-26T10:56:48.6761087Z ... Restoring cache ...
+2026-09-26T10:56:48.9233799Z Cache hit for: v0-rust-clippy-Linux-x64-459e2344-a8a4bdab
+2026-09-26T10:56:50.2058486Z Received 0 of 186540650 (0.0%), 0.0 MBs/sec
+2026-09-26T10:56:51.2065472Z Received 130023424 of 186540650 (69.7%), 62.0 MBs/sec
+2026-09-26T10:56:51.7057607Z Received 186540650 of 186540650 (100.0%), 71.2 MBs/sec
+2026-09-26T10:56:51.7059520Z Cache Size: ~178 MB (186540650 B)
+2026-09-26T10:56:51.7164623Z [command]/usr/bin/tar -xf /home/runner/work/_temp/bc96e164-a3de-4f01-9af7-11363b308c31/cache.tzst -P -C /home/runner/work/tokio/tokio --use-compress-program unzstd
+2026-09-26T10:56:52.8860898Z Cache restored successfully
+2026-09-26T10:56:52.8941926Z Restored from cache key "v0-rust-clippy-Linux-x64-459e2344-a8a4bdab" full match: true.
+2026-09-26T10:56:52.9077661Z ##[group]Run cargo clippy --workspace --tests --no-deps --features $TOKIO_STABLE_FEATURES
+2026-09-26T10:56:52.9078349Z cargo clippy --workspace --tests --no-deps --features $TOKIO_STABLE_FEATURES
+2026-09-26T10:56:52.9078930Z # Removing the tokio workspace patch to check without path dependencies
+2026-09-26T10:56:52.9079384Z # (if not specified differently in the crate)
+2026-09-26T10:56:52.9079793Z perl -0 -i.bak -pe 's/\[patch\.crates-io\].+\n\[/[/s' Cargo.toml
+2026-09-26T10:56:52.9080366Z cargo clippy --workspace --exclude tokio --tests --no-deps --features $TOKIO_STABLE_FEATURES
+2026-09-26T10:56:52.9141487Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-09-26T10:56:52.9141829Z env:
+2026-09-26T10:56:52.9142030Z   RUSTFLAGS: -Dwarnings
+2026-09-26T10:56:52.9142276Z   RUST_BACKTRACE: 1
+2026-09-26T10:56:52.9142507Z   RUSTUP_WINDOWS_PATH_ADD_BIN: 1
+2026-09-26T10:56:52.9143040Z   rust_stable: stable
+2026-09-26T10:56:52.9143354Z   rust_nightly: nightly-2025-10-12
+2026-09-26T10:56:52.9143643Z   rust_miri_nightly: nightly-2026-06-29
+2026-09-26T10:56:52.9143949Z   rust_emscripten_nightly: nightly-2026-08-17
+2026-09-26T10:56:52.9144250Z   emsdk_version: 6.0.8
+2026-09-26T10:56:52.9144480Z   rust_clippy: 1.88
+2026-09-26T10:56:52.9144686Z   rust_min: 1.85
+2026-09-26T10:56:52.9144905Z   TOKIO_STABLE_FEATURES: full,test-util
+2026-09-26T10:56:52.9145184Z   CARGO_HOME: /home/runner/.cargo
+2026-09-26T10:56:52.9145443Z   CARGO_INCREMENTAL: 0
+2026-09-26T10:56:52.9145661Z   CARGO_TERM_COLOR: always
+2026-09-26T10:56:52.9145892Z   CACHE_ON_FAILURE: false
+2026-09-26T10:56:52.9146125Z ##[endgroup]
+2026-09-26T10:56:52.9804644Z     Updating crates.io index
+2026-09-26T10:56:53.2493881Z      Locking 185 packages to latest compatible versions
+2026-09-26T10:56:53.2680240Z       Adding criterion v0.5.1 (available: v0.8.2)
+2026-09-26T10:56:53.2756870Z       Adding hashbrown v0.15.5 (available: v0.17.1)
+2026-09-26T10:56:53.2822582Z       Adding minicov v0.3.8 (available: v0.3.9)
+2026-09-26T10:56:53.2844285Z       Adding mockall v0.13.1 (available: v0.15.0)
+2026-09-26T10:56:53.2948474Z       Adding rand v0.9.5 (available: v0.10.3)
+2026-09-26T10:56:53.2950580Z       Adding rand_chacha v0.9.0 (available: v0.10.0)
+2026-09-26T10:56:53.3285006Z       Adding tracing-mock v0.1.0-beta.1 (available: v0.1.0-beta.3)
+2026-09-26T10:56:54.0774901Z    Compiling tokio-macros v2.7.2 (/home/runner/work/tokio/tokio/tokio-macros)
+2026-09-26T10:56:54.6085489Z     Checking tokio v1.53.1 (/home/runner/work/tokio/tokio/tokio)
+2026-09-26T10:56:59.4856352Z     Checking tokio-util v0.7.19 (/home/runner/work/tokio/tokio/tokio-util)
+2026-09-26T10:56:59.4858024Z     Checking tests-build v0.1.0 (/home/runner/work/tokio/tokio/tests-build)
+2026-09-26T10:57:00.4776815Z     Checking tokio-stream v0.1.19 (/home/runner/work/tokio/tokio/tokio-stream)
+2026-09-26T10:57:00.9446264Z     Checking tokio-test v0.4.6 (/home/runner/work/tokio/tokio/tokio-test)
+2026-09-26T10:57:01.0808501Z     Checking tests-integration v0.1.0 (/home/runner/work/tokio/tokio/tests-integration)
+2026-09-26T10:57:08.4075418Z error: this can be `std::io::Error::other(_)`
+2026-09-26T10:57:08.4087806Z   --> tokio/tests/io_skip_until.rs:47:21
+2026-09-26T10:57:08.4113618Z    |
+2026-09-26T10:57:08.4128164Z 47 |         .read_error(Error::new(ErrorKind::Other, "The world has no end"))
+2026-09-26T10:57:08.4174313Z    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-09-26T10:57:08.4175820Z    |
+2026-09-26T10:57:08.4214370Z    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#io_other_error
+2026-09-26T10:57:08.4234555Z    = note: `-D clippy::io-other-error` implied by `-D warnings`
+2026-09-26T10:57:08.4244653Z    = help: to override `-D warnings` add `#[allow(clippy::io_other_error)]`
+2026-09-26T10:57:08.4246127Z help: use `std::io::Error::other`
+2026-09-26T10:57:08.4247214Z    |
+2026-09-26T10:57:08.4248870Z 47 -         .read_error(Error::new(ErrorKind::Other, "The world has no end"))
+2026-09-26T10:57:08.4250931Z 47 +         .read_error(Error::other("The world has no end"))
+2026-09-26T10:57:08.4252161Z    |
+2026-09-26T10:57:08.4252678Z 
+2026-09-26T10:57:08.4253814Z error: could not compile `tokio` (test "io_skip_until") due to 1 previous error
+2026-09-26T10:57:08.4255109Z warning: build failed, waiting for other jobs to finish...
+2026-09-26T10:57:08.5949249Z ##[error]Process completed with exit code 101.
+2026-09-26T10:57:08.6076719Z Post job cleanup.
+2026-09-26T10:57:08.6948875Z [command]/usr/bin/git version
+2026-09-26T10:57:08.6996101Z git version 2.55.0
+2026-09-26T10:57:08.7032547Z Temporarily overriding HOME='/home/runner/work/_temp/94c6328d-50bc-42b2-8dc1-0081e3b6a970' before making global git config changes
+2026-09-26T10:57:08.7034214Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-26T10:57:08.7037929Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/tokio/tokio
+2026-09-26T10:57:08.7069811Z Removing SSH command configuration
+2026-09-26T10:57:08.7076177Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-26T10:57:08.7111939Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-26T10:57:08.7337507Z Removing HTTP extra header
+2026-09-26T10:57:08.7342709Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-26T10:57:08.7378035Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-26T10:57:08.7597236Z Removing includeIf entries pointing to credentials config files
+2026-09-26T10:57:08.7604363Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-26T10:57:08.7632693Z includeif.gitdir:/home/runner/work/tokio/tokio/.git.path
+2026-09-26T10:57:08.7633550Z includeif.gitdir:/home/runner/work/tokio/tokio/.git/worktrees/*.path
+2026-09-26T10:57:08.7634004Z includeif.gitdir:/github/workspace/.git.path
+2026-09-26T10:57:08.7634387Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-09-26T10:57:08.7642082Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/tokio/tokio/.git.path
+2026-09-26T10:57:08.7664716Z /home/runner/work/_temp/git-credentials-85eb40ab-812a-4677-948d-a7ee11054c85.config
+2026-09-26T10:57:08.7675245Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/tokio/tokio/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-85eb40ab\-812a\-4677\-948d\-a7ee11054c85\.config
+2026-09-26T10:57:08.7711641Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/tokio/tokio/.git/worktrees/*.path
+2026-09-26T10:57:08.7741568Z /home/runner/work/_temp/git-credentials-85eb40ab-812a-4677-948d-a7ee11054c85.config
+2026-09-26T10:57:08.7751513Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/tokio/tokio/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-85eb40ab\-812a\-4677\-948d\-a7ee11054c85\.config
+2026-09-26T10:57:08.7793999Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-09-26T10:57:08.7808093Z /github/runner_temp/git-credentials-85eb40ab-812a-4677-948d-a7ee11054c85.config
+2026-09-26T10:57:08.7816165Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-85eb40ab\-812a\-4677\-948d\-a7ee11054c85\.config
+2026-09-26T10:57:08.7850145Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-09-26T10:57:08.7871642Z /github/runner_temp/git-credentials-85eb40ab-812a-4677-948d-a7ee11054c85.config
+2026-09-26T10:57:08.7881845Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-85eb40ab\-812a\-4677\-948d\-a7ee11054c85\.config
+2026-09-26T10:57:08.7915863Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-26T10:57:08.8138239Z Removing credentials config '/home/runner/work/_temp/git-credentials-85eb40ab-812a-4677-948d-a7ee11054c85.config'
+2026-09-26T10:57:08.8289552Z Cleaning up orphan processes

@@ -1,0 +1,37 @@
+﻿2026-08-06T16:20:35.0804541Z Current runner version: '2.336.0'
+2026-08-06T16:20:35.0828483Z ##[group]Runner Image Provisioner
+2026-08-06T16:20:35.0829344Z Hosted Compute Agent
+2026-08-06T16:20:35.0830031Z Version: 20260707.563
+2026-08-06T16:20:35.0830676Z Commit: 02667638d2b423fbc733a8e32a88b44996a3ba6e
+2026-08-06T16:20:35.0831522Z Build Date: 2026-07-07T19:33:50Z
+2026-08-06T16:20:35.0832240Z Worker ID: {eb849460-b7ab-4752-a20a-3f6acdf5573b}
+2026-08-06T16:20:35.0832972Z Azure Region: westus
+2026-08-06T16:20:35.0833888Z ##[endgroup]
+2026-08-06T16:20:35.0835636Z ##[group]Operating System
+2026-08-06T16:20:35.0836289Z Ubuntu
+2026-08-06T16:20:35.0836921Z 24.04.4
+2026-08-06T16:20:35.0837449Z LTS
+2026-08-06T16:20:35.0838005Z ##[endgroup]
+2026-08-06T16:20:35.0838618Z ##[group]Runner Image
+2026-08-06T16:20:35.0839223Z Image: ubuntu-24.04
+2026-08-06T16:20:35.0839873Z Version: 20260720.247.2
+2026-08-06T16:20:35.0841090Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260720.247/images/ubuntu/Ubuntu2404-Readme.md
+2026-08-06T16:20:35.0842759Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260720.247
+2026-08-06T16:20:35.0843753Z ##[endgroup]
+2026-08-06T16:20:35.0845392Z ##[group]GITHUB_TOKEN Permissions
+2026-08-06T16:20:35.0847578Z Actions: read
+2026-08-06T16:20:35.0848330Z Contents: read
+2026-08-06T16:20:35.0848911Z Metadata: read
+2026-08-06T16:20:35.0849513Z Packages: read
+2026-08-06T16:20:35.0850243Z SecurityEvents: write
+2026-08-06T16:20:35.0850851Z ##[endgroup]
+2026-08-06T16:20:35.0852932Z Secret source: Actions
+2026-08-06T16:20:35.0854198Z Prepare workflow directory
+2026-08-06T16:20:35.1374268Z Prepare all required actions
+2026-08-06T16:20:35.1420614Z Getting action download info
+2026-08-06T16:21:18.0774670Z Failed to resolve action download info. Error: Service Unavailable
+2026-08-06T16:21:18.0850824Z Retrying in 27.106 seconds
+2026-08-06T16:22:36.7016350Z Failed to resolve action download info. Error: Service Unavailable
+2026-08-06T16:22:36.7019321Z Retrying in 18.454 seconds
+2026-08-06T16:23:37.5738213Z ##[error]Service Unavailable
+2026-08-06T16:23:37.5760130Z ##[error]Failed to resolve action download info.

@@ -1,0 +1,315 @@
+﻿2026-09-21T18:27:46.5111668Z Current runner version: '2.337.0'
+2026-09-21T18:27:46.5131649Z ##[group]Runner Image Provisioner
+2026-09-21T18:27:46.5132307Z Hosted Compute Agent
+2026-09-21T18:27:46.5132830Z Version: 20260828.587
+2026-09-21T18:27:46.5133526Z Commit: abac92662cab4cc7352de4f9f9d2e2419aad9c29
+2026-09-21T18:27:46.5134149Z Build Date: 2026-08-28T16:44:25Z
+2026-09-21T18:27:46.5134668Z Worker ID: {7fc9fa7b-afac-48bc-8998-ab14da39c954}
+2026-09-21T18:27:46.5135199Z Azure Region: centralus
+2026-09-21T18:27:46.5135668Z ##[endgroup]
+2026-09-21T18:27:46.5136672Z ##[group]Operating System
+2026-09-21T18:27:46.5137137Z Ubuntu
+2026-09-21T18:27:46.5137545Z 24.04.5
+2026-09-21T18:27:46.5137934Z LTS
+2026-09-21T18:27:46.5138327Z ##[endgroup]
+2026-09-21T18:27:46.5138746Z ##[group]Runner Image
+2026-09-21T18:27:46.5139179Z Image: ubuntu-24.04
+2026-09-21T18:27:46.5139621Z Version: 20260907.300.1
+2026-09-21T18:27:46.5140584Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260907.300/images/ubuntu/Ubuntu2404-Readme.md
+2026-09-21T18:27:46.5141825Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260907.300
+2026-09-21T18:27:46.5142528Z ##[endgroup]
+2026-09-21T18:27:46.5143608Z ##[group]GITHUB_TOKEN Permissions
+2026-09-21T18:27:46.5145370Z Contents: read
+2026-09-21T18:27:46.5145882Z Metadata: read
+2026-09-21T18:27:46.5146291Z ##[endgroup]
+2026-09-21T18:27:46.5147863Z Secret source: None
+2026-09-21T18:27:46.5148574Z Cache mode: write
+2026-09-21T18:27:46.5149099Z Prepare workflow directory
+2026-09-21T18:27:46.5453667Z Prepare all required actions
+2026-09-21T18:27:46.5495689Z Getting action download info
+2026-09-21T18:27:46.8656906Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-09-21T18:27:47.0518610Z Download action repository 'home-assistant/core@d3edfe8973a973a51adbb4eac06c0e6e80c26ae4' (SHA:d3edfe8973a973a51adbb4eac06c0e6e80c26ae4)
+2026-09-21T18:28:07.0121800Z Download action repository 'actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a' (SHA:043fb46d1a93c77aae656e7c1c64a875d1fc6a0a)
+2026-09-21T18:28:07.7455433Z Getting action download info
+2026-09-21T18:28:07.8795747Z Download action repository 'actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9' (SHA:55cc8345863c7cc4c66a329aec7e433d2d1c52a9)
+2026-09-21T18:28:08.4161946Z Getting action download info
+2026-09-21T18:28:08.5278535Z Download action repository 'astral-sh/setup-uv@11f9893b081a58869d3b5fccaea48c9e9e46f990' (SHA:11f9893b081a58869d3b5fccaea48c9e9e46f990)
+2026-09-21T18:28:09.2448555Z Getting action download info
+2026-09-21T18:28:09.3566579Z Download action repository 'awalsh128/cache-apt-pkgs-action@553a35bb8ebd9fcabcb1c9451aa4c98e1b4ca8a9' (SHA:553a35bb8ebd9fcabcb1c9451aa4c98e1b4ca8a9)
+2026-09-21T18:28:10.2893698Z Getting action download info
+2026-09-21T18:28:10.4260842Z Download action repository 'actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f' (SHA:bbbca2ddaa5d8feaa63e36b76fdaad77386f024f)
+2026-09-21T18:28:10.7870548Z Complete job name: Prepare dependencies (3.14.5)
+2026-09-21T18:28:10.8310759Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+2026-09-21T18:28:10.8311190Z with:
+2026-09-21T18:28:10.8311384Z   persist-credentials: false
+2026-09-21T18:28:10.8311595Z   repository: home-assistant/core
+2026-09-21T18:28:10.8313728Z   token: ***
+2026-09-21T18:28:10.8313927Z   ssh-strict: true
+2026-09-21T18:28:10.8314111Z   ssh-user: git
+2026-09-21T18:28:10.8314283Z   clean: true
+2026-09-21T18:28:10.8314469Z   sparse-checkout-cone-mode: true
+2026-09-21T18:28:10.8314682Z   fetch-depth: 1
+2026-09-21T18:28:10.8314883Z   fetch-tags: false
+2026-09-21T18:28:10.8315099Z   show-progress: true
+2026-09-21T18:28:10.8315276Z   lfs: false
+2026-09-21T18:28:10.8315431Z   submodules: false
+2026-09-21T18:28:10.8315613Z   set-safe-directory: true
+2026-09-21T18:28:10.8315816Z   allow-unsafe-pr-checkout: false
+2026-09-21T18:28:10.8316161Z env:
+2026-09-21T18:28:10.8316322Z   CACHE_VERSION: 4
+2026-09-21T18:28:10.8316496Z   MYPY_CACHE_VERSION: 1
+2026-09-21T18:28:10.8316968Z   HA_SHORT_VERSION: 2026.10
+2026-09-21T18:28:10.8317192Z   ADDITIONAL_PYTHON_VERSIONS: []
+2026-09-21T18:28:10.8317545Z   MARIADB_VERSIONS: ['mariadb:10.3.32','mariadb:10.6.10','mariadb:10.10.3','mariadb:10.11.2','mariadb:11.4.9','mysql:8.0.32']
+2026-09-21T18:28:10.8317990Z   POSTGRESQL_VERSIONS: ['postgres:12.22','postgres:15.19', 'postgres:18.6']
+2026-09-21T18:28:10.8318385Z   SQLITE_VERSIONS: [{"version": "3.40.1", "year": "2022"}, {"version": "3.53.4", "year": "2026"}]
+2026-09-21T18:28:10.8318898Z   RECORDER_TEST_DIRS: tests/components/history tests/components/logbook tests/components/recorder tests/components/sensor
+2026-09-21T18:28:10.8319309Z   UV_CACHE_DIR: /tmp/uv-cache
+2026-09-21T18:28:10.8319502Z   APT_CACHE_VERSION: 1
+2026-09-21T18:28:10.8319681Z   SQLALCHEMY_WARN_20: 1
+2026-09-21T18:28:10.8319857Z   PYTHONASYNCIODEBUG: 1
+2026-09-21T18:28:10.8320020Z   HASS_CI: 1
+2026-09-21T18:28:10.8320173Z ##[endgroup]
+2026-09-21T18:28:10.9149475Z Syncing repository: home-assistant/core
+2026-09-21T18:28:10.9150635Z ##[group]Getting Git version info
+2026-09-21T18:28:10.9150931Z Working directory is '/home/runner/work/core/core'
+2026-09-21T18:28:10.9151357Z [command]/usr/bin/git version
+2026-09-21T18:28:11.0213910Z git version 2.55.0
+2026-09-21T18:28:11.0231659Z ##[endgroup]
+2026-09-21T18:28:11.0243600Z Temporarily overriding HOME='/home/runner/work/_temp/c70e5cd2-43b5-4971-9f4b-48e2aef94ce3' before making global git config changes
+2026-09-21T18:28:11.0244801Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-21T18:28:11.0250128Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/core/core
+2026-09-21T18:28:11.0918953Z Deleting the contents of '/home/runner/work/core/core'
+2026-09-21T18:28:11.0923349Z ##[group]Determining repository object format
+2026-09-21T18:28:11.0925186Z ##[endgroup]
+2026-09-21T18:28:11.0925603Z ##[group]Initializing the repository
+2026-09-21T18:28:11.0929390Z [command]/usr/bin/git init /home/runner/work/core/core
+2026-09-21T18:28:11.1038371Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-09-21T18:28:11.1038867Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-09-21T18:28:11.1039250Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-09-21T18:28:11.1039542Z hint: call:
+2026-09-21T18:28:11.1039781Z hint:
+2026-09-21T18:28:11.1040124Z hint: 	git config --global init.defaultBranch <name>
+2026-09-21T18:28:11.1040460Z hint:
+2026-09-21T18:28:11.1040764Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-09-21T18:28:11.1041261Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-09-21T18:28:11.1041644Z hint:
+2026-09-21T18:28:11.1041855Z hint: 	git branch -m <name>
+2026-09-21T18:28:11.1042094Z hint:
+2026-09-21T18:28:11.1042397Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-09-21T18:28:11.1043368Z Initialized empty Git repository in /home/runner/work/core/core/.git/
+2026-09-21T18:28:11.1050252Z [command]/usr/bin/git remote add origin https://github.com/home-assistant/core
+2026-09-21T18:28:11.1091694Z ##[endgroup]
+2026-09-21T18:28:11.1092211Z ##[group]Disabling automatic garbage collection
+2026-09-21T18:28:11.1096051Z [command]/usr/bin/git config --local gc.auto 0
+2026-09-21T18:28:11.1119222Z ##[endgroup]
+2026-09-21T18:28:11.1119657Z ##[group]Setting up auth
+2026-09-21T18:28:11.1119962Z Removing SSH command configuration
+2026-09-21T18:28:11.1125102Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-21T18:28:11.1149775Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-21T18:28:11.1561936Z Removing HTTP extra header
+2026-09-21T18:28:11.1567044Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-21T18:28:11.1592236Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-21T18:28:11.1758709Z Removing includeIf entries pointing to credentials config files
+2026-09-21T18:28:11.1763846Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-21T18:28:11.1788464Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-21T18:28:11.1951760Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-5850784a-882f-4e3f-ae54-c52d9d5c6acc.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-09-21T18:28:11.1982866Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/core/core/.git.path /home/runner/work/_temp/git-credentials-5850784a-882f-4e3f-ae54-c52d9d5c6acc.config
+2026-09-21T18:28:11.2006281Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/core/core/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-5850784a-882f-4e3f-ae54-c52d9d5c6acc.config
+2026-09-21T18:28:11.2032369Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-5850784a-882f-4e3f-ae54-c52d9d5c6acc.config
+2026-09-21T18:28:11.2294211Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-5850784a-882f-4e3f-ae54-c52d9d5c6acc.config
+2026-09-21T18:28:11.2316137Z ##[endgroup]
+2026-09-21T18:28:11.2316644Z ##[group]Fetching the repository
+2026-09-21T18:28:11.2321917Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +d3edfe8973a973a51adbb4eac06c0e6e80c26ae4:refs/remotes/pull/182870/merge
+2026-09-21T18:28:15.4369037Z From https://github.com/home-assistant/core
+2026-09-21T18:28:15.4370947Z  * [new ref]           d3edfe8973a973a51adbb4eac06c0e6e80c26ae4 -> pull/182870/merge
+2026-09-21T18:28:15.4372327Z ##[endgroup]
+2026-09-21T18:28:15.4372726Z ##[group]Determining the checkout info
+2026-09-21T18:28:15.4373393Z ##[endgroup]
+2026-09-21T18:28:15.4378354Z [command]/usr/bin/git sparse-checkout disable
+2026-09-21T18:28:15.4519529Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-09-21T18:28:15.4542604Z ##[group]Checking out the ref
+2026-09-21T18:28:15.4546673Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/182870/merge
+2026-09-21T18:28:16.5257681Z Updating files:  99% (28044/28176)
+2026-09-21T18:28:16.5258069Z Updating files: 100% (28176/28176)
+2026-09-21T18:28:16.5258297Z Updating files: 100% (28176/28176), done.
+2026-09-21T18:28:16.5489646Z Note: switching to 'refs/remotes/pull/182870/merge'.
+2026-09-21T18:28:16.5489945Z 
+2026-09-21T18:28:16.5490548Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-09-21T18:28:16.5491411Z changes and commit them, and you can discard any commits you make in this
+2026-09-21T18:28:16.5491953Z state without impacting any branches by switching back to a branch.
+2026-09-21T18:28:16.5492226Z 
+2026-09-21T18:28:16.5492434Z If you want to create a new branch to retain commits you create, you may
+2026-09-21T18:28:16.5492823Z do so (now or later) by using -c with the switch command. Example:
+2026-09-21T18:28:16.5493026Z 
+2026-09-21T18:28:16.5493351Z   git switch -c <new-branch-name>
+2026-09-21T18:28:16.5493556Z 
+2026-09-21T18:28:16.5493693Z Or undo this operation with:
+2026-09-21T18:28:16.5493842Z 
+2026-09-21T18:28:16.5493918Z   git switch -
+2026-09-21T18:28:16.5494030Z 
+2026-09-21T18:28:16.5494196Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-09-21T18:28:16.5494433Z 
+2026-09-21T18:28:16.5494729Z HEAD is now at d3edfe89 Merge 74f0e05955036a38e09cf27b3d2f2f656ac793ba into 90233bf798181ca5dad08e638ba19feb2f3f38e7
+2026-09-21T18:28:16.5531403Z ##[endgroup]
+2026-09-21T18:28:16.6250036Z [command]/usr/bin/git log -1 --format=%H
+2026-09-21T18:28:16.6273679Z d3edfe8973a973a51adbb4eac06c0e6e80c26ae4
+2026-09-21T18:28:16.6283709Z ##[group]Removing auth
+2026-09-21T18:28:16.6284049Z Removing SSH command configuration
+2026-09-21T18:28:16.6294158Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-21T18:28:16.6314981Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-21T18:28:16.6506938Z Removing HTTP extra header
+2026-09-21T18:28:16.6524188Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-21T18:28:16.6535913Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-21T18:28:16.6723577Z Removing includeIf entries pointing to credentials config files
+2026-09-21T18:28:16.6727029Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-21T18:28:16.6749529Z includeif.gitdir:/home/runner/work/core/core/.git.path
+2026-09-21T18:28:16.6750060Z includeif.gitdir:/home/runner/work/core/core/.git/worktrees/*.path
+2026-09-21T18:28:16.6750498Z includeif.gitdir:/github/workspace/.git.path
+2026-09-21T18:28:16.6750891Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-09-21T18:28:16.6757422Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/core/core/.git.path
+2026-09-21T18:28:16.6774230Z /home/runner/work/_temp/git-credentials-5850784a-882f-4e3f-ae54-c52d9d5c6acc.config
+2026-09-21T18:28:16.6789302Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/core/core/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-5850784a\-882f\-4e3f\-ae54\-c52d9d5c6acc\.config
+2026-09-21T18:28:16.6814200Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/core/core/.git/worktrees/*.path
+2026-09-21T18:28:16.6831090Z /home/runner/work/_temp/git-credentials-5850784a-882f-4e3f-ae54-c52d9d5c6acc.config
+2026-09-21T18:28:16.6840644Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/core/core/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-5850784a\-882f\-4e3f\-ae54\-c52d9d5c6acc\.config
+2026-09-21T18:28:16.6868565Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-09-21T18:28:16.6884455Z /github/runner_temp/git-credentials-5850784a-882f-4e3f-ae54-c52d9d5c6acc.config
+2026-09-21T18:28:16.6891150Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-5850784a\-882f\-4e3f\-ae54\-c52d9d5c6acc\.config
+2026-09-21T18:28:16.6913403Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-09-21T18:28:16.6933476Z /github/runner_temp/git-credentials-5850784a-882f-4e3f-ae54-c52d9d5c6acc.config
+2026-09-21T18:28:16.6940159Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-5850784a\-882f\-4e3f\-ae54\-c52d9d5c6acc\.config
+2026-09-21T18:28:16.6964921Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-21T18:28:16.7152845Z Removing credentials config '/home/runner/work/_temp/git-credentials-5850784a-882f-4e3f-ae54-c52d9d5c6acc.config'
+2026-09-21T18:28:16.7159606Z ##[endgroup]
+2026-09-21T18:28:16.7379516Z ##[group]Run home-assistant/core/.github/actions/restore-or-build-venv@d3edfe8973a973a51adbb4eac06c0e6e80c26ae4
+2026-09-21T18:28:16.7379946Z with:
+2026-09-21T18:28:16.7380124Z   uv-version: 0.12.13
+2026-09-21T18:28:16.7380315Z   python-version: 3.14.5
+2026-09-21T18:28:16.7381584Z   python-cache-key: venv-4-2026.10-c1b9a8b3f4444e68a2624dc72c1c393372a8d4e120967743c6dd01514a035e28-ce7158ef3ed6d31563a9d2b18730de41d680bb56d2d1c4dacc067dd8a180fc4f-57880d87bf95b2ade12f44656bdf8574b64c18350a6a2219e91cf40334192134-4358f662fcf5f9bb9635e073a0f29a592888159bd92e1bdfa1bc7a9dfb0d4b97-f542e4e7245cd70d52627d05f7452d1ec3bb89954b4268a590bbb3df8ec8532e
+2026-09-21T18:28:16.7383030Z   uv-cache-dir: /tmp/uv-cache
+2026-09-21T18:28:16.7383566Z   apt-cache-version: 1
+2026-09-21T18:28:16.7383760Z   save: true
+2026-09-21T18:28:16.7383924Z env:
+2026-09-21T18:28:16.7384085Z   CACHE_VERSION: 4
+2026-09-21T18:28:16.7384261Z   MYPY_CACHE_VERSION: 1
+2026-09-21T18:28:16.7384453Z   HA_SHORT_VERSION: 2026.10
+2026-09-21T18:28:16.7384712Z   ADDITIONAL_PYTHON_VERSIONS: []
+2026-09-21T18:28:16.7385098Z   MARIADB_VERSIONS: ['mariadb:10.3.32','mariadb:10.6.10','mariadb:10.10.3','mariadb:10.11.2','mariadb:11.4.9','mysql:8.0.32']
+2026-09-21T18:28:16.7385577Z   POSTGRESQL_VERSIONS: ['postgres:12.22','postgres:15.19', 'postgres:18.6']
+2026-09-21T18:28:16.7385996Z   SQLITE_VERSIONS: [{"version": "3.40.1", "year": "2022"}, {"version": "3.53.4", "year": "2026"}]
+2026-09-21T18:28:16.7386527Z   RECORDER_TEST_DIRS: tests/components/history tests/components/logbook tests/components/recorder tests/components/sensor
+2026-09-21T18:28:16.7386954Z   UV_CACHE_DIR: /tmp/uv-cache
+2026-09-21T18:28:16.7387158Z   APT_CACHE_VERSION: 1
+2026-09-21T18:28:16.7387368Z   SQLALCHEMY_WARN_20: 1
+2026-09-21T18:28:16.7387582Z   PYTHONASYNCIODEBUG: 1
+2026-09-21T18:28:16.7387845Z   HASS_CI: 1
+2026-09-21T18:28:16.7388025Z ##[endgroup]
+2026-09-21T18:28:16.7442375Z ##[start-action display=Set up uv and managed Python;id=python.python]
+2026-09-21T18:28:16.7488823Z ##[group]Run home-assistant/core/.github/actions/setup-uv-python@d3edfe8973a973a51adbb4eac06c0e6e80c26ae4
+2026-09-21T18:28:16.7489231Z with:
+2026-09-21T18:28:16.7489406Z   uv-version: 0.12.13
+2026-09-21T18:28:16.7489596Z   python-version: 3.14.5
+2026-09-21T18:28:16.7489792Z env:
+2026-09-21T18:28:16.7489959Z   CACHE_VERSION: 4
+2026-09-21T18:28:16.7490165Z   MYPY_CACHE_VERSION: 1
+2026-09-21T18:28:16.7490363Z   HA_SHORT_VERSION: 2026.10
+2026-09-21T18:28:16.7490576Z   ADDITIONAL_PYTHON_VERSIONS: []
+2026-09-21T18:28:16.7490971Z   MARIADB_VERSIONS: ['mariadb:10.3.32','mariadb:10.6.10','mariadb:10.10.3','mariadb:10.11.2','mariadb:11.4.9','mysql:8.0.32']
+2026-09-21T18:28:16.7491459Z   POSTGRESQL_VERSIONS: ['postgres:12.22','postgres:15.19', 'postgres:18.6']
+2026-09-21T18:28:16.7491884Z   SQLITE_VERSIONS: [{"version": "3.40.1", "year": "2022"}, {"version": "3.53.4", "year": "2026"}]
+2026-09-21T18:28:16.7492428Z   RECORDER_TEST_DIRS: tests/components/history tests/components/logbook tests/components/recorder tests/components/sensor
+2026-09-21T18:28:16.7492877Z   UV_CACHE_DIR: /tmp/uv-cache
+2026-09-21T18:28:16.7493221Z   APT_CACHE_VERSION: 1
+2026-09-21T18:28:16.7493433Z   SQLALCHEMY_WARN_20: 1
+2026-09-21T18:28:16.7493634Z   PYTHONASYNCIODEBUG: 1
+2026-09-21T18:28:16.7493824Z   HASS_CI: 1
+2026-09-21T18:28:16.7494063Z ##[endgroup]
+2026-09-21T18:28:16.7497519Z ##[start-action display=Set up uv;id=python.python.uv]
+2026-09-21T18:28:16.7547424Z ##[group]Run astral-sh/setup-uv@11f9893b081a58869d3b5fccaea48c9e9e46f990
+2026-09-21T18:28:16.7547736Z with:
+2026-09-21T18:28:16.7547916Z   version: 0.12.13
+2026-09-21T18:28:16.7548107Z   python-version: 3.14.5
+2026-09-21T18:28:16.7548308Z   cache-python: true
+2026-09-21T18:28:16.7548513Z   ignore-nothing-to-cache: true
+2026-09-21T18:28:16.7548736Z   activate-environment: false
+2026-09-21T18:28:16.7548955Z   no-project: false
+2026-09-21T18:28:16.7549170Z   working-directory: /home/runner/work/core/core
+2026-09-21T18:28:16.7551318Z   github-token: ***
+2026-09-21T18:28:16.7551636Z   enable-cache: auto
+2026-09-21T18:28:16.7552100Z   cache-dependency-glob: **/*requirements*.txt
+**/*requirements*.in
+**/*constraints*.txt
+**/*constraints*.in
+**/pyproject.toml
+**/uv.lock
+**/*.py.lock
+
+2026-09-21T18:28:16.7552575Z   restore-cache: true
+2026-09-21T18:28:16.7552770Z   save-cache: true
+2026-09-21T18:28:16.7553034Z   prune-cache: true
+2026-09-21T18:28:16.7553369Z   ignore-empty-workdir: false
+2026-09-21T18:28:16.7553602Z   download-from-astral-mirror: true
+2026-09-21T18:28:16.7553844Z   add-problem-matchers: true
+2026-09-21T18:28:16.7554110Z   quiet: false
+2026-09-21T18:28:16.7554299Z   resolution-strategy: highest
+2026-09-21T18:28:16.7554504Z env:
+2026-09-21T18:28:16.7554666Z   CACHE_VERSION: 4
+2026-09-21T18:28:16.7554840Z   MYPY_CACHE_VERSION: 1
+2026-09-21T18:28:16.7555038Z   HA_SHORT_VERSION: 2026.10
+2026-09-21T18:28:16.7555256Z   ADDITIONAL_PYTHON_VERSIONS: []
+2026-09-21T18:28:16.7555650Z   MARIADB_VERSIONS: ['mariadb:10.3.32','mariadb:10.6.10','mariadb:10.10.3','mariadb:10.11.2','mariadb:11.4.9','mysql:8.0.32']
+2026-09-21T18:28:16.7556128Z   POSTGRESQL_VERSIONS: ['postgres:12.22','postgres:15.19', 'postgres:18.6']
+2026-09-21T18:28:16.7556541Z   SQLITE_VERSIONS: [{"version": "3.40.1", "year": "2022"}, {"version": "3.53.4", "year": "2026"}]
+2026-09-21T18:28:16.7557078Z   RECORDER_TEST_DIRS: tests/components/history tests/components/logbook tests/components/recorder tests/components/sensor
+2026-09-21T18:28:16.7557521Z   UV_CACHE_DIR: /tmp/uv-cache
+2026-09-21T18:28:16.7557727Z   APT_CACHE_VERSION: 1
+2026-09-21T18:28:16.7557915Z   SQLALCHEMY_WARN_20: 1
+2026-09-21T18:28:16.7558114Z   PYTHONASYNCIODEBUG: 1
+2026-09-21T18:28:16.7558309Z   HASS_CI: 1
+2026-09-21T18:28:16.7558469Z ##[endgroup]
+2026-09-21T18:28:16.8890301Z UV_CACHE_DIR is already set to /tmp/uv-cache
+2026-09-21T18:28:16.9001174Z Fetching manifest data from https://raw.githubusercontent.com/astral-sh/versions/main/v1/uv.ndjson ...
+2026-09-21T18:28:16.9542359Z ##[error]fetch failed
+2026-09-21T18:28:16.9591278Z ##[end-action id=python.python.uv;outcome=failure;conclusion=failure;duration_ms=209]
+2026-09-21T18:28:16.9596730Z ##[start-action display=Install Python interpreter;id=python.python.__run]
+2026-09-21T18:28:16.9599271Z ##[end-action id=python.python.__run;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-09-21T18:28:16.9642200Z ##[end-action id=python.python;outcome=failure;conclusion=failure;duration_ms=219]
+2026-09-21T18:28:16.9644388Z ##[start-action display=Restore full Python virtual environment;id=python.cache-venv]
+2026-09-21T18:28:16.9646223Z ##[end-action id=python.cache-venv;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-09-21T18:28:17.0146444Z ##[start-action display=Generate partial uv restore key;id=python.generate-uv-key]
+2026-09-21T18:28:17.0158088Z ##[end-action id=python.generate-uv-key;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-09-21T18:28:17.0160006Z ##[start-action display=Restore uv wheel cache;id=python.__actions_cache]
+2026-09-21T18:28:17.0162330Z ##[end-action id=python.__actions_cache;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-09-21T18:28:17.0164020Z ##[start-action display=Install additional OS dependencies;id=python.__selfRepository]
+2026-09-21T18:28:17.0166090Z ##[end-action id=python.__selfRepository;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-09-21T18:28:17.0168079Z ##[start-action display=Create Python virtual environment;id=python.create-venv]
+2026-09-21T18:28:17.0169805Z ##[end-action id=python.create-venv;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-09-21T18:28:17.0171060Z ##[start-action display=Prune uv cache;id=python.__run]
+2026-09-21T18:28:17.0175145Z ##[end-action id=python.__run;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-09-21T18:28:17.0176629Z ##[start-action display=Save uv wheel cache;id=python.__actions_cache_2]
+2026-09-21T18:28:17.0178903Z ##[end-action id=python.__actions_cache_2;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-09-21T18:28:17.0180576Z ##[start-action display=Save full Python virtual environment;id=python.__actions_cache_3]
+2026-09-21T18:28:17.0189929Z ##[end-action id=python.__actions_cache_3;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-09-21T18:28:17.0326817Z Post job cleanup.
+2026-09-21T18:28:17.0329994Z ##[start-action display=Set up uv and managed Python;id=__754f34bb-c53e-437b-91a9-6e35414341d9.python]
+2026-09-21T18:28:17.0366415Z Post job cleanup.
+2026-09-21T18:28:17.0368787Z ##[start-action display=Set up uv;id=__754f34bb-c53e-437b-91a9-6e35414341d9.python.uv]
+2026-09-21T18:28:17.0370466Z ##[end-action id=__754f34bb-c53e-437b-91a9-6e35414341d9.python.uv;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-09-21T18:28:17.0374576Z ##[end-action id=__754f34bb-c53e-437b-91a9-6e35414341d9.python;outcome=success;conclusion=success;duration_ms=4]
+2026-09-21T18:28:17.0423723Z Post job cleanup.
+2026-09-21T18:28:17.1140142Z [command]/usr/bin/git version
+2026-09-21T18:28:17.1172031Z git version 2.55.0
+2026-09-21T18:28:17.1197701Z Temporarily overriding HOME='/home/runner/work/_temp/c194e06a-b5dd-4618-99d6-784801978019' before making global git config changes
+2026-09-21T18:28:17.1198652Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-21T18:28:17.1201760Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/core/core
+2026-09-21T18:28:17.1226585Z Removing SSH command configuration
+2026-09-21T18:28:17.1231837Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-21T18:28:17.1258942Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-21T18:28:17.1449208Z Removing HTTP extra header
+2026-09-21T18:28:17.1453275Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-21T18:28:17.1477845Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-21T18:28:17.1651940Z Removing includeIf entries pointing to credentials config files
+2026-09-21T18:28:17.1657338Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-21T18:28:17.1679912Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-21T18:28:17.1990756Z Cleaning up orphan processes

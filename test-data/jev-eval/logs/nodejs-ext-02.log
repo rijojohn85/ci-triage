@@ -1,0 +1,516 @@
+﻿2026-09-17T04:00:17.5586335Z Current runner version: '2.337.0'
+2026-09-17T04:00:17.5642663Z ##[group]Runner Image Provisioner
+2026-09-17T04:00:17.5643577Z Hosted Compute Agent
+2026-09-17T04:00:17.5644155Z Version: 20260707.563
+2026-09-17T04:00:17.5644738Z Commit: 02667638d2b423fbc733a8e32a88b44996a3ba6e
+2026-09-17T04:00:17.5645708Z Build Date: 2026-07-07T19:33:50Z
+2026-09-17T04:00:17.5646390Z Worker ID: {4c4296ff-cc1b-49f3-b7d5-3b634836b2e1}
+2026-09-17T04:00:17.5647097Z Azure Region: eastus
+2026-09-17T04:00:17.5647642Z ##[endgroup]
+2026-09-17T04:00:17.5649198Z ##[group]VM Image
+2026-09-17T04:00:17.5649834Z - OS: Linux (x64)
+2026-09-17T04:00:17.5650444Z - Source: Docker
+2026-09-17T04:00:17.5650957Z - Name: ubuntu:24.04
+2026-09-17T04:00:17.5651546Z - Version: 20260728.2.1
+2026-09-17T04:00:17.5663484Z ##[endgroup]
+2026-09-17T04:00:17.5664699Z ##[group]GITHUB_TOKEN Permissions
+2026-09-17T04:00:17.5667857Z Contents: read
+2026-09-17T04:00:17.5668436Z Metadata: read
+2026-09-17T04:00:17.5668953Z ##[endgroup]
+2026-09-17T04:00:17.5671343Z Secret source: Actions
+2026-09-17T04:00:17.5684132Z Cache mode: write
+2026-09-17T04:00:17.5685033Z Prepare workflow directory
+2026-09-17T04:00:17.6667177Z Prepare all required actions
+2026-09-17T04:00:17.6771287Z Getting action download info
+2026-09-17T04:00:18.0410019Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-09-17T04:00:20.6989849Z Download action repository 'actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97' (SHA:5fda3b95a4ea91299a34e894583c3862153e4b97)
+2026-09-17T04:00:22.7613558Z Download action repository 'actions/setup-node@820762786026740c76f36085b0efc47a31fe5020' (SHA:820762786026740c76f36085b0efc47a31fe5020)
+2026-09-17T04:00:24.5559742Z Download action repository 'actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a' (SHA:043fb46d1a93c77aae656e7c1c64a875d1fc6a0a)
+2026-09-17T04:00:25.7374753Z Complete job name: build-tarball
+2026-09-17T04:00:25.8443796Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+2026-09-17T04:00:25.8445777Z with:
+2026-09-17T04:00:25.8446700Z   persist-credentials: false
+2026-09-17T04:00:25.8447791Z   repository: nodejs/node
+2026-09-17T04:00:25.8457415Z   token: ***
+2026-09-17T04:00:25.8458364Z   ssh-strict: true
+2026-09-17T04:00:25.8459279Z   ssh-user: git
+2026-09-17T04:00:25.8460161Z   clean: true
+2026-09-17T04:00:25.8461109Z   sparse-checkout-cone-mode: true
+2026-09-17T04:00:25.8462460Z   fetch-depth: 1
+2026-09-17T04:00:25.8463445Z   fetch-tags: false
+2026-09-17T04:00:25.8464386Z   show-progress: true
+2026-09-17T04:00:25.8465350Z   lfs: false
+2026-09-17T04:00:25.8466224Z   submodules: false
+2026-09-17T04:00:25.8467177Z   set-safe-directory: true
+2026-09-17T04:00:25.8468258Z   allow-unsafe-pr-checkout: false
+2026-09-17T04:00:25.8469736Z env:
+2026-09-17T04:00:25.8470604Z   PYTHON_VERSION: 3.14
+2026-09-17T04:00:25.8471610Z   FLAKY_TESTS: keep_retrying
+2026-09-17T04:00:25.8472974Z   CLANG_VERSION: 19
+2026-09-17T04:00:25.8473922Z   NODE_VERSION: lts/*
+2026-09-17T04:00:25.8474871Z ##[endgroup]
+2026-09-17T04:00:26.0780683Z Syncing repository: nodejs/node
+2026-09-17T04:00:26.0794267Z ##[group]Getting Git version info
+2026-09-17T04:00:26.0795636Z Working directory is '/home/runner/work/node/node'
+2026-09-17T04:00:26.1636222Z [command]/usr/bin/git version
+2026-09-17T04:00:26.3556873Z git version 2.54.0
+2026-09-17T04:00:26.3627981Z ##[endgroup]
+2026-09-17T04:00:26.3653055Z Temporarily overriding HOME='/home/runner/work/_temp/4a2cf2cd-4fe2-4a29-8259-6e8effaf76a7' before making global git config changes
+2026-09-17T04:00:26.3658004Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-17T04:00:26.3667926Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/node/node
+2026-09-17T04:00:26.4021061Z Deleting the contents of '/home/runner/work/node/node'
+2026-09-17T04:00:26.4034512Z ##[group]Determining repository object format
+2026-09-17T04:00:26.4047878Z ##[endgroup]
+2026-09-17T04:00:26.4050076Z ##[group]Initializing the repository
+2026-09-17T04:00:26.4065773Z [command]/usr/bin/git init /home/runner/work/node/node
+2026-09-17T04:00:26.7481527Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-09-17T04:00:26.7489587Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-09-17T04:00:26.7500781Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-09-17T04:00:26.7505319Z hint: call:
+2026-09-17T04:00:26.7508114Z hint:
+2026-09-17T04:00:26.7513568Z hint: 	git config --global init.defaultBranch <name>
+2026-09-17T04:00:26.7516907Z hint:
+2026-09-17T04:00:26.7525143Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-09-17T04:00:26.7545275Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-09-17T04:00:26.7546896Z hint:
+2026-09-17T04:00:26.7547769Z hint: 	git branch -m <name>
+2026-09-17T04:00:26.7548823Z hint:
+2026-09-17T04:00:26.7550129Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-09-17T04:00:26.7577380Z Initialized empty Git repository in /home/runner/work/node/node/.git/
+2026-09-17T04:00:26.7580866Z [command]/usr/bin/git remote add origin https://github.com/nodejs/node
+2026-09-17T04:00:27.4554081Z ##[endgroup]
+2026-09-17T04:00:27.4555780Z ##[group]Disabling automatic garbage collection
+2026-09-17T04:00:27.4557198Z [command]/usr/bin/git config --local gc.auto 0
+2026-09-17T04:00:27.4560448Z ##[endgroup]
+2026-09-17T04:00:27.4563111Z ##[group]Setting up auth
+2026-09-17T04:00:27.4564297Z Removing SSH command configuration
+2026-09-17T04:00:27.4565831Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-17T04:00:27.4570145Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-17T04:00:27.5701128Z Removing HTTP extra header
+2026-09-17T04:00:27.5707652Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-17T04:00:27.5765630Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-17T04:00:27.5966191Z Removing includeIf entries pointing to credentials config files
+2026-09-17T04:00:27.5972642Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-17T04:00:27.6002837Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-17T04:00:27.6276357Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-981fda3b-f5c6-4d12-a56f-c2fe0165862f.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-09-17T04:00:27.6324022Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/node/node/.git.path /home/runner/work/_temp/git-credentials-981fda3b-f5c6-4d12-a56f-c2fe0165862f.config
+2026-09-17T04:00:27.6356993Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/node/node/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-981fda3b-f5c6-4d12-a56f-c2fe0165862f.config
+2026-09-17T04:00:27.6746468Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-981fda3b-f5c6-4d12-a56f-c2fe0165862f.config
+2026-09-17T04:00:27.6790050Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-981fda3b-f5c6-4d12-a56f-c2fe0165862f.config
+2026-09-17T04:00:27.7089573Z ##[endgroup]
+2026-09-17T04:00:27.7092269Z ##[group]Fetching the repository
+2026-09-17T04:00:27.7121425Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +e204ae8ce527f434ae5fe84f5a2568e2ae19a749:refs/remotes/origin/main
+2026-09-17T04:00:39.5115895Z From https://github.com/nodejs/node
+2026-09-17T04:00:39.5116650Z  * [new ref]           e204ae8ce527f434ae5fe84f5a2568e2ae19a749 -> origin/main
+2026-09-17T04:00:39.5266725Z [command]/usr/bin/git branch --list --remote origin/main
+2026-09-17T04:00:39.5345924Z   origin/main
+2026-09-17T04:00:39.5370615Z [command]/usr/bin/git rev-parse refs/remotes/origin/main
+2026-09-17T04:00:39.5428793Z e204ae8ce527f434ae5fe84f5a2568e2ae19a749
+2026-09-17T04:00:39.5449569Z ##[endgroup]
+2026-09-17T04:00:39.5527665Z ##[group]Determining the checkout info
+2026-09-17T04:00:39.5533189Z ##[endgroup]
+2026-09-17T04:00:39.5543310Z [command]/usr/bin/git sparse-checkout disable
+2026-09-17T04:00:39.5666139Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-09-17T04:00:39.5709605Z ##[group]Checking out the ref
+2026-09-17T04:00:39.5759614Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2026-09-17T04:00:40.7385223Z Updating files:   6% (3406/51795)
+2026-09-17T04:00:40.8463968Z Updating files:   7% (3626/51795)
+2026-09-17T04:00:40.9842443Z Updating files:   8% (4144/51795)
+2026-09-17T04:00:41.1652997Z Updating files:   9% (4662/51795)
+2026-09-17T04:00:41.9693929Z Updating files:  10% (5180/51795)
+2026-09-17T04:00:41.9765002Z Updating files:  11% (5698/51795)
+2026-09-17T04:00:41.9766091Z Updating files:  12% (6216/51795)
+2026-09-17T04:00:41.9766466Z Updating files:  13% (6734/51795)
+2026-09-17T04:00:41.9766802Z Updating files:  14% (7252/51795)
+2026-09-17T04:00:41.9767099Z Updating files:  15% (7770/51795)
+2026-09-17T04:00:41.9767401Z Updating files:  16% (8288/51795)
+2026-09-17T04:00:41.9767701Z Updating files:  16% (8387/51795)
+2026-09-17T04:00:42.0145660Z Updating files:  17% (8806/51795)
+2026-09-17T04:00:42.1799578Z Updating files:  18% (9324/51795)
+2026-09-17T04:00:42.2879327Z Updating files:  19% (9842/51795)
+2026-09-17T04:00:42.3906670Z Updating files:  20% (10359/51795)
+2026-09-17T04:00:42.4869480Z Updating files:  21% (10877/51795)
+2026-09-17T04:00:42.6284933Z Updating files:  22% (11395/51795)
+2026-09-17T04:00:42.6814417Z Updating files:  23% (11913/51795)
+2026-09-17T04:00:42.8049070Z Updating files:  23% (12047/51795)
+2026-09-17T04:00:42.9680941Z Updating files:  24% (12431/51795)
+2026-09-17T04:00:43.0931036Z Updating files:  25% (12949/51795)
+2026-09-17T04:00:43.2260057Z Updating files:  26% (13467/51795)
+2026-09-17T04:00:43.4107787Z Updating files:  27% (13985/51795)
+2026-09-17T04:00:43.5053302Z Updating files:  28% (14503/51795)
+2026-09-17T04:00:43.5907425Z Updating files:  29% (15021/51795)
+2026-09-17T04:00:43.6855656Z Updating files:  30% (15539/51795)
+2026-09-17T04:00:43.9513860Z Updating files:  30% (15880/51795)
+2026-09-17T04:00:44.0646489Z Updating files:  31% (16057/51795)
+2026-09-17T04:00:44.2302624Z Updating files:  32% (16575/51795)
+2026-09-17T04:00:44.3910333Z Updating files:  33% (17093/51795)
+2026-09-17T04:00:44.5925860Z Updating files:  34% (17611/51795)
+2026-09-17T04:00:44.6820066Z Updating files:  35% (18129/51795)
+2026-09-17T04:00:44.7031111Z Updating files:  35% (18415/51795)
+2026-09-17T04:00:44.8985020Z Updating files:  36% (18647/51795)
+2026-09-17T04:00:45.0895464Z Updating files:  37% (19165/51795)
+2026-09-17T04:00:45.3040807Z Updating files:  38% (19683/51795)
+2026-09-17T04:00:45.3868793Z Updating files:  39% (20201/51795)
+2026-09-17T04:00:45.4304651Z Updating files:  40% (20718/51795)
+2026-09-17T04:00:45.4726981Z Updating files:  41% (21236/51795)
+2026-09-17T04:00:45.5158847Z Updating files:  42% (21754/51795)
+2026-09-17T04:00:45.5867747Z Updating files:  43% (22272/51795)
+2026-09-17T04:00:45.6811107Z Updating files:  44% (22790/51795)
+2026-09-17T04:00:45.6862275Z Updating files:  44% (23279/51795)
+2026-09-17T04:00:45.7993018Z Updating files:  45% (23308/51795)
+2026-09-17T04:00:45.8827097Z Updating files:  46% (23826/51795)
+2026-09-17T04:00:45.9147394Z Updating files:  47% (24344/51795)
+2026-09-17T04:00:45.9448765Z Updating files:  48% (24862/51795)
+2026-09-17T04:00:46.0343290Z Updating files:  49% (25380/51795)
+2026-09-17T04:00:46.0652728Z Updating files:  50% (25898/51795)
+2026-09-17T04:00:46.0892372Z Updating files:  51% (26416/51795)
+2026-09-17T04:00:46.1136093Z Updating files:  52% (26934/51795)
+2026-09-17T04:00:46.1451198Z Updating files:  53% (27452/51795)
+2026-09-17T04:00:46.1824589Z Updating files:  54% (27970/51795)
+2026-09-17T04:00:46.2020038Z Updating files:  55% (28488/51795)
+2026-09-17T04:00:46.2486594Z Updating files:  56% (29006/51795)
+2026-09-17T04:00:46.2901431Z Updating files:  57% (29524/51795)
+2026-09-17T04:00:46.3329164Z Updating files:  58% (30042/51795)
+2026-09-17T04:00:46.3877155Z Updating files:  59% (30560/51795)
+2026-09-17T04:00:46.4724829Z Updating files:  60% (31077/51795)
+2026-09-17T04:00:46.5694784Z Updating files:  61% (31595/51795)
+2026-09-17T04:00:46.7433973Z Updating files:  62% (32113/51795)
+2026-09-17T04:00:46.8389208Z Updating files:  62% (32179/51795)
+2026-09-17T04:00:46.8945589Z Updating files:  63% (32631/51795)
+2026-09-17T04:00:46.9526364Z Updating files:  64% (33149/51795)
+2026-09-17T04:00:47.0498105Z Updating files:  65% (33667/51795)
+2026-09-17T04:00:47.1222979Z Updating files:  66% (34185/51795)
+2026-09-17T04:00:47.1511444Z Updating files:  67% (34703/51795)
+2026-09-17T04:00:47.2527808Z Updating files:  68% (35221/51795)
+2026-09-17T04:00:47.3137039Z Updating files:  69% (35739/51795)
+2026-09-17T04:00:47.3742152Z Updating files:  70% (36257/51795)
+2026-09-17T04:00:47.4476285Z Updating files:  71% (36775/51795)
+2026-09-17T04:00:47.5829121Z Updating files:  72% (37293/51795)
+2026-09-17T04:00:47.6427600Z Updating files:  73% (37811/51795)
+2026-09-17T04:00:47.6808697Z Updating files:  74% (38329/51795)
+2026-09-17T04:00:47.6851160Z Updating files:  74% (38762/51795)
+2026-09-17T04:00:47.7074402Z Updating files:  75% (38847/51795)
+2026-09-17T04:00:47.7407788Z Updating files:  76% (39365/51795)
+2026-09-17T04:00:47.7631376Z Updating files:  77% (39883/51795)
+2026-09-17T04:00:47.8434653Z Updating files:  78% (40401/51795)
+2026-09-17T04:00:47.9256160Z Updating files:  79% (40919/51795)
+2026-09-17T04:00:47.9508665Z Updating files:  80% (41436/51795)
+2026-09-17T04:00:48.0010536Z Updating files:  81% (41954/51795)
+2026-09-17T04:00:48.0842961Z Updating files:  82% (42472/51795)
+2026-09-17T04:00:48.1077692Z Updating files:  83% (42990/51795)
+2026-09-17T04:00:48.1503244Z Updating files:  84% (43508/51795)
+2026-09-17T04:00:48.1819674Z Updating files:  85% (44026/51795)
+2026-09-17T04:00:48.2009823Z Updating files:  86% (44544/51795)
+2026-09-17T04:00:48.2368231Z Updating files:  87% (45062/51795)
+2026-09-17T04:00:48.2646035Z Updating files:  88% (45580/51795)
+2026-09-17T04:00:48.2929545Z Updating files:  89% (46098/51795)
+2026-09-17T04:00:48.3254812Z Updating files:  90% (46616/51795)
+2026-09-17T04:00:48.3512680Z Updating files:  91% (47134/51795)
+2026-09-17T04:00:48.3737073Z Updating files:  92% (47652/51795)
+2026-09-17T04:00:48.3979971Z Updating files:  93% (48170/51795)
+2026-09-17T04:00:48.4328842Z Updating files:  94% (48688/51795)
+2026-09-17T04:00:48.4593366Z Updating files:  95% (49206/51795)
+2026-09-17T04:00:48.4930677Z Updating files:  96% (49724/51795)
+2026-09-17T04:00:48.5254594Z Updating files:  97% (50242/51795)
+2026-09-17T04:00:48.5489567Z Updating files:  98% (50760/51795)
+2026-09-17T04:00:48.5979699Z Updating files:  99% (51278/51795)
+2026-09-17T04:00:48.5983926Z Updating files: 100% (51795/51795)
+2026-09-17T04:00:48.5984391Z Updating files: 100% (51795/51795), done.
+2026-09-17T04:00:53.6040929Z Switched to a new branch 'main'
+2026-09-17T04:00:55.3585232Z branch 'main' set up to track 'origin/main'.
+2026-09-17T04:00:55.3653005Z ##[endgroup]
+2026-09-17T04:00:55.3732546Z [command]/usr/bin/git log -1 --format=%H
+2026-09-17T04:00:55.3757775Z e204ae8ce527f434ae5fe84f5a2568e2ae19a749
+2026-09-17T04:00:55.3772912Z ##[group]Removing auth
+2026-09-17T04:00:55.3782242Z Removing SSH command configuration
+2026-09-17T04:00:55.3792935Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-17T04:00:55.3836763Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-17T04:00:55.4112320Z Removing HTTP extra header
+2026-09-17T04:00:55.4122495Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-17T04:00:55.4164249Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-17T04:00:55.4402895Z Removing includeIf entries pointing to credentials config files
+2026-09-17T04:00:55.4415121Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-17T04:00:55.4488221Z includeif.gitdir:/home/runner/work/node/node/.git.path
+2026-09-17T04:00:55.4488824Z includeif.gitdir:/home/runner/work/node/node/.git/worktrees/*.path
+2026-09-17T04:00:55.4490580Z includeif.gitdir:/github/workspace/.git.path
+2026-09-17T04:00:55.4529951Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-09-17T04:00:55.4546604Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/node/node/.git.path
+2026-09-17T04:00:55.4576487Z /home/runner/work/_temp/git-credentials-981fda3b-f5c6-4d12-a56f-c2fe0165862f.config
+2026-09-17T04:00:55.4607640Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/node/node/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-981fda3b\-f5c6\-4d12\-a56f\-c2fe0165862f\.config
+2026-09-17T04:00:55.4709075Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/node/node/.git/worktrees/*.path
+2026-09-17T04:00:55.4748497Z /home/runner/work/_temp/git-credentials-981fda3b-f5c6-4d12-a56f-c2fe0165862f.config
+2026-09-17T04:00:55.4776102Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/node/node/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-981fda3b\-f5c6\-4d12\-a56f\-c2fe0165862f\.config
+2026-09-17T04:00:55.4828785Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-09-17T04:00:55.4853027Z /github/runner_temp/git-credentials-981fda3b-f5c6-4d12-a56f-c2fe0165862f.config
+2026-09-17T04:00:55.4870403Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-981fda3b\-f5c6\-4d12\-a56f\-c2fe0165862f\.config
+2026-09-17T04:00:55.5169057Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-09-17T04:00:55.5195103Z /github/runner_temp/git-credentials-981fda3b-f5c6-4d12-a56f-c2fe0165862f.config
+2026-09-17T04:00:55.5209364Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-981fda3b\-f5c6\-4d12\-a56f\-c2fe0165862f\.config
+2026-09-17T04:00:55.5596445Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-17T04:00:55.5884361Z Removing credentials config '/home/runner/work/_temp/git-credentials-981fda3b-f5c6-4d12-a56f-c2fe0165862f.config'
+2026-09-17T04:00:55.5897657Z ##[endgroup]
+2026-09-17T04:00:55.6294374Z ##[group]Run actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+2026-09-17T04:00:55.6294786Z with:
+2026-09-17T04:00:55.6294986Z   python-version: 3.14
+2026-09-17T04:00:55.6295231Z   allow-prereleases: true
+2026-09-17T04:00:55.6295469Z   check-latest: false
+2026-09-17T04:00:55.6297803Z   token: ***
+2026-09-17T04:00:55.6298018Z   update-environment: true
+2026-09-17T04:00:55.6298265Z   freethreaded: false
+2026-09-17T04:00:55.6298468Z env:
+2026-09-17T04:00:55.6298654Z   PYTHON_VERSION: 3.14
+2026-09-17T04:00:55.6298885Z   FLAKY_TESTS: keep_retrying
+2026-09-17T04:00:55.6299113Z   CLANG_VERSION: 19
+2026-09-17T04:00:55.6299314Z   NODE_VERSION: lts/*
+2026-09-17T04:00:55.6299519Z ##[endgroup]
+2026-09-17T04:00:55.8141004Z ##[group]Installed versions
+2026-09-17T04:00:55.8279149Z Version ~3.14.0-0 was not found in the local cache
+2026-09-17T04:00:56.5656414Z Version ~3.14.0-0 is available for downloading
+2026-09-17T04:00:56.5657253Z Download from "https://github.com/actions/python-versions/releases/download/3.14.7-31064857500/python-3.14.7-linux-24.04-x64.tar.gz"
+2026-09-17T04:00:58.6512277Z Extract downloaded archive
+2026-09-17T04:00:58.6861588Z [command]/usr/bin/tar xz --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/fcfa191e-6c2e-4207-b628-ef762f5b20cf -f /home/runner/work/_temp/17d8bc13-65c5-45e9-99a8-28d4cfecde17
+2026-09-17T04:01:03.6757005Z Execute installation script
+2026-09-17T04:01:03.9205587Z Check if Python hostedtoolcache folder exist...
+2026-09-17T04:01:03.9206114Z Creating Python hostedtoolcache folder...
+2026-09-17T04:01:04.0074495Z Create Python 3.14.7 folder
+2026-09-17T04:01:04.0092287Z Copy Python binaries to hostedtoolcache folder
+2026-09-17T04:01:17.4611551Z Create additional symlinks (Required for the UsePythonVersion Azure Pipelines task and the setup-python GitHub Action)
+2026-09-17T04:01:17.4657442Z Upgrading pip...
+2026-09-17T04:01:56.9218802Z Collecting pip
+2026-09-17T04:01:57.0071489Z Downloading pip-26.2.1-py3-none-any.whl.metadata (4.6 kB)
+2026-09-17T04:01:57.5405421Z Downloading pip-26.2.1-py3-none-any.whl (1.8 MB)
+2026-09-17T04:01:57.9187295Z ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.8/1.8 MB 4.6 MB/s  0:00:00
+2026-09-17T04:01:57.9215197Z 
+2026-09-17T04:01:58.2518624Z Installing collected packages: pip
+2026-09-17T04:01:58.2526772Z Attempting uninstall: pip
+2026-09-17T04:01:58.2542791Z Found existing installation: pip 26.2.1
+2026-09-17T04:01:58.3412763Z Uninstalling pip-26.2.1:
+2026-09-17T04:01:58.3476923Z Successfully uninstalled pip-26.2.1
+2026-09-17T04:02:00.8778269Z Successfully installed pip-26.2.1
+2026-09-17T04:02:01.0861604Z Create complete file
+2026-09-17T04:02:01.1354925Z Successfully set up CPython (3.14.7)
+2026-09-17T04:02:01.1372066Z ##[endgroup]
+2026-09-17T04:02:01.1718472Z ##[group]Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+2026-09-17T04:02:01.1719010Z with:
+2026-09-17T04:02:01.1719205Z   node-version: lts/*
+2026-09-17T04:02:01.1719425Z   check-latest: false
+2026-09-17T04:02:01.1722031Z   token: ***
+2026-09-17T04:02:01.1722257Z   package-manager-cache: true
+2026-09-17T04:02:01.1722527Z env:
+2026-09-17T04:02:01.1722710Z   PYTHON_VERSION: 3.14
+2026-09-17T04:02:01.1722935Z   FLAKY_TESTS: keep_retrying
+2026-09-17T04:02:01.1723161Z   CLANG_VERSION: 19
+2026-09-17T04:02:01.1723363Z   NODE_VERSION: lts/*
+2026-09-17T04:02:01.1723637Z   pythonLocation: /opt/hostedtoolcache/Python/3.14.7/x64
+2026-09-17T04:02:01.1724142Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.14.7/x64/lib/pkgconfig
+2026-09-17T04:02:01.1724571Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.7/x64
+2026-09-17T04:02:01.1724958Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.7/x64
+2026-09-17T04:02:01.1725352Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.7/x64
+2026-09-17T04:02:01.1725727Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.14.7/x64/lib
+2026-09-17T04:02:01.1726048Z ##[endgroup]
+2026-09-17T04:02:01.3777407Z Attempt to resolve LTS alias from manifest...
+2026-09-17T04:02:01.9308221Z Attempting to download 24...
+2026-09-17T04:02:01.9436650Z Acquiring 24.21.0 - x64 from https://github.com/actions/node-versions/releases/download/24.21.0-34304089047/node-24.21.0-linux-x64.tar.gz
+2026-09-17T04:02:02.8083315Z Extracting ...
+2026-09-17T04:02:02.8374131Z [command]/usr/bin/tar xz --strip 1 --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/9ecb0f9e-7803-4f5a-9c0d-46c47633332a -f /home/runner/work/_temp/f9f38f1d-32f1-4a11-a3d1-e6e791a576a6
+2026-09-17T04:02:05.4635944Z Adding to the cache ...
+2026-09-17T04:02:21.6852756Z ##[group]Environment details
+2026-09-17T04:02:22.2693668Z node: v24.21.0
+2026-09-17T04:02:22.2694161Z npm: 11.19.0
+2026-09-17T04:02:22.2694397Z yarn: 
+2026-09-17T04:02:22.2739281Z ##[endgroup]
+2026-09-17T04:02:22.2921072Z ##[group]Run export DISTTYPE=nightly
+2026-09-17T04:02:22.2922286Z export DISTTYPE=nightly
+2026-09-17T04:02:22.2922600Z export DATESTRING=$(date "+%Y-%m-%d")
+2026-09-17T04:02:22.2923033Z export COMMIT=$(git rev-parse --short=10 "$GITHUB_SHA")
+2026-09-17T04:02:22.2923428Z ./configure && make tar -j4 SKIP_XZ=1
+2026-09-17T04:02:22.2950777Z shell: /usr/bin/bash -e {0}
+2026-09-17T04:02:22.2951040Z env:
+2026-09-17T04:02:22.2951241Z   PYTHON_VERSION: 3.14
+2026-09-17T04:02:22.2951476Z   FLAKY_TESTS: keep_retrying
+2026-09-17T04:02:22.2952063Z   CLANG_VERSION: 19
+2026-09-17T04:02:22.2952364Z   NODE_VERSION: lts/*
+2026-09-17T04:02:22.2952650Z   pythonLocation: /opt/hostedtoolcache/Python/3.14.7/x64
+2026-09-17T04:02:22.2953081Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.14.7/x64/lib/pkgconfig
+2026-09-17T04:02:22.2953507Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.7/x64
+2026-09-17T04:02:22.2953922Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.7/x64
+2026-09-17T04:02:22.2954302Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.7/x64
+2026-09-17T04:02:22.2954686Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.14.7/x64/lib
+2026-09-17T04:02:22.2955000Z ##[endgroup]
+2026-09-17T04:02:35.8434373Z Node.js configure: Found Python 3.14.7...
+2026-09-17T04:02:35.8435573Z WARNING: cargo not found! Support for Temporal will be disabled.
+2026-09-17T04:02:35.8438084Z WARNING: rustc not found! Support for Temporal will be disabled.
+2026-09-17T04:02:35.8440595Z INFO: Using floating patch "tools/icu/patches/78/source/i18n/dtfmtsym.cpp" from "tools/icu"
+2026-09-17T04:02:35.8443323Z WARNING: warnings were emitted in the configure phase
+2026-09-17T04:02:35.8504044Z INFO: configure completed successfully
+2026-09-17T04:02:36.6945358Z SKIP_XZ=1 supplied, skipping .tar.xz creation
+2026-09-17T04:02:38.4640082Z mkdir -p out/doc
+2026-09-17T04:02:38.4654233Z cp doc/node-config-schema.json out/doc
+2026-09-17T04:02:38.4720134Z mkdir -p out/doc/api
+2026-09-17T04:02:38.4859236Z cp -r doc/api out/doc
+2026-09-17T04:03:43.6702339Z 
+2026-09-17T04:03:43.6711154Z added 310 packages, and audited 311 packages in 1m
+2026-09-17T04:03:43.6778522Z 
+2026-09-17T04:03:43.6780753Z 148 packages are looking for funding
+2026-09-17T04:03:43.6783561Z   run `npm fund` for details
+2026-09-17T04:03:43.6839429Z 
+2026-09-17T04:03:43.6966585Z found 0 vulnerabilities
+2026-09-17T04:03:47.3059741Z [04:03:47.147] DEBUG (generators): Starting pipeline {"generators":"@node-core/doc-kit-legacy/legacy-json-all","threads":1}
+2026-09-17T04:03:47.3116818Z [04:03:47.307] DEBUG (WorkerPool): WorkerPool initialized {"threads":1,"workerScript":"file:///home/runner/work/node/node/tools/doc/node_modules/@doc-kit/core/src/threading/chunk-worker.mjs"}
+2026-09-17T04:03:47.3403776Z [04:03:47.334] DEBUG (generators): Scheduling "ast" {"dependsOn":"none","streaming":true}
+2026-09-17T04:03:47.3439836Z [04:03:47.340] DEBUG (generators): Scheduling "metadata" {"dependsOn":"@doc-kit/core/ast","streaming":true}
+2026-09-17T04:03:47.3925896Z [04:03:47.344] DEBUG (generators): Scheduling "legacy-json" {"dependsOn":"@doc-kit/core/metadata","streaming":true}
+2026-09-17T04:03:47.3972133Z [04:03:47.395] DEBUG (generators): Scheduling "legacy-json-all" {"dependsOn":"@node-core/doc-kit-legacy/legacy-json"}
+2026-09-17T04:03:47.3979293Z [04:03:47.397] DEBUG (generators): Starting "ast"
+2026-09-17T04:03:47.4293734Z [04:03:47.427] DEBUG (parallel): Distributing 69 items across 7 chunks {"generator":"ast","chunks":7,"chunkSize":10,"threads":1}
+2026-09-17T04:03:47.4466355Z [04:03:47.445] DEBUG (caching): Starting collection for "@doc-kit/core/ast"
+2026-09-17T04:04:07.2653567Z [04:04:07.261] DEBUG (parallel): Chunk 1/7 completed {"generator":"ast"}
+2026-09-17T04:04:07.2666378Z [04:04:07.265] DEBUG (caching): Collected chunk 1 {"itemsInChunk":9}
+2026-09-17T04:04:08.6070560Z [04:04:08.604] DEBUG (parallel): Chunk 2/7 completed {"generator":"ast"}
+2026-09-17T04:04:08.6077930Z [04:04:08.607] DEBUG (caching): Collected chunk 2 {"itemsInChunk":10}
+2026-09-17T04:04:08.7053457Z [04:04:08.703] DEBUG (parallel): Chunk 3/7 completed {"generator":"ast"}
+2026-09-17T04:04:08.7061793Z [04:04:08.705] DEBUG (caching): Collected chunk 3 {"itemsInChunk":10}
+2026-09-17T04:04:08.7381499Z [04:04:08.737] DEBUG (parallel): Chunk 4/7 completed {"generator":"ast"}
+2026-09-17T04:04:08.7388724Z [04:04:08.738] DEBUG (caching): Collected chunk 4 {"itemsInChunk":10}
+2026-09-17T04:04:08.7753624Z [04:04:08.774] DEBUG (parallel): Chunk 5/7 completed {"generator":"ast"}
+2026-09-17T04:04:08.7760888Z [04:04:08.775] DEBUG (caching): Collected chunk 5 {"itemsInChunk":10}
+2026-09-17T04:04:09.0258446Z [04:04:09.025] DEBUG (parallel): Chunk 6/7 completed {"generator":"ast"}
+2026-09-17T04:04:09.8853766Z [04:04:09.026] DEBUG (caching): Collected chunk 6 {"itemsInChunk":10}
+2026-09-17T04:04:09.8874173Z [04:04:09.324] DEBUG (parallel): Chunk 7/7 completed {"generator":"ast"}
+2026-09-17T04:04:09.8979806Z [04:04:09.327] DEBUG (caching): Collected chunk 7 {"itemsInChunk":10}
+2026-09-17T04:04:09.8984063Z [04:04:09.328] DEBUG (caching): Collection complete {"totalItems":69,"chunks":7}
+2026-09-17T04:04:09.8990431Z [04:04:09.328] DEBUG (caching): Evicted "@doc-kit/core/ast" after final consumer
+2026-09-17T04:04:09.9054283Z [04:04:09.328] DEBUG (generators): Starting "metadata"
+2026-09-17T04:04:09.9056898Z [04:04:09.329] DEBUG (caching): Starting collection for "@doc-kit/core/metadata"
+2026-09-17T04:04:09.9060292Z [04:04:09.387] DEBUG (parallel): Distributing 69 items across 7 chunks {"generator":"metadata","chunks":7,"chunkSize":10,"threads":1}
+2026-09-17T04:04:16.0670375Z [04:04:16.065] DEBUG (parallel): Chunk 1/7 completed {"generator":"metadata"}
+2026-09-17T04:04:16.0682251Z [04:04:16.067] DEBUG (caching): Collected chunk 1 {"itemsInChunk":817}
+2026-09-17T04:04:16.0694001Z [04:04:16.068] DEBUG (parallel): Chunk 2/7 completed {"generator":"metadata"}
+2026-09-17T04:04:16.0702598Z [04:04:16.069] DEBUG (caching): Collected chunk 2 {"itemsInChunk":629}
+2026-09-17T04:04:16.0749232Z [04:04:16.070] DEBUG (parallel): Chunk 3/7 completed {"generator":"metadata"}
+2026-09-17T04:04:16.0806336Z [04:04:16.070] DEBUG (caching): Collected chunk 3 {"itemsInChunk":1676}
+2026-09-17T04:04:16.0808058Z [04:04:16.071] DEBUG (parallel): Chunk 4/7 completed {"generator":"metadata"}
+2026-09-17T04:04:16.0809842Z [04:04:16.071] DEBUG (caching): Collected chunk 4 {"itemsInChunk":546}
+2026-09-17T04:04:16.0813723Z [04:04:16.071] DEBUG (parallel): Chunk 5/7 completed {"generator":"metadata"}
+2026-09-17T04:04:16.0816958Z [04:04:16.071] DEBUG (caching): Collected chunk 5 {"itemsInChunk":766}
+2026-09-17T04:04:16.0818833Z [04:04:16.071] DEBUG (parallel): Chunk 6/7 completed {"generator":"metadata"}
+2026-09-17T04:04:16.0877842Z [04:04:16.072] DEBUG (caching): Collected chunk 6 {"itemsInChunk":496}
+2026-09-17T04:04:16.0885461Z [04:04:16.072] DEBUG (parallel): Chunk 7/7 completed {"generator":"metadata"}
+2026-09-17T04:04:16.0886221Z [04:04:16.072] DEBUG (caching): Collected chunk 7 {"itemsInChunk":480}
+2026-09-17T04:04:16.0891039Z [04:04:16.072] DEBUG (caching): Collection complete {"totalItems":5410,"chunks":7}
+2026-09-17T04:04:16.0937630Z [04:04:16.072] DEBUG (caching): Evicted "@doc-kit/core/metadata" after final consumer
+2026-09-17T04:04:16.1008824Z [04:04:16.072] DEBUG (generators): Starting "legacy-json"
+2026-09-17T04:04:16.1012718Z [04:04:16.091] DEBUG (parallel): Distributing 69 items across 7 chunks {"generator":"legacy-json","chunks":7,"chunkSize":10,"threads":1}
+2026-09-17T04:04:17.2969639Z [04:04:17.296] DEBUG (caching): Starting collection for "@node-core/doc-kit-legacy/legacy-json"
+2026-09-17T04:04:17.2981623Z [04:04:17.297] DEBUG (parallel): Chunk 1/7 completed {"generator":"legacy-json"}
+2026-09-17T04:04:17.6495528Z [04:04:17.648] DEBUG (caching): Collected chunk 1 {"itemsInChunk":10}
+2026-09-17T04:04:17.6552968Z [04:04:17.653] DEBUG (parallel): Chunk 2/7 completed {"generator":"legacy-json"}
+2026-09-17T04:04:17.6766296Z [04:04:17.676] DEBUG (caching): Collected chunk 2 {"itemsInChunk":10}
+2026-09-17T04:04:17.6779177Z [04:04:17.677] DEBUG (parallel): Chunk 3/7 completed {"generator":"legacy-json"}
+2026-09-17T04:04:17.7375256Z [04:04:17.737] DEBUG (caching): Collected chunk 3 {"itemsInChunk":10}
+2026-09-17T04:04:17.7392622Z [04:04:17.738] DEBUG (parallel): Chunk 4/7 completed {"generator":"legacy-json"}
+2026-09-17T04:04:17.7512619Z [04:04:17.750] DEBUG (caching): Collected chunk 4 {"itemsInChunk":10}
+2026-09-17T04:04:17.7524790Z [04:04:17.752] DEBUG (parallel): Chunk 5/7 completed {"generator":"legacy-json"}
+2026-09-17T04:04:17.7725351Z [04:04:17.771] DEBUG (caching): Collected chunk 5 {"itemsInChunk":10}
+2026-09-17T04:04:17.7731401Z [04:04:17.772] DEBUG (parallel): Chunk 6/7 completed {"generator":"legacy-json"}
+2026-09-17T04:04:17.7892409Z [04:04:17.788] DEBUG (caching): Collected chunk 6 {"itemsInChunk":10}
+2026-09-17T04:04:17.7897467Z [04:04:17.789] DEBUG (parallel): Chunk 7/7 completed {"generator":"legacy-json"}
+2026-09-17T04:04:17.8007249Z [04:04:17.800] DEBUG (caching): Collected chunk 7 {"itemsInChunk":9}
+2026-09-17T04:04:17.8016165Z [04:04:17.801] DEBUG (caching): Collection complete {"totalItems":69,"chunks":7}
+2026-09-17T04:04:17.8022628Z [04:04:17.801] DEBUG (caching): Evicted "@node-core/doc-kit-legacy/legacy-json" after final consumer
+2026-09-17T04:04:17.8034723Z [04:04:17.802] DEBUG (generators): Starting "legacy-json-all"
+2026-09-17T04:04:17.9693179Z [04:04:17.968] DEBUG (generators): Completed "legacy-json-all"
+2026-09-17T04:04:17.9726175Z [04:04:17.972] DEBUG (caching): Evicted "@node-core/doc-kit-legacy/legacy-json-all" after final consumer
+2026-09-17T04:04:37.8665858Z git checkout-index -a -f --prefix=node-v27.0.0-nightly2026-09-17e204ae8ce5/
+2026-09-17T04:04:45.8613515Z mkdir -p node-v27.0.0-nightly2026-09-17e204ae8ce5/doc/api
+2026-09-17T04:04:45.9153972Z cp doc/node.1 node-v27.0.0-nightly2026-09-17e204ae8ce5/doc/node.1
+2026-09-17T04:04:46.4283588Z cp -r out/doc/api/* node-v27.0.0-nightly2026-09-17e204ae8ce5/doc/api/
+2026-09-17T04:04:49.2658118Z sed 's/fileset = fileset.intersection (fileset.gitTracked root)/fileset =/' tools/nix/v8.nix > node-v27.0.0-nightly2026-09-17e204ae8ce5/tools/nix/v8.nix
+2026-09-17T04:04:49.2700634Z rm -f -r node-v27.0.0-nightly2026-09-17e204ae8ce5/.editorconfig
+2026-09-17T04:04:49.3145001Z rm -f -r node-v27.0.0-nightly2026-09-17e204ae8ce5/.git*
+2026-09-17T04:04:49.3206827Z rm -f -r node-v27.0.0-nightly2026-09-17e204ae8ce5/.mailmap
+2026-09-17T04:04:49.3217046Z rm -f -r node-v27.0.0-nightly2026-09-17e204ae8ce5/deps/corepack
+2026-09-17T04:04:49.3259902Z rm -f node-v27.0.0-nightly2026-09-17e204ae8ce5/test/parallel/test-corepack-version.js
+2026-09-17T04:04:49.3270371Z rm -f -r node-v27.0.0-nightly2026-09-17e204ae8ce5/deps/openssl/openssl/demos
+2026-09-17T04:04:49.3282757Z rm -f -r node-v27.0.0-nightly2026-09-17e204ae8ce5/deps/openssl/openssl/doc
+2026-09-17T04:04:49.3296854Z rm -f -r node-v27.0.0-nightly2026-09-17e204ae8ce5/deps/openssl/openssl/test
+2026-09-17T04:04:49.3307319Z rm -f -r node-v27.0.0-nightly2026-09-17e204ae8ce5/deps/uv/docs
+2026-09-17T04:04:49.3335262Z rm -f -r node-v27.0.0-nightly2026-09-17e204ae8ce5/deps/uv/samples
+2026-09-17T04:04:49.3344464Z rm -f -r node-v27.0.0-nightly2026-09-17e204ae8ce5/deps/uv/test
+2026-09-17T04:04:49.3394903Z rm -f -r node-v27.0.0-nightly2026-09-17e204ae8ce5/deps/v8/samples
+2026-09-17T04:04:49.3409142Z rm -f -r node-v27.0.0-nightly2026-09-17e204ae8ce5/deps/v8/tools/profviz
+2026-09-17T04:04:49.3420093Z rm -f -r node-v27.0.0-nightly2026-09-17e204ae8ce5/deps/v8/tools/run-tests.py
+2026-09-17T04:04:49.3433042Z rm -f -r node-v27.0.0-nightly2026-09-17e204ae8ce5/test*.tap
+2026-09-17T04:04:49.3449257Z rm -f -r node-v27.0.0-nightly2026-09-17e204ae8ce5/tools/cpplint.py
+2026-09-17T04:04:49.3459201Z rm -f -r node-v27.0.0-nightly2026-09-17e204ae8ce5/tools/eslint
+2026-09-17T04:04:49.3469981Z rm -f -r node-v27.0.0-nightly2026-09-17e204ae8ce5/tools/eslint-rules
+2026-09-17T04:04:49.3486079Z rm -f -r node-v27.0.0-nightly2026-09-17e204ae8ce5/test/parallel/test-eslint-*
+2026-09-17T04:04:49.3533419Z rm -f -r node-v27.0.0-nightly2026-09-17e204ae8ce5/tools/license-builder.sh
+2026-09-17T04:04:49.3573854Z rm -f -r node-v27.0.0-nightly2026-09-17e204ae8ce5/tools/eslint/node_modules
+2026-09-17T04:04:49.3582757Z rm -f -r node-v27.0.0-nightly2026-09-17e204ae8ce5/tools/osx-*
+2026-09-17T04:04:49.3596749Z rm -f -r node-v27.0.0-nightly2026-09-17e204ae8ce5/tools/osx-pkg.pmdoc
+2026-09-17T04:04:49.3605656Z find node-v27.0.0-nightly2026-09-17e204ae8ce5/deps/v8/test/* -type d ! -regex '.*/test/torque$' | xargs rm -f -r
+2026-09-17T04:04:49.6398164Z find node-v27.0.0-nightly2026-09-17e204ae8ce5/deps/v8/test -type f ! -regex '.*/test/torque/.*' | xargs rm -f
+2026-09-17T04:04:49.6434625Z find node-v27.0.0-nightly2026-09-17e204ae8ce5/deps/zlib/contrib/* -type d ! -regex '.*/contrib/optimizations$' | xargs rm -f -r
+2026-09-17T04:04:49.6479708Z find node-v27.0.0-nightly2026-09-17e204ae8ce5/ -name "eslint.config*" -maxdepth 2 | xargs rm -f
+2026-09-17T04:04:49.6522980Z find node-v27.0.0-nightly2026-09-17e204ae8ce5/ -type l | xargs rm -f
+2026-09-17T04:04:49.7247800Z tar -cf node-v27.0.0-nightly2026-09-17e204ae8ce5.tar node-v27.0.0-nightly2026-09-17e204ae8ce5
+2026-09-17T04:04:55.8190869Z rm -f -r node-v27.0.0-nightly2026-09-17e204ae8ce5
+2026-09-17T04:04:56.8669745Z gzip -c -f -9 node-v27.0.0-nightly2026-09-17e204ae8ce5.tar > node-v27.0.0-nightly2026-09-17e204ae8ce5.tar.gz
+2026-09-17T04:06:26.7986191Z rm -f node-v27.0.0-nightly2026-09-17e204ae8ce5.tar
+2026-09-17T04:06:26.9127001Z ##[group]Run actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+2026-09-17T04:06:26.9128913Z with:
+2026-09-17T04:06:26.9130449Z   path: *.tar.gz
+2026-09-17T04:06:26.9132189Z   archive: false
+2026-09-17T04:06:26.9133802Z   name: artifact
+2026-09-17T04:06:26.9135123Z   if-no-files-found: warn
+2026-09-17T04:06:26.9135995Z   compression-level: 6
+2026-09-17T04:06:26.9137623Z   overwrite: false
+2026-09-17T04:06:26.9139879Z   include-hidden-files: false
+2026-09-17T04:06:26.9141158Z env:
+2026-09-17T04:06:26.9142479Z   PYTHON_VERSION: 3.14
+2026-09-17T04:06:26.9145178Z   FLAKY_TESTS: keep_retrying
+2026-09-17T04:06:26.9147021Z   CLANG_VERSION: 19
+2026-09-17T04:06:26.9147939Z   NODE_VERSION: lts/*
+2026-09-17T04:06:26.9148638Z   pythonLocation: /opt/hostedtoolcache/Python/3.14.7/x64
+2026-09-17T04:06:26.9149911Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.14.7/x64/lib/pkgconfig
+2026-09-17T04:06:26.9150454Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.7/x64
+2026-09-17T04:06:26.9153419Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.7/x64
+2026-09-17T04:06:26.9154247Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.7/x64
+2026-09-17T04:06:26.9155535Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.14.7/x64/lib
+2026-09-17T04:06:26.9156503Z ##[endgroup]
+2026-09-17T04:06:27.2849454Z With the provided path, there will be 1 file uploaded
+2026-09-17T04:06:27.2868947Z Artifact name is valid!
+2026-09-17T04:06:27.2882926Z Root directory input is valid!
+2026-09-17T04:06:27.4909428Z Uploading artifact: node-v27.0.0-nightly2026-09-17e204ae8ce5.tar.gz
+2026-09-17T04:06:27.4976306Z Beginning upload of artifact content to blob storage
+2026-09-17T04:06:27.9648028Z Uploaded bytes 8388608
+2026-09-17T04:06:27.9849083Z Uploaded bytes 16777216
+2026-09-17T04:06:28.0210447Z Uploaded bytes 25165824
+2026-09-17T04:06:28.1677675Z Uploaded bytes 33554432
+2026-09-17T04:06:28.1775257Z Uploaded bytes 41943040
+2026-09-17T04:06:28.2228178Z Uploaded bytes 50331648
+2026-09-17T04:06:28.3654714Z Uploaded bytes 58720256
+2026-09-17T04:06:28.3756337Z Uploaded bytes 67108864
+2026-09-17T04:06:28.3883682Z Uploaded bytes 75497472
+2026-09-17T04:06:28.5002749Z Uploaded bytes 83886080
+2026-09-17T04:06:28.5143650Z Uploaded bytes 92274688
+2026-09-17T04:06:28.5424281Z Uploaded bytes 100663296
+2026-09-17T04:06:28.6157392Z Uploaded bytes 109051904
+2026-09-17T04:06:37.6948267Z ##[error]getaddrinfo EAI_AGAIN productionresultssa7.blob.core.windows.net
+2026-09-17T04:06:37.7138195Z Post job cleanup.
+2026-09-17T04:06:37.8179644Z [command]/usr/bin/git version
+2026-09-17T04:06:37.8297367Z git version 2.54.0
+2026-09-17T04:06:37.8368230Z Temporarily overriding HOME='/home/runner/work/_temp/4d28deec-209c-4e4a-9d21-753e5560e6f5' before making global git config changes
+2026-09-17T04:06:37.8376967Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-17T04:06:37.8389187Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/node/node
+2026-09-17T04:06:37.8430349Z Removing SSH command configuration
+2026-09-17T04:06:37.8437107Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-17T04:06:37.8483798Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-17T04:06:37.8849692Z Removing HTTP extra header
+2026-09-17T04:06:37.8857883Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-17T04:06:37.8900596Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-17T04:06:37.9292934Z Removing includeIf entries pointing to credentials config files
+2026-09-17T04:06:37.9302531Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-17T04:06:37.9340967Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-17T04:06:37.9743835Z Cleaning up orphan processes

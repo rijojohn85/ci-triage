@@ -1,0 +1,357 @@
+﻿2026-09-19T17:57:08.3036191Z Current runner version: '2.337.0'
+2026-09-19T17:57:08.3059400Z ##[group]Runner Image Provisioner
+2026-09-19T17:57:08.3060291Z Hosted Compute Agent
+2026-09-19T17:57:08.3060901Z Version: 20260828.587
+2026-09-19T17:57:08.3061615Z Commit: abac92662cab4cc7352de4f9f9d2e2419aad9c29
+2026-09-19T17:57:08.3062605Z Build Date: 2026-08-28T16:44:25Z
+2026-09-19T17:57:08.3063349Z Worker ID: {8e5acc5f-9ad0-4036-9dc4-c6ab4dc9e665}
+2026-09-19T17:57:08.3064157Z Azure Region: northcentralus
+2026-09-19T17:57:08.3064808Z ##[endgroup]
+2026-09-19T17:57:08.3066384Z ##[group]Operating System
+2026-09-19T17:57:08.3067038Z Ubuntu
+2026-09-19T17:57:08.3067555Z 24.04.5
+2026-09-19T17:57:08.3068183Z LTS
+2026-09-19T17:57:08.3068727Z ##[endgroup]
+2026-09-19T17:57:08.3069314Z ##[group]Runner Image
+2026-09-19T17:57:08.3069920Z Image: ubuntu-24.04
+2026-09-19T17:57:08.3070468Z Version: 20260907.300.1
+2026-09-19T17:57:08.3071801Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260907.300/images/ubuntu/Ubuntu2404-Readme.md
+2026-09-19T17:57:08.3073668Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260907.300
+2026-09-19T17:57:08.3074685Z ##[endgroup]
+2026-09-19T17:57:08.3075887Z ##[group]GITHUB_TOKEN Permissions
+2026-09-19T17:57:08.3077725Z Contents: read
+2026-09-19T17:57:08.3078317Z Metadata: read
+2026-09-19T17:57:08.3078967Z ##[endgroup]
+2026-09-19T17:57:08.3080943Z Secret source: None
+2026-09-19T17:57:08.3082023Z Cache mode: write
+2026-09-19T17:57:08.3083031Z Prepare workflow directory
+2026-09-19T17:57:08.3488310Z Prepare all required actions
+2026-09-19T17:57:08.3535520Z Getting action download info
+2026-09-19T17:57:08.6014487Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-09-19T17:57:08.7006235Z Download action repository 'erlef/setup-beam@54075bcc5e249e4758d363f27d099f55d843f124' (SHA:54075bcc5e249e4758d363f27d099f55d843f124)
+2026-09-19T17:57:09.0054743Z Download action repository 'actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a' (SHA:043fb46d1a93c77aae656e7c1c64a875d1fc6a0a)
+2026-09-19T17:57:09.1696823Z Complete job name: Ubuntu 24.04, OTP 27.3
+2026-09-19T17:57:09.2478490Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+2026-09-19T17:57:09.2479539Z with:
+2026-09-19T17:57:09.2479985Z   persist-credentials: false
+2026-09-19T17:57:09.2480514Z   repository: elixir-lang/elixir
+2026-09-19T17:57:09.2484677Z   token: ***
+2026-09-19T17:57:09.2485112Z   ssh-strict: true
+2026-09-19T17:57:09.2485539Z   ssh-user: git
+2026-09-19T17:57:09.2485952Z   clean: true
+2026-09-19T17:57:09.2486400Z   sparse-checkout-cone-mode: true
+2026-09-19T17:57:09.2486925Z   fetch-depth: 1
+2026-09-19T17:57:09.2487346Z   fetch-tags: false
+2026-09-19T17:57:09.2487782Z   show-progress: true
+2026-09-19T17:57:09.2488231Z   lfs: false
+2026-09-19T17:57:09.2488636Z   submodules: false
+2026-09-19T17:57:09.2489076Z   set-safe-directory: true
+2026-09-19T17:57:09.2489580Z   allow-unsafe-pr-checkout: false
+2026-09-19T17:57:09.2490354Z env:
+2026-09-19T17:57:09.2490852Z   ELIXIR_ASSERT_TIMEOUT: 2000
+2026-09-19T17:57:09.2491385Z   ELIXIRC_OPTS: --warnings-as-errors
+2026-09-19T17:57:09.2491942Z   LANG: C.UTF-8
+2026-09-19T17:57:09.2492548Z   ERLC_OPTS: warnings_as_errors
+2026-09-19T17:57:09.2493040Z ##[endgroup]
+2026-09-19T17:57:09.3538276Z Syncing repository: elixir-lang/elixir
+2026-09-19T17:57:09.3541031Z ##[group]Getting Git version info
+2026-09-19T17:57:09.3542467Z Working directory is '/home/runner/work/elixir/elixir'
+2026-09-19T17:57:09.3544306Z [command]/usr/bin/git version
+2026-09-19T17:57:09.3621955Z git version 2.55.0
+2026-09-19T17:57:09.3648048Z ##[endgroup]
+2026-09-19T17:57:09.3658945Z Temporarily overriding HOME='/home/runner/work/_temp/16db4f8f-b2c7-4786-84e6-235b3f841361' before making global git config changes
+2026-09-19T17:57:09.3664602Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-19T17:57:09.3675272Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/elixir/elixir
+2026-09-19T17:57:09.3724962Z Deleting the contents of '/home/runner/work/elixir/elixir'
+2026-09-19T17:57:09.3728697Z ##[group]Determining repository object format
+2026-09-19T17:57:09.3729965Z ##[endgroup]
+2026-09-19T17:57:09.3730841Z ##[group]Initializing the repository
+2026-09-19T17:57:09.3734592Z [command]/usr/bin/git init /home/runner/work/elixir/elixir
+2026-09-19T17:57:09.3859629Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-09-19T17:57:09.3861039Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-09-19T17:57:09.3862807Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-09-19T17:57:09.3863751Z hint: call:
+2026-09-19T17:57:09.3864492Z hint:
+2026-09-19T17:57:09.3865437Z hint: 	git config --global init.defaultBranch <name>
+2026-09-19T17:57:09.3866600Z hint:
+2026-09-19T17:57:09.3867714Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-09-19T17:57:09.3869503Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-09-19T17:57:09.3871386Z hint:
+2026-09-19T17:57:09.3872396Z hint: 	git branch -m <name>
+2026-09-19T17:57:09.3873236Z hint:
+2026-09-19T17:57:09.3874470Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-09-19T17:57:09.3876671Z Initialized empty Git repository in /home/runner/work/elixir/elixir/.git/
+2026-09-19T17:57:09.3879353Z [command]/usr/bin/git remote add origin https://github.com/elixir-lang/elixir
+2026-09-19T17:57:09.3919151Z ##[endgroup]
+2026-09-19T17:57:09.3920461Z ##[group]Disabling automatic garbage collection
+2026-09-19T17:57:09.3923121Z [command]/usr/bin/git config --local gc.auto 0
+2026-09-19T17:57:09.3952869Z ##[endgroup]
+2026-09-19T17:57:09.3954431Z ##[group]Setting up auth
+2026-09-19T17:57:09.3955378Z Removing SSH command configuration
+2026-09-19T17:57:09.3959768Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-19T17:57:09.4063654Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-19T17:57:09.4320701Z Removing HTTP extra header
+2026-09-19T17:57:09.4326486Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-19T17:57:09.4363037Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-19T17:57:09.4575016Z Removing includeIf entries pointing to credentials config files
+2026-09-19T17:57:09.4579565Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-19T17:57:09.4608887Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-19T17:57:09.4847509Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-641ef696-3257-4150-8a05-4a00fd658f44.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-09-19T17:57:09.4882893Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/elixir/elixir/.git.path /home/runner/work/_temp/git-credentials-641ef696-3257-4150-8a05-4a00fd658f44.config
+2026-09-19T17:57:09.4909868Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/elixir/elixir/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-641ef696-3257-4150-8a05-4a00fd658f44.config
+2026-09-19T17:57:09.4941404Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-641ef696-3257-4150-8a05-4a00fd658f44.config
+2026-09-19T17:57:09.4971476Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-641ef696-3257-4150-8a05-4a00fd658f44.config
+2026-09-19T17:57:09.4997586Z ##[endgroup]
+2026-09-19T17:57:09.4998936Z ##[group]Fetching the repository
+2026-09-19T17:57:09.5004664Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +647651647779a6d77529ae3962b92e024748b895:refs/remotes/pull/15912/merge
+2026-09-19T17:57:10.0534738Z From https://github.com/elixir-lang/elixir
+2026-09-19T17:57:10.0536499Z  * [new ref]         647651647779a6d77529ae3962b92e024748b895 -> pull/15912/merge
+2026-09-19T17:57:10.0539788Z ##[endgroup]
+2026-09-19T17:57:10.0540668Z ##[group]Determining the checkout info
+2026-09-19T17:57:10.0541578Z ##[endgroup]
+2026-09-19T17:57:10.0544371Z [command]/usr/bin/git sparse-checkout disable
+2026-09-19T17:57:10.0596890Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-09-19T17:57:10.0626954Z ##[group]Checking out the ref
+2026-09-19T17:57:10.0630558Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/15912/merge
+2026-09-19T17:57:10.1481186Z Note: switching to 'refs/remotes/pull/15912/merge'.
+2026-09-19T17:57:10.1483423Z 
+2026-09-19T17:57:10.1485113Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-09-19T17:57:10.1487983Z changes and commit them, and you can discard any commits you make in this
+2026-09-19T17:57:10.1490551Z state without impacting any branches by switching back to a branch.
+2026-09-19T17:57:10.1491925Z 
+2026-09-19T17:57:10.1493247Z If you want to create a new branch to retain commits you create, you may
+2026-09-19T17:57:10.1495493Z do so (now or later) by using -c with the switch command. Example:
+2026-09-19T17:57:10.1496837Z 
+2026-09-19T17:57:10.1497506Z   git switch -c <new-branch-name>
+2026-09-19T17:57:10.1498569Z 
+2026-09-19T17:57:10.1499209Z Or undo this operation with:
+2026-09-19T17:57:10.1500138Z 
+2026-09-19T17:57:10.1500650Z   git switch -
+2026-09-19T17:57:10.1501330Z 
+2026-09-19T17:57:10.1502711Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-09-19T17:57:10.1504338Z 
+2026-09-19T17:57:10.1506493Z HEAD is now at 6476516 Merge f27cf1a96eb4dbf192eaa4e5a461b7e0b74558f9 into 3ea1620996ab3a52eb9e59991dd4a87e56a4a119
+2026-09-19T17:57:10.1510441Z ##[endgroup]
+2026-09-19T17:57:10.1539170Z [command]/usr/bin/git log -1 --format=%H
+2026-09-19T17:57:10.1563093Z 647651647779a6d77529ae3962b92e024748b895
+2026-09-19T17:57:10.1573442Z ##[group]Removing auth
+2026-09-19T17:57:10.1574449Z Removing SSH command configuration
+2026-09-19T17:57:10.1577658Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-19T17:57:10.1611830Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-19T17:57:10.1827380Z Removing HTTP extra header
+2026-09-19T17:57:10.1830718Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-19T17:57:10.1863835Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-19T17:57:10.2077309Z Removing includeIf entries pointing to credentials config files
+2026-09-19T17:57:10.2080935Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-19T17:57:10.2104880Z includeif.gitdir:/home/runner/work/elixir/elixir/.git.path
+2026-09-19T17:57:10.2107444Z includeif.gitdir:/home/runner/work/elixir/elixir/.git/worktrees/*.path
+2026-09-19T17:57:10.2109636Z includeif.gitdir:/github/workspace/.git.path
+2026-09-19T17:57:10.2111529Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-09-19T17:57:10.2117450Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/elixir/elixir/.git.path
+2026-09-19T17:57:10.2135894Z /home/runner/work/_temp/git-credentials-641ef696-3257-4150-8a05-4a00fd658f44.config
+2026-09-19T17:57:10.2145425Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/elixir/elixir/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-641ef696\-3257\-4150\-8a05\-4a00fd658f44\.config
+2026-09-19T17:57:10.2177057Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/elixir/elixir/.git/worktrees/*.path
+2026-09-19T17:57:10.2200649Z /home/runner/work/_temp/git-credentials-641ef696-3257-4150-8a05-4a00fd658f44.config
+2026-09-19T17:57:10.2211545Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/elixir/elixir/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-641ef696\-3257\-4150\-8a05\-4a00fd658f44\.config
+2026-09-19T17:57:10.2240109Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-09-19T17:57:10.2263611Z /github/runner_temp/git-credentials-641ef696-3257-4150-8a05-4a00fd658f44.config
+2026-09-19T17:57:10.2272674Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-641ef696\-3257\-4150\-8a05\-4a00fd658f44\.config
+2026-09-19T17:57:10.2302388Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-09-19T17:57:10.2323923Z /github/runner_temp/git-credentials-641ef696-3257-4150-8a05-4a00fd658f44.config
+2026-09-19T17:57:10.2338983Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-641ef696\-3257\-4150\-8a05\-4a00fd658f44\.config
+2026-09-19T17:57:10.2379017Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-19T17:57:10.2620575Z Removing credentials config '/home/runner/work/_temp/git-credentials-641ef696-3257-4150-8a05-4a00fd658f44.config'
+2026-09-19T17:57:10.2627351Z ##[endgroup]
+2026-09-19T17:57:10.3027379Z ##[group]Run erlef/setup-beam@54075bcc5e249e4758d363f27d099f55d843f124
+2026-09-19T17:57:10.3029084Z with:
+2026-09-19T17:57:10.3029967Z   otp-version: 27.3
+2026-09-19T17:57:10.3040657Z   github-token: ***
+2026-09-19T17:57:10.3041672Z   otp-architecture: 64
+2026-09-19T17:57:10.3043093Z   install-hex: true
+2026-09-19T17:57:10.3044089Z   install-rebar: true
+2026-09-19T17:57:10.3045108Z   version-type: loose
+2026-09-19T17:57:10.3046164Z   disable_problem_matchers: false
+2026-09-19T17:57:10.3047408Z   hexpm-mirrors: https://builds.hex.pm
+
+2026-09-19T17:57:10.3048624Z env:
+2026-09-19T17:57:10.3049509Z   ELIXIR_ASSERT_TIMEOUT: 2000
+2026-09-19T17:57:10.3050681Z   ELIXIRC_OPTS: --warnings-as-errors
+2026-09-19T17:57:10.3051875Z   LANG: C.UTF-8
+2026-09-19T17:57:10.3052985Z   ERLC_OPTS: warnings_as_errors
+2026-09-19T17:57:10.3054086Z ##[endgroup]
+2026-09-19T17:57:10.5337813Z ##[group]Installing Erlang/OTP OTP-27.3.4.17 - built on amd64/ubuntu-24.04
+2026-09-19T17:57:10.9165852Z [command]/usr/bin/tar zx --strip-components=1 --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/c828dc68-c727-4877-abd5-126942112a06 -f /home/runner/work/_temp/a2f75bab-750b-4471-9f01-ba644a7709cb
+2026-09-19T17:57:13.5293906Z [command]/home/runner/work/_temp/.setup-beam/otp/Install -minimal /home/runner/work/_temp/.setup-beam/otp
+2026-09-19T17:57:13.5594882Z Installed Erlang/OTP version
+2026-09-19T17:57:13.5616495Z [command]/home/runner/work/_temp/.setup-beam/otp/bin/erl -version
+2026-09-19T17:57:13.5728141Z Erlang (SMP,ASYNC_THREADS) (BEAM) emulator version 15.2.7.13
+2026-09-19T17:57:13.5760333Z ##[endgroup]
+2026-09-19T17:57:13.5934194Z ##[group]Run make compile
+2026-09-19T17:57:13.5934618Z make compile
+2026-09-19T17:57:13.5934928Z echo "$PWD/bin" >> $GITHUB_PATH
+2026-09-19T17:57:13.5975728Z shell: /usr/bin/bash -e {0}
+2026-09-19T17:57:13.5976040Z env:
+2026-09-19T17:57:13.5976291Z   ELIXIR_ASSERT_TIMEOUT: 2000
+2026-09-19T17:57:13.5976615Z   ELIXIRC_OPTS: --warnings-as-errors
+2026-09-19T17:57:13.5976933Z   LANG: C.UTF-8
+2026-09-19T17:57:13.5977191Z   ERLC_OPTS: warnings_as_errors
+2026-09-19T17:57:13.5977842Z   INSTALL_DIR_FOR_OTP: /home/runner/work/_temp/.setup-beam/otp
+2026-09-19T17:57:13.5978235Z ##[endgroup]
+2026-09-19T17:57:15.6081375Z Recompile: src/iex
+2026-09-19T17:57:15.7059884Z Recompile: src/elixir_utils
+2026-09-19T17:57:15.7642165Z Recompile: src/elixir_tokenizer
+2026-09-19T17:57:16.4904559Z Recompile: src/elixir_sup
+2026-09-19T17:57:16.4925873Z Recompile: src/elixir_rewrite
+2026-09-19T17:57:16.6312234Z Recompile: src/elixir_quote
+2026-09-19T17:57:16.8049230Z Recompile: src/elixir_parser
+2026-09-19T17:57:19.8709236Z Recompile: src/elixir_overridable
+2026-09-19T17:57:19.9027661Z Recompile: src/elixir_module
+2026-09-19T17:57:20.0481498Z Recompile: src/elixir_map
+2026-09-19T17:57:20.1215511Z Recompile: src/elixir_lexical
+2026-09-19T17:57:20.1569048Z Recompile: src/elixir_interpolation
+2026-09-19T17:57:20.2827947Z Recompile: src/elixir_import
+2026-09-19T17:57:20.3439990Z Recompile: src/elixir_fn
+2026-09-19T17:57:20.4009653Z Recompile: src/elixir_expand
+2026-09-19T17:57:20.7633939Z Recompile: src/elixir_errors
+2026-09-19T17:57:20.8448760Z Recompile: src/elixir_erl_var
+2026-09-19T17:57:20.8743606Z Recompile: src/elixir_erl_try
+2026-09-19T17:57:20.9337845Z Recompile: src/elixir_erl_pass
+2026-09-19T17:57:21.1974150Z Recompile: src/elixir_erl_for
+2026-09-19T17:57:21.3070589Z Recompile: src/elixir_erl_compiler
+2026-09-19T17:57:21.3399146Z Recompile: src/elixir_erl_clauses
+2026-09-19T17:57:21.3568288Z Recompile: src/elixir_erl
+2026-09-19T17:57:21.5273168Z Recompile: src/elixir_env
+2026-09-19T17:57:21.5539944Z Recompile: src/elixir_dispatch
+2026-09-19T17:57:21.6317506Z Recompile: src/elixir_def
+2026-09-19T17:57:21.7566916Z Recompile: src/elixir_config
+2026-09-19T17:57:21.7683362Z Recompile: src/elixir_compiler
+2026-09-19T17:57:21.8240936Z Recompile: src/elixir_code_server
+2026-09-19T17:57:21.8598735Z Recompile: src/elixir_clauses
+2026-09-19T17:57:21.9882960Z Recompile: src/elixir_bootstrap
+2026-09-19T17:57:21.9970850Z Recompile: src/elixir_bitstring
+2026-09-19T17:57:22.0905573Z Recompile: src/elixir_aliases
+2026-09-19T17:57:22.1291952Z Recompile: src/elixir
+2026-09-19T17:57:22.5079895Z Generated elixir app
+2026-09-19T17:57:22.5349803Z ==> bootstrap (compile)
+2026-09-19T17:57:23.4003143Z Compiled kernel.ex
+2026-09-19T17:57:23.4854809Z Compiled kernel/utils.ex
+2026-09-19T17:57:23.5694056Z Compiled macro/env.ex
+2026-09-19T17:57:23.6208676Z Compiled range.ex
+2026-09-19T17:57:23.7684277Z Compiled keyword.ex
+2026-09-19T17:57:24.0488599Z Compiled module.ex
+2026-09-19T17:57:24.1820424Z Compiled list.ex
+2026-09-19T17:57:24.6854072Z Compiled macro.ex
+2026-09-19T17:57:25.0580242Z Compiled kernel/typespec.ex
+2026-09-19T17:57:25.3065677Z Compiled code.ex
+2026-09-19T17:57:25.3851840Z Compiled code/identifier.ex
+2026-09-19T17:57:25.6077544Z Compiled protocol.ex
+2026-09-19T17:57:25.6923723Z Compiled stream/reducers.ex
+2026-09-19T17:57:26.5798946Z Compiled enum.ex
+2026-09-19T17:57:26.7524943Z Compiled regex.ex
+2026-09-19T17:57:27.0812386Z Compiled inspect/algebra.ex
+2026-09-19T17:57:27.3571028Z Compiled inspect.ex
+2026-09-19T17:57:27.7727105Z Compiled string.ex
+2026-09-19T17:57:27.8435591Z Compiled string/chars.ex
+2026-09-19T17:57:28.4411089Z Compiled kernel.ex
+2026-09-19T17:57:28.5123102Z Compiled list/chars.ex
+2026-09-19T17:57:28.5302924Z Compiled bitwise.ex
+2026-09-19T17:57:28.6338965Z Compiled map.ex
+2026-09-19T17:57:28.8079689Z Compiled module/parallel_checker.ex
+2026-09-19T17:57:28.9086986Z Compiled module/behaviour.ex
+2026-09-19T17:57:29.1481571Z Compiled module/types/helpers.ex
+2026-09-19T17:57:30.5813006Z Compiled module/types/descr.ex
+2026-09-19T17:57:30.7784219Z Compiled module/types/of.ex
+2026-09-19T17:57:31.2957195Z Compiled module/types/pattern.ex
+2026-09-19T17:57:32.4588877Z Compiled module/types/apply.ex
+2026-09-19T17:57:32.8319649Z Compiled module/types/expr.ex
+2026-09-19T17:57:32.8959605Z Compiled module/types/traverse.ex
+2026-09-19T17:57:33.0826360Z Compiled module/types.ex
+2026-09-19T17:57:33.8519210Z Compiled exception.ex
+2026-09-19T17:57:33.9741173Z Compiled path.ex
+2026-09-19T17:57:34.1727377Z Compiled file.ex
+2026-09-19T17:57:34.3867841Z Compiled access.ex
+2026-09-19T17:57:34.4766223Z Compiled io.ex
+2026-09-19T17:57:34.6600945Z Compiled system.ex
+2026-09-19T17:57:35.3151156Z Compiled code/formatter.ex
+2026-09-19T17:57:35.5226069Z Compiled code/normalizer.ex
+2026-09-19T17:57:35.7209413Z Compiled kernel/cli.ex
+2026-09-19T17:57:35.7380071Z Compiled kernel/error_handler.ex
+2026-09-19T17:57:36.0360301Z Compiled kernel/parallel_compiler.ex
+2026-09-19T17:57:36.1024956Z Compiled kernel/lexical_tracker.ex
+2026-09-19T17:57:36.1113980Z make[1]: Entering directory '/home/runner/work/elixir/elixir'
+2026-09-19T17:57:36.1165588Z ==> unicode (compile)
+2026-09-19T17:57:37.7548102Z [Unicode] Break on 25 whitespace codepoints
+2026-09-19T17:57:38.2914798Z [Unicode] Tokenizing 33714 non-ascii codepoints
+2026-09-19T17:57:38.3779402Z [Unicode] Tokenizing 64 scriptsets
+2026-09-19T17:57:47.7713971Z make[1]: Leaving directory '/home/runner/work/elixir/elixir'
+2026-09-19T17:57:47.7725834Z ==> elixir (compile)
+2026-09-19T17:57:56.8020960Z Generated elixir app
+2026-09-19T17:57:57.6076679Z Type inferred stdlib in 435ms
+2026-09-19T17:57:57.9637477Z Type checked stdlib in 356ms
+2026-09-19T17:57:57.9756719Z ==> eex (compile)
+2026-09-19T17:57:58.6658535Z ==> mix (compile)
+2026-09-19T17:58:01.4374976Z Generated mix app
+2026-09-19T17:58:01.4478899Z ==> ex_unit (compile)
+2026-09-19T17:58:03.1010903Z Generated ex_unit app
+2026-09-19T17:58:03.1097742Z ==> logger (compile)
+2026-09-19T17:58:04.2459806Z Generated logger app
+2026-09-19T17:58:04.6660374Z Generated eex app
+2026-09-19T17:58:04.6750949Z ==> iex (compile)
+2026-09-19T17:58:06.0918685Z Generated iex app
+2026-09-19T17:58:06.1014651Z ##[group]Run bin/elixir --version
+2026-09-19T17:58:06.1014976Z bin/elixir --version
+2026-09-19T17:58:06.1051549Z shell: /usr/bin/bash -e {0}
+2026-09-19T17:58:06.1051797Z env:
+2026-09-19T17:58:06.1051992Z   ELIXIR_ASSERT_TIMEOUT: 2000
+2026-09-19T17:58:06.1052680Z   ELIXIRC_OPTS: --warnings-as-errors
+2026-09-19T17:58:06.1052950Z   LANG: C.UTF-8
+2026-09-19T17:58:06.1053176Z   ERLC_OPTS: warnings_as_errors
+2026-09-19T17:58:06.1053498Z   INSTALL_DIR_FOR_OTP: /home/runner/work/_temp/.setup-beam/otp
+2026-09-19T17:58:06.1053846Z ##[endgroup]
+2026-09-19T17:58:06.3021664Z Erlang/OTP 27 [erts-15.2.7.13] [source] [64-bit] [smp:4:4] [ds:4:4:10] [async-threads:1] [jit:ns]
+2026-09-19T17:58:06.3022596Z 
+2026-09-19T17:58:06.3106039Z Elixir 1.21.0-dev (6476516) (compiled with Erlang/OTP 27)
+2026-09-19T17:58:06.3175284Z ##[group]Run make test_formatted && echo "All Elixir source code files are properly formatted."
+2026-09-19T17:58:06.3175973Z make test_formatted && echo "All Elixir source code files are properly formatted."
+2026-09-19T17:58:06.3212626Z shell: /usr/bin/bash -e {0}
+2026-09-19T17:58:06.3212872Z env:
+2026-09-19T17:58:06.3213064Z   ELIXIR_ASSERT_TIMEOUT: 2000
+2026-09-19T17:58:06.3213333Z   ELIXIRC_OPTS: --warnings-as-errors
+2026-09-19T17:58:06.3213596Z   LANG: C.UTF-8
+2026-09-19T17:58:06.3213801Z   ERLC_OPTS: warnings_as_errors
+2026-09-19T17:58:06.3214126Z   INSTALL_DIR_FOR_OTP: /home/runner/work/_temp/.setup-beam/otp
+2026-09-19T17:58:06.3214474Z ##[endgroup]
+2026-09-19T17:58:08.3567614Z ** (Mix) mix format failed due to --check-formatted.
+2026-09-19T17:58:08.3568500Z The following files are not formatted:
+2026-09-19T17:58:08.3568874Z 
+2026-09-19T17:58:08.3569838Z /home/runner/work/elixir/elixir/lib/elixir/test/elixir/calendar/iso_test.exs
+2026-09-19T17:58:08.3573475Z 
+2026-09-19T17:58:08.3574984Z          |
+2026-09-19T17:58:08.3575432Z  97  97  |               Integer.mod(days + offset, 7) + 1
+2026-09-19T17:58:08.3575932Z  98  98  |    end
+2026-09-19T17:58:08.3576259Z  99     -|    
+2026-09-19T17:58:08.3576582Z      99 +|
+2026-09-19T17:58:08.3576925Z 100 100  |    :ok
+2026-09-19T17:58:08.3577257Z 101 101  |  end
+2026-09-19T17:58:08.3577581Z          |
+2026-09-19T17:58:08.3577770Z 
+2026-09-19T17:58:08.3577781Z 
+2026-09-19T17:58:08.3577791Z 
+2026-09-19T17:58:08.3666155Z make: *** [Makefile:275: test_formatted] Error 1
+2026-09-19T17:58:08.3681687Z ##[error]Process completed with exit code 2.
+2026-09-19T17:58:08.3863767Z Post job cleanup.
+2026-09-19T17:58:08.4693957Z [command]/usr/bin/git version
+2026-09-19T17:58:08.4739111Z git version 2.55.0
+2026-09-19T17:58:08.4774981Z Temporarily overriding HOME='/home/runner/work/_temp/2a0ba251-f50d-40de-ac49-9c4560c22eff' before making global git config changes
+2026-09-19T17:58:08.4776310Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-19T17:58:08.4780229Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/elixir/elixir
+2026-09-19T17:58:08.4809839Z Removing SSH command configuration
+2026-09-19T17:58:08.4816108Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-19T17:58:08.4848582Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-19T17:58:08.5064434Z Removing HTTP extra header
+2026-09-19T17:58:08.5068463Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-19T17:58:08.5099161Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-19T17:58:08.5308936Z Removing includeIf entries pointing to credentials config files
+2026-09-19T17:58:08.5314324Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-19T17:58:08.5342398Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-19T17:58:08.5679248Z Cleaning up orphan processes

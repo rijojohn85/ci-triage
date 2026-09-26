@@ -1,0 +1,34 @@
+﻿2026-08-06T15:38:23.8399583Z Current runner version: '2.336.0'
+2026-08-06T15:38:23.8417379Z ##[group]Runner Image Provisioner
+2026-08-06T15:38:23.8418091Z Hosted Compute Agent
+2026-08-06T15:38:23.8418540Z Version: 20260729.566
+2026-08-06T15:38:23.8419083Z Commit: cf7153fe6e25b664e8693c24944bf2b00355d109
+2026-08-06T15:38:23.8419659Z Build Date: 2026-07-29T19:17:02Z
+2026-08-06T15:38:23.8420213Z Worker ID: {7bc9c871-e19e-4047-99af-4d491d6e1524}
+2026-08-06T15:38:23.8420788Z Azure Region: westus3
+2026-08-06T15:38:23.8421242Z ##[endgroup]
+2026-08-06T15:38:23.8422272Z ##[group]Operating System
+2026-08-06T15:38:23.8422762Z Ubuntu
+2026-08-06T15:38:23.8423159Z 24.04.4
+2026-08-06T15:38:23.8423838Z LTS
+2026-08-06T15:38:23.8424268Z ##[endgroup]
+2026-08-06T15:38:23.8424714Z ##[group]Runner Image
+2026-08-06T15:38:23.8425203Z Image: ubuntu-24.04
+2026-08-06T15:38:23.8425654Z Version: 20260804.265.1
+2026-08-06T15:38:23.8426648Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260804.265/images/ubuntu/Ubuntu2404-Readme.md
+2026-08-06T15:38:23.8427839Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260804.265
+2026-08-06T15:38:23.8428607Z ##[endgroup]
+2026-08-06T15:38:23.8429496Z ##[group]GITHUB_TOKEN Permissions
+2026-08-06T15:38:23.8431060Z Contents: read
+2026-08-06T15:38:23.8431508Z Metadata: read
+2026-08-06T15:38:23.8431951Z ##[endgroup]
+2026-08-06T15:38:23.8433626Z Secret source: None
+2026-08-06T15:38:23.8434476Z Prepare workflow directory
+2026-08-06T15:38:23.8969321Z Prepare all required actions
+2026-08-06T15:38:23.9009465Z Getting action download info
+2026-08-06T15:40:10.6401128Z Failed to resolve action download info. Error: Service Unavailable
+2026-08-06T15:40:10.6460571Z Retrying in 28.619 seconds
+2026-08-06T15:42:03.5680226Z Failed to resolve action download info. Error: Service Unavailable
+2026-08-06T15:42:03.5682988Z Retrying in 13.673 seconds
+2026-08-06T15:43:47.4765985Z ##[error]Service Unavailable
+2026-08-06T15:43:47.4782662Z ##[error]Failed to resolve action download info.
