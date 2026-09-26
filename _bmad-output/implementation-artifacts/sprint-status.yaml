@@ -100,7 +100,7 @@ development_status:
   epic-5-retrospective: optional
 
   epic-6: backlog
-  6-1-collect-every-model-call-and-attempt-centrally: backlog
+  6-1-collect-every-model-call-and-attempt-centrally: review
   6-2-compute-versioned-null-aware-model-costs: backlog
   6-3-calibrate-confidence-and-central-thresholds-on-labelled-data: backlog
   6-4-record-the-supplied-per-agent-quality-pass-decision: backlog
