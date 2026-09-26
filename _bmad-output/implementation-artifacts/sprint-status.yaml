@@ -71,7 +71,7 @@ development_status:
   epic-2-retrospective: optional
 
   epic-3: backlog
-  3-1-serve-the-jev-classifier-and-batched-injection-screen: backlog
+  3-1-serve-the-jev-classifier-and-batched-injection-screen: review
   3-2-evaluate-jev-classification-before-connection: backlog
   3-3-serve-the-evidence-grounded-analyzer: backlog
   3-4-evaluate-analyzer-evidence-and-attribution: backlog
