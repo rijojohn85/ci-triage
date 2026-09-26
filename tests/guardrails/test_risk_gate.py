@@ -527,6 +527,65 @@ def test_ac1_new_file_introducing_a_timeout_is_blocked() -> None:
     assert rule_codes(decision.reasons) == {"timeout_increased"}
 
 
+# --- AC1 (F2): timeout spellings beyond `timeout = N` are caught too
+
+
+@pytest.mark.parametrize(
+    ("line", "value"),
+    [
+        ("TIMEOUT = 30", 30),
+        ("client.set_timeout(30)", 30),
+        ("x(timeout_seconds=30)", 30),
+        ("request_timeout=30", 30),
+        ("timeout_ms=30", 30),
+        ("connect_timeout: 30", 30),
+        ("@pytest.mark.timeout(30)", 30),
+        ("timeout = 30.5", 30.5),
+        ("timeout = 1_000", 1000),
+    ],
+)
+def test_ac1_timeout_spellings_are_blocked(line: str, value: float) -> None:
+    prior = "def test_slow():\n    pass\n"
+    raised = f"def test_slow():\n    {line}\n"
+
+    decision = evaluate_risk(
+        gate_input(
+            diff_of(
+                DiffFile(
+                    path="tests/test_slow.py",
+                    op=DiffOperation.MODIFY,
+                    new_content=raised,
+                )
+            ),
+            prior={"tests/test_slow.py": prior},
+        )
+    )
+
+    assert decision.risk_tier is RiskTier.BLOCKED, f"{line} must block"
+    assert rule_codes(decision.reasons) == {"timeout_increased"}
+
+
+def test_ac1_timeout_word_without_a_value_is_not_a_hit() -> None:
+    prior = "def test_slow():\n    pass\n"
+    new = "def test_slow():\n    # the timeout is handled by pytest itself\n    pass\n"
+
+    decision = evaluate_risk(
+        gate_input(
+            diff_of(
+                DiffFile(
+                    path="tests/test_slow.py",
+                    op=DiffOperation.MODIFY,
+                    new_content=new,
+                )
+            ),
+            prior={"tests/test_slow.py": prior},
+        )
+    )
+
+    assert decision.risk_tier is RiskTier.NORMAL
+    assert decision.reasons == ()
+
+
 # --- AC1: the S5 timeout-bump fixture (the only-obvious-fix case)
 
 

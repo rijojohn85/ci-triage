@@ -130,8 +130,12 @@ _RETRY_PATTERN: Final[re.Pattern[str]] = re.compile(
     r"\bretries\b|\brerun\b|@retry\b|\btenacity\b"
 )
 _TIMEOUT_PATTERN: Final[re.Pattern[str]] = re.compile(
-    r"timeout\s*[=:]\s*(\d+)|timeout\((\d+)\)"
+    r"(?i)\b[a-z_]*timeout[a-z_]*\s*[=:]\s*([0-9][0-9_]*(?:\.[0-9]+)?)"
+    r"|timeout\(\s*([0-9][0-9_]*(?:\.[0-9]+)?)\s*\)"
 )
+"""Case-insensitive: any `…timeout…` key with a numeric value (assignment,
+keyword argument or mapping entry), plus the `timeout(N)` call/marker form.
+Values may be floats or use digit separators; they are compared numerically."""
 _STRONG_ASSERTION: Final[re.Pattern[str]] = re.compile(
     r"assertEqual\((\w+)\s*,|assert\s+(\w+)\s*=="
 )
@@ -194,8 +198,8 @@ def _removed_lines(file: DiffFile, prior_contents: Mapping[str, str]) -> list[st
     return _changed_lines(prior, file.new_content, added=False)
 
 
-def _timeout_values(text: str) -> list[int]:
-    return [int(first or second) for first, second in _TIMEOUT_PATTERN.findall(text)]
+def _timeout_values(text: str) -> list[float]:
+    return [float(first or second) for first, second in _TIMEOUT_PATTERN.findall(text)]
 
 
 def _assertion_tokens(lines: Sequence[str], pattern: re.Pattern[str]) -> set[str]:
