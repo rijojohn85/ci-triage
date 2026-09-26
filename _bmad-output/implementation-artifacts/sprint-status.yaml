@@ -82,7 +82,7 @@ development_status:
   3-8-evaluate-reviewer-objections-before-connection: backlog
   3-9-pin-agent-discovery-and-implement-two-stage-routing: backlog
   3-10-prove-description-selection-and-no-route-pause: backlog
-  3-11-guard-the-jev-eval-against-unanswerable-cases: backlog
+  3-11-guard-the-jev-eval-against-unanswerable-cases: review
   3-12-teach-jev-the-ci-platform-failure-convention: backlog
   3-13-give-jev-structured-flake-evidence: backlog
   epic-3-retrospective: optional
